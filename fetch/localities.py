@@ -9,7 +9,7 @@
 """
 import sys, csv, io, statistics, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
-from lib import fetch, save, STATES
+from lib import fetch_cached, is_deliverable, save, STATES
 
 SRC = ("https://raw.githubusercontent.com/matthewproctor/australianpostcodes"
        "/master/australian_postcodes.csv")
@@ -25,13 +25,16 @@ def main(state):
     if state not in STATES:
         raise SystemExit(f"未知的州別 {state}；可用：{', '.join(STATES)}")
     print(f"下載 {SRC}")
-    rows = list(csv.DictReader(io.StringIO(fetch(SRC, timeout=180))))
+    rows = list(csv.DictReader(io.StringIO(fetch_cached(SRC, "australian_postcodes.csv"))))
     print(f"  {len(rows)} 列")
 
     lo_lat, hi_lat, lo_lon, hi_lon = BOUNDS[state]
     acc, skipped = {}, 0
     for r in rows:
         if (r.get("state") or "").strip().lower() != state:
+            continue
+        if not is_deliverable(r, state):
+            skipped += 1
             continue
         try:
             pc, lat, lon = int(r["postcode"]), float(r["lat"]), float(r["long"])

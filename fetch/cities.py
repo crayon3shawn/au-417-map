@@ -10,7 +10,7 @@
 """
 import sys, csv, io, json, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
-from lib import fetch, save, load, STATES
+from lib import fetch_cached, save, load, STATES
 
 SRC = ("https://raw.githubusercontent.com/matthewproctor/australianpostcodes"
        "/master/australian_postcodes.csv")
@@ -26,7 +26,7 @@ def main(state):
     seed = load(seed_path)["cities"]
 
     print(f"下載 {SRC}")
-    rows = [r for r in csv.DictReader(io.StringIO(fetch(SRC, timeout=180)))
+    rows = [r for r in csv.DictReader(io.StringIO(fetch_cached(SRC, "australian_postcodes.csv")))
             if (r.get("state") or "").strip().lower() == state]
 
     index = {}

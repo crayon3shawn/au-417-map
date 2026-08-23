@@ -51,6 +51,41 @@ def fetch(url, timeout=60):
         return r.read().decode("utf-8", "replace")
 
 
+# LVR（大宗收件企業信箱）與 Post Office Boxes 不是可以工作的地方。
+# 空白 type 是資料缺漏而非信箱（例如 0800 DARWIN），要留下。
+NON_DELIVERY_TYPES = {"LVR", "Post Office Boxes"}
+
+
+def is_deliverable(row, state_key):
+    """這一列是不是該州境內、可實際投遞的郵區。"""
+    if (row.get("type") or "").strip() in NON_DELIVERY_TYPES:
+        return False
+    try:
+        pc = int(row["postcode"])
+    except (ValueError, TypeError, KeyError):
+        return False
+    # 資料集裡有 9999 NORTH POLE 標成 VIC 這種條目，用號碼區間擋掉
+    return any(lo <= pc <= hi for lo, hi in STATES[state_key]["ranges"])
+
+
+def fetch_cached(url, name, timeout=300, max_age_hours=24):
+    """抓取並快取到 data/raw/。同一次 make update 裡多支腳本共用同一份下載。
+
+    地名 CSV 有 8 MB，localities、cities、portal 三支都要用，
+    沒快取的話一次 update 會重抓三遍。
+    """
+    import pathlib, time
+    cache = pathlib.Path(__file__).resolve().parent / "data" / "raw"
+    cache.mkdir(parents=True, exist_ok=True)
+    f = cache / name
+    if f.exists() and (time.time() - f.stat().st_mtime) < max_age_hours * 3600:
+        print(f"  用快取 {f.name}（{f.stat().st_size/1e6:.1f} MB）")
+        return f.read_text(encoding="utf-8")
+    text = fetch(url, timeout=timeout)
+    f.write_text(text, encoding="utf-8")
+    return text
+
+
 def expand(raw, state_key):
     """把官網的範圍字串展開成郵區號碼集合。
 

@@ -13,43 +13,6 @@
         "Brisbane-City"
       ]
     },
-    "4001": {
-      "lat": -27.6035,
-      "lon": 152.8231,
-      "n_names": 4,
-      "names": [
-        "Brisbane",
-        "Central Plaza",
-        "Riverside Centre",
-        "Waterfront Place"
-      ]
-    },
-    "4002": {
-      "lat": -27.4693,
-      "lon": 153.027,
-      "n_names": 3,
-      "names": [
-        "Brisbane Albert Street Bc",
-        "City East",
-        "Wintergarden"
-      ]
-    },
-    "4003": {
-      "lat": -24.8724,
-      "lon": 152.3485,
-      "n_names": 1,
-      "names": [
-        "George Street"
-      ]
-    },
-    "4004": {
-      "lat": -24.0453,
-      "lon": 149.3166,
-      "n_names": 1,
-      "names": [
-        "Spring Hill"
-      ]
-    },
     "4005": {
       "lat": -27.4631,
       "lon": 153.0468,
@@ -233,14 +196,6 @@
         "Kooringal",
         "Moreton Island",
         "Tangalooma"
-      ]
-    },
-    "4029": {
-      "lat": -27.4493,
-      "lon": 153.0264,
-      "n_names": 1,
-      "names": [
-        "Royal Brisbane Hospital"
       ]
     },
     "4030": {
@@ -478,14 +433,6 @@
         "Bellbowrie",
         "Moggill",
         "Priors Pocket"
-      ]
-    },
-    "4072": {
-      "lat": -27.549,
-      "lon": 152.3301,
-      "n_names": 1,
-      "names": [
-        "University Of Queensland"
       ]
     },
     "4073": {
@@ -1403,14 +1350,6 @@
         "Ingleside",
         "Tallebudgera",
         "Tallebudgera Valley"
-      ]
-    },
-    "4229": {
-      "lat": -28.0779,
-      "lon": 153.4131,
-      "n_names": 1,
-      "names": [
-        "Bond University"
       ]
     },
     "4230": {
@@ -5030,94 +4969,6 @@
         "Degarra",
         "Helenvale",
         "Hope Vale"
-      ]
-    },
-    "9000": {
-      "lat": -27.6035,
-      "lon": 152.8231,
-      "n_names": 1,
-      "names": [
-        "Brisbane"
-      ]
-    },
-    "9001": {
-      "lat": -27.6035,
-      "lon": 152.8231,
-      "n_names": 1,
-      "names": [
-        "Brisbane"
-      ]
-    },
-    "9002": {
-      "lat": -27.6035,
-      "lon": 152.8231,
-      "n_names": 1,
-      "names": [
-        "Brisbane"
-      ]
-    },
-    "9005": {
-      "lat": -27.6035,
-      "lon": 152.8231,
-      "n_names": 1,
-      "names": [
-        "Brisbane"
-      ]
-    },
-    "9007": {
-      "lat": -27.6035,
-      "lon": 152.8231,
-      "n_names": 1,
-      "names": [
-        "Brisbane"
-      ]
-    },
-    "9009": {
-      "lat": -27.6035,
-      "lon": 152.8231,
-      "n_names": 1,
-      "names": [
-        "Brisbane"
-      ]
-    },
-    "9010": {
-      "lat": -27.6035,
-      "lon": 152.8231,
-      "n_names": 1,
-      "names": [
-        "Brisbane"
-      ]
-    },
-    "9013": {
-      "lat": -27.6035,
-      "lon": 152.8231,
-      "n_names": 1,
-      "names": [
-        "Brisbane"
-      ]
-    },
-    "9015": {
-      "lat": -27.6035,
-      "lon": 152.8231,
-      "n_names": 1,
-      "names": [
-        "Brisbane"
-      ]
-    },
-    "9464": {
-      "lat": -27.3971,
-      "lon": 153.075,
-      "n_names": 1,
-      "names": [
-        "Northgate Mc"
-      ]
-    },
-    "9726": {
-      "lat": -28.0088,
-      "lon": 153.4122,
-      "n_names": 1,
-      "names": [
-        "Gold Coast Mc"
       ]
     }
   },

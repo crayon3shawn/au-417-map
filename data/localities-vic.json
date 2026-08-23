@@ -8,14 +8,6 @@
         "Melbourne"
       ]
     },
-    "3001": {
-      "lat": -37.8144,
-      "lon": 144.9826,
-      "n_names": 1,
-      "names": [
-        "Melbourne"
-      ]
-    },
     "3002": {
       "lat": -37.8144,
       "lon": 144.9826,
@@ -1406,14 +1398,6 @@
         "Carnegie",
         "Glen Huntly",
         "Murrumbeena"
-      ]
-    },
-    "3164": {
-      "lat": -38.0224,
-      "lon": 145.2374,
-      "n_names": 1,
-      "names": [
-        "Dandenong South"
       ]
     },
     "3165": {
@@ -2933,23 +2917,6 @@
         "Bonshaw"
       ]
     },
-    "3353": {
-      "lat": -37.7778,
-      "lon": 144.8357,
-      "n_names": 1,
-      "names": [
-        "Ballarat"
-      ]
-    },
-    "3354": {
-      "lat": -37.5609,
-      "lon": 143.8672,
-      "n_names": 2,
-      "names": [
-        "Bakery Hill",
-        "Ballarat Mc"
-      ]
-    },
     "3355": {
       "lat": -37.5303,
       "lon": 143.8256,
@@ -3296,14 +3263,6 @@
         "Cherrypool",
         "Clear Lake",
         "Connangorach"
-      ]
-    },
-    "3402": {
-      "lat": -37.1642,
-      "lon": 142.6663,
-      "n_names": 1,
-      "names": [
-        "Horsham"
       ]
     },
     "3407": {
@@ -3933,14 +3892,6 @@
         "Nichols Point"
       ]
     },
-    "3502": {
-      "lat": -37.9729,
-      "lon": 145.2584,
-      "n_names": 1,
-      "names": [
-        "Mildura"
-      ]
-    },
     "3505": {
       "lat": -34.1805,
       "lon": 142.0042,
@@ -4246,14 +4197,6 @@
         "Axe Creek",
         "Axedale",
         "Bagshot"
-      ]
-    },
-    "3552": {
-      "lat": -36.7643,
-      "lon": 144.2786,
-      "n_names": 1,
-      "names": [
-        "Bendigo"
       ]
     },
     "3554": {
@@ -4714,14 +4657,6 @@
         "Merrigum"
       ]
     },
-    "3619": {
-      "lat": -37.6596,
-      "lon": 144.9363,
-      "n_names": 1,
-      "names": [
-        "Kyabram"
-      ]
-    },
     "3620": {
       "lat": -36.2846,
       "lon": 145.0827,
@@ -4812,14 +4747,6 @@
         "Cosgrove",
         "Cosgrove South",
         "Grahamvale"
-      ]
-    },
-    "3632": {
-      "lat": -36.5445,
-      "lon": 145.6032,
-      "n_names": 1,
-      "names": [
-        "Shepparton"
       ]
     },
     "3633": {
@@ -4913,14 +4840,6 @@
         "Ulupna"
       ]
     },
-    "3643": {
-      "lat": -35.9554,
-      "lon": 145.6319,
-      "n_names": 1,
-      "names": [
-        "Cobram"
-      ]
-    },
     "3644": {
       "lat": -35.9454,
       "lon": 145.6327,
@@ -4944,14 +4863,6 @@
         "Waggarandall",
         "Wattville",
         "Yabba North"
-      ]
-    },
-    "3647": {
-      "lat": -36.3853,
-      "lon": 145.7045,
-      "n_names": 1,
-      "names": [
-        "Dookie College"
       ]
     },
     "3649": {
@@ -4996,14 +4907,6 @@
         "Highlands",
         "Hilldene",
         "Kerrisdale"
-      ]
-    },
-    "3661": {
-      "lat": -38.196,
-      "lon": 146.5353,
-      "n_names": 1,
-      "names": [
-        "Seymour"
       ]
     },
     "3662": {
@@ -5078,14 +4981,6 @@
         "Warrenbayne"
       ]
     },
-    "3671": {
-      "lat": -36.3851,
-      "lon": 145.4207,
-      "n_names": 1,
-      "names": [
-        "Benalla"
-      ]
-    },
     "3672": {
       "lat": -36.5549,
       "lon": 145.9778,
@@ -5119,14 +5014,6 @@
         "Glenrowan West",
         "Greta",
         "Greta South"
-      ]
-    },
-    "3676": {
-      "lat": -36.3412,
-      "lon": 146.3386,
-      "n_names": 1,
-      "names": [
-        "Wangaratta"
       ]
     },
     "3677": {
@@ -5206,14 +5093,6 @@
         "Barnawartha North",
         "Indigo Upper",
         "Indigo Valley"
-      ]
-    },
-    "3689": {
-      "lat": -37.6758,
-      "lon": 144.9898,
-      "n_names": 1,
-      "names": [
-        "Wodonga"
       ]
     },
     "3690": {
@@ -5474,14 +5353,6 @@
         "Enochs Point"
       ]
     },
-    "3724": {
-      "lat": -37.0531,
-      "lon": 146.0768,
-      "n_names": 1,
-      "names": [
-        "Mansfield"
-      ]
-    },
     "3725": {
       "lat": -36.4144,
       "lon": 145.9373,
@@ -5568,14 +5439,6 @@
         "Whorouly",
         "Whorouly East",
         "Whorouly South"
-      ]
-    },
-    "3736": {
-      "lat": -36.4551,
-      "lon": 146.4795,
-      "n_names": 1,
-      "names": [
-        "Myrtleford"
       ]
     },
     "3737": {
@@ -6371,14 +6234,6 @@
         "East Sale",
         "East Sale Raaf",
         "Sale East Raaf"
-      ]
-    },
-    "3853": {
-      "lat": -38.0956,
-      "lon": 146.06,
-      "n_names": 1,
-      "names": [
-        "Sale"
       ]
     },
     "3854": {
@@ -7366,52 +7221,12 @@
         "Pound Creek"
       ]
     },
-    "8001": {
-      "lat": -37.8144,
-      "lon": 144.9826,
-      "n_names": 1,
-      "names": [
-        "Melbourne"
-      ]
-    },
-    "8002": {
-      "lat": -37.8144,
-      "lon": 144.9826,
-      "n_names": 1,
-      "names": [
-        "East Melbourne"
-      ]
-    },
     "8003": {
       "lat": -37.8183,
       "lon": 144.957,
       "n_names": 1,
       "names": [
         "Collins Street East"
-      ]
-    },
-    "8004": {
-      "lat": -36.5588,
-      "lon": 145.469,
-      "n_names": 1,
-      "names": [
-        "St Kilda Road"
-      ]
-    },
-    "8005": {
-      "lat": -37.8246,
-      "lon": 144.9509,
-      "n_names": 1,
-      "names": [
-        "World Trade Centre"
-      ]
-    },
-    "8006": {
-      "lat": -37.8097,
-      "lon": 144.9593,
-      "n_names": 1,
-      "names": [
-        "Abeckett Street"
       ]
     },
     "8007": {
@@ -7430,165 +7245,12 @@
         "St Kilda Road Central"
       ]
     },
-    "8009": {
-      "lat": -37.8172,
-      "lon": 144.9645,
-      "n_names": 1,
-      "names": [
-        "Flinders Lane"
-      ]
-    },
-    "8010": {
-      "lat": -38.1859,
-      "lon": 146.2937,
-      "n_names": 1,
-      "names": [
-        "Law Courts"
-      ]
-    },
-    "8011": {
-      "lat": -37.8113,
-      "lon": 144.9617,
-      "n_names": 1,
-      "names": [
-        "Little Lonsdale Street"
-      ]
-    },
     "8012": {
       "lat": -37.8147,
       "lon": 144.948,
       "n_names": 1,
       "names": [
         "Docklands"
-      ]
-    },
-    "8045": {
-      "lat": -37.8144,
-      "lon": 144.9826,
-      "n_names": 1,
-      "names": [
-        "Melbourne"
-      ]
-    },
-    "8051": {
-      "lat": -37.8144,
-      "lon": 144.9826,
-      "n_names": 1,
-      "names": [
-        "Melbourne"
-      ]
-    },
-    "8066": {
-      "lat": -37.8144,
-      "lon": 144.9826,
-      "n_names": 1,
-      "names": [
-        "Melbourne"
-      ]
-    },
-    "8069": {
-      "lat": -37.8144,
-      "lon": 144.9826,
-      "n_names": 1,
-      "names": [
-        "Melbourne"
-      ]
-    },
-    "8070": {
-      "lat": -37.8144,
-      "lon": 144.9826,
-      "n_names": 1,
-      "names": [
-        "Melbourne"
-      ]
-    },
-    "8071": {
-      "lat": -37.8144,
-      "lon": 144.9826,
-      "n_names": 1,
-      "names": [
-        "Melbourne"
-      ]
-    },
-    "8102": {
-      "lat": -37.8144,
-      "lon": 144.9826,
-      "n_names": 1,
-      "names": [
-        "Melbourne"
-      ]
-    },
-    "8107": {
-      "lat": -37.8144,
-      "lon": 144.9826,
-      "n_names": 1,
-      "names": [
-        "Melbourne"
-      ]
-    },
-    "8111": {
-      "lat": -37.8144,
-      "lon": 144.9826,
-      "n_names": 1,
-      "names": [
-        "Melbourne"
-      ]
-    },
-    "8120": {
-      "lat": -37.8144,
-      "lon": 144.9826,
-      "n_names": 1,
-      "names": [
-        "Melbourne"
-      ]
-    },
-    "8205": {
-      "lat": -37.8144,
-      "lon": 144.9826,
-      "n_names": 1,
-      "names": [
-        "Melbourne"
-      ]
-    },
-    "8383": {
-      "lat": -37.8144,
-      "lon": 144.9826,
-      "n_names": 1,
-      "names": [
-        "Melbourne"
-      ]
-    },
-    "8438": {
-      "lat": -37.7981,
-      "lon": 144.8111,
-      "n_names": 1,
-      "names": [
-        "Sunshine West"
-      ]
-    },
-    "8511": {
-      "lat": -37.7981,
-      "lon": 144.8111,
-      "n_names": 1,
-      "names": [
-        "Sunshine West"
-      ]
-    },
-    "8785": {
-      "lat": -38.0161,
-      "lon": 145.2085,
-      "n_names": 2,
-      "names": [
-        "Dandenong",
-        "Dandenong South"
-      ]
-    },
-    "9999": {
-      "lat": -37.8174,
-      "lon": 144.9568,
-      "n_names": 1,
-      "names": [
-        "North Pole"
       ]
     }
   },
