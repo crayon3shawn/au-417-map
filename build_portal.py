@@ -50,7 +50,11 @@ def main():
         states.append({
             "key": st, "label": LABELS.get(st, STATES[st]["name"]),
             "name": STATES[st]["name"], "url": urls.get(st),
-            "total": total, "label_at": LABEL_POS.get(st), **s,
+            "total": total, "label_at": LABEL_POS.get(st),
+            # 全境都在 regional 名單上（官網原文就是 All postcodes are eligible）。
+            # 這種州不必做地圖——整張圖只會是一片綠。
+            "all_work": s["rebuild"] == 0 and s["none"] == 0 and s["work"] > 0,
+            **s,
         })
 
     payload = {

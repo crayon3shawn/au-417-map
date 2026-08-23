@@ -9,7 +9,7 @@
 """
 import sys, json, urllib.parse, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
-from lib import fetch, save, STATES
+from lib import fetch, save, STATES, CROSS_BORDER
 
 BASE = "https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/POA/MapServer/1/query"
 OFFSET = 0.0015      # 概化容差（度），約 165 公尺
@@ -37,7 +37,11 @@ def query(where, offset):
 def main(state):
     if state not in STATES:
         raise SystemExit(f"未知的州別 {state}；可用：{', '.join(STATES)}")
-    where = " OR ".join(f"poa_code_2021 LIKE '{p}%'" for p in STATES[state]["abs_like"])
+    clauses = [f"poa_code_2021 LIKE '{p}%'" for p in STATES[state]["abs_like"]]
+    # 橫跨州界的郵區用號碼直接指定，否則本州地圖會出現大片留白
+    extra = CROSS_BORDER.get(state, [])
+    clauses += [f"poa_code_2021 = '{pc:04d}'" for pc in extra]
+    where = " OR ".join(clauses)
 
     feats, offset = [], 0
     while True:
@@ -56,7 +60,7 @@ def main(state):
     rings, dropped = {}, 0
     for ft in feats:
         code = int(ft["properties"]["poa_code_2021"])
-        if not any(a <= code <= b for a, b in STATES[state]["ranges"]):
+        if code not in extra and not any(a <= code <= b for a, b in STATES[state]["ranges"]):
             continue
         g = ft.get("geometry")
         if not g:

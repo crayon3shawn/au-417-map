@@ -1,0 +1,273 @@
+{
+  "cities": [
+    {
+      "lat": -31.9526,
+      "lon": 115.861,
+      "name": "Perth 珀斯",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -32.0539,
+      "lon": 115.7605,
+      "name": "Fremantle",
+      "side": "l",
+      "tier": 1
+    },
+    {
+      "lat": -33.321,
+      "lon": 115.6383,
+      "name": "Bunbury",
+      "side": "l",
+      "tier": 1
+    },
+    {
+      "lat": -33.6532,
+      "lon": 115.3455,
+      "name": "Busselton",
+      "side": "l",
+      "tier": 1
+    },
+    {
+      "lat": -35.0269,
+      "lon": 117.8837,
+      "name": "Albany",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -33.8613,
+      "lon": 121.8914,
+      "name": "Esperance",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -30.749,
+      "lon": 121.466,
+      "name": "Kalgoorlie",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -28.7797,
+      "lon": 114.6144,
+      "name": "Geraldton",
+      "side": "l",
+      "tier": 1
+    },
+    {
+      "lat": -20.7337,
+      "lon": 116.8447,
+      "name": "Karratha",
+      "side": "l",
+      "tier": 1
+    },
+    {
+      "lat": -20.3839,
+      "lon": 118.6484,
+      "name": "Port Hedland",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -17.9644,
+      "lon": 122.2304,
+      "name": "Broome",
+      "side": "l",
+      "tier": 1
+    },
+    {
+      "lat": -22.9799,
+      "lon": 119.7889,
+      "name": "Newman",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -32.5462,
+      "lon": 115.722,
+      "name": "Mandurah",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -32.2781,
+      "lon": 115.7351,
+      "name": "Rockingham",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -33.961,
+      "lon": 115.0767,
+      "name": "Margaret River",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -34.316,
+      "lon": 115.1597,
+      "name": "Augusta",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -33.3581,
+      "lon": 116.1512,
+      "name": "Collie",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -34.2492,
+      "lon": 116.1437,
+      "name": "Manjimup",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -33.9583,
+      "lon": 116.1381,
+      "name": "Bridgetown",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -31.6479,
+      "lon": 116.6742,
+      "name": "Northam",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -31.8935,
+      "lon": 116.7682,
+      "name": "York",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -31.4826,
+      "lon": 118.2724,
+      "name": "Merredin",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -32.9312,
+      "lon": 117.1785,
+      "name": "Narrogin",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -33.6894,
+      "lon": 117.5551,
+      "name": "Katanning",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -30.6411,
+      "lon": 116.008,
+      "name": "Moora",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -30.2938,
+      "lon": 115.1178,
+      "name": "Jurien Bay",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -29.2452,
+      "lon": 114.9326,
+      "name": "Dongara",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -25.9272,
+      "lon": 113.5424,
+      "name": "Denham",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -24.8877,
+      "lon": 113.6622,
+      "name": "Carnarvon",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -21.9313,
+      "lon": 114.1237,
+      "name": "Exmouth",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -22.6961,
+      "lon": 117.795,
+      "name": "Tom Price",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -17.44,
+      "lon": 123.744,
+      "name": "Derby",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -15.6049,
+      "lon": 128.7655,
+      "name": "Kununurra",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -18.2229,
+      "lon": 127.6701,
+      "name": "Halls Creek",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -18.1937,
+      "lon": 125.5604,
+      "name": "Fitzroy Crossing",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -28.6257,
+      "lon": 122.4013,
+      "name": "Laverton",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -28.885,
+      "lon": 121.3308,
+      "name": "Leonora",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -32.1978,
+      "lon": 121.7789,
+      "name": "Norseman",
+      "side": "r",
+      "tier": 2
+    }
+  ],
+  "note": "座標由 fetch/cities.py 從地名資料解析，請改 seed 檔而非本檔。",
+  "source": "https://raw.githubusercontent.com/matthewproctor/australianpostcodes/master/australian_postcodes.csv",
+  "state": "wa"
+}

@@ -21,6 +21,10 @@ STATES = {
     "act": {"name": "Australian Capital Territory", "abs_like": ["2"], "ranges": [(2600, 2618), (2900, 2920)]},
 }
 
+# 橫跨州界的郵區。0872 涵蓋 NT／WA／SA 交界的大片沙漠，只在 NT 的郵區
+# 號碼區間內，所以逐州抓邊界時 WA、SA 會缺這一塊，地圖上出現大片留白。
+CROSS_BORDER = {"wa": [872], "sa": [872]}
+
 # 官網表格裡州別欄位的各種寫法
 STATE_ALIASES = {
     "queensland": "qld", "qld": "qld",

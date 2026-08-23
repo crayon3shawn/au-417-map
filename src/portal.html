@@ -88,7 +88,9 @@ h1{margin:0 0 6px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-
 svg.au{display:block;width:100%;height:auto;background:var(--paper-2);
   border:1px solid var(--line);border-radius:6px}
 .st{cursor:pointer;stroke:var(--edge);stroke-width:1;stroke-linejoin:round;fill-opacity:var(--fill-a)}
-.st.nomap{fill-opacity:calc(var(--fill-a) * .4);cursor:default}
+/* 「沒有地圖」用虛線邊框表示，不用透明度——降透明度會被讀成「比較不合格」，
+   而 SA、TAS、NT 全境都算，那樣講就反了。 */
+.st.nomap{cursor:default;stroke-dasharray:4 3}
 .st:not(.nomap):hover{fill-opacity:.92}
 .stlbl{fill:var(--ink);font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
   paint-order:stroke;stroke:var(--halo);stroke-width:3;stroke-linejoin:round;
@@ -111,6 +113,12 @@ a.card:hover{border-color:var(--ink-3);background:var(--sunk)}
 .legend2 span{display:flex;align-items:center;gap:5px}
 .legend2 i{width:9px;height:9px;border-radius:2px;background:var(--sw)}
 .legend2 b{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--ink)}
+.allwork{margin-top:8px;font-size:11.5px;line-height:1.5;color:var(--ink-2)}
+.allwork b{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--ink)}
+.card.off{opacity:1}
+.card.off .go{color:var(--c-work);font-weight:700}
+.card.nomap{opacity:.62}
+.card.nomap .go{color:var(--ink-3)}
 
 .notes{margin-top:38px;padding-top:22px;border-top:1px solid var(--line);
   display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
@@ -216,15 +224,20 @@ for(const s of STATES){
   const rings = DATA.outlines[s.key];
   if(!rings || !rings.length) continue;   // 空陣列是 truthy，要另外擋
   const d = rings.map(r => r.map(([lo,la],i)=>(i?'L':'M')+px(lo).toFixed(2)+' '+py(la).toFixed(2)).join('')+'Z').join('');
-  const dominant = s.work >= s.rebuild ? 'work' : 'rebuild';
+  // 顏色一律反映該州的實際身分。有沒有地圖只影響能不能點，不能拿顏色表示——
+  // SA、TAS、NT 全境都算，塗成灰色（＝完全不算）會誤導。
+  const dominant = s.none > s.work && s.none > s.rebuild ? 'none'
+                 : s.work >= s.rebuild ? 'work' : 'rebuild';
   const node = el('path',{class:'st' + (s.url ? '' : ' nomap'), d,
-    fill: s.url ? CATS[dominant].c : 'var(--c-none)', 'vector-effect':'non-scaling-stroke'});
+    fill: CATS[dominant].c, 'vector-effect':'non-scaling-stroke'});
+  const t = el('title',{});
+  t.textContent = s.all_work
+    ? `${s.label}：全境都算，${s.work} 個郵區`
+    : `${s.label}：一般工地 ${s.work}、只有重建 ${s.rebuild}、不算 ${s.none}`;
+  node.appendChild(t);
   if(s.url){
     node.style.cursor = 'pointer';
     node.addEventListener('click', () => { location.href = s.url; });
-    const t = el('title',{});
-    t.textContent = `${s.label}：一般工地 ${s.work}、只有重建 ${s.rebuild}、不算 ${s.none}`;
-    node.appendChild(t);
   }
   svg.appendChild(node);
 
@@ -242,22 +255,28 @@ for(const s of STATES){
 const cards = document.getElementById('cards');
 for(const s of STATES){
   const total = s.total || 1;
-  const seg = (n, v) => `<i style="width:${(n/total*100).toFixed(1)}%;background:${v}"></i>`;
+  const seg = (n, v) => n ? `<i style="width:${(n/total*100).toFixed(1)}%;background:${v}"></i>` : '';
+  const status = s.url ? '看地圖 →' : (s.all_work ? '全境都算' : '尚無地圖');
+  const detail = s.all_work
+    ? `<div class="allwork">整個州都在 Regional Australia 名單上，
+         一般建築工地在哪裡工作都算，所以不需要地圖。共 <b>${s.work}</b> 個郵區。</div>`
+    : `<div class="legend2">
+        <span style="--sw:var(--c-work)"><i></i>一般工地 <b>${s.work}</b></span>
+        <span style="--sw:var(--c-rebuild)"><i></i>只有重建 <b>${s.rebuild}</b></span>
+        <span style="--sw:var(--c-none)"><i></i>不算 <b>${s.none}</b></span>
+      </div>`;
   const inner = `
     <div class="top">
       <span class="nm">${esc(s.label)}</span>
       <span class="en">${esc(s.name)}</span>
-      <span class="go">${s.url ? '看地圖 →' : '尚無地圖'}</span>
+      <span class="go">${status}</span>
     </div>
     <div class="bar">${seg(s.work,'var(--c-work)')}${seg(s.rebuild,'var(--c-rebuild)')}${seg(s.none,'var(--c-none)')}</div>
-    <div class="legend2">
-      <span style="--sw:var(--c-work)"><i></i>一般工地 <b>${s.work}</b></span>
-      <span style="--sw:var(--c-rebuild)"><i></i>只有重建 <b>${s.rebuild}</b></span>
-      <span style="--sw:var(--c-none)"><i></i>不算 <b>${s.none}</b></span>
-    </div>`;
+    ${detail}`;
   let node;
   if(s.url){ node = document.createElement('a'); node.href = s.url; node.className = 'card'; }
-  else { node = document.createElement('div'); node.className = 'card off'; }
+  else { node = document.createElement('div');
+         node.className = 'card ' + (s.all_work ? 'off' : 'nomap'); }
   node.innerHTML = inner;
   cards.appendChild(node);
 }

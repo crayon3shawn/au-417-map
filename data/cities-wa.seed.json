@@ -1,0 +1,272 @@
+{
+  "note": "人工維護。locality 是要在地名資料裡查的名字；座標由 fetch/cities.py 解析。tier 1 一律顯示，tier 2 放大後才顯示。side 為標籤放在點的左（l）或右（r）。",
+  "state": "wa",
+  "cities": [
+    {
+      "name": "Perth 珀斯",
+      "locality": "Perth",
+      "postcode": "6000",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Fremantle",
+      "locality": "Fremantle",
+      "postcode": "6160",
+      "tier": 1,
+      "side": "l"
+    },
+    {
+      "name": "Bunbury",
+      "locality": "Bunbury",
+      "postcode": "6230",
+      "tier": 1,
+      "side": "l"
+    },
+    {
+      "name": "Busselton",
+      "locality": "Busselton",
+      "postcode": "6280",
+      "tier": 1,
+      "side": "l"
+    },
+    {
+      "name": "Albany",
+      "locality": "Albany",
+      "postcode": "6330",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Esperance",
+      "locality": "Esperance",
+      "postcode": "6450",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Kalgoorlie",
+      "locality": "Kalgoorlie",
+      "postcode": "6430",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Geraldton",
+      "locality": "Geraldton",
+      "postcode": "6530",
+      "tier": 1,
+      "side": "l"
+    },
+    {
+      "name": "Karratha",
+      "locality": "Karratha",
+      "postcode": "6714",
+      "tier": 1,
+      "side": "l"
+    },
+    {
+      "name": "Port Hedland",
+      "locality": "Port Hedland",
+      "postcode": "6721",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Broome",
+      "locality": "Broome",
+      "postcode": "6725",
+      "tier": 1,
+      "side": "l"
+    },
+    {
+      "name": "Newman",
+      "locality": "Newman",
+      "postcode": "6753",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Mandurah",
+      "locality": "Mandurah",
+      "postcode": "6210",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Rockingham",
+      "locality": "Rockingham",
+      "postcode": "6168",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Margaret River",
+      "locality": "Margaret River",
+      "postcode": "6285",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Augusta",
+      "locality": "Augusta",
+      "postcode": "6290",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Collie",
+      "locality": "Collie",
+      "postcode": "6225",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Manjimup",
+      "locality": "Manjimup",
+      "postcode": "6258",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Bridgetown",
+      "locality": "Bridgetown",
+      "postcode": "6255",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Northam",
+      "locality": "Northam",
+      "postcode": "6401",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "York",
+      "locality": "York",
+      "postcode": "6302",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Merredin",
+      "locality": "Merredin",
+      "postcode": "6415",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Narrogin",
+      "locality": "Narrogin",
+      "postcode": "6312",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Katanning",
+      "locality": "Katanning",
+      "postcode": "6317",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Moora",
+      "locality": "Moora",
+      "postcode": "6510",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Jurien Bay",
+      "locality": "Jurien Bay",
+      "postcode": "6516",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Dongara",
+      "locality": "Dongara",
+      "postcode": "6525",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Denham",
+      "locality": "Denham",
+      "postcode": "6537",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Carnarvon",
+      "locality": "Carnarvon",
+      "postcode": "6701",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Exmouth",
+      "locality": "Exmouth",
+      "postcode": "6707",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Tom Price",
+      "locality": "Tom Price",
+      "postcode": "6751",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Derby",
+      "locality": "Derby",
+      "postcode": "6728",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Kununurra",
+      "locality": "Kununurra",
+      "postcode": "6743",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Halls Creek",
+      "locality": "Halls Creek",
+      "postcode": "6770",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Fitzroy Crossing",
+      "locality": "Fitzroy Crossing",
+      "postcode": "6765",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Laverton",
+      "locality": "Laverton",
+      "postcode": "6440",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Leonora",
+      "locality": "Leonora",
+      "postcode": "6438",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Norseman",
+      "locality": "Norseman",
+      "postcode": "6443",
+      "tier": 2,
+      "side": "r"
+    }
+  ]
+}

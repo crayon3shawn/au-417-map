@@ -1,5 +1,5 @@
 STATE ?= qld
-STATES ?= qld nsw vic
+STATES ?= qld nsw vic wa
 PORT  ?= 8731
 
 .PHONY: help update build all portal serve check test clean

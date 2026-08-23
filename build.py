@@ -19,7 +19,7 @@ INDUSTRY = "construction"   # 這份地圖的取向。換產業要看的地區�
 BIT_WORK, BIT_FIRE, BIT_DISASTER = 1, 2, 4   # 位元旗標
 
 TITLES = {"qld": "昆士蘭 417 集簽地圖", "nsw": "新南威爾斯 417 集簽地圖",
-          "vic": "維多利亞 417 集簽地圖"}
+          "vic": "維多利亞 417 集簽地圖", "wa": "西澳 417 集簽地圖"}
 LABELS = {"qld": "昆士蘭", "nsw": "新南威爾斯", "vic": "維多利亞",
           "sa": "南澳", "wa": "西澳", "tas": "塔斯馬尼亞",
           "nt": "北領地", "act": "首都領地"}
@@ -27,6 +27,7 @@ EXCLUDED = {
     "qld": "布里斯本市區與黃金海岸多數郵區不在名單上。",
     "nsw": "雪梨、紐卡索、臥龍崗、中央海岸的郵區不在名單上。",
     "vic": "墨爾本都會區的郵區不在名單上。",
+    "wa": "珀斯都會區的郵區不在名單上。",
 }
 COORD_DP = 3          # 約 110 公尺，與邊界抓取的 165 公尺概化容差相稱
 
@@ -109,6 +110,13 @@ def categorise(rings, flags):
     return c
 
 
+def ring_centroid(rings):
+    """取最大環的平均點當代表座標。搜尋定位用，不需要精確的幾何重心。"""
+    big = max(rings, key=len)
+    return (round(sum(x for x, _ in big) / len(big), 4),
+            round(sum(y for _, y in big) / len(big), 4))
+
+
 def bbox(rings):
     xs = [x for r in rings for x, y in r]
     ys = [y for r in rings for x, y in r]
@@ -132,11 +140,16 @@ def main(state):
         raise SystemExit(f"{ind['label']}在 {VISA} 沒有這一項產業，無法建圖")
 
     # 展開成每個郵區一組位元旗標。災後重建是獨立於產業的另一條路。
+    #
+    # 跨全澳取聯集，不是只看本州：郵區的合格性是郵區本身的屬性，不該隨你
+    # 看哪一頁而變。0872 橫跨 NT／WA／SA，只出現在 NT 的 regional 表
+    # （「全境皆可」），逐州算的話在 WA 頁會被誤判成不是 regional。
     flags = {}
     for area, bit in [(a, BIT_WORK) for a in work_areas] + \
                      [("bushfire", BIT_FIRE), ("disaster", BIT_DISASTER)]:
-        for pc in expand(pcdata["areas"][VISA].get(area, {}).get(state), state):
-            flags[pc] = flags.get(pc, 0) | bit
+        for st in STATES:
+            for pc in expand(pcdata["areas"][VISA].get(area, {}).get(st), st):
+                flags[pc] = flags.get(pc, 0) | bit
     if not flags:
         raise SystemExit(f"{state} 沒有任何合格郵區，資料可能有問題")
 
@@ -145,9 +158,22 @@ def main(state):
     # 不然被篩掉的地方會變成空洞，看不出那裡是哪個郵區。
     rings = poa["rings"]
 
+    # 跨州郵區（例如 0872）的地名資料在別州的檔案裡，本州查不到。
+    # 有面卻沒地名的，用全澳索引補地名、用多邊形重心補座標，
+    # 否則點下去會顯示「不在合格清單上」——但它明明是綠的。
+    national = {}
+    idx_path = ROOT / "data" / "portal-index.json"
+    if idx_path.exists():
+        national = load(idx_path)["postcodes"]
+
     records, no_coord, non_geo = [], [], []
     for pc in sorted(flags):
         d = loc.get(str(pc))
+        if not d and str(pc) in rings:
+            n = national.get(str(pc))
+            lon, lat = ring_centroid(rings[str(pc)])
+            d = {"lon": lon, "lat": lat,
+                 "names": [n[1]] if n else [f"郵區 {pc}"], "n_names": 1}
         if not d:
             no_coord.append(pc)
             continue
