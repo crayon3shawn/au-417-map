@@ -1,0 +1,392 @@
+{
+  "cities": [
+    {
+      "lat": -33.8708,
+      "lon": 151.2073,
+      "name": "Sydney 雪梨",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -32.9272,
+      "lon": 151.7795,
+      "name": "Newcastle",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -34.4278,
+      "lon": 150.8931,
+      "name": "Wollongong",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -33.4267,
+      "lon": 151.3417,
+      "name": "Central Coast 中央海岸",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -30.2986,
+      "lon": 153.1094,
+      "name": "Coffs Harbour",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -31.4333,
+      "lon": 152.9,
+      "name": "Port Macquarie",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -28.6474,
+      "lon": 153.602,
+      "name": "Byron Bay 拜倫灣",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -28.8093,
+      "lon": 153.2883,
+      "name": "Lismore",
+      "side": "l",
+      "tier": 1
+    },
+    {
+      "lat": -31.0927,
+      "lon": 150.932,
+      "name": "Tamworth",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -32.2315,
+      "lon": 148.633,
+      "name": "Dubbo",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -33.2833,
+      "lon": 149.1,
+      "name": "Orange",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -33.4193,
+      "lon": 149.5775,
+      "name": "Bathurst",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -35.1082,
+      "lon": 147.3598,
+      "name": "Wagga Wagga",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -36.0737,
+      "lon": 146.9135,
+      "name": "Albury",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -31.9539,
+      "lon": 141.4539,
+      "name": "Broken Hill",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -34.8833,
+      "lon": 150.6,
+      "name": "Nowra",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -28.1786,
+      "lon": 153.5157,
+      "name": "Tweed Heads",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -28.838,
+      "lon": 153.5629,
+      "name": "Ballina",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -29.6817,
+      "lon": 152.9337,
+      "name": "Grafton",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -31.0605,
+      "lon": 152.8482,
+      "name": "Kempsey",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -31.8895,
+      "lon": 152.4444,
+      "name": "Taree",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -32.1806,
+      "lon": 152.5117,
+      "name": "Forster",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -30.5016,
+      "lon": 151.6662,
+      "name": "Armidale",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -29.7628,
+      "lon": 151.1103,
+      "name": "Inverell",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -29.4658,
+      "lon": 149.8339,
+      "name": "Moree",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -30.3324,
+      "lon": 149.7812,
+      "name": "Narrabri",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -30.9923,
+      "lon": 150.2369,
+      "name": "Gunnedah",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -32.2848,
+      "lon": 150.905,
+      "name": "Muswellbrook",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -32.5695,
+      "lon": 151.1788,
+      "name": "Singleton",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -32.8345,
+      "lon": 151.3624,
+      "name": "Cessnock",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -32.7384,
+      "lon": 151.5492,
+      "name": "Maitland",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -32.6145,
+      "lon": 149.5733,
+      "name": "Mudgee",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -33.1373,
+      "lon": 148.1747,
+      "name": "Parkes",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -33.3799,
+      "lon": 148.0067,
+      "name": "Forbes",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -33.8281,
+      "lon": 148.6779,
+      "name": "Cowra",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -34.3,
+      "lon": 148.3,
+      "name": "Young",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -34.7479,
+      "lon": 149.7277,
+      "name": "Goulburn",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -35.353,
+      "lon": 149.2309,
+      "name": "Queanbeyan",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -36.2269,
+      "lon": 149.1298,
+      "name": "Cooma",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -36.6889,
+      "lon": 149.8416,
+      "name": "Bega",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -35.7144,
+      "lon": 150.1795,
+      "name": "Batemans Bay",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -36.8875,
+      "lon": 149.9059,
+      "name": "Merimbula",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -34.2801,
+      "lon": 146.0455,
+      "name": "Griffith",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -34.5667,
+      "lon": 146.4,
+      "name": "Leeton",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -35.5282,
+      "lon": 144.9566,
+      "name": "Deniliquin",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -34.5005,
+      "lon": 144.8451,
+      "name": "Hay",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -31.4958,
+      "lon": 145.8389,
+      "name": "Cobar",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -30.0888,
+      "lon": 145.9378,
+      "name": "Bourke",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -30.0268,
+      "lon": 148.1231,
+      "name": "Walgett",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -31.2747,
+      "lon": 149.2804,
+      "name": "Coonabarabran",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -33.7125,
+      "lon": 150.3119,
+      "name": "Katoomba",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -33.4827,
+      "lon": 150.157,
+      "name": "Lithgow",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -34.445,
+      "lon": 147.5361,
+      "name": "Temora",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -35.3208,
+      "lon": 148.2325,
+      "name": "Tumut",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -34.8261,
+      "lon": 148.9143,
+      "name": "Yass",
+      "side": "l",
+      "tier": 2
+    }
+  ],
+  "note": "座標由 fetch/cities.py 從地名資料解析，請改 seed 檔而非本檔。",
+  "source": "https://raw.githubusercontent.com/matthewproctor/australianpostcodes/master/australian_postcodes.csv",
+  "state": "nsw"
+}

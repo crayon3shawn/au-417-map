@@ -1,4 +1,4 @@
-# 昆士蘭 417 集簽地圖
+# 澳洲 417／462 集簽地圖
 
 澳洲打工度假簽證（417 / 462）集簽合格郵遞區號的互動地圖，以**建築工地**為取向。
 郵區以整片色塊渲染，可切換 regional、叢林大火宣告區、天災宣告區三個圖層。
@@ -8,9 +8,12 @@
 ## 快速開始
 
 ```bash
-make build          # 用現有 data/ 產生 dist/qld.html
-make serve          # 建置並在 http://127.0.0.1:8731/qld.html 預覽
+make build                # dist/qld.html
+make build STATE=nsw      # dist/nsw.html
+make serve                # 建置並在 http://127.0.0.1:8731/qld.html 預覽
 ```
+
+目前已建 **QLD** 與 **NSW** 兩州，各自獨立一頁。
 
 `make build` 不連網。要更新資料才需要 `make update`。
 
@@ -22,7 +25,7 @@ make serve          # 建置並在 http://127.0.0.1:8731/qld.html 預覽
 | 郵區邊界多邊形 | ABS ArcGIS，ASGS2021 POA_GEN 圖層 | `fetch/boundaries.py` |
 | 郵區地區名與中心座標 | [matthewproctor/australianpostcodes](https://github.com/matthewproctor/australianpostcodes) | `fetch/localities.py` |
 | 州界輪廓 | [rowanhogan/australian-states](https://github.com/rowanhogan/australian-states) | `fetch/basemap.py` |
-| 城市標註 | 人工維護 | 直接編輯 `data/cities-qld.json` |
+| 城市標註 | 人工維護清單，座標自動解析 | `fetch/cities.py`（改 `data/cities-<state>.seed.json`）|
 
 ## 架構：抓取 → 凍結 → 建置
 
@@ -63,18 +66,42 @@ make build
 
 `--keep-raw` 會把原始 HTML 存到 `data/raw/`（不進版控）供人工核對。
 
+## 效能
+
+**一州一頁**，不把多州塞進同一份 HTML —— 這是控制成本最有效的一件事。
+
+單頁內的兩個關鍵作法：
+
+* **一個郵區一條 path。** 邊界與填色不分兩層，沒被篩選到就 `fill-opacity: 0`，
+  只剩邊界線。篩選只是加減一個 class，不動幾何。這讓節點數直接減半。
+* **path 字串在 build 端烘好，投影交給 SVG group transform。**
+  資料維持原始經緯度，前端啟動時不必逐點做字串運算（NSW 有 8 萬多個點）。
+  座標精度 3 位小數（約 110 公尺），與邊界概化的 165 公尺容差相稱。
+
+實測（1280×860）：
+
+| | path 數 | SVG 節點 | 頁面大小 | 篩選切換 |
+|---|---|---|---|---|
+| QLD 改版前 | 872 | 1035 | 1353 KB | — |
+| QLD 現在 | 434 | 598 | 1094 KB | 0.6 ms |
+| NSW 現在 | 614 | 817 | 1397 KB | 0.8 ms |
+
+版面尺寸（字級、點徑）以**目標螢幕像素**定義再換算成世界單位。
+各州視野比例不同（QLD 貼高度、NSW 貼寬度），寫死世界單位會讓字忽大忽小。
+
 ## 加一個州
 
-資料層是全澳設計的，`data/postcodes.json` 已含八州。要加 NSW：
+資料層是全澳設計的，`data/postcodes.json` 已含八州。以 VIC 為例：
 
 ```bash
-make update STATE=nsw
-# 建立 data/cities-nsw.json（照 cities-qld.json 的格式）
-make build STATE=nsw
+make update STATE=vic                  # 郵區清單、邊界、地名、州界
+# 建立 data/cities-vic.seed.json（照 cities-qld.seed.json 的格式）
+python3 fetch/cities.py vic            # 解析城市座標
+make build STATE=vic
 ```
 
-`build.py` 的 `TITLES` 可加該州標題。投影是等距長方投影加緯度餘弦修正，
-`src/template.html` 會依資料自動算出視野範圍，不需要改。
+`build.py` 的 `TITLES`、`LABELS`、`EXCLUDED` 各加一行該州的文案。
+其餘不用改：視野範圍、字級、南回歸線畫不畫，樣板都會依資料自行決定。
 
 ## 417 與 462
 

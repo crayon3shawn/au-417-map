@@ -1,258 +1,301 @@
 {
-  "note": "人工維護。tier 1 一律顯示，tier 2 放大 2 倍後才出現。座標為市中心。 Thursday Island 已移除：其島嶼多邊形小於邊界抓取的面積門檻，標籤會浮在空白海面上。",
-  "state": "qld",
   "cities": [
     {
-      "name": "Brisbane 布里斯本",
-      "lon": 153.0251,
       "lat": -27.4698,
+      "lon": 153.025,
+      "name": "Brisbane 布里斯本",
+      "side": "r",
       "tier": 1
     },
     {
+      "lat": -28.0,
+      "lon": 153.4167,
       "name": "Gold Coast 黃金海岸",
-      "lon": 153.4,
-      "lat": -28.0167,
+      "side": "r",
       "tier": 1
     },
     {
-      "name": "Sunshine Coast 陽光海岸",
-      "lon": 153.0667,
       "lat": -26.65,
+      "lon": 153.1,
+      "name": "Sunshine Coast 陽光海岸",
+      "side": "r",
       "tier": 1
     },
     {
+      "lat": -27.5565,
+      "lon": 151.9533,
       "name": "Toowoomba",
-      "lon": 151.9507,
-      "lat": -27.5598,
+      "side": "l",
       "tier": 1
     },
     {
-      "name": "Cairns 凱恩斯",
-      "lon": 145.7781,
       "lat": -16.9186,
+      "lon": 145.7781,
+      "name": "Cairns 凱恩斯",
+      "side": "r",
       "tier": 1
     },
     {
-      "name": "Townsville",
-      "lon": 146.8169,
       "lat": -19.259,
+      "lon": 146.8169,
+      "name": "Townsville",
+      "side": "r",
       "tier": 1
     },
     {
+      "lat": -21.1425,
+      "lon": 149.1821,
       "name": "Mackay",
-      "lon": 149.1861,
-      "lat": -21.1411,
+      "side": "r",
       "tier": 1
     },
     {
+      "lat": -23.3791,
+      "lon": 150.51,
       "name": "Rockhampton",
-      "lon": 150.5136,
-      "lat": -23.3781,
+      "side": "r",
       "tier": 1
     },
     {
+      "lat": -24.867,
+      "lon": 152.351,
       "name": "Bundaberg",
-      "lon": 152.3489,
-      "lat": -24.8661,
+      "side": "r",
       "tier": 1
     },
     {
+      "lat": -25.2813,
+      "lon": 152.8294,
       "name": "Hervey Bay",
-      "lon": 152.8535,
-      "lat": -25.2986,
+      "side": "r",
       "tier": 1
     },
     {
+      "lat": -23.8416,
+      "lon": 151.2498,
       "name": "Gladstone",
-      "lon": 151.2569,
-      "lat": -23.8489,
+      "side": "r",
       "tier": 1
     },
     {
-      "name": "Mount Isa",
-      "lon": 139.4927,
       "lat": -20.7256,
+      "lon": 139.4927,
+      "name": "Mount Isa",
+      "side": "r",
       "tier": 1
     },
     {
+      "lat": -26.1834,
+      "lon": 152.6657,
       "name": "Gympie",
-      "lon": 152.665,
-      "lat": -26.19,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -25.5233,
+      "lon": 152.6971,
       "name": "Maryborough",
-      "lon": 152.7,
-      "lat": -25.54,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -28.2157,
+      "lon": 152.0282,
       "name": "Warwick",
-      "lon": 152.035,
-      "lat": -28.2196,
+      "side": "l",
       "tier": 2
     },
     {
+      "lat": -28.66,
+      "lon": 151.9376,
       "name": "Stanthorpe",
-      "lon": 151.933,
-      "lat": -28.656,
+      "side": "l",
       "tier": 2
     },
     {
+      "lat": -28.5387,
+      "lon": 150.2983,
       "name": "Goondiwindi",
-      "lon": 150.309,
-      "lat": -28.546,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -27.1944,
+      "lon": 151.266,
       "name": "Dalby",
-      "lon": 151.26,
-      "lat": -27.18,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -26.5309,
+      "lon": 151.84,
       "name": "Kingaroy",
-      "lon": 151.839,
-      "lat": -26.541,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -26.5694,
+      "lon": 148.7838,
       "name": "Roma",
-      "lon": 148.787,
-      "lat": -26.57,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -26.4021,
+      "lon": 146.2454,
       "name": "Charleville",
-      "lon": 146.24,
-      "lat": -26.403,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -23.4403,
+      "lon": 144.2506,
       "name": "Longreach",
-      "lon": 144.251,
-      "lat": -23.442,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -22.3913,
+      "lon": 143.0381,
       "name": "Winton",
-      "lon": 143.04,
-      "lat": -22.39,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -23.5273,
+      "lon": 148.1646,
       "name": "Emerald",
-      "lon": 148.1594,
-      "lat": -23.5275,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -24.3977,
+      "lon": 150.5164,
       "name": "Biloela",
-      "lon": 150.515,
-      "lat": -24.406,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -23.1333,
+      "lon": 150.7333,
       "name": "Yeppoon",
-      "lon": 150.742,
-      "lat": -23.129,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -22.0061,
+      "lon": 148.0398,
       "name": "Moranbah",
-      "lon": 148.046,
-      "lat": -22.001,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -21.4167,
+      "lon": 149.2167,
       "name": "Sarina",
-      "lon": 149.217,
-      "lat": -21.426,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -20.2675,
+      "lon": 148.7169,
       "name": "Airlie Beach",
-      "lon": 148.718,
-      "lat": -20.269,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -20.0121,
+      "lon": 148.2463,
       "name": "Bowen",
-      "lon": 148.245,
-      "lat": -20.009,
+      "side": "l",
       "tier": 2
     },
     {
-      "name": "Charters Towers",
-      "lon": 146.262,
       "lat": -20.077,
+      "lon": 146.26,
+      "name": "Charters Towers",
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -18.6494,
+      "lon": 146.1625,
       "name": "Ingham",
-      "lon": 146.16,
-      "lat": -18.65,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -17.5226,
+      "lon": 146.0285,
       "name": "Innisfail",
-      "lon": 146.03,
-      "lat": -17.522,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -17.2661,
+      "lon": 145.4859,
       "name": "Atherton",
-      "lon": 145.477,
-      "lat": -17.268,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -17.0019,
+      "lon": 145.4389,
       "name": "Mareeba",
-      "lon": 145.42,
-      "lat": -17.0,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -16.4836,
+      "lon": 145.4653,
       "name": "Port Douglas",
-      "lon": 145.465,
-      "lat": -16.484,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -15.4758,
+      "lon": 145.2471,
       "name": "Cooktown",
-      "lon": 145.25,
-      "lat": -15.467,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -12.6493,
+      "lon": 141.847,
       "name": "Weipa",
-      "lon": 141.879,
-      "lat": -12.627,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -17.6742,
+      "lon": 141.0752,
       "name": "Normanton",
-      "lon": 141.077,
-      "lat": -17.671,
+      "side": "r",
       "tier": 2
     },
     {
+      "lat": -27.0667,
+      "lon": 152.9667,
       "name": "Caboolture",
-      "lon": 152.951,
-      "lat": -27.085,
+      "side": "l",
       "tier": 2
     },
     {
+      "lat": -27.5636,
+      "lon": 152.28,
       "name": "Gatton",
-      "lon": 152.277,
-      "lat": -27.556,
+      "side": "l",
       "tier": 2
     },
     {
+      "lat": -27.9882,
+      "lon": 153.0019,
       "name": "Beaudesert",
-      "lon": 153.003,
-      "lat": -27.988,
+      "side": "l",
       "tier": 2
     }
-  ]
+  ],
+  "note": "座標由 fetch/cities.py 從地名資料解析，請改 seed 檔而非本檔。",
+  "source": "https://raw.githubusercontent.com/matthewproctor/australianpostcodes/master/australian_postcodes.csv",
+  "state": "qld"
 }

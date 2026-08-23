@@ -125,18 +125,20 @@ svg.map.drag{cursor:grabbing}
 .tropic{stroke:var(--ink-3);stroke-width:.9;stroke-dasharray:5 4;fill:none;opacity:.6}
 .tropiclbl{fill:var(--ink-3);font-family:"Barlow Condensed",sans-serif;font-weight:600;
   letter-spacing:.12em;text-transform:uppercase}
-.poabase{fill:none;stroke:var(--grid);stroke-width:.7;stroke-linejoin:round;cursor:pointer}
-.poabase:hover{stroke:var(--ink-3);stroke-width:1.4}
-.poabase.sel{stroke:var(--ink);stroke-width:2.2}
-.poa{stroke:var(--edge);stroke-width:.8;fill-opacity:var(--fill-a);cursor:pointer;stroke-linejoin:round}
-.poa:hover{fill-opacity:.92}
-.poa.sel{stroke:var(--ink);stroke-width:2.2;fill-opacity:.95}
+/* 每個郵區只有一條 path。沒被篩選到時 fill-opacity 為 0，只剩邊界線，
+   所以永遠看得到郵區格線，而切換篩選只是加減一個 class，不動幾何。 */
+.poa{fill-opacity:0;stroke:var(--grid);stroke-width:.7;stroke-linejoin:round;cursor:pointer}
+.poa.on{fill-opacity:var(--fill-a);stroke:var(--edge);stroke-width:.8}
+.poa:hover{stroke:var(--ink-3);stroke-width:1.4}
+.poa.on:hover{fill-opacity:.92;stroke-width:1.4}
+.poa.sel,.poa.on.sel{stroke:var(--ink);stroke-width:2.2}
+.poa.on.sel{fill-opacity:.95}
 .stray{fill:var(--ink-3);stroke:var(--halo);stroke-width:1;cursor:pointer}
 .city circle{fill:var(--ink);stroke:var(--halo);stroke-linejoin:round}
 .city text{fill:var(--ink);font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
   paint-order:stroke;stroke:var(--halo);stroke-linejoin:round}
-.city.t2{opacity:0}
-.city.t2.on{opacity:1}
+.city.t2{display:none}
+.city.t2.on{display:inline}
 
 .zoom{position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;gap:5px}
 .zoom button{width:34px;height:34px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);
@@ -181,7 +183,7 @@ svg.map.drag{cursor:grabbing}
         <div class="layers">
           <label class="lay" style="--sw:var(--c-reg)">
             <input type="checkbox" id="L1" checked>
-            <span class="nm">Regional Australia（QLD）<small>一般建築工地就算集簽</small></span>
+            <span class="nm">Regional Australia（<span id="statelbl"></span>）<small>一般建築工地就算集簽</small></span>
             <span class="ct" id="c1"></span>
           </label>
           <label class="lay" style="--sw:var(--c-fire)">
@@ -223,7 +225,7 @@ svg.map.drag{cursor:grabbing}
       <section class="blk">
         <span class="eyebrow">給工地的三個重點</span>
         <div class="facts">
-          <p><b>1. 一般工地只認 regional。</b>建築業在 Regional Australia 郵區內的工作才算集簽。布里斯本市區、黃金海岸多數郵區不在名單上。</p>
+          <p><b>1. 一般工地只認 regional。</b>建築業在 Regional Australia 郵區內的工作才算集簽。<span id="excluded"></span></p>
           <p><b>2. 災區是另一條路。</b>被宣告為災區的郵區，就算不在 regional 名單裡，做<b>災後重建</b>的土建、拆除、修繕、道路橋樑一樣算，志工也算。但同一個郵區的一般新建案不算。</p>
           <p><b>3. 二簽 88 天、三簽 179 天。</b>算的是等同全職的工作天數，不能壓縮在比 3 個月／6 個月更短的期間內完成。</p>
           <p><b>4. 417 與 462。</b><span id="visanote"></span></p>
@@ -274,6 +276,8 @@ const PC = DATA.postcodes, RINGS = DATA.outline, POA = DATA.poa, CITIES = DATA.c
 // 頁首出處與 417/462 等同性由資料決定，不寫死在樣板裡
 document.getElementById('stamp').textContent = META.stamp;
 document.getElementById('visanote').textContent = META.visa_note;
+document.getElementById('statelbl').textContent = META.state_label;
+document.getElementById('excluded').textContent = META.excluded_note;
 
 const COS = Math.cos(20 * Math.PI / 180);
 const px = lon => lon * COS, py = lat => -lat;
@@ -281,90 +285,97 @@ const NS = 'http://www.w3.org/2000/svg';
 const svg = document.getElementById('map');
 const el = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
 
-let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;
-for (const r of RINGS) for (const [lo,la] of r){
-  const x=px(lo), y=py(la);
-  if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y;
-}
-const padX=(x1-x0)*0.04, padY=(y1-y0)*0.04, padE=2.05;   // 東側多留海面給城市標籤
+const [minLon, minLat, maxLon, maxLat] = META.bbox;
+const x0=px(minLon), x1=px(maxLon), y0=py(maxLat), y1=py(minLat);
+const padX=(x1-x0)*0.04, padY=(y1-y0)*0.04, padE=(x1-x0)*0.13;  // 東側多留海面給城市標籤
 const VB={x:x0-padX, y:y0-padY, w:(x1-x0)+padX+padE, h:(y1-y0)+padY*2};
+// 字級與點徑以「目標螢幕像素」定義，再換算成世界單位。
+// 各州的視野比例不同（QLD 貼高度、NSW 貼寬度），寫死世界單位會讓字忽大忽小。
+const PX = {lbl1:11.5, lbl2:9.5, dot1:3.2, dot2:2.3, halo:1.5, gap:5, trop:8.5, stray:2.2};
+const SZ = {};
+function sizeToViewport(){
+  const r = svg.getBoundingClientRect();
+  const perUnit = Math.min(r.width / VB.w, r.height / VB.h) || 1;   // preserveAspectRatio meet
+  for(const key in PX) SZ[key] = PX[key] / perUnit;
+}
 svg.setAttribute('viewBox', `${VB.x} ${VB.y} ${VB.w} ${VB.h}`);
 svg.setAttribute('preserveAspectRatio','xMidYMid meet');
+sizeToViewport();
 const world = el('g',{}); svg.appendChild(world);
+// 多邊形資料維持原始經緯度，投影交給這個 group 的 transform。
+// 這樣 build 出來的 path 不必內嵌投影，啟動時也不用逐點換算。
+const proj = el('g',{transform:`scale(${COS} -1)`}); 
+const over = el('g',{});          // 需要在 JS 端算座標的東西（城市、小點、格線）
+world.appendChild(proj); world.appendChild(over);
 
 const grat = el('g',{class:'grat'});
 for(let lon=138; lon<=154; lon+=2)
   grat.appendChild(el('line',{x1:px(lon),y1:VB.y,x2:px(lon),y2:VB.y+VB.h,'vector-effect':'non-scaling-stroke'}));
 for(let lat=-10; lat>=-30; lat-=2)
   grat.appendChild(el('line',{x1:VB.x,y1:py(lat),x2:VB.x+VB.w,y2:py(lat),'vector-effect':'non-scaling-stroke'}));
-world.appendChild(grat);
+over.appendChild(grat);
 
 const coast = el('g',{class:'coast'});
-for(const r of RINGS)
-  coast.appendChild(el('path',{d:r.map(([lo,la],i)=>(i?'L':'M')+px(lo).toFixed(3)+' '+py(la).toFixed(3)).join(' ')+' Z',
-    'vector-effect':'non-scaling-stroke'}));
-world.appendChild(coast);
+coast.appendChild(el('path',{d:RINGS, 'vector-effect':'non-scaling-stroke'}));
+proj.appendChild(coast);
 
 // ---- 郵區面 ----
 const COLORS = {reg:'var(--c-reg)', fire:'var(--c-fire)', flood:'var(--c-flood)', both:'var(--c-both)'};
 const colorOf = f => (f&2)&&(f&4) ? COLORS.both : (f&2) ? COLORS.fire : (f&4) ? COLORS.flood : COLORS.reg;
 
-const basesG = el('g',{}); world.appendChild(basesG);   // 全部郵區的邊界，不受篩選影響
-const areasG = el('g',{}); world.appendChild(areasG);   // 符合篩選的色塊
-const strayG = el('g',{}); world.appendChild(strayG);   // 沒有邊界面的郵區，以小點代替
+const areasG = el('g',{}); proj.appendChild(areasG);    // 郵區面（原始經緯度）
+const strayG = el('g',{}); over.appendChild(strayG);    // 沒有邊界面的郵區，以小點代替
 const byPc = new Map();
-const baseByPc = new Map();
 const shapes = [];
+const flagOf = new Map(PC.map(r => [r[0], r[3]]));
 
-const pathOf = rings => rings
-  .map(r => r.map(([lo,la],i)=>(i?'L':'M')+px(lo).toFixed(3)+' '+py(la).toFixed(3)).join(' ')+'Z')
-  .join(' ');
+// 沒有災害宣告的先畫，讓災區的顏色疊在上層；不合格的郵區排最前面當底。
+const drawOrder = Object.keys(POA).map(Number)
+  .sort((a,b) => ((flagOf.get(a)||0) ? 1 : 0) - ((flagOf.get(b)||0) ? 1 : 0)
+              || (((flagOf.get(a)||0) & 6) ? 1 : 0) - (((flagOf.get(b)||0) & 6) ? 1 : 0));
 
-// 底層：每一個郵區都畫邊界。篩選只改變上層有沒有填色，
-// 邊界一直在，才看得出沒被選到的地方是哪些郵區。
-for(const pc in POA){
-  const p = el('path',{class:'poabase', d:pathOf(POA[pc]),
+for(const pc of drawOrder){
+  const f = flagOf.get(pc) || 0;
+  const node = el('path',{class:'poa', d:POA[pc], fill:f ? colorOf(f) : 'none',
     'vector-effect':'non-scaling-stroke', 'pointer-events':'all'});
-  p.__pc = +pc;
-  basesG.appendChild(p);
-  baseByPc.set(+pc, p);
+  node.__pc = pc;
+  areasG.appendChild(node);
+  byPc.set(pc, {node, f});
+  if(f) shapes.push(node);
 }
 
-// 沒有災害宣告的先畫，讓災區疊在上層
-const order = [...PC].sort((a,b)=>(a[3]&6?1:0)-(b[3]&6?1:0));
-for(const rec of order){
-  const [pc,lon,lat,f] = rec;
-  const rings = POA[pc];
-  let node;
-  if(rings){
-    node = el('path',{class:'poa', d:pathOf(rings), fill:colorOf(f), 'vector-effect':'non-scaling-stroke'});
-    areasG.appendChild(node);
-  } else {
-    node = el('circle',{class:'stray', cx:px(lon), cy:py(lat), r:0.09, 'vector-effect':'non-scaling-stroke'});
-    strayG.appendChild(node);
-  }
-  node.__rec = rec;
-  byPc.set(pc, {rec, node, poly:!!rings});
+// 合格但 ABS 沒有對應面的郵區，用小點標出概略位置
+for(const rec of PC){
+  const [pc,lon,lat] = rec;
+  const d = byPc.get(pc);
+  if(d){ d.rec = rec; continue; }
+  const node = el('circle',{class:'stray', cx:px(lon), cy:py(lat), r:SZ.stray,
+    'vector-effect':'non-scaling-stroke'});
+  node.__pc = pc;
+  strayG.appendChild(node);
+  byPc.set(pc, {node, f:rec[3], rec, stray:true});
   shapes.push(node);
 }
 
 // ---- 南回歸線 ----
-const tropY = py(-23.4362);
-world.appendChild(el('line',{class:'tropic',x1:VB.x,y1:tropY,x2:VB.x+VB.w,y2:tropY,'vector-effect':'non-scaling-stroke'}));
-const tlbl = el('text',{class:'tropiclbl',x:VB.x+0.25,y:tropY-0.22});
-tlbl.textContent='TROPIC OF CAPRICORN 南回歸線';
-world.appendChild(tlbl);
+// 南回歸線只在該州確實跨越時才畫（NSW 整個在它以南）
+const TROPIC = -23.4362, tropY = py(TROPIC);
+let tlbl = null;
+if(minLat < TROPIC && TROPIC < maxLat){
+  over.appendChild(el('line',{class:'tropic',x1:VB.x,y1:tropY,x2:VB.x+VB.w,y2:tropY,'vector-effect':'non-scaling-stroke'}));
+  tlbl = el('text',{class:'tropiclbl'});
+  tlbl.textContent='TROPIC OF CAPRICORN 南回歸線';
+  over.appendChild(tlbl);
+}
 
 // ---- 城市 ----
-const cityG = el('g',{}); world.appendChild(cityG);
+const cityG = el('g',{}); over.appendChild(cityG);
 const cityNodes = [];
-const LEFTLBL = new Set(['Toowoomba','Gatton','Beaudesert','Caboolture','Warwick','Stanthorpe','Bowen']);
-for(const [name, lon, lat, tier] of CITIES){
+for(const [name, lon, lat, tier, side] of CITIES){
   const g = el('g',{class:'city' + (tier===2 ? ' t2' : '')});
   const cx = px(lon), cy = py(lat);
-  const side = LEFTLBL.has(name.split(' ')[0]) ? -1 : 1;
-  g.appendChild(el('circle',{cx, cy, r:tier===1?0.14:0.10, 'stroke-width':0.07}));
-  const t = el('text',{x:cx+0.2*side, y:cy+0.11, 'text-anchor': side<0 ? 'end' : 'start'});
+  g.appendChild(el('circle',{cx, cy, r:tier===1?SZ.dot1:SZ.dot2, 'stroke-width':SZ.halo}));
+  const t = el('text',{x:cx+SZ.gap*side, y:cy+SZ.lbl1*0.26, 'text-anchor': side<0 ? 'end' : 'start'});
   t.textContent = name;
   g.appendChild(t);
   g.__c = {cx, cy, t, dot:g.firstChild, tier, side};
@@ -378,21 +389,44 @@ function apply(){
   world.setAttribute('transform', `translate(${tx} ${ty}) scale(${k})`);
   for(const g of cityNodes){
     const c = g.__c;
-    const fs = (c.tier===1 ? 0.46 : 0.36)/k;
-    c.dot.setAttribute('r', (c.tier===1?0.14:0.10)/k);
-    c.dot.setAttribute('stroke-width', 0.07/k);
+    const fs = (c.tier===1 ? SZ.lbl1 : SZ.lbl2)/k;
+    c.dot.setAttribute('r', (c.tier===1?SZ.dot1:SZ.dot2)/k);
+    c.dot.setAttribute('stroke-width', SZ.halo/k);
     c.t.setAttribute('font-size', fs);
-    c.t.setAttribute('stroke-width', 0.11/k);
-    c.t.setAttribute('x', c.cx + 0.2*c.side/k);
-    c.t.setAttribute('y', c.cy + 0.11/k);
+    c.t.setAttribute('stroke-width', SZ.halo*1.6/k);
+    c.t.setAttribute('x', c.cx + SZ.gap*c.side/k);
+    c.t.setAttribute('y', c.cy + SZ.lbl1*0.26/k);
     if(c.tier===2) g.classList.toggle('on', k >= 2);
   }
-  for(const s of strayG.children) s.setAttribute('r', 0.09/k);
-  tlbl.setAttribute('font-size', 0.34/k);
-  tlbl.setAttribute('x', VB.x + 0.25/k);
-  tlbl.setAttribute('y', tropY - 0.22/k);
+  for(const s of strayG.children) s.setAttribute('r', SZ.stray/k);
+  if(tlbl){
+    tlbl.setAttribute('font-size', SZ.trop/k);
+    tlbl.setAttribute('x', VB.x + SZ.gap/k);
+    tlbl.setAttribute('y', tropY - SZ.gap*0.7/k);
+  }
 }
 apply();
+
+// 標籤寬度要等字型載入才量得準。溢出視野就把視野撐開，
+// 免得像 Byron Bay 這種在最東端的地名被切掉。
+function fitLabels(){
+  if(!cityG.getBBox) return;
+  const bb = cityG.getBBox();
+  const pad = SZ.gap;
+  let changed = false;
+  if(bb.x + bb.width > VB.x + VB.w){ VB.w = bb.x + bb.width - VB.x + pad; changed = true; }
+  if(bb.x < VB.x){ const d = VB.x - bb.x + pad; VB.x -= d; VB.w += d; changed = true; }
+  if(bb.y < VB.y){ const d = VB.y - bb.y + pad; VB.y -= d; VB.h += d; changed = true; }
+  if(bb.y + bb.height > VB.y + VB.h){ VB.h = bb.y + bb.height - VB.y + pad; changed = true; }
+  if(changed){
+    svg.setAttribute('viewBox', `${VB.x} ${VB.y} ${VB.w} ${VB.h}`);
+    sizeToViewport();
+    apply();
+  }
+}
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitLabels);
+else fitLabels();
+addEventListener('resize', () => { sizeToViewport(); apply(); });
 
 function toBase(e){
   const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
@@ -444,12 +478,12 @@ function visible(f){
 function render(){
   let n = 0;
   for(const s of shapes){
-    const v = visible(s.__rec[3]);
-    s.style.display = v ? '' : 'none';
+    const v = visible(byPc.get(s.__pc).f);
+    s.classList.toggle('on', v);
+    if(s.classList.contains('stray')) s.style.display = v ? '' : 'none';
     if(v) n++;
   }
   document.getElementById('shown').textContent = n;
-  if(selPc !== null) select(selPc);        // 重新決定高亮該落在色塊還是底層邊界
 }
 const count = m => PC.filter(r => r[3] & m).length;
 document.getElementById('c1').textContent = count(1);
@@ -473,22 +507,16 @@ function clearSel(){ if(selNode){ selNode.classList.remove('sel'); selNode = nul
 
 function select(pc){
   selPc = pc;
+  clearSel();
   const d = byPc.get(pc);
-  if(!d){
-    clearSel();
-    const base = baseByPc.get(pc);
-    if(base){ base.classList.add('sel'); selNode = base; base.parentNode.appendChild(base); }
-    const names = OTHER[pc];
+  if(d){ d.node.classList.add('sel'); selNode = d.node; d.node.parentNode.appendChild(d.node); }
+
+  if(!d || !d.rec){
+    const names = (OTHER[pc] || [])[0];
     const where = names ? `（${esc(names.join('、'))}）` : '';
-    detail.innerHTML = `<div class="empty">郵遞區號 <b class="mono">${esc(pc)}</b>${where} 不在昆士蘭的合格清單上。一般建築工地與災後重建工作都不能用它集簽。</div>`;
+    detail.innerHTML = `<div class="empty">郵遞區號 <b class="mono">${esc(pc)}</b>${where} 不在${META.state_label}的合格清單上。一般建築工地與災後重建工作都不能用它集簽。</div>`;
     return;
   }
-  clearSel();
-  // 郵區合格但被目前篩選隱藏時，色塊是 display:none，高亮要加在底層邊界上才看得見
-  const base = baseByPc.get(pc);
-  const target = (d.node.style.display === 'none' && base) ? base : d.node;
-  target.classList.add('sel'); selNode = target;
-  target.parentNode.appendChild(target);
 
   const [p, , , f, names, total] = d.rec;
   const more = total > names.length ? ` 等 ${total} 個地區` : '';
@@ -498,7 +526,7 @@ function select(pc){
   if(f&2) rows.push(`<div class="verdict" style="--vc:var(--c-fire)"><span class="dot"></span><span><b>叢林大火重建工作 → 算</b><br>2019 年 7 月 31 日之後執行的重建、拆除、整地、修繕，有給薪或志工都算。</span></div>`);
   if(f&4) rows.push(`<div class="verdict" style="--vc:var(--c-flood)"><span class="dot"></span><span><b>洪水／氣旋等天災重建工作 → 算</b><br>2021 年 12 月 31 日之後執行；申請時「Employment type」要選 flood recovery。</span></div>`);
   if(!(f&1) && (f&6)) rows.push(`<div class="note"><b>注意：</b>這個郵區只走災後重建這條路。同一個工地如果做的是一般新建案、跟災後復原無關，不能算。留好能證明工程屬於災後修復的紀錄。</div>`);
-  if(!d.poly) rows.push(`<div class="note">ABS 沒有這個郵區的對應面，地圖上以小點標示概略位置。</div>`);
+  if(d.stray) rows.push(`<div class="note">ABS 沒有這個郵區的對應面，地圖上以小點標示概略位置。</div>`);
 
   detail.innerHTML =
     `<div class="hd"><span class="pcn" style="color:${colorOf(f)}">${p}</span><span class="loc">${esc(names.join('、'))}${more}</span></div>` +
@@ -506,14 +534,13 @@ function select(pc){
 }
 
 const tip = document.getElementById('tip'), wrap = document.getElementById('mapwrap');
-const hit = e => e.target.closest('.poa, .stray, .poabase');
-const pcOf = node => node.__rec ? node.__rec[0] : node.__pc;
-svg.addEventListener('click', e => { if(drag && drag.moved) return; const t = hit(e); if(t) select(pcOf(t)); });
+const hit = e => e.target.closest('.poa, .stray');
+svg.addEventListener('click', e => { if(drag && drag.moved) return; const t = hit(e); if(t) select(t.__pc); });
 svg.addEventListener('pointerover', e => {
   const t = hit(e); if(!t) return;
-  const pc = pcOf(t);
-  const d = byPc.get(pc);
-  tip.textContent = pc + (d ? '  ' + d.rec[4][0] : (OTHER[pc] ? '  ' + OTHER[pc][0] : ''));
+  const d = byPc.get(t.__pc);
+  const names = (d && d.rec) ? d.rec[4] : (OTHER[t.__pc] || [])[0];
+  tip.textContent = t.__pc + (names ? '  ' + names[0] : '');
   tip.classList.add('on');
 });
 svg.addEventListener('pointerout', e => { if(hit(e)) tip.classList.remove('on'); });
@@ -531,7 +558,7 @@ function doSearch(){
   const n = parseInt(v,10);
   select(n);
   const d = byPc.get(n);
-  if(!d) return;
+  if(!d || !d.rec) return;
   for(const b of [1,2,4]) if((d.rec[3] & b) && !boxes[b].checked) boxes[b].checked = true;
   mode = 'or';
   for(const b of document.querySelectorAll('#mode button')) b.setAttribute('aria-pressed', String(b.dataset.m==='or'));

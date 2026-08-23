@@ -1,0 +1,391 @@
+{
+  "note": "人工維護。locality 是要在地名資料裡查的名字；座標由 fetch/cities.py 解析。tier 1 一律顯示，tier 2 放大後才顯示。side 為標籤放在點的左（l）或右（r）。",
+  "state": "nsw",
+  "cities": [
+    {
+      "name": "Sydney 雪梨",
+      "locality": "Sydney",
+      "postcode": "2000",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Newcastle",
+      "locality": "Newcastle",
+      "postcode": "2300",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Wollongong",
+      "locality": "Wollongong",
+      "postcode": "2500",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Central Coast 中央海岸",
+      "locality": "Gosford",
+      "postcode": "2250",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Coffs Harbour",
+      "locality": "Coffs Harbour",
+      "postcode": "2450",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Port Macquarie",
+      "locality": "Port Macquarie",
+      "postcode": "2444",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Byron Bay 拜倫灣",
+      "locality": "Byron Bay",
+      "postcode": "2481",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Lismore",
+      "locality": "Lismore",
+      "postcode": "2480",
+      "tier": 1,
+      "side": "l"
+    },
+    {
+      "name": "Tamworth",
+      "locality": "Tamworth",
+      "postcode": "2340",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Dubbo",
+      "locality": "Dubbo",
+      "postcode": "2830",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Orange",
+      "locality": "Orange",
+      "postcode": "2800",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Bathurst",
+      "locality": "Bathurst",
+      "postcode": "2795",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Wagga Wagga",
+      "locality": "Wagga Wagga",
+      "postcode": "2650",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Albury",
+      "locality": "Albury",
+      "postcode": "2640",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Broken Hill",
+      "locality": "Broken Hill",
+      "postcode": "2880",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Nowra",
+      "locality": "Nowra",
+      "postcode": "2541",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Tweed Heads",
+      "locality": "Tweed Heads",
+      "postcode": "2485",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Ballina",
+      "locality": "Ballina",
+      "postcode": "2478",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Grafton",
+      "locality": "Grafton",
+      "postcode": "2460",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Kempsey",
+      "locality": "Kempsey",
+      "postcode": "2440",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Taree",
+      "locality": "Taree",
+      "postcode": "2430",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Forster",
+      "locality": "Forster",
+      "postcode": "2428",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Armidale",
+      "locality": "Armidale",
+      "postcode": "2350",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Inverell",
+      "locality": "Inverell",
+      "postcode": "2360",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Moree",
+      "locality": "Moree",
+      "postcode": "2400",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Narrabri",
+      "locality": "Narrabri",
+      "postcode": "2390",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Gunnedah",
+      "locality": "Gunnedah",
+      "postcode": "2380",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Muswellbrook",
+      "locality": "Muswellbrook",
+      "postcode": "2333",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Singleton",
+      "locality": "Singleton",
+      "postcode": "2330",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Cessnock",
+      "locality": "Cessnock",
+      "postcode": "2325",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Maitland",
+      "locality": "Maitland",
+      "postcode": "2320",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Mudgee",
+      "locality": "Mudgee",
+      "postcode": "2850",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Parkes",
+      "locality": "Parkes",
+      "postcode": "2870",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Forbes",
+      "locality": "Forbes",
+      "postcode": "2871",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Cowra",
+      "locality": "Cowra",
+      "postcode": "2794",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Young",
+      "locality": "Young",
+      "postcode": "2594",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Goulburn",
+      "locality": "Goulburn",
+      "postcode": "2580",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Queanbeyan",
+      "locality": "Queanbeyan",
+      "postcode": "2620",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Cooma",
+      "locality": "Cooma",
+      "postcode": "2630",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Bega",
+      "locality": "Bega",
+      "postcode": "2550",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Batemans Bay",
+      "locality": "Batemans Bay",
+      "postcode": "2536",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Merimbula",
+      "locality": "Merimbula",
+      "postcode": "2548",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Griffith",
+      "locality": "Griffith",
+      "postcode": "2680",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Leeton",
+      "locality": "Leeton",
+      "postcode": "2705",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Deniliquin",
+      "locality": "Deniliquin",
+      "postcode": "2710",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Hay",
+      "locality": "Hay",
+      "postcode": "2711",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Cobar",
+      "locality": "Cobar",
+      "postcode": "2835",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Bourke",
+      "locality": "Bourke",
+      "postcode": "2840",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Walgett",
+      "locality": "Walgett",
+      "postcode": "2832",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Coonabarabran",
+      "locality": "Coonabarabran",
+      "postcode": "2357",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Katoomba",
+      "locality": "Katoomba",
+      "postcode": "2780",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Lithgow",
+      "locality": "Lithgow",
+      "postcode": "2790",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Temora",
+      "locality": "Temora",
+      "postcode": "2666",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Tumut",
+      "locality": "Tumut",
+      "postcode": "2720",
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Yass",
+      "locality": "Yass",
+      "postcode": "2582",
+      "tier": 2,
+      "side": "l"
+    }
+  ]
+}

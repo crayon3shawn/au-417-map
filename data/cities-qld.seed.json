@@ -1,0 +1,300 @@
+{
+  "note": "人工維護。locality 是要在地名資料裡查的名字；座標由 fetch/cities.py 解析。tier 1 一律顯示，tier 2 放大後才顯示。",
+  "state": "qld",
+  "cities": [
+    {
+      "name": "Brisbane 布里斯本",
+      "locality": "Brisbane City",
+      "postcode": "4000",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Gold Coast 黃金海岸",
+      "locality": "Surfers Paradise",
+      "postcode": "4217",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Sunshine Coast 陽光海岸",
+      "locality": "Maroochydore",
+      "postcode": "4558",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Toowoomba",
+      "locality": "Toowoomba",
+      "postcode": null,
+      "tier": 1,
+      "side": "l"
+    },
+    {
+      "name": "Cairns 凱恩斯",
+      "locality": "Cairns City",
+      "postcode": "4870",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Townsville",
+      "locality": "Townsville",
+      "postcode": null,
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Mackay",
+      "locality": "Mackay",
+      "postcode": null,
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Rockhampton",
+      "locality": "Rockhampton",
+      "postcode": null,
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Bundaberg",
+      "locality": "Bundaberg",
+      "postcode": null,
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Hervey Bay",
+      "locality": "Pialba",
+      "postcode": "4655",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Gladstone",
+      "locality": "Gladstone",
+      "postcode": null,
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Mount Isa",
+      "locality": "Mount Isa",
+      "postcode": "4825",
+      "tier": 1,
+      "side": "r"
+    },
+    {
+      "name": "Gympie",
+      "locality": "Gympie",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Maryborough",
+      "locality": "Maryborough",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Warwick",
+      "locality": "Warwick",
+      "postcode": null,
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Stanthorpe",
+      "locality": "Stanthorpe",
+      "postcode": null,
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Goondiwindi",
+      "locality": "Goondiwindi",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Dalby",
+      "locality": "Dalby",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Kingaroy",
+      "locality": "Kingaroy",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Roma",
+      "locality": "Roma",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Charleville",
+      "locality": "Charleville",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Longreach",
+      "locality": "Longreach",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Winton",
+      "locality": "Winton",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Emerald",
+      "locality": "Emerald",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Biloela",
+      "locality": "Biloela",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Yeppoon",
+      "locality": "Yeppoon",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Moranbah",
+      "locality": "Moranbah",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Sarina",
+      "locality": "Sarina",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Airlie Beach",
+      "locality": "Airlie Beach",
+      "postcode": "4802",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Bowen",
+      "locality": "Bowen",
+      "postcode": null,
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Charters Towers",
+      "locality": "Charters Towers City",
+      "postcode": "4820",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Ingham",
+      "locality": "Ingham",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Innisfail",
+      "locality": "Innisfail",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Atherton",
+      "locality": "Atherton",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Mareeba",
+      "locality": "Mareeba",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Port Douglas",
+      "locality": "Port Douglas",
+      "postcode": "4877",
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Cooktown",
+      "locality": "Cooktown",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Weipa",
+      "locality": "Weipa",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Normanton",
+      "locality": "Normanton",
+      "postcode": null,
+      "tier": 2,
+      "side": "r"
+    },
+    {
+      "name": "Caboolture",
+      "locality": "Caboolture",
+      "postcode": null,
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Gatton",
+      "locality": "Gatton",
+      "postcode": null,
+      "tier": 2,
+      "side": "l"
+    },
+    {
+      "name": "Beaudesert",
+      "locality": "Beaudesert",
+      "postcode": null,
+      "tier": 2,
+      "side": "l"
+    }
+  ]
+}
