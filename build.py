@@ -60,8 +60,12 @@ def main(state):
             continue
         records.append([pc, d["lon"], d["lat"], flags[pc], d["names"], d["n_names"]])
 
-    rings = {k: v for k, v in poa["rings"].items() if int(k) in flags}
+    # 全部郵區的邊界都送進去。前端拿它畫底層格線，篩選只影響上層填色，
+    # 不然被篩掉的地方會變成空洞，看不出那裡是哪個郵區。
+    rings = poa["rings"]
     no_poly = sorted(r[0] for r in records if str(r[0]) not in rings)
+    other = {k: [loc[k]["names"], loc[k]["n_names"]]
+             for k in rings if int(k) not in flags and k in loc}
 
     src = pcdata["sources"]
     meta = {
@@ -70,11 +74,12 @@ def main(state):
         "stamp": (f"郵區清單 Home Affairs {src[VISA]['page_last_updated']}"
                   f" · 邊界 ABS POA 2021 · 建置 {pcdata['fetched_at'][:10]}"),
         "visa_note": visa_note(pcdata, state),
-        "counts": {"eligible": len(records), "with_polygon": len(rings),
+        "counts": {"eligible": len(records), "boundaries": len(rings),
+                   "not_eligible": len(other),
                    "no_polygon": len(no_poly), "no_coordinates": len(no_coord)},
     }
 
-    payload = {"meta": meta, "postcodes": records, "poa": rings,
+    payload = {"meta": meta, "postcodes": records, "poa": rings, "other": other,
                "outline": out, "cities": [[c["name"], c["lon"], c["lat"], c["tier"]] for c in cities]}
 
     html = (ROOT / "src" / "template.html").read_text(encoding="utf-8")
@@ -87,7 +92,10 @@ def main(state):
     dest = ROOT / "dist" / f"{state}.html"
     dest.write_text(html, encoding="utf-8")
 
-    print(f"合格郵區 {len(records)}（其中 {len(rings)} 個有邊界面，{len(no_poly)} 個只有點）")
+    print(f"合格郵區 {len(records)}，畫出邊界的郵區 {len(rings)}"
+          f"（其中不合格 {len(other)} 個，只畫邊界不填色）")
+    if no_poly:
+        pass
     if no_coord:
         # 官方清單是以範圍書寫（例如 "4307 to 4499"），範圍內有大量澳洲郵政
         # 從未發行的號碼。這些查不到地區也畫不出來，摘要即可，不必逐一列出。

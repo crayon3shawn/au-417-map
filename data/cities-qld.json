@@ -1,5 +1,5 @@
 {
-  "note": "人工維護。tier 1 一律顯示，tier 2 放大 2 倍後才出現。座標為市中心。",
+  "note": "人工維護。tier 1 一律顯示，tier 2 放大 2 倍後才出現。座標為市中心。 Thursday Island 已移除：其島嶼多邊形小於邊界抓取的面積門檻，標籤會浮在空白海面上。",
   "state": "qld",
   "cities": [
     {
@@ -234,12 +234,6 @@
       "name": "Normanton",
       "lon": 141.077,
       "lat": -17.671,
-      "tier": 2
-    },
-    {
-      "name": "Thursday Island",
-      "lon": 142.219,
-      "lat": -10.583,
       "tier": 2
     },
     {

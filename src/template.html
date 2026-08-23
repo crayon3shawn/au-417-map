@@ -8,7 +8,7 @@
   --paper:#EDEFEA; --paper-2:#D8E0E1; --surface:#F8F9F6; --sunk:#E0E5DD;
   --ink:#16201C; --ink-2:#4E5B55; --ink-3:#76837C;
   --line:#C9D0C7; --line-2:#B2BCAF;
-  --land:#F0F2EC; --coast:#7C8B82; --grat:#C6CEC8; --halo:#F0F2EC;
+  --land:#F0F2EC; --coast:#7C8B82; --grat:#C6CEC8; --halo:#F0F2EC; --grid:#BFC9C2;
   --c-reg:#0F7A6B; --c-fire:#C0451A; --c-flood:#2A66A8; --c-both:#7A4B9E;
   --fill-a:0.62; --edge:rgba(22,32,28,.38);
   --warn-bg:#F6E9DC; --warn-line:#DCB894;
@@ -18,7 +18,7 @@
   --paper:#111713; --paper-2:#0C1211; --surface:#1B231E; --sunk:#0C110E;
   --ink:#E8EEE7; --ink-2:#A2B0A7; --ink-3:#7C8A82;
   --line:#2C3830; --line-2:#3A4840;
-  --land:#202A23; --coast:#586A5E; --grat:#242F28; --halo:#151C18;
+  --land:#202A23; --coast:#586A5E; --grat:#242F28; --halo:#151C18; --grid:#3B4A41;
   --c-reg:#22A78F; --c-fire:#DE6431; --c-flood:#4E8FD6; --c-both:#9E71CC;
   --fill-a:0.70; --edge:rgba(233,240,232,.30);
   --warn-bg:#2A2117; --warn-line:#4E3D26;
@@ -28,7 +28,7 @@
   --paper:#111713; --paper-2:#0C1211; --surface:#1B231E; --sunk:#0C110E;
   --ink:#E8EEE7; --ink-2:#A2B0A7; --ink-3:#7C8A82;
   --line:#2C3830; --line-2:#3A4840;
-  --land:#202A23; --coast:#586A5E; --grat:#242F28; --halo:#151C18;
+  --land:#202A23; --coast:#586A5E; --grat:#242F28; --halo:#151C18; --grid:#3B4A41;
   --c-reg:#22A78F; --c-fire:#DE6431; --c-flood:#4E8FD6; --c-both:#9E71CC;
   --fill-a:0.70; --edge:rgba(233,240,232,.30);
   --warn-bg:#2A2117; --warn-line:#4E3D26;
@@ -125,11 +125,14 @@ svg.map.drag{cursor:grabbing}
 .tropic{stroke:var(--ink-3);stroke-width:.9;stroke-dasharray:5 4;fill:none;opacity:.6}
 .tropiclbl{fill:var(--ink-3);font-family:"Barlow Condensed",sans-serif;font-weight:600;
   letter-spacing:.12em;text-transform:uppercase}
+.poabase{fill:none;stroke:var(--grid);stroke-width:.7;stroke-linejoin:round;cursor:pointer}
+.poabase:hover{stroke:var(--ink-3);stroke-width:1.4}
+.poabase.sel{stroke:var(--ink);stroke-width:2.2}
 .poa{stroke:var(--edge);stroke-width:.8;fill-opacity:var(--fill-a);cursor:pointer;stroke-linejoin:round}
 .poa:hover{fill-opacity:.92}
 .poa.sel{stroke:var(--ink);stroke-width:2.2;fill-opacity:.95}
 .stray{fill:var(--ink-3);stroke:var(--halo);stroke-width:1;cursor:pointer}
-.city circle{fill:var(--ink);stroke:none}
+.city circle{fill:var(--ink);stroke:var(--halo);stroke-linejoin:round}
 .city text{fill:var(--ink);font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
   paint-order:stroke;stroke:var(--halo);stroke-linejoin:round}
 .city.t2{opacity:0}
@@ -249,6 +252,7 @@ svg.map.drag{cursor:grabbing}
         <div class="lg" style="--sw:var(--c-fire)"><i></i><span>有叢林大火宣告</span></div>
         <div class="lg" style="--sw:var(--c-flood)"><i></i><span>有天災宣告</span></div>
         <div class="lg" style="--sw:var(--c-both)"><i></i><span>大火與天災都有宣告</span></div>
+        <div class="lg"><i style="background:none;border:1px solid var(--grid);opacity:1"></i><span>只有邊界＝目前篩選沒選到</span></div>
         <div class="lgnote">顏色跟你勾了哪個圖層無關，勾選只決定要顯示哪些郵區。災區圖層含非 regional 的郵區（例如布里斯本市區），那裡只有災後重建工作算。</div>
       </div>
       <div class="count">顯示中 <b id="shown">0</b> 個郵區</div>
@@ -264,7 +268,8 @@ svg.map.drag{cursor:grabbing}
 
 <script>
 const DATA = __DATA__;
-const PC = DATA.postcodes, RINGS = DATA.outline, POA = DATA.poa, CITIES = DATA.cities, META = DATA.meta;
+const PC = DATA.postcodes, RINGS = DATA.outline, POA = DATA.poa, CITIES = DATA.cities,
+      META = DATA.meta, OTHER = DATA.other || {};
 
 // 頁首出處與 417/462 等同性由資料決定，不寫死在樣板裡
 document.getElementById('stamp').textContent = META.stamp;
@@ -304,10 +309,26 @@ world.appendChild(coast);
 const COLORS = {reg:'var(--c-reg)', fire:'var(--c-fire)', flood:'var(--c-flood)', both:'var(--c-both)'};
 const colorOf = f => (f&2)&&(f&4) ? COLORS.both : (f&2) ? COLORS.fire : (f&4) ? COLORS.flood : COLORS.reg;
 
-const areasG = el('g',{}); world.appendChild(areasG);
-const strayG = el('g',{}); world.appendChild(strayG);
+const basesG = el('g',{}); world.appendChild(basesG);   // 全部郵區的邊界，不受篩選影響
+const areasG = el('g',{}); world.appendChild(areasG);   // 符合篩選的色塊
+const strayG = el('g',{}); world.appendChild(strayG);   // 沒有邊界面的郵區，以小點代替
 const byPc = new Map();
+const baseByPc = new Map();
 const shapes = [];
+
+const pathOf = rings => rings
+  .map(r => r.map(([lo,la],i)=>(i?'L':'M')+px(lo).toFixed(3)+' '+py(la).toFixed(3)).join(' ')+'Z')
+  .join(' ');
+
+// 底層：每一個郵區都畫邊界。篩選只改變上層有沒有填色，
+// 邊界一直在，才看得出沒被選到的地方是哪些郵區。
+for(const pc in POA){
+  const p = el('path',{class:'poabase', d:pathOf(POA[pc]),
+    'vector-effect':'non-scaling-stroke', 'pointer-events':'all'});
+  p.__pc = +pc;
+  basesG.appendChild(p);
+  baseByPc.set(+pc, p);
+}
 
 // 沒有災害宣告的先畫，讓災區疊在上層
 const order = [...PC].sort((a,b)=>(a[3]&6?1:0)-(b[3]&6?1:0));
@@ -316,8 +337,7 @@ for(const rec of order){
   const rings = POA[pc];
   let node;
   if(rings){
-    const d = rings.map(r => r.map(([lo,la],i)=>(i?'L':'M')+px(lo).toFixed(3)+' '+py(la).toFixed(3)).join(' ')+'Z').join(' ');
-    node = el('path',{class:'poa', d, fill:colorOf(f), 'vector-effect':'non-scaling-stroke'});
+    node = el('path',{class:'poa', d:pathOf(rings), fill:colorOf(f), 'vector-effect':'non-scaling-stroke'});
     areasG.appendChild(node);
   } else {
     node = el('circle',{class:'stray', cx:px(lon), cy:py(lat), r:0.09, 'vector-effect':'non-scaling-stroke'});
@@ -343,7 +363,7 @@ for(const [name, lon, lat, tier] of CITIES){
   const g = el('g',{class:'city' + (tier===2 ? ' t2' : '')});
   const cx = px(lon), cy = py(lat);
   const side = LEFTLBL.has(name.split(' ')[0]) ? -1 : 1;
-  g.appendChild(el('circle',{cx, cy, r:tier===1?0.09:0.06}));
+  g.appendChild(el('circle',{cx, cy, r:tier===1?0.14:0.10, 'stroke-width':0.07}));
   const t = el('text',{x:cx+0.2*side, y:cy+0.11, 'text-anchor': side<0 ? 'end' : 'start'});
   t.textContent = name;
   g.appendChild(t);
@@ -359,7 +379,8 @@ function apply(){
   for(const g of cityNodes){
     const c = g.__c;
     const fs = (c.tier===1 ? 0.46 : 0.36)/k;
-    c.dot.setAttribute('r', (c.tier===1?0.09:0.06)/k);
+    c.dot.setAttribute('r', (c.tier===1?0.14:0.10)/k);
+    c.dot.setAttribute('stroke-width', 0.07/k);
     c.t.setAttribute('font-size', fs);
     c.t.setAttribute('stroke-width', 0.11/k);
     c.t.setAttribute('x', c.cx + 0.2*c.side/k);
@@ -411,6 +432,8 @@ function focusOn(rec, nk){
 }
 
 // ---- 篩選 ----
+// selNode/selPc 必須宣告在 render() 之前：render() 初始化時就會執行並讀取 selPc
+let selNode = null, selPc = null;
 let mode = 'or';
 const boxes = {1:document.getElementById('L1'), 2:document.getElementById('L2'), 4:document.getElementById('L4')};
 function visible(f){
@@ -426,6 +449,7 @@ function render(){
     if(v) n++;
   }
   document.getElementById('shown').textContent = n;
+  if(selPc !== null) select(selPc);        // 重新決定高亮該落在色塊還是底層邊界
 }
 const count = m => PC.filter(r => r[3] & m).length;
 document.getElementById('c1').textContent = count(1);
@@ -443,18 +467,28 @@ render();
 
 // ---- 詳情 ----
 const detail = document.getElementById('detail');
-let selNode = null;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
+function clearSel(){ if(selNode){ selNode.classList.remove('sel'); selNode = null; } }
+
 function select(pc){
+  selPc = pc;
   const d = byPc.get(pc);
   if(!d){
-    detail.innerHTML = `<div class="empty">郵遞區號 <b class="mono">${esc(pc)}</b> 不在昆士蘭的四張合格清單上。這代表一般建築工地與災後重建工作都不能用它集簽。</div>`;
+    clearSel();
+    const base = baseByPc.get(pc);
+    if(base){ base.classList.add('sel'); selNode = base; base.parentNode.appendChild(base); }
+    const names = OTHER[pc];
+    const where = names ? `（${esc(names.join('、'))}）` : '';
+    detail.innerHTML = `<div class="empty">郵遞區號 <b class="mono">${esc(pc)}</b>${where} 不在昆士蘭的合格清單上。一般建築工地與災後重建工作都不能用它集簽。</div>`;
     return;
   }
-  if(selNode) selNode.classList.remove('sel');
-  d.node.classList.add('sel'); selNode = d.node;
-  d.node.parentNode.appendChild(d.node);
+  clearSel();
+  // 郵區合格但被目前篩選隱藏時，色塊是 display:none，高亮要加在底層邊界上才看得見
+  const base = baseByPc.get(pc);
+  const target = (d.node.style.display === 'none' && base) ? base : d.node;
+  target.classList.add('sel'); selNode = target;
+  target.parentNode.appendChild(target);
 
   const [p, , , f, names, total] = d.rec;
   const more = total > names.length ? ` 等 ${total} 個地區` : '';
@@ -472,11 +506,14 @@ function select(pc){
 }
 
 const tip = document.getElementById('tip'), wrap = document.getElementById('mapwrap');
-const hit = e => e.target.closest('.poa, .stray');
-svg.addEventListener('click', e => { if(drag && drag.moved) return; const t = hit(e); if(t) select(t.__rec[0]); });
+const hit = e => e.target.closest('.poa, .stray, .poabase');
+const pcOf = node => node.__rec ? node.__rec[0] : node.__pc;
+svg.addEventListener('click', e => { if(drag && drag.moved) return; const t = hit(e); if(t) select(pcOf(t)); });
 svg.addEventListener('pointerover', e => {
   const t = hit(e); if(!t) return;
-  tip.textContent = t.__rec[0] + '  ' + t.__rec[4][0];
+  const pc = pcOf(t);
+  const d = byPc.get(pc);
+  tip.textContent = pc + (d ? '  ' + d.rec[4][0] : (OTHER[pc] ? '  ' + OTHER[pc][0] : ''));
   tip.classList.add('on');
 });
 svg.addEventListener('pointerout', e => { if(hit(e)) tip.classList.remove('on'); });
