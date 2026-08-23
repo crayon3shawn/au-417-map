@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>__TITLE__</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -9,6 +10,7 @@
   --ink:#16201C; --ink-2:#4E5B55; --ink-3:#76837C;
   --line:#C9D0C7; --line-2:#B2BCAF;
   --land:#F0F2EC; --coast:#7C8B82; --grat:#C6CEC8; --halo:#F0F2EC; --grid:#BFC9C2;
+  --none:#8C9691; --none-a:0.30;
   --c-reg:#0F7A6B; --c-fire:#C0451A; --c-flood:#2A66A8; --c-both:#7A4B9E;
   --fill-a:0.62; --edge:rgba(22,32,28,.38);
   --warn-bg:#F6E9DC; --warn-line:#DCB894;
@@ -19,6 +21,7 @@
   --ink:#E8EEE7; --ink-2:#A2B0A7; --ink-3:#7C8A82;
   --line:#2C3830; --line-2:#3A4840;
   --land:#202A23; --coast:#586A5E; --grat:#242F28; --halo:#151C18; --grid:#3B4A41;
+  --none:#6E7C74; --none-a:0.34;
   --c-reg:#22A78F; --c-fire:#DE6431; --c-flood:#4E8FD6; --c-both:#9E71CC;
   --fill-a:0.70; --edge:rgba(233,240,232,.30);
   --warn-bg:#2A2117; --warn-line:#4E3D26;
@@ -29,6 +32,7 @@
   --ink:#E8EEE7; --ink-2:#A2B0A7; --ink-3:#7C8A82;
   --line:#2C3830; --line-2:#3A4840;
   --land:#202A23; --coast:#586A5E; --grat:#242F28; --halo:#151C18; --grid:#3B4A41;
+  --none:#6E7C74; --none-a:0.34;
   --c-reg:#22A78F; --c-fire:#DE6431; --c-flood:#4E8FD6; --c-both:#9E71CC;
   --fill-a:0.70; --edge:rgba(233,240,232,.30);
   --warn-bg:#2A2117; --warn-line:#4E3D26;
@@ -51,8 +55,10 @@ body{
   font-size:26px;letter-spacing:.02em;text-wrap:balance}
 .bar .sub{color:var(--ink-2);font-size:13px}
 .bar .spacer{flex:1 1 40px}
+/* 這行出處字串很長，nowrap 會在手機上把整個頁面推寬造成橫向捲動 */
 .stamp{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);
-  border:1px solid var(--line);border-radius:2px;padding:3px 8px;white-space:nowrap}
+  border:1px solid var(--line);border-radius:2px;padding:3px 8px;
+  white-space:normal;overflow-wrap:anywhere;max-width:100%}
 .main{display:grid;grid-template-columns:352px 1fr;min-height:0}
 @media (max-width:900px){ .shell{height:auto;min-height:100vh} .main{grid-template-columns:1fr} }
 
@@ -128,6 +134,8 @@ svg.map.drag{cursor:grabbing}
 /* 每個郵區只有一條 path。沒被篩選到時 fill-opacity 為 0，只剩邊界線，
    所以永遠看得到郵區格線，而切換篩選只是加減一個 class，不動幾何。 */
 .poa{fill-opacity:0;stroke:var(--grid);stroke-width:.7;stroke-linejoin:round;cursor:pointer}
+/* 不在任何清單上：永遠不可能集簽，跟「只是目前沒篩到」必須看得出差別 */
+.poa.none{fill-opacity:var(--none-a)}
 .poa.on{fill-opacity:var(--fill-a);stroke:var(--edge);stroke-width:.8}
 .poa:hover{stroke:var(--ink-3);stroke-width:1.4}
 .poa.on:hover{fill-opacity:.92;stroke-width:1.4}
@@ -149,7 +157,13 @@ svg.map.drag{cursor:grabbing}
 
 .legend{position:absolute;left:14px;top:14px;background:var(--surface);border:1px solid var(--line);
   border-radius:4px;padding:11px 13px;box-shadow:var(--shadow);max-width:248px}
-.legend .eyebrow{font-size:10.5px;margin-bottom:7px;display:block}
+.legend > summary{font-size:10.5px;cursor:pointer;list-style:none;display:flex;
+  align-items:center;justify-content:space-between;gap:8px}
+.legend > summary::-webkit-details-marker{display:none}
+.legend > summary::after{content:"−";font-size:13px;line-height:1;color:var(--ink-3)}
+.legend:not([open]) > summary::after{content:"+"}
+.legend[open] > summary{margin-bottom:7px}
+.legend > summary:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .lg{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ink-2);line-height:1.35;padding:2.5px 0}
 .lg i{width:13px;height:11px;border-radius:2px;flex:none;background:var(--sw);
   opacity:var(--fill-a);border:.5px solid var(--edge)}
@@ -217,7 +231,7 @@ svg.map.drag{cursor:grabbing}
 
       <section class="blk">
         <span class="eyebrow">郵區詳情</span>
-        <div class="card" id="detail">
+        <div class="card" id="detail" role="status" aria-live="polite">
           <div class="empty">點地圖上任一塊郵區，或在上面輸入郵遞區號，這裡會顯示這個郵區算不算集簽、哪一種工作算。</div>
         </div>
       </section>
@@ -247,16 +261,17 @@ svg.map.drag{cursor:grabbing}
     </aside>
 
     <div class="mapwrap" id="mapwrap">
-      <svg class="map" id="map" role="img" aria-label="昆士蘭 417 集簽合格郵遞區號地圖"></svg>
-      <div class="legend">
-        <span class="eyebrow">顏色＝這塊郵區的身分</span>
+      <svg class="map" id="map" aria-labelledby="maptitle"></svg>
+      <details class="legend" id="legend">
+        <summary class="eyebrow">顏色＝這塊郵區的身分</summary>
         <div class="lg" style="--sw:var(--c-reg)"><i></i><span>只在 Regional 名單，無災害宣告</span></div>
         <div class="lg" style="--sw:var(--c-fire)"><i></i><span>有叢林大火宣告</span></div>
         <div class="lg" style="--sw:var(--c-flood)"><i></i><span>有天災宣告</span></div>
         <div class="lg" style="--sw:var(--c-both)"><i></i><span>大火與天災都有宣告</span></div>
+        <div class="lg" id="lgnone" style="--sw:var(--none);display:none"><i style="opacity:var(--none-a)"></i><span>不在任何清單上，永遠不能集簽</span></div>
         <div class="lg"><i style="background:none;border:1px solid var(--grid);opacity:1"></i><span>只有邊界＝目前篩選沒選到</span></div>
         <div class="lgnote">顏色跟你勾了哪個圖層無關，勾選只決定要顯示哪些郵區。災區圖層含非 regional 的郵區（例如布里斯本市區），那裡只有災後重建工作算。</div>
-      </div>
+      </details>
       <div class="count">顯示中 <b id="shown">0</b> 個郵區</div>
       <div class="tip" id="tip"></div>
       <div class="zoom">
@@ -336,7 +351,8 @@ const drawOrder = Object.keys(POA).map(Number)
 
 for(const pc of drawOrder){
   const f = flagOf.get(pc) || 0;
-  const node = el('path',{class:'poa', d:POA[pc], fill:f ? colorOf(f) : 'none',
+  const node = el('path',{class:'poa' + (f ? '' : ' none'), d:POA[pc],
+    fill:f ? colorOf(f) : 'var(--none)',
     'vector-effect':'non-scaling-stroke', 'pointer-events':'all'});
   node.__pc = pc;
   areasG.appendChild(node);
@@ -567,4 +583,16 @@ function doSearch(){
 }
 document.getElementById('qb').onclick = doSearch;
 q.addEventListener('keydown', e => { if(e.key === 'Enter') doSearch(); });
+
+// ---- 無障礙 ----
+// 地圖不是可逐格 tab 的（幾百個郵區當 tab stop 反而更難用），
+// 鍵盤與螢幕閱讀器的路徑是「查郵遞區號」欄位加上 live region 的詳情面板。
+svg.setAttribute('aria-roledescription', '地圖');
+const mt = el('title',{id:'maptitle'});
+mt.textContent = `${META.state_label} 417 集簽合格郵遞區號地圖，共 ${META.counts.boundaries} 個郵區。`
+              + `用左側「查郵遞區號」欄位查詢個別郵區。`;
+svg.insertBefore(mt, svg.firstChild);
+if(META.counts.not_eligible > 0) document.getElementById('lgnone').style.display = '';
+// 圖例在手機上會蓋掉半張地圖，所以窄螢幕預設收起，桌機維持展開
+document.getElementById('legend').open = !matchMedia('(max-width:900px)').matches;
 </script>

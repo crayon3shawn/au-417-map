@@ -10,6 +10,7 @@
 ```bash
 make build                # dist/qld.html
 make build STATE=nsw      # dist/nsw.html
+make test                 # 跑測試（不連網）
 make serve                # 建置並在 http://127.0.0.1:8731/qld.html 預覽
 ```
 
@@ -65,6 +66,32 @@ make build
 確認官網真的改了而且改對了，再用 `python3 fetch/postcodes.py --force` 覆寫。
 
 `--keep-raw` 會把原始 HTML 存到 `data/raw/`（不進版控）供人工核對。
+
+## 測試
+
+```bash
+make test
+```
+
+不連網，分四塊：
+
+| 檔案 | 管什麼 |
+|---|---|
+| `tests/test_expand.py` | 郵區範圍字串的解析。解析錯一個範圍，合格郵區就默默變了，這是風險最高的一段 |
+| `tests/test_data.py` | 凍結資料的結構完整性，加上幾個定錨事實（凱恩斯是 regional、雪梨不在任何清單上）|
+| `tests/test_build.py` | 郵件中心郵區的判定、path 產生、bbox |
+| `tests/test_smoke.py` | **把產出頁面的腳本在 node 裡真的跑一遍** |
+
+刻意不釘死郵區數量——官網本來就會改，釘數字只會在正常更新時假警報。
+釘的是結構，以及「417 與 462 目前完全相同」這件事：哪天官網讓它們分家，
+測試會先失敗，提醒去改頁面文案而不是繼續講錯話。
+
+### 為什麼要有 node 煙霧測試
+
+暫時死區（TDZ）、拼錯的變數、呼叫不存在的東西——這類錯在瀏覽器只會讓
+**整段腳本靜靜掛掉**，畫面上看起來就只是「地圖沒出來」，沒有其他線索。
+這個專案已經栽過三次。`tests/smoke.js` 用一個「什麼都回傳假物件」的 DOM
+把腳本跑完，跑得完就代表沒有這類錯。需要 `node`，沒裝就自動略過。
 
 ## 效能
 

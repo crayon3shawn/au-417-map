@@ -39,6 +39,8 @@ def to_path(rings):
                 continue
             seg.append(f"{pt[0]:g} {pt[1]:g}")
             prev = pt
+        if len(seg) > 1 and seg[0] == seg[-1]:
+            seg.pop()                 # Z 會封口，重複的收尾點是多餘的
         if len(seg) >= 3:
             out.append("M" + "L".join(seg) + "Z")
     return "".join(out)
