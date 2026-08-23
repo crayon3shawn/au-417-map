@@ -159,6 +159,31 @@ make build STATE=vic
 `build.py` 的 `TITLES`、`LABELS`、`EXCLUDED` 各加一行該州的文案。
 其餘不用改：視野範圍、字級、南回歸線畫不畫，樣板都會依資料自行決定。
 
+## 產業
+
+這份地圖是**建築業**取向。產業會決定要看哪幾張地區表，換產業結果就不同：
+
+| 產業 | 417 | 462 |
+|---|---|---|
+| 建築 | Regional | Regional（結果相同）|
+| 農牧 | Regional | Regional |
+| 礦業 | Regional | **462 沒有這一項產業** |
+| 漁業／珍珠 | Regional | **僅 Northern** |
+| 林業伐木 | Regional | **僅 Northern** |
+| 觀光餐旅 | Northern ＋ Remote | 同左 |
+
+對應表在 `data/industries.json`，`build.py` 的 `INDUSTRY` 指定要用哪一個。
+官方**沒有**這張表——它是頁面上的散文規則，人工整理來的，所以 `tests/test_industries.py`
+釘得比較細。地區表本身則是抓取來的。
+
+要支援多產業，資料層已經備好，剩下的是 UI：加一個選單、依選擇重算三分類即可。
+
+### 逐州比對會看到假差異
+
+0872 是橫跨 NT／WA／SA 的偏遠郵區，NT 的五張表都有它，但它只出現在 WA 的
+northern 而不在 WA 的 regional。比較覆蓋範圍時要跨州取聯集，否則會誤判
+417 與 462 有差異。全澳合計，兩者的建築業覆蓋各 4519 個郵區，完全相同。
+
 ## 417 與 462
 
 建置時會比對兩者在該州的五張表，並把結果寫進頁面。

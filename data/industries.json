@@ -1,0 +1,46 @@
+{
+  "note": "產業與地區表的對應。官方沒有這張表——它是 Home Affairs 頁面上的散文規則，人工整理自 417 與 462 的『Approved industries and areas for specified work』段落。地區表本身在 postcodes.json。",
+  "source": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work",
+  "checked_against_page_dated": "2026-08-18",
+  "industries": {
+    "construction": {
+      "label": "建築",
+      "en": "Construction",
+      "areas": { "417": ["regional"], "462": ["northern", "regional"] },
+      "note": "462 頁面寫『northern Australia and other specified areas of regional Australia』，但兩份的 regional 表逐字相同，所以實際結果一致。"
+    },
+    "cultivation": {
+      "label": "農牧",
+      "en": "Plant and animal cultivation",
+      "areas": { "417": ["regional"], "462": ["northern", "regional"] },
+      "note": "集簽最大宗。二次加工不算（釀酒、製麵、製作加工肉品）。"
+    },
+    "mining": {
+      "label": "礦業",
+      "en": "Mining",
+      "areas": { "417": ["regional"], "462": null },
+      "note": "462 的核准產業清單裡沒有礦業這一項。null 代表『不適用』，跟『不算』不同——礦區的土建案子若歸類為 construction 則 462 仍算。"
+    },
+    "fishing": {
+      "label": "漁業與珍珠",
+      "en": "Fishing and pearling",
+      "areas": { "417": ["regional"], "462": ["northern"] }
+    },
+    "forestry": {
+      "label": "林業伐木",
+      "en": "Tree farming and felling",
+      "areas": { "417": ["regional"], "462": ["northern"] }
+    },
+    "tourism": {
+      "label": "觀光與餐旅",
+      "en": "Tourism and hospitality",
+      "areas": { "417": ["remote", "northern"], "462": ["remote", "northern"] },
+      "note": "2021/6/22 起適用。remote 表已含官方另列的 4406、4416、4498、7215。"
+    }
+  },
+  "recovery": {
+    "note": "災後重建是獨立於產業的另一條路，任何產業都適用，且志工也算。",
+    "bushfire": { "area": "bushfire", "from": "2019-07-31" },
+    "disaster": { "area": "disaster", "from": "2021-12-31" }
+  }
+}

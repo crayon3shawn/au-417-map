@@ -11,8 +11,12 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from lib import expand, load, STATES
 
 ROOT = pathlib.Path(__file__).resolve().parent
-VISA = "417"                     # 顯示用的主要簽證；地點清單 417/462 相同時會註明
-AREAS = {"regional": 1, "bushfire": 2, "disaster": 4}   # 位元旗標，前端用來篩選
+VISA = "417"          # 顯示用的主要簽證；地點清單 417/462 相同時會註明
+INDUSTRY = "construction"   # 這份地圖的取向。換產業要看的地區表就不同——
+                            # 例如漁業在 462 只限 northern Australia。
+                            # 對應規則在 data/industries.json。
+
+BIT_WORK, BIT_FIRE, BIT_DISASTER = 1, 2, 4   # 位元旗標
 
 TITLES = {"qld": "昆士蘭 417 集簽地圖", "nsw": "新南威爾斯 417 集簽地圖",
           "vic": "維多利亞 417 集簽地圖"}
@@ -121,11 +125,17 @@ def main(state):
     out    = load(ROOT / "data" / f"outline-{state}.json")["rings"]
     cities = load(ROOT / "data" / f"cities-{state}.json")["cities"]
 
-    # 展開三張表 -> 每個郵區一組位元旗標
+    # 這個產業在這個簽證下要看哪幾張地區表
+    ind = load(ROOT / "data" / "industries.json")["industries"][INDUSTRY]
+    work_areas = ind["areas"][VISA]
+    if work_areas is None:
+        raise SystemExit(f"{ind['label']}在 {VISA} 沒有這一項產業，無法建圖")
+
+    # 展開成每個郵區一組位元旗標。災後重建是獨立於產業的另一條路。
     flags = {}
-    for area, bit in AREAS.items():
-        raw = pcdata["areas"][VISA].get(area, {}).get(state)
-        for pc in expand(raw, state):
+    for area, bit in [(a, BIT_WORK) for a in work_areas] + \
+                     [("bushfire", BIT_FIRE), ("disaster", BIT_DISASTER)]:
+        for pc in expand(pcdata["areas"][VISA].get(area, {}).get(state), state):
             flags[pc] = flags.get(pc, 0) | bit
     if not flags:
         raise SystemExit(f"{state} 沒有任何合格郵區，資料可能有問題")
