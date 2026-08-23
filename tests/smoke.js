@@ -46,17 +46,23 @@ function stub(name) {
   return proxy;
 }
 
+// 從頁面實際的 HTML 收集所有 id。getElementById 對不存在的 id 要回傳 null，
+// 不能一律給假物件——否則「引用已被刪掉的元素」這種錯會被替身吃掉。
+const IDS = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+
 const doc = stub('document');
 const sandbox = {
   document: new Proxy({}, {
     get(t, k) {
       if (k === 'querySelectorAll') return () => [];
       if (k === 'fonts') return { ready: { then: (f) => f() } };
+      if (k === 'getElementById') return (id) => (IDS.has(id) ? stub('#' + id) : null);
       return doc[k];
     },
   }),
   window: stub('window'),
   performance: { now: () => 0, getEntriesByType: () => [{}] },
+  location: { hash: '#pc=4870', href: 'about:blank', search: '' },
   requestAnimationFrame: (f) => f(0),
   addEventListener: () => {},
   matchMedia: () => ({ matches: false, addEventListener: () => {} }),

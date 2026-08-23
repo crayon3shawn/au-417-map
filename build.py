@@ -72,6 +72,35 @@ def is_non_geographic(names):
     return bool(names) and all(NON_GEO.search(n) for n in names)
 
 
+def categorise(rings, flags):
+    """把每個郵區歸成三個互斥類別，並統計數量。
+
+    綠 work    ：regional，一般建築工地就算
+    琥珀 rebuild：不是 regional，但被宣告為災區，只有災後重建工作算
+    灰 none    ：不在任何清單上
+
+    琥珀再細分成大火／天災／兩者——災害種類只有在「重建是唯一路徑」時才
+    影響決定（日期門檻不同、ImmiAccount 的 Employment type 也不同）。
+    在綠色郵區，一般工作本來就算，災害種類是次要資訊，留在詳情面板。
+    """
+    c = dict(work=0, rebuild=0, none=0, fire_only=0, flood_only=0, fire_and_flood=0)
+    for k in rings:
+        f = flags.get(int(k), 0)
+        if f & 1:
+            c["work"] += 1
+        elif f & 6:
+            c["rebuild"] += 1
+            if (f & 2) and (f & 4):
+                c["fire_and_flood"] += 1
+            elif f & 2:
+                c["fire_only"] += 1
+            else:
+                c["flood_only"] += 1
+        else:
+            c["none"] += 1
+    return c
+
+
 def bbox(rings):
     xs = [x for r in rings for x, y in r]
     ys = [y for r in rings for x, y in r]
@@ -126,14 +155,21 @@ def main(state):
         "state_label": LABELS.get(state, STATES[state]["name"]),
         "excluded_note": EXCLUDED.get(state, ""),
         "bbox": bbox(out),
-        "counts": {"eligible": len(records), "boundaries": len(rings),
+        "counts": {**categorise(rings, flags),
+                   "eligible": len(records), "boundaries": len(rings),
                    "not_eligible": len(other),
                    "no_polygon": len(no_poly), "no_coordinates": len(no_coord),
                    "non_geographic": len(non_geo)},
     }
 
     paths = {k: to_path(v) for k, v in rings.items()}
-    payload = {"meta": meta, "postcodes": records, "poa": paths, "other": other,
+    # 每個多邊形的身分直接給前端，不要讓它從 records 反推：
+    # 有些郵區有邊界也合格，卻因為缺地名座標而不在 records 裡，
+    # 反推會把它算成「完全不算」，圖例數字就跟畫面對不上。
+    poa_flags = {k: flags.get(int(k), 0) for k in rings}
+
+    payload = {"meta": meta, "postcodes": records, "poa": paths, "flags": poa_flags,
+               "other": other,
                "outline": to_path(out),
                "cities": [[c["name"], c["lon"], c["lat"], c["tier"],
                            -1 if c.get("side") == "l" else 1] for c in cities]}
@@ -148,8 +184,11 @@ def main(state):
     dest = ROOT / "dist" / f"{state}.html"
     dest.write_text(html, encoding="utf-8")
 
-    print(f"合格郵區 {len(records)}，畫出邊界的郵區 {len(rings)}"
-          f"（其中不合格 {len(other)} 個，只畫邊界不填色）")
+    cat = meta["counts"]
+    print(f"郵區 {len(rings)}：一般工地就算 {cat['work']}、"
+          f"只有重建算 {cat['rebuild']}（大火 {cat['fire_only']}／"
+          f"天災 {cat['flood_only']}／兩者 {cat['fire_and_flood']}）、"
+          f"完全不算 {cat['none']}")
     if no_poly:
         pass
     if no_coord:

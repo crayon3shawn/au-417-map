@@ -10,8 +10,8 @@
   --ink:#16201C; --ink-2:#4E5B55; --ink-3:#76837C;
   --line:#C9D0C7; --line-2:#B2BCAF;
   --land:#F0F2EC; --coast:#7C8B82; --grat:#C6CEC8; --halo:#F0F2EC; --grid:#BFC9C2;
-  --none:#8C9691; --none-a:0.30;
-  --c-reg:#0F7A6B; --c-fire:#C0451A; --c-flood:#2A66A8; --c-both:#7A4B9E;
+  --c-work:#0F7A6B; --c-rebuild:#B4741A; --c-none:#8C9691;
+  --c-fire:#C0451A; --c-flood:#2A66A8; --c-both:#7A4B9E;
   --fill-a:0.62; --edge:rgba(22,32,28,.38);
   --warn-bg:#F6E9DC; --warn-line:#DCB894;
   --shadow:0 1px 2px rgba(22,32,28,.08), 0 8px 24px -12px rgba(22,32,28,.22);
@@ -21,8 +21,8 @@
   --ink:#E8EEE7; --ink-2:#A2B0A7; --ink-3:#7C8A82;
   --line:#2C3830; --line-2:#3A4840;
   --land:#202A23; --coast:#586A5E; --grat:#242F28; --halo:#151C18; --grid:#3B4A41;
-  --none:#6E7C74; --none-a:0.34;
-  --c-reg:#22A78F; --c-fire:#DE6431; --c-flood:#4E8FD6; --c-both:#9E71CC;
+  --c-work:#22A78F; --c-rebuild:#D4922F; --c-none:#6E7C74;
+  --c-fire:#DE6431; --c-flood:#4E8FD6; --c-both:#9E71CC;
   --fill-a:0.70; --edge:rgba(233,240,232,.30);
   --warn-bg:#2A2117; --warn-line:#4E3D26;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
@@ -32,8 +32,8 @@
   --ink:#E8EEE7; --ink-2:#A2B0A7; --ink-3:#7C8A82;
   --line:#2C3830; --line-2:#3A4840;
   --land:#202A23; --coast:#586A5E; --grat:#242F28; --halo:#151C18; --grid:#3B4A41;
-  --none:#6E7C74; --none-a:0.34;
-  --c-reg:#22A78F; --c-fire:#DE6431; --c-flood:#4E8FD6; --c-both:#9E71CC;
+  --c-work:#22A78F; --c-rebuild:#D4922F; --c-none:#6E7C74;
+  --c-fire:#DE6431; --c-flood:#4E8FD6; --c-both:#9E71CC;
   --fill-a:0.70; --edge:rgba(233,240,232,.30);
   --warn-bg:#2A2117; --warn-line:#4E3D26;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
@@ -94,7 +94,7 @@ body{
 .srch{display:flex;gap:6px}
 .srch input{flex:1;min-width:0;font-family:"IBM Plex Mono",monospace;font-size:14px;
   padding:8px 10px;border:1px solid var(--line-2);border-radius:3px;background:var(--paper);color:var(--ink)}
-.srch input:focus-visible{outline:2px solid var(--c-reg);outline-offset:-1px;border-color:var(--c-reg)}
+.srch input:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px;border-color:var(--c-work)}
 .btn{appearance:none;border:1px solid var(--line-2);background:var(--paper);color:var(--ink);
   font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:13px;
   letter-spacing:.06em;padding:8px 12px;border-radius:3px;cursor:pointer}
@@ -120,7 +120,7 @@ body{
 .facts b{color:var(--ink)}
 .src{font-size:11.5px;line-height:1.6;color:var(--ink-3)}
 .src a{color:var(--ink-2)}
-.src a:hover{color:var(--c-reg)}
+.src a:hover{color:var(--c-work)}
 
 .mapwrap{position:relative;background:var(--paper-2);min-height:0;overflow:hidden}
 @media (max-width:900px){ .mapwrap{height:72vh;min-height:460px;order:1} }
@@ -133,14 +133,12 @@ svg.map.drag{cursor:grabbing}
   letter-spacing:.12em;text-transform:uppercase}
 /* 每個郵區只有一條 path。沒被篩選到時 fill-opacity 為 0，只剩邊界線，
    所以永遠看得到郵區格線，而切換篩選只是加減一個 class，不動幾何。 */
-.poa{fill-opacity:0;stroke:var(--grid);stroke-width:.7;stroke-linejoin:round;cursor:pointer}
-/* 不在任何清單上：永遠不可能集簽，跟「只是目前沒篩到」必須看得出差別 */
-.poa.none{fill-opacity:var(--none-a)}
-.poa.on{fill-opacity:var(--fill-a);stroke:var(--edge);stroke-width:.8}
-.poa:hover{stroke:var(--ink-3);stroke-width:1.4}
-.poa.on:hover{fill-opacity:.92;stroke-width:1.4}
-.poa.sel,.poa.on.sel{stroke:var(--ink);stroke-width:2.2}
-.poa.on.sel{fill-opacity:.95}
+/* 每個郵區只有一條 path，顏色直接就是答案：沒有篩選、沒有第二個軸 */
+.poa{fill-opacity:var(--fill-a);stroke:var(--edge);stroke-width:.8;
+  stroke-linejoin:round;cursor:pointer}
+.poa.none{fill-opacity:calc(var(--fill-a) * .55)}
+.poa:hover{fill-opacity:.92;stroke:var(--ink-3);stroke-width:1.4}
+.poa.sel{stroke:var(--ink);stroke-width:2.2;fill-opacity:.95}
 .stray{fill:var(--ink-3);stroke:var(--halo);stroke-width:1;cursor:pointer}
 .city circle{fill:var(--ink);stroke:var(--halo);stroke-linejoin:round}
 .city text{fill:var(--ink);font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
@@ -165,6 +163,20 @@ svg.map.drag{cursor:grabbing}
 .legend[open] > summary{margin-bottom:7px}
 .legend > summary:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .lg{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ink-2);line-height:1.35;padding:2.5px 0}
+.lg span{flex:1}
+.lg b{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
+  font-weight:600;font-size:11px;color:var(--ink)}
+.lg.split{display:none}
+.legend.split .lg.split{display:flex}
+.legend.split #r-rebuild{display:none}
+.lgtoggle{display:flex;align-items:center;gap:7px;margin-top:8px;padding-top:8px;
+  border-top:1px solid var(--line);font-size:11px;color:var(--ink-2);cursor:pointer}
+.lgtoggle input{appearance:none;width:13px;height:13px;margin:0;flex:none;cursor:pointer;
+  border:1.5px solid var(--line-2);border-radius:2px;background:var(--paper);position:relative}
+.lgtoggle input:checked{background:var(--ink);border-color:var(--ink)}
+.lgtoggle input:checked::after{content:"";position:absolute;left:3.5px;top:.5px;width:3.5px;height:7px;
+  border:solid var(--surface);border-width:0 2px 2px 0;transform:rotate(42deg)}
+.lgtoggle:has(input:focus-visible){outline:2px solid var(--ink);outline-offset:2px}
 .lg i{width:13px;height:11px;border-radius:2px;flex:none;background:var(--sw);
   opacity:var(--fill-a);border:.5px solid var(--edge)}
 .lgnote{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);
@@ -192,35 +204,6 @@ svg.map.drag{cursor:grabbing}
 
   <div class="main">
     <aside class="rail">
-      <section class="blk">
-        <span class="eyebrow">圖層</span>
-        <div class="layers">
-          <label class="lay" style="--sw:var(--c-reg)">
-            <input type="checkbox" id="L1" checked>
-            <span class="nm">Regional Australia（<span id="statelbl"></span>）<small>一般建築工地就算集簽</small></span>
-            <span class="ct" id="c1"></span>
-          </label>
-          <label class="lay" style="--sw:var(--c-fire)">
-            <input type="checkbox" id="L2">
-            <span class="nm">叢林大火宣告區<small>2019/7/31 後的重建工作</small></span>
-            <span class="ct" id="c2"></span>
-          </label>
-          <label class="lay" style="--sw:var(--c-flood)">
-            <input type="checkbox" id="L4">
-            <span class="nm">天災宣告區（洪水／氣旋）<small>2021/12/31 後的重建工作</small></span>
-            <span class="ct" id="c4"></span>
-          </label>
-        </div>
-      </section>
-
-      <section class="blk">
-        <span class="eyebrow">勾選多層時</span>
-        <div class="seg" id="mode">
-          <button type="button" data-m="or" aria-pressed="true">任一符合</button>
-          <button type="button" data-m="and" aria-pressed="false">同時符合</button>
-        </div>
-      </section>
-
       <section class="blk">
         <span class="eyebrow">查郵遞區號</span>
         <div class="srch">
@@ -263,16 +246,16 @@ svg.map.drag{cursor:grabbing}
     <div class="mapwrap" id="mapwrap">
       <svg class="map" id="map" aria-labelledby="maptitle"></svg>
       <details class="legend" id="legend">
-        <summary class="eyebrow">顏色＝這塊郵區的身分</summary>
-        <div class="lg" style="--sw:var(--c-reg)"><i></i><span>只在 Regional 名單，無災害宣告</span></div>
-        <div class="lg" style="--sw:var(--c-fire)"><i></i><span>有叢林大火宣告</span></div>
-        <div class="lg" style="--sw:var(--c-flood)"><i></i><span>有天災宣告</span></div>
-        <div class="lg" style="--sw:var(--c-both)"><i></i><span>大火與天災都有宣告</span></div>
-        <div class="lg" id="lgnone" style="--sw:var(--none);display:none"><i style="opacity:var(--none-a)"></i><span>不在任何清單上，永遠不能集簽</span></div>
-        <div class="lg"><i style="background:none;border:1px solid var(--grid);opacity:1"></i><span>只有邊界＝目前篩選沒選到</span></div>
-        <div class="lgnote">顏色跟你勾了哪個圖層無關，勾選只決定要顯示哪些郵區。災區圖層含非 regional 的郵區（例如布里斯本市區），那裡只有災後重建工作算。</div>
+        <summary class="eyebrow">這塊郵區算不算</summary>
+        <div class="lg" style="--sw:var(--c-work)"><i></i><span>一般建築工地就算</span><b id="n-work"></b></div>
+        <div class="lg" id="r-rebuild" style="--sw:var(--c-rebuild)"><i></i><span>只有災後重建工作算</span><b id="n-rebuild"></b></div>
+        <div class="lg split" style="--sw:var(--c-fire)"><i></i><span>只有大火重建算</span><b id="n-fire"></b></div>
+        <div class="lg split" style="--sw:var(--c-flood)"><i></i><span>只有天災重建算</span><b id="n-flood"></b></div>
+        <div class="lg split" style="--sw:var(--c-both)"><i></i><span>大火與天災重建都算</span><b id="n-both"></b></div>
+        <div class="lg" id="r-none" style="--sw:var(--c-none)"><i></i><span>完全不算</span><b id="n-none"></b></div>
+        <label class="lgtoggle"><input type="checkbox" id="split"><span>區分大火與天災</span></label>
+        <div class="lgnote">災害種類只有在「重建是唯一路徑」時才影響你的判斷。在綠色郵區一般工作本來就算，災害資訊點進去看。</div>
       </details>
-      <div class="count">顯示中 <b id="shown">0</b> 個郵區</div>
       <div class="tip" id="tip"></div>
       <div class="zoom">
         <button type="button" id="zin" aria-label="放大">＋</button>
@@ -286,12 +269,11 @@ svg.map.drag{cursor:grabbing}
 <script>
 const DATA = __DATA__;
 const PC = DATA.postcodes, RINGS = DATA.outline, POA = DATA.poa, CITIES = DATA.cities,
-      META = DATA.meta, OTHER = DATA.other || {};
+      META = DATA.meta, OTHER = DATA.other || {}, FLAGS = DATA.flags;
 
 // 頁首出處與 417/462 等同性由資料決定，不寫死在樣板裡
 document.getElementById('stamp').textContent = META.stamp;
 document.getElementById('visanote').textContent = META.visa_note;
-document.getElementById('statelbl').textContent = META.state_label;
 document.getElementById('excluded').textContent = META.excluded_note;
 
 const COS = Math.cos(20 * Math.PI / 180);
@@ -335,29 +317,36 @@ coast.appendChild(el('path',{d:RINGS, 'vector-effect':'non-scaling-stroke'}));
 proj.appendChild(coast);
 
 // ---- 郵區面 ----
-const COLORS = {reg:'var(--c-reg)', fire:'var(--c-fire)', flood:'var(--c-flood)', both:'var(--c-both)'};
-const colorOf = f => (f&2)&&(f&4) ? COLORS.both : (f&2) ? COLORS.fire : (f&4) ? COLORS.flood : COLORS.reg;
+// 三個互斥的答案。顏色就是答案本身，沒有第二個軸。
+//   work    regional，一般建築工地就算
+//   rebuild 不是 regional 但被宣告為災區，只有災後重建工作算
+//   none    不在任何清單上
+const catOf = f => (f & 1) ? 'work' : (f & 6) ? 'rebuild' : 'none';
+
+// 細分只作用在 rebuild：災害種類唯有在「重建是唯一路徑」時才影響判斷。
+function colorOf(f, split){
+  if(f & 1) return 'var(--c-work)';
+  if(!(f & 6)) return 'var(--c-none)';
+  if(!split) return 'var(--c-rebuild)';
+  return ((f & 2) && (f & 4)) ? 'var(--c-both)' : (f & 2) ? 'var(--c-fire)' : 'var(--c-flood)';
+}
 
 const areasG = el('g',{}); proj.appendChild(areasG);    // 郵區面（原始經緯度）
 const strayG = el('g',{}); over.appendChild(strayG);    // 沒有邊界面的郵區，以小點代替
 const byPc = new Map();
-const shapes = [];
-const flagOf = new Map(PC.map(r => [r[0], r[3]]));
+const flagOf = new Map(Object.entries(FLAGS).map(([pc, f]) => [+pc, f]));
 
-// 沒有災害宣告的先畫，讓災區的顏色疊在上層；不合格的郵區排最前面當底。
-const drawOrder = Object.keys(POA).map(Number)
-  .sort((a,b) => ((flagOf.get(a)||0) ? 1 : 0) - ((flagOf.get(b)||0) ? 1 : 0)
-              || (((flagOf.get(a)||0) & 6) ? 1 : 0) - (((flagOf.get(b)||0) & 6) ? 1 : 0));
-
-for(const pc of drawOrder){
+const rebuildNodes = [];
+for(const pc of Object.keys(POA).map(Number).sort((a,b)=>a-b)){
   const f = flagOf.get(pc) || 0;
-  const node = el('path',{class:'poa' + (f ? '' : ' none'), d:POA[pc],
-    fill:f ? colorOf(f) : 'var(--none)',
+  const cat = catOf(f);
+  const node = el('path',{class:'poa ' + cat, d:POA[pc], fill:colorOf(f, false),
     'vector-effect':'non-scaling-stroke', 'pointer-events':'all'});
   node.__pc = pc;
+  node.__f = f;
   areasG.appendChild(node);
   byPc.set(pc, {node, f});
-  if(f) shapes.push(node);
+  if(cat === 'rebuild') rebuildNodes.push(node);
 }
 
 // 合格但 ABS 沒有對應面的郵區，用小點標出概略位置
@@ -370,7 +359,6 @@ for(const rec of PC){
   node.__pc = pc;
   strayG.appendChild(node);
   byPc.set(pc, {node, f:rec[3], rec, stray:true});
-  shapes.push(node);
 }
 
 // ---- 南回歸線 ----
@@ -481,39 +469,23 @@ function focusOn(rec, nk){
   apply();
 }
 
-// ---- 篩選 ----
-// selNode/selPc 必須宣告在 render() 之前：render() 初始化時就會執行並讀取 selPc
+// ---- 圖例：數量與細分開關 ----
 let selNode = null, selPc = null;
-let mode = 'or';
-const boxes = {1:document.getElementById('L1'), 2:document.getElementById('L2'), 4:document.getElementById('L4')};
-function visible(f){
-  const on = [1,2,4].filter(b => boxes[b].checked);
-  if(!on.length) return false;
-  return mode==='and' ? on.every(b => f & b) : on.some(b => f & b);
-}
-function render(){
-  let n = 0;
-  for(const s of shapes){
-    const v = visible(byPc.get(s.__pc).f);
-    s.classList.toggle('on', v);
-    if(s.classList.contains('stray')) s.style.display = v ? '' : 'none';
-    if(v) n++;
-  }
-  document.getElementById('shown').textContent = n;
-}
-const count = m => PC.filter(r => r[3] & m).length;
-document.getElementById('c1').textContent = count(1);
-document.getElementById('c2').textContent = count(2);
-document.getElementById('c4').textContent = count(4);
-for(const b of [boxes[1],boxes[2],boxes[4]]) b.addEventListener('change', render);
-for(const btn of document.querySelectorAll('#mode button')){
-  btn.onclick = () => {
-    mode = btn.dataset.m;
-    for(const b of document.querySelectorAll('#mode button')) b.setAttribute('aria-pressed', String(b===btn));
-    render();
-  };
-}
-render();
+
+const C = META.counts;
+for(const [id, n] of [['n-work', C.work], ['n-rebuild', C.rebuild], ['n-none', C.none],
+                      ['n-fire', C.fire_only], ['n-flood', C.flood_only], ['n-both', C.fire_and_flood]])
+  document.getElementById(id).textContent = n;
+if(C.none === 0) document.getElementById('r-none').style.display = 'none';
+
+const legend = document.getElementById('legend');
+const splitBox = document.getElementById('split');
+splitBox.addEventListener('change', () => {
+  const on = splitBox.checked;
+  legend.classList.toggle('split', on);
+  for(const node of rebuildNodes) node.setAttribute('fill', colorOf(node.__f, on));
+});
+if(C.rebuild === 0) splitBox.closest('.lgtoggle').style.display = 'none';
 
 // ---- 詳情 ----
 const detail = document.getElementById('detail');
@@ -537,7 +509,7 @@ function select(pc){
   const [p, , , f, names, total] = d.rec;
   const more = total > names.length ? ` 等 ${total} 個地區` : '';
   const rows = [];
-  if(f&1) rows.push(`<div class="verdict" style="--vc:var(--c-reg)"><span class="dot"></span><span><b>一般建築工地 → 算</b><br>在 Regional Australia 郵區內，住宅、非住宅、土木、整地、鷹架、油漆、圍籬等都算。</span></div>`);
+  if(f&1) rows.push(`<div class="verdict" style="--vc:var(--c-work)"><span class="dot"></span><span><b>一般建築工地 → 算</b><br>在 Regional Australia 郵區內，住宅、非住宅、土木、整地、鷹架、油漆、圍籬等都算。</span></div>`);
   else rows.push(`<div class="verdict no"><span class="dot"></span><span><b>一般建築工地 → 不算</b><br>這個郵區不在 Regional Australia 名單上。</span></div>`);
   if(f&2) rows.push(`<div class="verdict" style="--vc:var(--c-fire)"><span class="dot"></span><span><b>叢林大火重建工作 → 算</b><br>2019 年 7 月 31 日之後執行的重建、拆除、整地、修繕，有給薪或志工都算。</span></div>`);
   if(f&4) rows.push(`<div class="verdict" style="--vc:var(--c-flood)"><span class="dot"></span><span><b>洪水／氣旋等天災重建工作 → 算</b><br>2021 年 12 月 31 日之後執行；申請時「Employment type」要選 flood recovery。</span></div>`);
@@ -545,7 +517,7 @@ function select(pc){
   if(d.stray) rows.push(`<div class="note">ABS 沒有這個郵區的對應面，地圖上以小點標示概略位置。</div>`);
 
   detail.innerHTML =
-    `<div class="hd"><span class="pcn" style="color:${colorOf(f)}">${p}</span><span class="loc">${esc(names.join('、'))}${more}</span></div>` +
+    `<div class="hd"><span class="pcn" style="color:${colorOf(f, splitBox.checked)}">${p}</span><span class="loc">${esc(names.join('、'))}${more}</span></div>` +
     `<div class="bd">${rows.join('')}</div>`;
 }
 
@@ -575,14 +547,20 @@ function doSearch(){
   select(n);
   const d = byPc.get(n);
   if(!d || !d.rec) return;
-  for(const b of [1,2,4]) if((d.rec[3] & b) && !boxes[b].checked) boxes[b].checked = true;
-  mode = 'or';
-  for(const b of document.querySelectorAll('#mode button')) b.setAttribute('aria-pressed', String(b.dataset.m==='or'));
-  render();
   focusOn(d.rec, Math.max(k, 6));
 }
 document.getElementById('qb').onclick = doSearch;
 q.addEventListener('keydown', e => { if(e.key === 'Enter') doSearch(); });
+
+// 從入口頁帶郵區進來：#pc=4870
+function fromHash(){
+  const m = /pc=(\d{3,4})/.exec(location.hash || '');
+  if(!m) return;
+  q.value = m[1];
+  doSearch();
+}
+addEventListener('hashchange', fromHash);
+fromHash();
 
 // ---- 無障礙 ----
 // 地圖不是可逐格 tab 的（幾百個郵區當 tab stop 反而更難用），
@@ -592,7 +570,6 @@ const mt = el('title',{id:'maptitle'});
 mt.textContent = `${META.state_label} 417 集簽合格郵遞區號地圖，共 ${META.counts.boundaries} 個郵區。`
               + `用左側「查郵遞區號」欄位查詢個別郵區。`;
 svg.insertBefore(mt, svg.firstChild);
-if(META.counts.not_eligible > 0) document.getElementById('lgnone').style.display = '';
 // 圖例在手機上會蓋掉半張地圖，所以窄螢幕預設收起，桌機維持展開
 document.getElementById('legend').open = !matchMedia('(max-width:900px)').matches;
 </script>
