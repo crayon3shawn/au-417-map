@@ -1,0 +1,322 @@
+{
+  "cities": [
+    {
+      "lat": -37.8152,
+      "lon": 144.9639,
+      "name": "Melbourne 墨爾本",
+      "side": "l",
+      "tier": 1
+    },
+    {
+      "lat": -38.1499,
+      "lon": 144.3617,
+      "name": "Geelong",
+      "side": "l",
+      "tier": 1
+    },
+    {
+      "lat": -37.5622,
+      "lon": 143.8503,
+      "name": "Ballarat",
+      "side": "l",
+      "tier": 1
+    },
+    {
+      "lat": -36.7643,
+      "lon": 144.2786,
+      "name": "Bendigo",
+      "side": "l",
+      "tier": 1
+    },
+    {
+      "lat": -36.3833,
+      "lon": 145.4,
+      "name": "Shepparton",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -36.1241,
+      "lon": 146.8818,
+      "name": "Wodonga",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -36.3742,
+      "lon": 146.3265,
+      "name": "Wangaratta",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -38.2034,
+      "lon": 146.5198,
+      "name": "Traralgon",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -38.3687,
+      "lon": 142.4982,
+      "name": "Warrnambool",
+      "side": "l",
+      "tier": 1
+    },
+    {
+      "lat": -34.2151,
+      "lon": 142.1169,
+      "name": "Mildura",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -36.7204,
+      "lon": 142.1806,
+      "name": "Horsham",
+      "side": "l",
+      "tier": 1
+    },
+    {
+      "lat": -38.1026,
+      "lon": 147.073,
+      "name": "Sale",
+      "side": "r",
+      "tier": 1
+    },
+    {
+      "lat": -38.3333,
+      "lon": 144.3167,
+      "name": "Torquay",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -38.341,
+      "lon": 143.5855,
+      "name": "Colac",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -38.5287,
+      "lon": 143.9324,
+      "name": "Lorne",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -38.7552,
+      "lon": 143.6676,
+      "name": "Apollo Bay",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -38.3609,
+      "lon": 141.6041,
+      "name": "Portland",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -37.7456,
+      "lon": 142.0179,
+      "name": "Hamilton",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -37.2846,
+      "lon": 142.9316,
+      "name": "Ararat",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -37.0518,
+      "lon": 142.7777,
+      "name": "Stawell",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -37.1468,
+      "lon": 142.5235,
+      "name": "Halls Gap",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -37.0473,
+      "lon": 143.7446,
+      "name": "Maryborough",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -37.0581,
+      "lon": 144.2185,
+      "name": "Castlemaine",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -37.35,
+      "lon": 144.15,
+      "name": "Daylesford",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -35.3396,
+      "lon": 143.5525,
+      "name": "Swan Hill",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -36.146,
+      "lon": 144.7448,
+      "name": "Echuca",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -36.3139,
+      "lon": 145.0468,
+      "name": "Kyabram",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -37.0161,
+      "lon": 145.162,
+      "name": "Seymour",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -36.6182,
+      "lon": 145.9804,
+      "name": "Benalla",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -36.0271,
+      "lon": 145.9991,
+      "name": "Yarrawonga",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -35.9667,
+      "lon": 145.65,
+      "name": "Cobram",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -36.7322,
+      "lon": 146.9836,
+      "name": "Bright",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -37.0625,
+      "lon": 146.0821,
+      "name": "Mansfield",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -36.1967,
+      "lon": 147.9023,
+      "name": "Corryong",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -38.1538,
+      "lon": 145.9298,
+      "name": "Warragul",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -38.1722,
+      "lon": 146.2678,
+      "name": "Moe",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -38.2276,
+      "lon": 146.4146,
+      "name": "Morwell",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -37.8333,
+      "lon": 147.6167,
+      "name": "Bairnsdale",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -37.8511,
+      "lon": 147.9958,
+      "name": "Lakes Entrance",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -37.7028,
+      "lon": 148.4653,
+      "name": "Orbost",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -37.5131,
+      "lon": 149.7718,
+      "name": "Mallacoota",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -37.1,
+      "lon": 147.6,
+      "name": "Omeo",
+      "side": "r",
+      "tier": 2
+    },
+    {
+      "lat": -38.474,
+      "lon": 145.9437,
+      "name": "Leongatha",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -38.609,
+      "lon": 145.5911,
+      "name": "Wonthaggi",
+      "side": "l",
+      "tier": 2
+    },
+    {
+      "lat": -38.4511,
+      "lon": 145.2419,
+      "name": "Cowes",
+      "side": "l",
+      "tier": 2
+    }
+  ],
+  "note": "座標由 fetch/cities.py 從地名資料解析，請改 seed 檔而非本檔。",
+  "source": "https://raw.githubusercontent.com/matthewproctor/australianpostcodes/master/australian_postcodes.csv",
+  "state": "vic"
+}
