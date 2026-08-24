@@ -1,4 +1,11 @@
 __pycache__/
 *.pyc
 .venv/
+
+# 抓取快取（8 MB 的地名 CSV 等）
 data/raw/
+
+# 建置產出。由 data/ + src/ 完全決定，跑 `make all` 就會重新產生。
+# 不進版控的理由：每次改一行文案都會重寫 4 MB，git log 會被淹沒。
+# GitHub Pages 由 .github/workflows/pages.yml 建置後部署。
+dist/

@@ -95,6 +95,10 @@ def categorise(rings, flags):
     return c
 
 
+def tokens_css():
+    """共用的設計 token。兩個樣板都注入同一份，避免改配色時漏掉一邊。"""
+    return (ROOT / "src" / "tokens.css").read_text(encoding="utf-8")
+
 def ring_centroid(rings):
     """取最大環的平均點當代表座標。搜尋定位用，不需要精確的幾何重心。"""
     big = max(rings, key=len)
@@ -200,7 +204,8 @@ def main(state):
                            -1 if c.get("side") == "l" else 1] for c in cities]}
 
     html = (ROOT / "src" / "template.html").read_text(encoding="utf-8")
-    for token, value in (("__TITLE__", TITLES.get(state, f"{STATES[state]['name']} 417 集簽地圖")),
+    for token, value in (("__TOKENS__", tokens_css()),
+                         ("__TITLE__", TITLES.get(state, f"{STATES[state]['name']} 417 集簽地圖")),
                          ("__DATA__", json.dumps(payload, ensure_ascii=False, separators=(",", ":")))):
         if token not in html:
             raise SystemExit(f"樣板裡找不到注入點 {token}")

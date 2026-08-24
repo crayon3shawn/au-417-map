@@ -1,0 +1,110 @@
+/* 設計 token —— 州頁與入口頁共用這一份。
+
+   兩邊各存一份的話，改配色時漏掉一邊不會有任何錯誤訊息，也不會被測試抓到，
+   只會變成「入口頁還是舊配色、點進地圖是新配色」，要有人看到才會發現。
+
+   由 build 注入到 <style> 開頭，樣板裡不要再宣告一次。 */
+
+:root{
+  /* 底色與面板 */
+  --paper:#EDEFEA;
+  --paper-2:#D8E0E1;
+  --surface:#F8F9F6;
+  --sunk:#E0E5DD;
+  /* 文字 */
+  --ink:#16201C;
+  --ink-2:#4E5B55;
+  --ink-3:#76837C;
+  /* 線條與描邊光暈 */
+  --line:#C9D0C7;
+  --line-2:#B2BCAF;
+  --halo:#F0F2EC;
+  /* 三分類的顏色 */
+  --c-work:#0F7A6B;
+  --c-rebuild:#B4741A;
+  --c-none:#8C9691;
+  /* 災害細分（只有州頁用） */
+  --c-fire:#C0451A;
+  --c-flood:#2A66A8;
+  --c-both:#7A4B9E;
+  /* 郵區填色 */
+  --fill-a:0.62;
+  --edge:rgba(22,32,28,.38);
+  /* 經緯格線（只有州頁用） */
+  --grat:#C6CEC8;
+  /* 提示框（只有州頁用） */
+  --warn-bg:#F6E9DC;
+  --warn-line:#DCB894;
+  /* 陰影 */
+  --shadow:0 1px 2px rgba(22,32,28,.08), 0 8px 24px -12px rgba(22,32,28,.22);
+}
+
+/* 系統偏好深色，且使用者沒有明確選淺色 */
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  /* 底色與面板 */
+  --paper:#151C19;
+  --paper-2:#1B2523;
+  --surface:#212B26;
+  --sunk:#121814;
+  /* 文字 */
+  --ink:#E8EEE7;
+  --ink-2:#A2B0A7;
+  --ink-3:#7C8A82;
+  /* 線條與描邊光暈 */
+  --line:#2C3830;
+  --line-2:#3A4840;
+  --halo:#151C18;
+  /* 三分類的顏色 */
+  --c-work:#22A78F;
+  --c-rebuild:#D4922F;
+  --c-none:#6E7C74;
+  /* 災害細分（只有州頁用） */
+  --c-fire:#DE6431;
+  --c-flood:#4E8FD6;
+  --c-both:#9E71CC;
+  /* 郵區填色 */
+  --fill-a:0.70;
+  --edge:rgba(233,240,232,.30);
+  /* 經緯格線（只有州頁用） */
+  --grat:#242F28;
+  /* 提示框（只有州頁用） */
+  --warn-bg:#2A2117;
+  --warn-line:#4E3D26;
+  /* 陰影 */
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+}}
+
+/* 使用者明確選了深色 */
+:root[data-theme="dark"]{
+  /* 底色與面板 */
+  --paper:#151C19;
+  --paper-2:#1B2523;
+  --surface:#212B26;
+  --sunk:#121814;
+  /* 文字 */
+  --ink:#E8EEE7;
+  --ink-2:#A2B0A7;
+  --ink-3:#7C8A82;
+  /* 線條與描邊光暈 */
+  --line:#2C3830;
+  --line-2:#3A4840;
+  --halo:#151C18;
+  /* 三分類的顏色 */
+  --c-work:#22A78F;
+  --c-rebuild:#D4922F;
+  --c-none:#6E7C74;
+  /* 災害細分（只有州頁用） */
+  --c-fire:#DE6431;
+  --c-flood:#4E8FD6;
+  --c-both:#9E71CC;
+  /* 郵區填色 */
+  --fill-a:0.70;
+  --edge:rgba(233,240,232,.30);
+  /* 經緯格線（只有州頁用） */
+  --grat:#242F28;
+  /* 提示框（只有州頁用） */
+  --warn-bg:#2A2117;
+  --warn-line:#4E3D26;
+  /* 陰影 */
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+}

@@ -26,6 +26,11 @@ LABEL_POS = {
 FEW = 5   # 一般工地只有這麼少郵區算的話，直接把它們點名出來
 
 
+def tokens_css():
+    """共用的設計 token。兩個樣板都注入同一份，避免改配色時漏掉一邊。"""
+    return (ROOT / "src" / "tokens.css").read_text(encoding="utf-8")
+
+
 def area_coverage(pcdata, real):
     """五張地區表各自涵蓋多少個實際存在的郵區，用來說明它們的大小差距。"""
     out = {}
@@ -125,10 +130,11 @@ def main():
     }
 
     html = (ROOT / "src" / "portal.html").read_text(encoding="utf-8")
-    token = "__DATA__"
-    if token not in html:
-        raise SystemExit(f"樣板裡找不到注入點 {token}")
-    html = html.replace(token, json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
+    for token, value in (("__TOKENS__", tokens_css()),
+                         ("__DATA__", json.dumps(payload, ensure_ascii=False, separators=(",", ":")))):
+        if token not in html:
+            raise SystemExit(f"樣板裡找不到注入點 {token}")
+        html = html.replace(token, value)
 
     dest = ROOT / "dist" / "index.html"
     dest.write_text(html, encoding="utf-8")

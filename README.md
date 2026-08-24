@@ -13,7 +13,7 @@ make test     # 跑測試（不連網）
 make serve    # 建置並在 http://127.0.0.1:8731/index.html 預覽
 ```
 
-產出四頁，各自獨立：
+產出五頁，各自獨立（`dist/` 不進版控，由 `make all` 產生）：
 
 | 頁面 | 內容 | 大小 |
 |---|---|---|
@@ -84,6 +84,32 @@ postcodes」。它不是 Australia Post 的官方郵區界線——後者並未�
 
 覆蓋差異很小且可解釋：只在 matthewproctor 的多半是非地理郵區（信箱、大學、
 郵件中心），ABS 不給它們面是正確的；只在 ABS 的是 0872 這種跨州郵區與外島。
+
+## 檔案怎麼分
+
+| | 是什麼 | 進版控？ |
+|---|---|---|
+| `src/tokens.css` | **設計 token 的唯一來源**——配色、字級尺度 | ✅ |
+| `src/template.html`、`src/portal.html` | 版面與程式，不含 token（用 `__TOKENS__` 注入）| ✅ |
+| `data/*.json` | 凍結的資料 | ✅ |
+| `dist/*.html` | **建置產出** | ❌ 見下 |
+
+### 為什麼 token 要抽出來
+
+配色如果在兩個樣板裡各存一份，改的時候漏掉一邊**不會有任何錯誤訊息**，
+測試也抓不到，只會變成「入口頁還是舊配色、點進地圖是新配色」。
+這個專案已經差點發生過（改深色底色那次要同時動兩個檔案）。
+
+現在是單一來源，而且 `tests/test_tokens.py` 會檢查：樣板裡不准再宣告 token、
+三個主題區塊的 token 名稱必須一致、所有產出頁面的配色必須完全相同。
+
+### 為什麼 dist 不進版控
+
+它由 `data/` 加 `src/` 完全決定，刪掉重跑 `make all` 會得到一模一樣的檔案。
+進版控的話，每改一行文案就重寫 4 MB，`git log` 會被淹沒——這個專案早期
+16 個提交裡 dist 出現了 34 次。
+
+要發佈 Artifact 時本機仍然會有這些檔案，只是不提交。
 
 ## 架構：抓取 → 凍結 → 建置
 
@@ -265,10 +291,13 @@ make build STATE=vic
 
 ### 放上 GitHub Pages
 
-`dist/` 本來就是自包含的靜態檔案，可以直接當 Pages 的輸出目錄。
-改成 Pages 之後有一個額外好處：各頁之間可以用相對路徑互連
-（`qld.html`），不必再繞 Artifact 的網址，也就沒有 iframe 沙箱那些限制。
-`data/artifacts.json` 屆時可以換成相對路徑。
+`.github/workflows/pages.yml` 已經寫好：push 到 `main` 就建置、跑測試、部署。
+建置**完全離線**（只讀 `data/`），不會連到 Home Affairs 或 ABS——資料更新
+是手動跑 `make update` 之後提交的，CI 不會偷偷改資料。
+
+上 Pages 之後有個額外好處：各頁之間可以用相對路徑互連（`qld.html`），
+不必再繞 Artifact 的網址，也就沒有 iframe 沙箱那些限制。
+`data/artifacts.json` 屆時換成相對路徑即可。
 
 ## 免責
 
