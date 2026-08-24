@@ -1,46 +1,103 @@
 {
-  "note": "產業與地區表的對應。官方沒有這張表——它是 Home Affairs 頁面上的散文規則，人工整理自 417 與 462 的『Approved industries and areas for specified work』段落。地區表本身在 postcodes.json。",
+  "note": "產業與地區表的對應。官方沒有這張表——它是 Home Affairs 頁面上的散文規則，人工整理自 417 與 462 的『Approved industries and areas for specified work』段落。地區表本身在 postcodes.json。 scope 是該產業的範圍摘要，同樣整理自官網的定義與例示，用意是避免把不算的工作誤認為算（例如農牧的二次加工）。",
   "source": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work",
   "checked_against_page_dated": "2026-08-18",
   "industries": {
     "construction": {
       "label": "建築",
       "en": "Construction",
-      "areas": { "417": ["regional"], "462": ["northern", "regional"] },
-      "note": "462 頁面寫『northern Australia and other specified areas of regional Australia』，但兩份的 regional 表逐字相同，所以實際結果一致。"
+      "areas": {
+        "417": [
+          "regional"
+        ],
+        "462": [
+          "northern",
+          "regional"
+        ]
+      },
+      "note": "462 頁面寫『northern Australia and other specified areas of regional Australia』，但兩份的 regional 表逐字相同，所以實際結果一致。",
+      "scope": "住宅與非住宅營造、土木工程、整地、鷹架、油漆、圍籬，含支援與清潔服務。"
     },
     "cultivation": {
       "label": "農牧",
       "en": "Plant and animal cultivation",
-      "areas": { "417": ["regional"], "462": ["northern", "regional"] },
-      "note": "集簽最大宗。二次加工不算（釀酒、製麵、製作加工肉品）。"
+      "areas": {
+        "417": [
+          "regional"
+        ],
+        "462": [
+          "northern",
+          "regional"
+        ]
+      },
+      "note": "集簽最大宗。二次加工不算（釀酒、製麵、製作加工肉品）。",
+      "scope": "採收與包裝蔬果、剪毛、屠宰、包裝、以生乳製作乳製品、種植與育苗、環境復育造林。二次加工不算：釀酒、蒸餾、碾磨、加工肉品、乳製品或肉品零售。"
     },
     "mining": {
       "label": "礦業",
       "en": "Mining",
-      "areas": { "417": ["regional"], "462": null },
-      "note": "462 的核准產業清單裡沒有礦業這一項。null 代表『不適用』，跟『不算』不同——礦區的土建案子若歸類為 construction 則 462 仍算。"
+      "areas": {
+        "417": [
+          "regional"
+        ],
+        "462": null
+      },
+      "note": "462 的核准產業清單裡沒有礦業這一項。null 代表『不適用』，跟『不算』不同——礦區的土建案子若歸類為 construction 則 462 仍算。",
+      "scope": "煤礦、油氣開採、金屬與非金屬礦、採石、探勘，以及礦業支援服務（含清潔）。"
     },
     "fishing": {
-      "label": "漁業與珍珠",
+      "label": "漁業與採珠",
       "en": "Fishing and pearling",
-      "areas": { "417": ["regional"], "462": ["northern"] }
+      "areas": {
+        "417": [
+          "regional"
+        ],
+        "462": [
+          "northern"
+        ]
+      },
+      "note": "官方原文 \"Fishing and pearling\"。pearling 是採珠業，不是「珍珠」這個物品——先前譯為「漁業與珍珠」不準。",
+      "scope": "捕撈魚類與其他水生物；採集或養殖珍珠與珠貝。"
     },
     "forestry": {
       "label": "林業伐木",
       "en": "Tree farming and felling",
-      "areas": { "417": ["regional"], "462": ["northern"] }
+      "areas": {
+        "417": [
+          "regional"
+        ],
+        "462": [
+          "northern"
+        ]
+      },
+      "scope": "在林場或森林種植、撫育、砍伐供伐採的樹木，以及把伐倒的樹運送到第一個加工或轉運地點。"
     },
     "tourism": {
       "label": "觀光與餐旅",
       "en": "Tourism and hospitality",
-      "areas": { "417": ["remote", "northern"], "462": ["remote", "northern"] },
-      "note": "2021/6/22 起適用。remote 表已含官方另列的 4406、4416、4498、7215。"
+      "areas": {
+        "417": [
+          "remote",
+          "northern"
+        ],
+        "462": [
+          "remote",
+          "northern"
+        ]
+      },
+      "note": "2021/6/22 起適用。remote 表已含官方另列的 4406、4416、4498、7215。",
+      "scope": "住宿（旅館、背包客棧、露營區）、餐飲（餐廳、外帶、酒吧）、直接面向遊客的服務（導遊、潛水教練、遊覽車司機、票務與活動場館）。"
     }
   },
   "recovery": {
     "note": "災後重建是獨立於產業的另一條路，任何產業都適用，且志工也算。",
-    "bushfire": { "area": "bushfire", "from": "2019-07-31" },
-    "disaster": { "area": "disaster", "from": "2021-12-31" }
+    "bushfire": {
+      "area": "bushfire",
+      "from": "2019-07-31"
+    },
+    "disaster": {
+      "area": "disaster",
+      "from": "2021-12-31"
+    }
   }
 }

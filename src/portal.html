@@ -35,7 +35,8 @@ h1{margin:0 0 6px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-
   padding:6px 10px;border:1px solid var(--line-2);border-radius:3px;
   background:var(--paper);color:var(--ink);cursor:pointer}
 .indrow select:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px}
-.indrow span{font-size:11.5px;color:var(--ink-3)}
+.indrow span{font-size:11.5px;color:var(--ink-3);line-height:1.5;flex:1;min-width:240px}
+.indrow .dim{color:var(--ink-3);opacity:.75}
 .qrow{display:flex}
 .qrow input{flex:1;min-width:0;font-family:"IBM Plex Mono",monospace;font-size:26px;
   letter-spacing:.06em;padding:10px 14px;border:1px solid var(--line-2);border-radius:4px;
@@ -129,7 +130,7 @@ a.card:hover{border-color:var(--ink-3);background:var(--sunk)}
   color:var(--ink);font-weight:600;font-size:13px}
 .cov i{font-style:normal;color:var(--ink-3);font-size:10.5px}
 .tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:5px;background:var(--surface)}
-table.imap{border-collapse:collapse;width:100%;min-width:520px;font-size:12.5px}
+table.imap{border-collapse:collapse;width:100%;min-width:680px;font-size:12.5px}
 table.imap th,table.imap td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--line);
   vertical-align:top;line-height:1.5}
 table.imap thead th{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
@@ -139,6 +140,7 @@ table.imap tbody tr:last-child th,table.imap tbody tr:last-child td{border-botto
 table.imap td.na{color:var(--ink-3)}
 table.imap td.na b{color:var(--c-rebuild)}
 table.imap th[scope="row"]{font-weight:700;white-space:nowrap}
+table.imap td.sc{color:var(--ink-3);font-size:11.5px;min-width:260px}
 table.imap th[scope="row"] em{display:block;font-style:normal;font-weight:400;
   font-size:10.5px;color:var(--ink-3);letter-spacing:0}
 table.imap .diff{color:var(--c-rebuild);font-weight:700}
@@ -205,7 +207,7 @@ table.imap .diff{color:var(--c-rebuild);font-weight:700}
 
     <div class="tblwrap">
       <table class="imap" id="imap">
-        <thead><tr><th>產業</th><th>看哪張郵區表</th></tr></thead>
+        <thead><tr><th>產業</th><th>看哪張郵區表</th><th>範圍</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -283,8 +285,8 @@ for(const i of DATA.industry_masks){
   indSel.appendChild(o);
 }
 function applyIndustry(){
-  document.getElementById('indnote').textContent =
-    `${industry.label}適用的地區名單。切換會改變下面的判定與各州統計。`;
+  document.getElementById('indnote').innerHTML = esc(industry.scope || '')
+    + `<br><span class="dim">切換行業會改變下面的判定與各州統計。</span>`;
   drawStates();
   drawCards();
   if(q.value.trim()) lookup();
@@ -429,7 +431,8 @@ for(const ind of INDS){
   if(!ind.areas) continue;
   const tr = document.createElement('tr');
   tr.innerHTML = `<th scope="row">${esc(ind.label)}<em>${esc(ind.en)}</em></th>`
-    + `<td>${ind.areas.map(esc).join('　＋　')}</td>`;
+    + `<td>${ind.areas.map(esc).join('　＋　')}</td>`
+    + `<td class="sc">${esc(ind.scope || '')}</td>`;
   tb.appendChild(tr);
 }
 

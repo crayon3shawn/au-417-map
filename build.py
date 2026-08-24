@@ -211,6 +211,7 @@ def main(state):
         "bbox": bbox([r for rs in rings.values() for r in rs]),
         "industries": [
             {"key": key, "label": v["label"], "en": v["en"],
+             "scope": v.get("scope", ""),
              "mask": work_mask(v["areas"][VISA]),
              "counts": categorise(rings, flags, work_mask(v["areas"][VISA]))}
             for key, v in industries.items() if v["areas"][VISA]

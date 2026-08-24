@@ -114,13 +114,14 @@ def main():
     industries = []
     for key, v in ind["industries"].items():
         areas = v["areas"][VISA]
-        industries.append({"label": v["label"], "en": v["en"],
+        industries.append({"label": v["label"], "en": v["en"], "scope": v.get("scope", ""),
                            "areas": None if areas is None else [AREA_LABEL[a] for a in areas]})
 
     payload = {
         "industries": industries,
         "industry_masks": [
-            {"key": key, "label": v["label"], "mask": work_mask(v["areas"][VISA])}
+            {"key": key, "label": v["label"], "scope": v.get("scope", ""),
+             "mask": work_mask(v["areas"][VISA])}
             for key, v in inds.items() if v["areas"][VISA]
         ],
         "industry": DEFAULT_INDUSTRY,

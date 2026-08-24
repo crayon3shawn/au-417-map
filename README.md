@@ -242,11 +242,13 @@ make build STATE=vic
 | 建築 | Regional | Regional（結果相同）|
 | 農牧 | Regional | Regional |
 | 礦業 | Regional | **462 沒有這一項產業** |
-| 漁業／珍珠 | Regional | **僅 Northern** |
+| 漁業與採珠 | Regional | **僅 Northern** |
 | 林業伐木 | Regional | **僅 Northern** |
 | 觀光餐旅 | Northern ＋ Remote | 同左 |
 
 對應表在 `data/industries.json`，`build.py` 的 `DEFAULT_INDUSTRY` 指定預設值。
+每個產業另外帶一段 `scope`（範圍摘要），顯示在選單下方——官方對每個產業的
+範圍有明確定義，搞錯會被拒（例如農牧的二次加工不算：釀酒、碾磨、加工肉品）。
 
 每個郵區存的是**它在五張地區表裡的成員資格**（位元遮罩），不是預先算好的
 「算／不算」——判定取決於選了哪個產業，所以切換時只要換一組遮罩重新上色，
