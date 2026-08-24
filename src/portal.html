@@ -116,7 +116,7 @@ a.card:hover{border-color:var(--ink-3);background:var(--sunk)}
 .allwork{margin-top:8px;font-size:11.5px;line-height:1.5;color:var(--ink-2)}
 .allwork b{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--ink)}
 .card.off{opacity:1}
-.card.off .go{color:var(--c-work);font-weight:700}
+.card.off .go{font-weight:700}
 .card.nomap{opacity:.62}
 .card.nomap .go{color:var(--ink-3)}
 
@@ -256,10 +256,12 @@ const cards = document.getElementById('cards');
 for(const s of STATES){
   const total = s.total || 1;
   const seg = (n, v) => n ? `<i style="width:${(n/total*100).toFixed(1)}%;background:${v}"></i>` : '';
-  const status = s.url ? '看地圖 →' : (s.all_work ? '全境都算' : '尚無地圖');
-  const detail = s.all_work
-    ? `<div class="allwork">整個州都在 Regional Australia 名單上，
-         一般建築工地在哪裡工作都算，所以不需要地圖。共 <b>${s.work}</b> 個郵區。</div>`
+  const status = s.url ? '看地圖 →'
+               : s.all_work ? '全境都算'
+               : s.work === 0 ? '一般工地不算'
+               : s.summary ? '幾乎都不算' : '尚無地圖';
+  const detail = (!s.url && s.summary)
+    ? `<div class="allwork">${esc(s.summary)}</div>`
     : `<div class="legend2">
         <span style="--sw:var(--c-work)"><i></i>一般工地 <b>${s.work}</b></span>
         <span style="--sw:var(--c-rebuild)"><i></i>只有重建 <b>${s.rebuild}</b></span>
@@ -276,7 +278,7 @@ for(const s of STATES){
   let node;
   if(s.url){ node = document.createElement('a'); node.href = s.url; node.className = 'card'; }
   else { node = document.createElement('div');
-         node.className = 'card ' + (s.all_work ? 'off' : 'nomap'); }
+         node.className = 'card ' + (s.summary ? 'off' : 'nomap'); }
   node.innerHTML = inner;
   cards.appendChild(node);
 }
