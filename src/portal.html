@@ -27,6 +27,15 @@ h1{margin:0 0 6px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-
 .finder{background:var(--surface);border:1px solid var(--line);border-radius:6px;
   padding:20px;box-shadow:var(--shadow)}
 .finder .eyebrow{display:block;margin-bottom:10px}
+.indrow{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-bottom:14px;
+  padding-bottom:14px;border-bottom:1px solid var(--line)}
+.indrow label{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
+  font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.indrow select{font-family:"Noto Sans TC",system-ui,sans-serif;font-size:14px;
+  padding:6px 10px;border:1px solid var(--line-2);border-radius:3px;
+  background:var(--paper);color:var(--ink);cursor:pointer}
+.indrow select:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px}
+.indrow span{font-size:11.5px;color:var(--ink-3)}
 .qrow{display:flex}
 .qrow input{flex:1;min-width:0;font-family:"IBM Plex Mono",monospace;font-size:26px;
   letter-spacing:.06em;padding:10px 14px;border:1px solid var(--line-2);border-radius:4px;
@@ -67,8 +76,11 @@ h1{margin:0 0 6px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-
 .nomap{margin-top:11px;font-size:12px;color:var(--ink-3)}
 
 /* ---- 版面 ---- */
-.cols{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;margin-top:34px;align-items:start}
-@media (max-width:820px){ .cols{grid-template-columns:1fr;gap:26px} }
+/* 地圖與卡片原本並排，但兩者高度差很多（地圖 526px、卡片 944px），
+   左欄下半整片空著。改成上下堆疊，地圖有空間、卡片變成清楚的次要清單。 */
+.cols{display:flex;flex-direction:column;gap:26px;margin-top:34px}
+.mapbox{max-width:640px;margin:0 auto;width:100%}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:9px}
 .panel > .eyebrow{display:block;margin-bottom:12px}
 svg.au{display:block;width:100%;height:auto;background:var(--paper-2);
   border:1px solid var(--line);border-radius:6px}
@@ -84,7 +96,6 @@ svg.au{display:block;width:100%;height:auto;background:var(--paper-2);
   pointer-events:none;text-anchor:middle}
 .stlbl.dim{fill:var(--ink-3)}
 
-.cards{display:flex;flex-direction:column;gap:9px}
 .card{display:block;text-decoration:none;color:inherit;background:var(--surface);
   border:1px solid var(--line);border-radius:5px;padding:13px 15px}
 a.card:hover{border-color:var(--ink-3);background:var(--sunk)}
@@ -152,12 +163,17 @@ table.imap .diff{color:var(--c-rebuild);font-weight:700}
 <div class="wrap">
   <header>
     <h1>澳洲 417 集簽地圖</h1>
-    <p class="lede"><strong>417</strong> 打工度假簽證的集簽合格郵遞區號，以<strong>建築工地</strong>為取向。
-      輸入郵遞區號或地名馬上知道算不算，或直接進各州地圖看整體分布。
+    <p class="lede"><strong>417</strong> 打工度假簽證的集簽合格郵遞區號。
+      選你的行業、輸入郵遞區號或地名，馬上知道算不算，或直接進各州地圖看整體分布。
       <span class="lede-note">（462 的產業規則不同，不適用。）</span></p>
   </header>
 
   <section class="finder">
+    <div class="indrow">
+      <label for="ind">你做哪一行</label>
+      <select id="ind" aria-label="選擇產業"></select>
+      <span id="indnote"></span>
+    </div>
     <span class="eyebrow">查郵區或地名</span>
     <div class="qrow">
       <input id="q" maxlength="30" placeholder="4870 或 Cairns" autocomplete="off"
@@ -170,7 +186,7 @@ table.imap .diff{color:var(--c-rebuild);font-weight:700}
   </section>
 
   <div class="cols">
-    <section class="panel">
+    <section class="panel mapbox">
       <span class="eyebrow">各州地圖</span>
       <svg class="au" id="au" aria-labelledby="autitle"></svg>
     </section>
@@ -241,15 +257,42 @@ document.getElementById('hint').textContent =
   `可查 ${META.n_postcodes} 個郵遞區號，涵蓋全澳。目前有 ${META.n_maps} 個州做了地圖。`;
 
 // 三個互斥的答案，跟各州地圖用同一套說法
-const CATS = {
-  work:    {c:'var(--c-work)',    say:'一般建築工地就算',
-            sub:'住宅、非住宅、土木、整地、鷹架、油漆、圍籬等都算。'},
-  rebuild: {c:'var(--c-rebuild)', say:'只有災後重建工作算',
-            sub:'一般新建案不算。重建的土建、拆除、修繕、道路橋樑才算，志工也算，記得留下能證明工程屬於災後修復的紀錄。'},
-  none:    {c:'var(--c-none)',    say:'完全不算',
-            sub:'這個郵區不在任何一張合格清單上。'},
-};
-const catOf = f => (f & 1) ? 'work' : (f & 6) ? 'rebuild' : 'none';
+// 判定文字要跟著選定的產業變，所以是函式不是常數
+const CAT_COLOR = {work:'var(--c-work)', rebuild:'var(--c-rebuild)', none:'var(--c-none)'};
+function cats(){
+  const n = industry.label;
+  return {
+    work:    {c:CAT_COLOR.work,    say:`一般${n}工作就算`,
+              sub:`這個郵區在${n}適用的地區名單上。`},
+    rebuild: {c:CAT_COLOR.rebuild, say:'只有災後重建工作算',
+              sub:`一般${n}工作不算。重建的土建、拆除、修繕、道路橋樑才算，志工也算，記得留下能證明工程屬於災後修復的紀錄。`},
+    none:    {c:CAT_COLOR.none,    say:'完全不算',
+              sub:'這個郵區不在任何一張合格清單上。'},
+  };
+}
+// 位元記的是地區表成員資格，判定取決於選了哪個產業
+const BIT_FIRE = 8, BIT_DISASTER = 16, REBUILD = BIT_FIRE | BIT_DISASTER;
+let industry = DATA.industry_masks.find(i => i.key === DATA.industry) || DATA.industry_masks[0];
+const catOf = f => (f & industry.mask) ? 'work' : (f & REBUILD) ? 'rebuild' : 'none';
+
+const indSel = document.getElementById('ind');
+for(const i of DATA.industry_masks){
+  const o = document.createElement('option');
+  o.value = i.key; o.textContent = i.label;
+  if(i.key === industry.key) o.selected = true;
+  indSel.appendChild(o);
+}
+function applyIndustry(){
+  document.getElementById('indnote').textContent =
+    `${industry.label}適用的地區名單。切換會改變下面的判定與各州統計。`;
+  drawStates();
+  drawCards();
+  if(q.value.trim()) lookup();
+}
+indSel.addEventListener('change', () => {
+  industry = DATA.industry_masks.find(i => i.key === indSel.value) || industry;
+  applyIndustry();
+});
 const stateOf = k => STATES.find(s => s.key === k);
 
 // ---- 全澳概觀圖 ----
@@ -268,7 +311,25 @@ const at = el('title',{id:'autitle'});
 at.textContent = '澳洲各州地圖導覽。有做地圖的州可以點進去，其餘僅供參考。';
 svg.appendChild(at);
 
+// 各州統計依選定產業即時算，不用 build 端算好的固定值——換產業數字要跟著變
+function statsFor(s){
+  let work = 0, rebuild = 0, none = 0;
+  for(const pc in IDX){
+    if(IDX[pc][0] !== s.key) continue;
+    const f = IDX[pc][2];
+    if(f & industry.mask) work++;
+    else if(f & REBUILD) rebuild++;
+    else none++;
+  }
+  const total = work + rebuild + none;
+  return {work, rebuild, none, total,
+          all_work: rebuild === 0 && none === 0 && work > 0};
+}
+
+function drawStates(){
+for(const n of [...svg.querySelectorAll('path.st, a, text.stlbl')]) n.remove();
 for(const s of STATES){
+  Object.assign(s, statsFor(s));
   const rings = DATA.outlines[s.key];
   if(!rings || !rings.length) continue;   // 空陣列是 truthy，要另外擋
   const d = rings.map(r => r.map(([lo,la],i)=>(i?'L':'M')+px(lo).toFixed(2)+' '+py(la).toFixed(2)).join('')+'Z').join('');
@@ -277,11 +338,11 @@ for(const s of STATES){
   const dominant = s.none > s.work && s.none > s.rebuild ? 'none'
                  : s.work >= s.rebuild ? 'work' : 'rebuild';
   const node = el('path',{class:'st' + (s.url ? '' : ' nomap'), d,
-    fill: CATS[dominant].c, 'vector-effect':'non-scaling-stroke'});
+    fill: CAT_COLOR[dominant], 'vector-effect':'non-scaling-stroke'});
   const t = el('title',{});
   t.textContent = s.all_work
     ? `${s.abbr} ${s.label}：全境都算，${s.work} 個郵區`
-    : `${s.abbr} ${s.label}：一般工地 ${s.work}、只有重建 ${s.rebuild}、不算 ${s.none}`;
+    : `${s.abbr} ${s.label}：一般${industry.label} ${s.work}、只有重建 ${s.rebuild}、不算 ${s.none}`;
   node.appendChild(t);
   // Artifact 在沙箱 iframe 裡執行，改變上層網址會被擋掉（畫面變成一片白），
   // 所以一律用 <a target="_blank"> 在新分頁開啟。
@@ -306,20 +367,30 @@ for(const s of STATES){
     svg.appendChild(lbl);
   }
 }
+}
 
 // ---- 各州卡片 ----
 const cards = document.getElementById('cards');
+function drawCards(){
+cards.innerHTML = '';
 for(const s of STATES){
   const total = s.total || 1;
   const seg = (n, v) => n ? `<i style="width:${(n/total*100).toFixed(1)}%;background:${v}"></i>` : '';
   const status = s.url ? '看地圖 →'
                : s.all_work ? '全境都算'
-               : s.work === 0 ? '一般工地不算'
-               : s.summary ? '幾乎都不算' : '尚無地圖';
-  const detail = (!s.url && s.summary)
-    ? `<div class="allwork">${esc(s.summary)}</div>`
+               : s.work === 0 ? '一般工作不算'
+               : s.work <= 5 ? '幾乎都不算' : '尚無地圖';
+  const note = s.all_work
+    ? `整個州都在${esc(industry.label)}適用的地區名單上，在哪裡工作都算，所以不需要地圖。共 ${s.work} 個郵區。`
+    : s.work === 0
+      ? `一般${esc(industry.label)}工作在這裡都不算。但全境被宣告為災區，災後重建工作在哪裡都算。`
+      : s.work <= 5
+        ? `一般${esc(industry.label)}工作只有 ${s.work} 個郵區算，其餘只有災後重建工作算。`
+        : null;
+  const detail = (!s.url && note)
+    ? `<div class="allwork">${esc(note)}</div>`
     : `<div class="legend2">
-        <span style="--sw:var(--c-work)"><i></i>一般工地 <b>${s.work}</b></span>
+        <span style="--sw:var(--c-work)"><i></i>一般${esc(industry.label)} <b>${s.work}</b></span>
         <span style="--sw:var(--c-rebuild)"><i></i>只有重建 <b>${s.rebuild}</b></span>
         <span style="--sw:var(--c-none)"><i></i>不算 <b>${s.none}</b></span>
       </div>`;
@@ -335,9 +406,10 @@ for(const s of STATES){
   if(s.url){ node = document.createElement('a'); node.href = s.url; node.className = 'card';
              node.target = '_blank'; node.rel = 'noopener'; }
   else { node = document.createElement('div');
-         node.className = 'card ' + (s.summary ? 'off' : 'nomap'); }
+         node.className = 'card ' + (note ? 'off' : 'nomap'); }
   node.innerHTML = inner;
   cards.appendChild(node);
+}
 }
 
 // ---- 依據：五張表的大小、產業對應 ----
@@ -390,7 +462,7 @@ function showHits(list, term){
     const f = IDX[pc][2], s = stateOf(st);
     const b = document.createElement('button');
     b.type = 'button';
-    b.style.setProperty('--hc', CATS[catOf(f)].c);
+    b.style.setProperty('--hc', CAT_COLOR[catOf(f)]);
     b.innerHTML = `<em></em><b>${pc}</b><i>${esc(nm)}</i><u>${esc(s.abbr)}</u>`;
     b.addEventListener('click', () => { q.value = nm; clearHits(); render(pc); });
     hitsEl.appendChild(b);
@@ -428,10 +500,10 @@ function render(key){
   }
   const v = key;
   const [stKey, name, f] = hit;
-  const s = stateOf(stKey), cat = CATS[catOf(f)];
+  const s = stateOf(stKey), cat = cats()[catOf(f)];
   const routes = [];
-  if(f & 2) routes.push('叢林大火重建（2019/7/31 之後）');
-  if(f & 4) routes.push('洪水／氣旋等天災重建（2021/12/31 之後）');
+  if(f & BIT_FIRE) routes.push('叢林大火重建（2019/7/31 之後）');
+  if(f & BIT_DISASTER) routes.push('洪水／氣旋等天災重建（2021/12/31 之後）');
   const extra = routes.length ? `<br>這裡也被宣告為災區：${routes.join('、')}。` : '';
   const link = s.url
     ? `<a class="golink" href="${s.url}#pc=${parseInt(v,10)}" target="_blank" rel="noopener">在${esc(s.label)}地圖上看 →</a>`
@@ -454,4 +526,6 @@ q.addEventListener('input', () => {
   if(v.length >= 2 && !/^\d{1,2}$/.test(v)) lookup();
   else { clearHits(); show(`<p class="hint" id="hint"></p>`); }
 });
+
+applyIndustry();   // 初次繪製。放最後是因為它會用到上面宣告的 q 與 lookup。
 </script>

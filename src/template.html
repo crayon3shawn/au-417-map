@@ -66,6 +66,12 @@ body{
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
 .seg button:focus-visible{outline:2px solid var(--ink);outline-offset:-3px}
 
+/* 產業決定整張圖的意思，所以放在搜尋上面 */
+.ind{width:100%;font-family:"Noto Sans TC",system-ui,sans-serif;font-size:14px;
+  padding:8px 10px;border:1px solid var(--line-2);border-radius:3px;
+  background:var(--paper);color:var(--ink);cursor:pointer}
+.ind:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px;border-color:var(--c-work)}
+.indnote{margin:0;font-size:11.5px;line-height:1.5;color:var(--ink-3)}
 .srch{display:flex}
 .srch input{flex:1;min-width:0;font-family:"IBM Plex Mono",monospace;font-size:14px;
   padding:8px 10px;border:1px solid var(--line-2);border-radius:3px;background:var(--paper);color:var(--ink)}
@@ -189,13 +195,19 @@ svg.map.drag{cursor:grabbing}
 <div class="shell">
   <header class="bar">
     <h1>__TITLE__</h1>
-    <span class="sub">建築工地取向 · 郵遞區號合格性與災區宣告</span>
+    <span class="sub">郵遞區號合格性與災區宣告 · <span id="subind"></span></span>
     <span class="spacer"></span>
     <nav class="nav" id="nav" aria-label="切換地圖"></nav>
   </header>
 
   <div class="main">
     <aside class="rail">
+      <section class="blk">
+        <span class="eyebrow">你做哪一行</span>
+        <select id="ind" class="ind" aria-label="選擇產業"></select>
+        <p class="indnote" id="indnote"></p>
+      </section>
+
       <section class="blk">
         <span class="eyebrow">查郵區或地名</span>
         <div class="srch">
@@ -214,10 +226,10 @@ svg.map.drag{cursor:grabbing}
       </section>
 
       <section class="blk">
-        <span class="eyebrow">給工地的三個重點</span>
+        <span class="eyebrow">三個重點</span>
         <div class="facts">
-          <p><b>1. 一般工地只認 regional。</b>建築業在 Regional Australia 郵區內的工作才算集簽。<span id="excluded"></span></p>
-          <p><b>2. 災區是另一條路。</b>被宣告為災區的郵區，就算不在 regional 名單裡，做<b>災後重建</b>的土建、拆除、修繕、道路橋樑一樣算，志工也算。但同一個郵區的一般新建案不算。</p>
+          <p><b>1. 地區名單看產業。</b><span id="fact1"></span><span id="excluded"></span></p>
+          <p><b>2. 災區是另一條路。</b>被宣告為災區的郵區，就算不在上面那些名單裡，做<b>災後重建</b>的土建、拆除、修繕、道路橋樑一樣算，志工也算。但同一個郵區的一般工作不算。</p>
           <p><b>3. 二簽 88 天、三簽 179 天。</b>算的是等同全職的工作天數，不能壓縮在比 3 個月／6 個月更短的期間內完成。</p>
         </div>
       </section>
@@ -246,7 +258,7 @@ svg.map.drag{cursor:grabbing}
             <i style="--sw:var(--c-work)"></i><i style="--sw:var(--c-rebuild)"></i><i style="--sw:var(--c-none)"></i>
           </span>
         </summary>
-        <div class="lg" style="--sw:var(--c-work)"><i></i><span>一般建築工地就算</span><b id="n-work"></b></div>
+        <div class="lg" style="--sw:var(--c-work)"><i></i><span id="n-work-label">一般工作就算</span><b id="n-work"></b></div>
         <div class="lg" id="r-rebuild" style="--sw:var(--c-rebuild)"><i></i><span>只有災後重建工作算</span><b id="n-rebuild"></b></div>
         <div class="lg split" style="--sw:var(--c-fire)"><i></i><span>只有大火重建算</span><b id="n-fire"></b></div>
         <div class="lg split" style="--sw:var(--c-flood)"><i></i><span>只有天災重建算</span><b id="n-flood"></b></div>
@@ -329,18 +341,26 @@ for(let lat=-10; lat>=-30; lat-=2)
 over.appendChild(grat);
 
 // ---- 郵區面 ----
+// 每個郵區的旗標記的是「它在五張地區表裡的成員資格」，不是判定結果——
+// 判定取決於選了哪個產業，所以切換產業只要換一組遮罩重新上色。
+const BIT_FIRE = 8, BIT_DISASTER = 16, REBUILD = BIT_FIRE | BIT_DISASTER;
+
+let industry = META.industries.find(i => i.key === META.industry) || META.industries[0];
+const workMask = () => industry.mask;
+
 // 三個互斥的答案。顏色就是答案本身，沒有第二個軸。
-//   work    regional，一般建築工地就算
-//   rebuild 不是 regional 但被宣告為災區，只有災後重建工作算
-//   none    不在任何清單上
-const catOf = f => (f & 1) ? 'work' : (f & 6) ? 'rebuild' : 'none';
+//   work    這個產業認可的地區表裡，一般工作就算
+//   rebuild 不在那些表裡，但被宣告為災區，只有災後重建工作算
+//   none    兩者皆非
+const catOf = f => (f & workMask()) ? 'work' : (f & REBUILD) ? 'rebuild' : 'none';
 
 // 細分只作用在 rebuild：災害種類唯有在「重建是唯一路徑」時才影響判斷。
 function colorOf(f, split){
-  if(f & 1) return 'var(--c-work)';
-  if(!(f & 6)) return 'var(--c-none)';
+  if(f & workMask()) return 'var(--c-work)';
+  if(!(f & REBUILD)) return 'var(--c-none)';
   if(!split) return 'var(--c-rebuild)';
-  return ((f & 2) && (f & 4)) ? 'var(--c-both)' : (f & 2) ? 'var(--c-fire)' : 'var(--c-flood)';
+  return ((f & BIT_FIRE) && (f & BIT_DISASTER)) ? 'var(--c-both)'
+       : (f & BIT_FIRE) ? 'var(--c-fire)' : 'var(--c-flood)';
 }
 
 const areasG = el('g',{}); proj.appendChild(areasG);    // 郵區面（原始經緯度）
@@ -348,7 +368,6 @@ const strayG = el('g',{}); over.appendChild(strayG);    // 沒有邊界面的郵
 const byPc = new Map();
 const flagOf = new Map(Object.entries(FLAGS).map(([pc, f]) => [+pc, f]));
 
-const rebuildNodes = [];
 for(const pc of Object.keys(POA).map(Number).sort((a,b)=>a-b)){
   const f = flagOf.get(pc) || 0;
   const cat = catOf(f);
@@ -358,7 +377,6 @@ for(const pc of Object.keys(POA).map(Number).sort((a,b)=>a-b)){
   node.__f = f;
   areasG.appendChild(node);
   byPc.set(pc, {node, f});
-  if(cat === 'rebuild') rebuildNodes.push(node);
 }
 
 // 合格但 ABS 沒有對應面的郵區，用小點標出概略位置
@@ -534,20 +552,58 @@ function focusOn(rec, nk){
 // ---- 圖例：數量與細分開關 ----
 let selNode = null, selPc = null;
 
-const C = META.counts;
-for(const [id, n] of [['n-work', C.work], ['n-rebuild', C.rebuild], ['n-none', C.none],
-                      ['n-fire', C.fire_only], ['n-flood', C.flood_only], ['n-both', C.fire_and_flood]])
-  document.getElementById(id).textContent = n;
-if(C.none === 0) document.getElementById('r-none').style.display = 'none';
-
 const legend = document.getElementById('legend');
 const splitBox = document.getElementById('split');
-splitBox.addEventListener('change', () => {
+const indSel = document.getElementById('ind');
+const indNote = document.getElementById('indnote');
+
+const AREA_NAME = {1:'Remote and Very Remote', 2:'Northern Australia', 4:'Regional Australia'};
+function areasOf(mask){
+  return Object.keys(AREA_NAME).map(Number).filter(b => mask & b).map(b => AREA_NAME[b]);
+}
+
+for(const i of META.industries){
+  const o = document.createElement('option');
+  o.value = i.key; o.textContent = i.label;
+  if(i.key === industry.key) o.selected = true;
+  indSel.appendChild(o);
+}
+
+function applyIndustry(){
   const on = splitBox.checked;
-  legend.classList.toggle('split', on);
-  for(const node of rebuildNodes) node.setAttribute('fill', colorOf(node.__f, on));
+  for(const s of areasG.children){
+    const f = byPc.get(s.__pc).f;
+    s.setAttribute('class', 'poa ' + catOf(f) + (s.classList.contains('sel') ? ' sel' : ''));
+    s.setAttribute('fill', colorOf(f, on));
+  }
+  for(const s of strayG.children){
+    const f = byPc.get(s.__pc).f;
+    s.setAttribute('fill', colorOf(f, on));
+  }
+  const c = industry.counts;
+  for(const [id, n] of [['n-work', c.work], ['n-rebuild', c.rebuild], ['n-none', c.none],
+                        ['n-fire', c.fire_only], ['n-flood', c.flood_only], ['n-both', c.fire_and_flood]])
+    document.getElementById(id).textContent = n;
+  document.getElementById('r-none').style.display = c.none ? '' : 'none';
+  const tables = areasOf(industry.mask).join(' ＋ ');
+  document.getElementById('n-work-label').textContent = `一般${industry.label}工作就算`;
+  indNote.textContent = `看的是 ${tables} 這張表。`;
+  document.getElementById('subind').textContent = `目前顯示：${industry.label}`;
+  document.getElementById('fact1').textContent =
+    `${industry.label}在 ${tables} 郵區內的工作才算集簽。`;
+  splitBox.closest('.lgtoggle').style.display = c.rebuild ? '' : 'none';
+  if(selPc !== null) select(selPc);
+}
+
+indSel.addEventListener('change', () => {
+  industry = META.industries.find(i => i.key === indSel.value) || industry;
+  applyIndustry();
 });
-if(C.rebuild === 0) splitBox.closest('.lgtoggle').style.display = 'none';
+applyIndustry();      // 初次載入也要跑，文案與數量才會跟預設產業一致
+splitBox.addEventListener('change', () => {
+  legend.classList.toggle('split', splitBox.checked);
+  applyIndustry();
+});
 
 // ---- 詳情 ----
 const detail = document.getElementById('detail');
@@ -564,7 +620,7 @@ function select(pc){
   if(!d || !d.rec){
     const names = OTHER[pc];
     const where = names ? `（${esc(names.join('、'))}）` : '';
-    detail.innerHTML = `<div class="empty">郵遞區號 <b class="mono">${esc(pc)}</b>${where} 不在${META.state_label}的合格清單上。一般建築工地與災後重建工作都不能用它集簽。</div>`;
+    detail.innerHTML = `<div class="empty">郵遞區號 <b class="mono">${esc(pc)}</b>${where} 不在${META.state_label}的合格清單上。一般${esc(industry.label)}工作與災後重建工作都不能用它集簽。</div>`;
     return;
   }
 
@@ -572,11 +628,12 @@ function select(pc){
   const shown = names.slice(0, 6);
   const more = names.length > shown.length ? ` 等 ${names.length} 個地區` : '';
   const rows = [];
-  if(f&1) rows.push(`<div class="verdict" style="--vc:var(--c-work)"><span class="dot"></span><span><b>一般建築工地 → 算</b><br>在 Regional Australia 郵區內，住宅、非住宅、土木、整地、鷹架、油漆、圍籬等都算。</span></div>`);
-  else rows.push(`<div class="verdict no"><span class="dot"></span><span><b>一般建築工地 → 不算</b><br>這個郵區不在 Regional Australia 名單上。</span></div>`);
-  if(f&2) rows.push(`<div class="verdict" style="--vc:var(--c-fire)"><span class="dot"></span><span><b>叢林大火重建工作 → 算</b><br>2019 年 7 月 31 日之後執行的重建、拆除、整地、修繕，有給薪或志工都算。</span></div>`);
-  if(f&4) rows.push(`<div class="verdict" style="--vc:var(--c-flood)"><span class="dot"></span><span><b>洪水／氣旋等天災重建工作 → 算</b><br>2021 年 12 月 31 日之後執行；申請時「Employment type」要選 flood recovery。</span></div>`);
-  if(!(f&1) && (f&6)) rows.push(`<div class="note"><b>注意：</b>這個郵區只走災後重建這條路。同一個工地如果做的是一般新建案、跟災後復原無關，不能算。留好能證明工程屬於災後修復的紀錄。</div>`);
+  const ind = industry.label;
+  if(f & workMask()) rows.push(`<div class="verdict" style="--vc:var(--c-work)"><span class="dot"></span><span><b>一般${esc(ind)}工作 → 算</b><br>這個郵區在${esc(ind)}適用的地區名單上。</span></div>`);
+  else rows.push(`<div class="verdict no"><span class="dot"></span><span><b>一般${esc(ind)}工作 → 不算</b><br>這個郵區不在${esc(ind)}適用的地區名單上。</span></div>`);
+  if(f & BIT_FIRE) rows.push(`<div class="verdict" style="--vc:var(--c-fire)"><span class="dot"></span><span><b>叢林大火重建工作 → 算</b><br>2019 年 7 月 31 日之後執行的重建、拆除、整地、修繕，有給薪或志工都算。</span></div>`);
+  if(f & BIT_DISASTER) rows.push(`<div class="verdict" style="--vc:var(--c-flood)"><span class="dot"></span><span><b>洪水／氣旋等天災重建工作 → 算</b><br>2021 年 12 月 31 日之後執行；申請時「Employment type」要選 flood recovery。</span></div>`);
+  if(!(f & workMask()) && (f & REBUILD)) rows.push(`<div class="note"><b>注意：</b>這個郵區只走災後重建這條路。一般${esc(ind)}工作、跟災後復原無關的，不能算。留好能證明工程屬於災後修復的紀錄。</div>`);
   if(d.stray) rows.push(`<div class="note">ABS 沒有這個郵區的對應面，地圖上以小點標示概略位置。</div>`);
 
   detail.innerHTML =

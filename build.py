@@ -12,11 +12,14 @@ from lib import expand, load, STATES
 
 ROOT = pathlib.Path(__file__).resolve().parent
 VISA = "417"          # 顯示用的主要簽證；地點清單 417/462 相同時會註明
-INDUSTRY = "construction"   # 這份地圖的取向。換產業要看的地區表就不同——
-                            # 例如漁業在 462 只限 northern Australia。
-                            # 對應規則在 data/industries.json。
+DEFAULT_INDUSTRY = "construction"   # 預設取向；使用者可在頁面上切換
 
-BIT_WORK, BIT_FIRE, BIT_DISASTER = 1, 2, 4   # 位元旗標
+# 每個郵區記錄它在五張地區表裡的成員資格。
+# 不預先算成「算／不算」，因為那取決於選了哪個產業——前端切換產業時
+# 只要換一組遮罩重新上色，不必重新載入資料。
+AREA_BITS = {"remote": 1, "northern": 2, "regional": 4, "bushfire": 8, "disaster": 16}
+BIT_FIRE, BIT_DISASTER = AREA_BITS["bushfire"], AREA_BITS["disaster"]
+REBUILD_MASK = BIT_FIRE | BIT_DISASTER
 
 TITLES = {"qld": "昆士蘭 417 集簽地圖", "nsw": "新南威爾斯 417 集簽地圖",
           "vic": "維多利亞 417 集簽地圖", "wa": "西澳 417 集簽地圖"}
@@ -66,12 +69,20 @@ def is_non_geographic(names):
     return bool(names) and all(NON_GEO.search(n) for n in names)
 
 
-def categorise(rings, flags):
+def work_mask(industry_areas):
+    """某個產業的「一般工作就算」是哪幾張表的聯集。"""
+    m = 0
+    for a in industry_areas or []:
+        m |= AREA_BITS[a]
+    return m
+
+
+def categorise(rings, flags, mask):
     """把每個郵區歸成三個互斥類別，並統計數量。
 
-    綠 work    ：regional，一般建築工地就算
-    琥珀 rebuild：不是 regional，但被宣告為災區，只有災後重建工作算
-    灰 none    ：不在任何清單上
+    綠 work    ：這個產業認可的地區表裡，一般工作就算
+    琥珀 rebuild：不在上面那些表裡，但被宣告為災區，只有災後重建工作算
+    灰 none    ：兩者皆非
 
     琥珀再細分成大火／天災／兩者——災害種類只有在「重建是唯一路徑」時才
     影響決定（日期門檻不同、ImmiAccount 的 Employment type 也不同）。
@@ -80,13 +91,13 @@ def categorise(rings, flags):
     c = dict(work=0, rebuild=0, none=0, fire_only=0, flood_only=0, fire_and_flood=0)
     for k in rings:
         f = flags.get(int(k), 0)
-        if f & 1:
+        if f & mask:
             c["work"] += 1
-        elif f & 6:
+        elif f & REBUILD_MASK:
             c["rebuild"] += 1
-            if (f & 2) and (f & 4):
+            if (f & BIT_FIRE) and (f & BIT_DISASTER):
                 c["fire_and_flood"] += 1
-            elif f & 2:
+            elif f & BIT_FIRE:
                 c["fire_only"] += 1
             else:
                 c["flood_only"] += 1
@@ -137,20 +148,15 @@ def main(state):
     poa    = load(ROOT / "data" / f"poa-{state}.json")
     cities = load(ROOT / "data" / f"cities-{state}.json")["cities"]
 
-    # 這個產業在這個簽證下要看哪幾張地區表
-    ind = load(ROOT / "data" / "industries.json")["industries"][INDUSTRY]
-    work_areas = ind["areas"][VISA]
-    if work_areas is None:
-        raise SystemExit(f"{ind['label']}在 {VISA} 沒有這一項產業，無法建圖")
+    industries = load(ROOT / "data" / "industries.json")["industries"]
 
-    # 展開成每個郵區一組位元旗標。災後重建是獨立於產業的另一條路。
+    # 每個郵區在五張地區表裡的成員資格。
     #
     # 跨全澳取聯集，不是只看本州：郵區的合格性是郵區本身的屬性，不該隨你
     # 看哪一頁而變。0872 橫跨 NT／WA／SA，只出現在 NT 的 regional 表
     # （「全境皆可」），逐州算的話在 WA 頁會被誤判成不是 regional。
     flags = {}
-    for area, bit in [(a, BIT_WORK) for a in work_areas] + \
-                     [("bushfire", BIT_FIRE), ("disaster", BIT_DISASTER)]:
+    for area, bit in AREA_BITS.items():
         for st in STATES:
             for pc in expand(pcdata["areas"][VISA].get(area, {}).get(st), st):
                 flags[pc] = flags.get(pc, 0) | bit
@@ -170,8 +176,12 @@ def main(state):
     if idx_path.exists():
         national = load(idx_path)["postcodes"]
 
+    # flags 是全澳的（郵區身分不隨頁面而變），但這一頁只需要本州相關的郵區：
+    # 有邊界面的，加上本州地名檔裡有登記且在任一張表上的。
+    candidates = {int(k) for k in rings} | {int(k) for k in loc if int(k) in flags}
+
     records, no_coord, non_geo = [], [], []
-    for pc in sorted(flags):
+    for pc in sorted(candidates):
         d = loc.get(str(pc))
         if not d and str(pc) in rings:
             n = national.get(str(pc))
@@ -184,10 +194,9 @@ def main(state):
         if str(pc) not in rings and is_non_geographic(d["names"]):
             non_geo.append(pc)
             continue
-        records.append([pc, d["lon"], d["lat"], flags[pc], d["names"]])
+        records.append([pc, d["lon"], d["lat"], flags.get(pc, 0), d["names"]])
     no_poly = sorted(r[0] for r in records if str(r[0]) not in rings)
-    other = {k: loc[k]["names"]
-             for k in rings if int(k) not in flags and k in loc}
+    other = {k: loc[k]["names"] for k in rings if k in loc}
 
     src = pcdata["sources"]
     meta = {
@@ -200,7 +209,14 @@ def main(state):
         "nav": nav_links(state),
         "excluded_note": EXCLUDED.get(state, ""),
         "bbox": bbox([r for rs in rings.values() for r in rs]),
-        "counts": {**categorise(rings, flags),
+        "industries": [
+            {"key": key, "label": v["label"], "en": v["en"],
+             "mask": work_mask(v["areas"][VISA]),
+             "counts": categorise(rings, flags, work_mask(v["areas"][VISA]))}
+            for key, v in industries.items() if v["areas"][VISA]
+        ],
+        "industry": DEFAULT_INDUSTRY,
+        "counts": {**categorise(rings, flags, work_mask(industries[DEFAULT_INDUSTRY]["areas"][VISA])),
                    "eligible": len(records), "boundaries": len(rings),
                    "not_eligible": len(other),
                    "no_polygon": len(no_poly), "no_coordinates": len(no_coord),
@@ -232,11 +248,12 @@ def main(state):
     dest = ROOT / "dist" / f"{state}.html"
     dest.write_text(html, encoding="utf-8")
 
-    cat = meta["counts"]
-    print(f"郵區 {len(rings)}：一般工地就算 {cat['work']}、"
-          f"只有重建算 {cat['rebuild']}（大火 {cat['fire_only']}／"
-          f"天災 {cat['flood_only']}／兩者 {cat['fire_and_flood']}）、"
-          f"完全不算 {cat['none']}")
+    print(f"郵區 {len(rings)}，各產業的「一般工作就算」數量：")
+    for ind in meta["industries"]:
+        c = ind["counts"]
+        mark = "  ←預設" if ind["key"] == DEFAULT_INDUSTRY else ""
+        print(f"    {ind['label']:6s} 就算 {c['work']:4d} · 只有重建 {c['rebuild']:4d}"
+              f" · 不算 {c['none']:4d}{mark}")
     if no_poly:
         pass
     if no_coord:

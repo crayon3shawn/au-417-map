@@ -90,10 +90,26 @@ class TestMapping(unittest.TestCase):
 
 class TestBuildUsesMapping(unittest.TestCase):
 
-    def test_build指定的產業存在於對應表(self):
+    def test_預設產業存在於對應表(self):
         import build
-        self.assertIn(build.INDUSTRY, IND["industries"])
-        self.assertIsNotNone(IND["industries"][build.INDUSTRY]["areas"][build.VISA])
+        self.assertIn(build.DEFAULT_INDUSTRY, IND["industries"])
+        self.assertIsNotNone(IND["industries"][build.DEFAULT_INDUSTRY]["areas"][build.VISA])
+
+    def test_每個產業都能算出工作遮罩(self):
+        import build
+        for key, v in IND["industries"].items():
+            areas = v["areas"][build.VISA]
+            if areas is None:
+                continue
+            with self.subTest(industry=key):
+                self.assertGreater(build.work_mask(areas), 0)
+
+    def test_地區位元互不重疊(self):
+        import build
+        bits = list(build.AREA_BITS.values())
+        self.assertEqual(len(set(bits)), len(bits))
+        for b in bits:
+            self.assertEqual(b & (b - 1), 0, "每個地區必須佔一個獨立的位元")
 
 
 if __name__ == "__main__":

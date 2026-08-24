@@ -10,7 +10,7 @@
 import sys, json, pathlib, collections
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from lib import expand, load, STATES
-from build import LABELS, VISA
+from build import LABELS, VISA, AREA_BITS, REBUILD_MASK, DEFAULT_INDUSTRY, work_mask
 
 ROOT = pathlib.Path(__file__).resolve().parent
 
@@ -70,11 +70,13 @@ def main():
     index  = load(ROOT / "data" / "portal-index.json")["postcodes"]
     out    = load(ROOT / "data" / "outline-au.json")["outlines"]
     urls   = load(ROOT / "data" / "artifacts.json")["urls"]
+    inds   = load(ROOT / "data" / "industries.json")["industries"]
+    default_mask = work_mask(inds[DEFAULT_INDUSTRY]["areas"][VISA])
 
-    # 每個州展開三張表，算出每個郵區的身分旗標
+    # 每個郵區在五張地區表裡的成員資格（跟州頁同一套位元）
     flags = {}
     for st in STATES:
-        for area, bit in (("regional", 1), ("bushfire", 2), ("disaster", 4)):
+        for area, bit in AREA_BITS.items():
             for pc in expand(pcdata["areas"][VISA].get(area, {}).get(st), st):
                 flags[pc] = flags.get(pc, 0) | bit
 
@@ -85,8 +87,8 @@ def main():
         f = flags.get(int(pc), 0)
         # [州, 代表地名, 旗標, 其餘地名]——最後一個給搜尋用
         entries[pc] = [st, name, f, others]
-        stats[st]["work" if f & 1 else "rebuild" if f & 6 else "none"] += 1
-        if f & 1:
+        stats[st]["work" if f & default_mask else "rebuild" if f & REBUILD_MASK else "none"] += 1
+        if f & default_mask:
             work_pcs[st].append((int(pc), name))
 
     states = []
@@ -105,7 +107,7 @@ def main():
         })
 
     # 產業對應表直接從 industries.json 生成，頁面不寫死——對應改了頁面會跟著變
-    ind = load(ROOT / "data" / "industries.json")
+    ind = {"industries": inds}
     AREA_LABEL = {"regional": "Regional Australia", "northern": "Northern Australia",
                   "remote": "Remote and Very Remote", "bushfire": "大火宣告區",
                   "disaster": "天災宣告區"}
@@ -117,6 +119,11 @@ def main():
 
     payload = {
         "industries": industries,
+        "industry_masks": [
+            {"key": key, "label": v["label"], "mask": work_mask(v["areas"][VISA])}
+            for key, v in inds.items() if v["areas"][VISA]
+        ],
+        "industry": DEFAULT_INDUSTRY,
         "area_coverage": area_coverage(pcdata, {int(p) for p in index}),
         "meta": {
             "visa": VISA,
