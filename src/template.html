@@ -9,7 +9,7 @@
   --paper:#EDEFEA; --paper-2:#D8E0E1; --surface:#F8F9F6; --sunk:#E0E5DD;
   --ink:#16201C; --ink-2:#4E5B55; --ink-3:#76837C;
   --line:#C9D0C7; --line-2:#B2BCAF;
-  --land:#F0F2EC; --coast:#7C8B82; --grat:#C6CEC8; --halo:#F0F2EC; --grid:#BFC9C2;
+  --grat:#C6CEC8; --halo:#F0F2EC; --grid:#BFC9C2;
   --c-work:#0F7A6B; --c-rebuild:#B4741A; --c-none:#8C9691;
   --c-fire:#C0451A; --c-flood:#2A66A8; --c-both:#7A4B9E;
   --fill-a:0.62; --edge:rgba(22,32,28,.38);
@@ -20,7 +20,7 @@
   --paper:#111713; --paper-2:#0C1211; --surface:#1B231E; --sunk:#0C110E;
   --ink:#E8EEE7; --ink-2:#A2B0A7; --ink-3:#7C8A82;
   --line:#2C3830; --line-2:#3A4840;
-  --land:#202A23; --coast:#586A5E; --grat:#242F28; --halo:#151C18; --grid:#3B4A41;
+  --grat:#242F28; --halo:#151C18; --grid:#3B4A41;
   --c-work:#22A78F; --c-rebuild:#D4922F; --c-none:#6E7C74;
   --c-fire:#DE6431; --c-flood:#4E8FD6; --c-both:#9E71CC;
   --fill-a:0.70; --edge:rgba(233,240,232,.30);
@@ -31,7 +31,7 @@
   --paper:#111713; --paper-2:#0C1211; --surface:#1B231E; --sunk:#0C110E;
   --ink:#E8EEE7; --ink-2:#A2B0A7; --ink-3:#7C8A82;
   --line:#2C3830; --line-2:#3A4840;
-  --land:#202A23; --coast:#586A5E; --grat:#242F28; --halo:#151C18; --grid:#3B4A41;
+  --grat:#242F28; --halo:#151C18; --grid:#3B4A41;
   --c-work:#22A78F; --c-rebuild:#D4922F; --c-none:#6E7C74;
   --c-fire:#DE6431; --c-flood:#4E8FD6; --c-both:#9E71CC;
   --fill-a:0.70; --edge:rgba(233,240,232,.30);
@@ -126,7 +126,6 @@ body{
 @media (max-width:900px){ .mapwrap{height:72vh;min-height:460px;order:1} }
 svg.map{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
 svg.map.drag{cursor:grabbing}
-.coast{fill:var(--land);stroke:var(--coast);stroke-width:1.1;stroke-linejoin:round}
 .grat{stroke:var(--grat);stroke-width:.6;fill:none}
 .tropic{stroke:var(--ink-3);stroke-width:.9;stroke-dasharray:5 4;fill:none;opacity:.6}
 .tropiclbl{fill:var(--ink-3);font-family:"Barlow Condensed",sans-serif;font-weight:600;
@@ -268,7 +267,7 @@ svg.map.drag{cursor:grabbing}
 
 <script>
 const DATA = __DATA__;
-const PC = DATA.postcodes, RINGS = DATA.outline, POA = DATA.poa, CITIES = DATA.cities,
+const PC = DATA.postcodes, POA = DATA.poa, CITIES = DATA.cities,
       META = DATA.meta, OTHER = DATA.other || {}, FLAGS = DATA.flags;
 
 // 頁首出處與 417/462 等同性由資料決定，不寫死在樣板裡
@@ -311,10 +310,6 @@ for(let lon=138; lon<=154; lon+=2)
 for(let lat=-10; lat>=-30; lat-=2)
   grat.appendChild(el('line',{x1:VB.x,y1:py(lat),x2:VB.x+VB.w,y2:py(lat),'vector-effect':'non-scaling-stroke'}));
 over.appendChild(grat);
-
-const coast = el('g',{class:'coast'});
-coast.appendChild(el('path',{d:RINGS, 'vector-effect':'non-scaling-stroke'}));
-proj.appendChild(coast);
 
 // ---- 郵區面 ----
 // 三個互斥的答案。顏色就是答案本身，沒有第二個軸。

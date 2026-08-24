@@ -130,7 +130,6 @@ def main(state):
     pcdata = load(ROOT / "data" / "postcodes.json")
     loc    = load(ROOT / "data" / f"localities-{state}.json")["postcodes"]
     poa    = load(ROOT / "data" / f"poa-{state}.json")
-    out    = load(ROOT / "data" / f"outline-{state}.json")["rings"]
     cities = load(ROOT / "data" / f"cities-{state}.json")["cities"]
 
     # 這個產業在這個簽證下要看哪幾張地區表
@@ -194,7 +193,7 @@ def main(state):
         "visa_note": visa_note(pcdata, state),
         "state_label": LABELS.get(state, STATES[state]["name"]),
         "excluded_note": EXCLUDED.get(state, ""),
-        "bbox": bbox(out),
+        "bbox": bbox([r for rs in rings.values() for r in rs]),
         "counts": {**categorise(rings, flags),
                    "eligible": len(records), "boundaries": len(rings),
                    "not_eligible": len(other),
@@ -208,9 +207,11 @@ def main(state):
     # 反推會把它算成「完全不算」，圖例數字就跟畫面對不上。
     poa_flags = {k: flags.get(int(k), 0) for k in rings}
 
+    # 不再送州界輪廓：它是另一份解析度粗得多的幾何（RDP 容差約 3 公里），
+    # 疊在郵區面底下會從半透明色塊外緣露出淡色細帶。郵區面本來就鋪滿整個州，
+    # 形狀也精確得多，視野範圍直接由它算。
     payload = {"meta": meta, "postcodes": records, "poa": paths, "flags": poa_flags,
                "other": other,
-               "outline": to_path(out),
                "cities": [[c["name"], c["lon"], c["lat"], c["tier"],
                            -1 if c.get("side") == "l" else 1] for c in cities]}
 

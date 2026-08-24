@@ -63,7 +63,7 @@ type 也不同）。在綠色郵區一般工作本來就算，那是次要資訊
 | 五張指定地區郵區表（417 與 462） | [Home Affairs](https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work) | `fetch/postcodes.py` |
 | 郵區邊界多邊形 | ABS ArcGIS，ASGS2021 POA_GEN 圖層 | `fetch/boundaries.py` |
 | 郵區地區名與中心座標 | [matthewproctor/australianpostcodes](https://github.com/matthewproctor/australianpostcodes) | `fetch/localities.py` |
-| 州界輪廓 | [rowanhogan/australian-states](https://github.com/rowanhogan/australian-states) | `fetch/basemap.py` |
+| 州界輪廓（僅入口頁用） | [rowanhogan/australian-states](https://github.com/rowanhogan/australian-states) | `fetch/basemap.py`、`fetch/portal.py` |
 | 城市標註 | 人工維護清單，座標自動解析 | `fetch/cities.py`（改 `data/cities-<state>.seed.json`）|
 
 ## 架構：抓取 → 凍結 → 建置
@@ -167,6 +167,15 @@ make build STATE=vic
 
 `build.py` 的 `TITLES`、`LABELS`、`EXCLUDED` 各加一行該州的文案。
 其餘不用改：視野範圍、字級、南回歸線畫不畫，樣板都會依資料自行決定。
+
+### 州頁不畫州界輪廓
+
+郵區面本來就鋪滿整個州，形狀也比輪廓精確得多，視野範圍直接由它算。
+
+輪廓是另一份解析度粗得多的幾何（RDP 容差約 3 公里），疊在半透明的郵區色塊
+底下會出現兩種假象：描邊從色塊透出來，變成一條不跟隨任何東西的線；
+即使只留底色不描邊，輪廓外緣仍會露出淡色細帶。兩份不同解析度的幾何疊在
+一起就是會這樣，所以州頁乾脆不畫。入口頁沒有郵區面，那裡輪廓就是地圖本身。
 
 ## 產業
 
