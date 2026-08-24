@@ -30,10 +30,10 @@ body{
 .nav a:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
 .nav .home{border-color:var(--line-2);color:var(--ink)}
 .nav .here{background:var(--ink);color:var(--surface);border-color:var(--ink)}
-/* 這行出處字串很長，nowrap 會在手機上把整個頁面推寬造成橫向捲動 */
-.stamp{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);
-  border:1px solid var(--line);border-radius:2px;padding:3px 8px;
-  white-space:normal;overflow-wrap:anywhere;max-width:100%}
+/* 出處與建置日期是溯源資訊，不是要操作的東西，所以放在最下面的出處段落裡。
+   字串很長，nowrap 會在手機上把整個頁面推寬造成橫向捲動。 */
+.stamp{display:block;margin-top:8px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  color:var(--ink-3);white-space:normal;overflow-wrap:anywhere}
 .main{display:grid;grid-template-columns:352px 1fr;min-height:0}
 @media (max-width:900px){ .shell{height:auto;min-height:100vh} .main{grid-template-columns:1fr} }
 
@@ -66,7 +66,7 @@ body{
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
 .seg button:focus-visible{outline:2px solid var(--ink);outline-offset:-3px}
 
-.srch{display:flex;gap:6px}
+.srch{display:flex}
 .srch input{flex:1;min-width:0;font-family:"IBM Plex Mono",monospace;font-size:14px;
   padding:8px 10px;border:1px solid var(--line-2);border-radius:3px;background:var(--paper);color:var(--ink)}
 .srch input:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px;border-color:var(--c-work)}
@@ -192,7 +192,6 @@ svg.map.drag{cursor:grabbing}
     <span class="sub">建築工地取向 · 郵遞區號合格性與災區宣告</span>
     <span class="spacer"></span>
     <nav class="nav" id="nav" aria-label="切換地圖"></nav>
-    <span class="stamp" id="stamp"></span>
   </header>
 
   <div class="main">
@@ -202,7 +201,6 @@ svg.map.drag{cursor:grabbing}
         <div class="srch">
           <input id="q" maxlength="30" placeholder="4870 或 Cairns" autocomplete="off"
                  aria-label="輸入郵遞區號或地名" aria-describedby="qhint">
-          <button class="btn" id="qb" type="button">查</button>
         </div>
         <p class="qhint" id="qhint"></p>
         <div class="hits" id="hits" role="listbox" aria-label="搜尋結果"></div>
@@ -235,6 +233,7 @@ svg.map.drag{cursor:grabbing}
           <a href="https://www.disasterassist.gov.au/find-a-disaster" target="_blank" rel="noopener">Disaster Assist — Find a disaster</a> 查證。
           有 8 個合格郵區在 ABS 沒有對應面（多為信箱型郵區），以小點標示。
           送件前務必以官方頁面為準。
+          <span class="stamp" id="stamp"></span>
         </div>
       </section>
     </aside>
@@ -260,7 +259,7 @@ svg.map.drag{cursor:grabbing}
       <div class="zoom">
         <button type="button" id="zin" aria-label="放大">＋</button>
         <button type="button" id="zout" aria-label="縮小">−</button>
-        <button type="button" id="zrst" aria-label="重設視野" style="font-size:12px">重設</button>
+        <button type="button" id="zrst" aria-label="回到全州視野" title="回到全州視野">⤢</button>
       </div>
     </div>
   </div>
@@ -665,9 +664,9 @@ function doSearch(){
   showHits(list, v);
 }
 
-document.getElementById('qb').onclick = doSearch;
+// 打字就查，沒有「查」按鈕——按鈕在即時搜尋之下沒有任何作用。
+// 只有 1-2 位數字先不查：那時候候選太多，列出來只是洗版。
 q.addEventListener('keydown', e => { if(e.key === 'Enter') doSearch(); });
-// 打字時即時給候選，但太短就先不要洗版
 q.addEventListener('input', () => {
   const v = q.value.trim();
   if(v.length >= 2 && !/^\d{1,2}$/.test(v)) doSearch();

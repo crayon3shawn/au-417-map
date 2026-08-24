@@ -18,15 +18,15 @@ header{padding:38px 0 26px}
 h1{margin:0 0 6px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
   font-size:clamp(30px,5vw,44px);letter-spacing:.02em;line-height:1.05;text-wrap:balance}
 .lede{margin:0;color:var(--ink-2);font-size:15px;max-width:62ch}
-.stamp{display:inline-block;margin-top:14px;font-family:"IBM Plex Mono",monospace;font-size:11px;
-  color:var(--ink-3);border:1px solid var(--line);border-radius:2px;padding:3px 8px;
-  overflow-wrap:anywhere;max-width:100%}
+/* 出處與建置日期是溯源資訊，不是要操作的東西，所以放在最下面的出處段落裡 */
+.stamp{margin:8px 0 0;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  color:var(--ink-3);overflow-wrap:anywhere}
 
 /* ---- 查詢 ---- */
 .finder{background:var(--surface);border:1px solid var(--line);border-radius:6px;
   padding:20px;box-shadow:var(--shadow)}
 .finder .eyebrow{display:block;margin-bottom:10px}
-.qrow{display:flex;gap:8px}
+.qrow{display:flex}
 .qrow input{flex:1;min-width:0;font-family:"IBM Plex Mono",monospace;font-size:26px;
   letter-spacing:.06em;padding:10px 14px;border:1px solid var(--line-2);border-radius:4px;
   background:var(--paper);color:var(--ink)}
@@ -151,7 +151,6 @@ table.imap .diff{color:var(--c-rebuild);font-weight:700}
     <h1>澳洲 417 集簽地圖</h1>
     <p class="lede">打工度假簽證（417／462）的集簽合格郵遞區號，以<strong>建築工地</strong>為取向。
       輸入郵遞區號馬上知道算不算，或直接進各州地圖看整體分布。</p>
-    <span class="stamp" id="stamp"></span>
   </header>
 
   <section class="finder">
@@ -159,7 +158,6 @@ table.imap .diff{color:var(--c-rebuild);font-weight:700}
     <div class="qrow">
       <input id="q" maxlength="30" placeholder="4870 或 Cairns" autocomplete="off"
              aria-label="輸入郵遞區號或地名">
-      <button type="button" id="qb">查</button>
     </div>
     <div class="result" id="result" role="status" aria-live="polite">
       <p class="hint" id="hint"></p>
@@ -222,6 +220,7 @@ table.imap .diff{color:var(--c-rebuild);font-weight:700}
       <h3>出處與查證</h3>
       <p>本站只處理 <b>417</b>（Working Holiday）。郵區清單逐字取自 <a href="https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work" target="_blank" rel="noopener">Home Affairs — Specified work</a>。
         個別災害的宣告範圍與日期請對 <a href="https://www.disasterassist.gov.au/find-a-disaster" target="_blank" rel="noopener">Disaster Assist</a> 查證。送件前務必以官方頁面為準。</p>
+      <p class="stamp" id="stamp"></p>
     </div>
   </div>
 </div>
@@ -442,11 +441,12 @@ function render(key){
       </div>
     </div>`);
 }
-document.getElementById('qb').addEventListener('click', lookup);
+// 打字就查，沒有「查」按鈕。條件跟州頁一致——原本入口頁漏掉三位數郵區
+// （北領地的 0800 打完不會自動查，只能按按鈕），那是條件寫得不一致，不是按鈕的價值。
 q.addEventListener('keydown', e => { if(e.key === 'Enter') lookup(); });
 q.addEventListener('input', () => {
   const v = q.value.trim();
-  if(/^\d{4}$/.test(v) || (v.length >= 2 && !/^\d+$/.test(v))) lookup();
-  else { clearHits(); }
+  if(v.length >= 2 && !/^\d{1,2}$/.test(v)) lookup();
+  else { clearHits(); show(`<p class="hint" id="hint"></p>`); }
 });
 </script>
