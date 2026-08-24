@@ -94,7 +94,7 @@ def main():
         s = stats[st]
         total = s["work"] + s["rebuild"] + s["none"]
         states.append({
-            "key": st, "label": LABELS.get(st, STATES[st]["name"]),
+            "key": st, "label": LABELS.get(st, STATES[st]["name"]), "abbr": st.upper(),
             "name": STATES[st]["name"], "url": urls.get(st),
             "total": total, "label_at": LABEL_POS.get(st),
             # 全境都在 regional 名單上（官網原文就是 All postcodes are eligible）。

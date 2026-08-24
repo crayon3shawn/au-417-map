@@ -106,8 +106,8 @@ def nav_links(state):
     if art.get("portal"):
         out.append({"label": "全澳入口", "url": art["portal"], "home": True})
     for key, url in art.get("urls", {}).items():
-        out.append({"label": LABELS.get(key, key.upper()), "url": url,
-                    "current": key == state})
+        # 導覽用縮寫：澳洲當地（求職廣告、地址）就是講 QLD／NSW，比中文州名好認也省空間
+        out.append({"label": key.upper(), "url": url, "current": key == state})
     return out
 
 
@@ -196,6 +196,7 @@ def main(state):
         "stamp": (f"郵區清單 Home Affairs {src[VISA]['page_last_updated']}"
                   f" · 邊界 ABS POA 2021 · 建置 {pcdata['fetched_at'][:10]}"),
         "state_label": LABELS.get(state, STATES[state]["name"]),
+        "state_abbr": state.upper(),
         "nav": nav_links(state),
         "excluded_note": EXCLUDED.get(state, ""),
         "bbox": bbox([r for rs in rings.values() for r in rs]),

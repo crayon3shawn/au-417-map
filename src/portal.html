@@ -18,6 +18,7 @@ header{padding:38px 0 26px}
 h1{margin:0 0 6px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
   font-size:clamp(30px,5vw,44px);letter-spacing:.02em;line-height:1.05;text-wrap:balance}
 .lede{margin:0;color:var(--ink-2);font-size:15px;max-width:62ch}
+.lede-note{color:var(--ink-3);font-size:13px}
 /* 出處與建置日期是溯源資訊，不是要操作的東西，所以放在最下面的出處段落裡 */
 .stamp{margin:8px 0 0;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
   color:var(--ink-3);overflow-wrap:anywhere}
@@ -76,8 +77,10 @@ svg.au{display:block;width:100%;height:auto;background:var(--paper-2);
    而 SA、TAS、NT 全境都算，那樣講就反了。 */
 .st.nomap{cursor:default;stroke-dasharray:4 3}
 .st:not(.nomap):hover{fill-opacity:.92}
+/* 描邊寬度必須跟 font-size 一起用 user unit 換算：viewBox 只有 37 度寬，
+   寫死 stroke-width:3 等於 3 度，會變成蓋住標籤的一大團色塊。 */
 .stlbl{fill:var(--ink);font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
-  paint-order:stroke;stroke:var(--halo);stroke-width:3;stroke-linejoin:round;
+  paint-order:stroke;stroke:var(--halo);stroke-linejoin:round;
   pointer-events:none;text-anchor:middle}
 .stlbl.dim{fill:var(--ink-3)}
 
@@ -149,8 +152,9 @@ table.imap .diff{color:var(--c-rebuild);font-weight:700}
 <div class="wrap">
   <header>
     <h1>澳洲 417 集簽地圖</h1>
-    <p class="lede">打工度假簽證（417／462）的集簽合格郵遞區號，以<strong>建築工地</strong>為取向。
-      輸入郵遞區號馬上知道算不算，或直接進各州地圖看整體分布。</p>
+    <p class="lede"><strong>417</strong> 打工度假簽證的集簽合格郵遞區號，以<strong>建築工地</strong>為取向。
+      輸入郵遞區號或地名馬上知道算不算，或直接進各州地圖看整體分布。
+      <span class="lede-note">（462 的產業規則不同，不適用。）</span></p>
   </header>
 
   <section class="finder">
@@ -276,8 +280,8 @@ for(const s of STATES){
     fill: CATS[dominant].c, 'vector-effect':'non-scaling-stroke'});
   const t = el('title',{});
   t.textContent = s.all_work
-    ? `${s.label}：全境都算，${s.work} 個郵區`
-    : `${s.label}：一般工地 ${s.work}、只有重建 ${s.rebuild}、不算 ${s.none}`;
+    ? `${s.abbr} ${s.label}：全境都算，${s.work} 個郵區`
+    : `${s.abbr} ${s.label}：一般工地 ${s.work}、只有重建 ${s.rebuild}、不算 ${s.none}`;
   node.appendChild(t);
   // Artifact 在沙箱 iframe 裡執行，改變上層網址會被擋掉（畫面變成一片白），
   // 所以一律用 <a target="_blank"> 在新分頁開啟。
@@ -294,10 +298,11 @@ for(const s of STATES){
 
   // 標註位置由資料指定（重心會讓 ACT 疊在 NSW 上）。沒給就不標。
   if(s.label_at){
+    const fs = (x1-x0)*0.030;
     const lbl = el('text',{class:'stlbl' + (s.url ? '' : ' dim'),
       x:px(s.label_at[0]).toFixed(2), y:py(s.label_at[1]).toFixed(2),
-      'font-size':(x1-x0)*0.030});
-    lbl.textContent = s.label;
+      'font-size':fs, 'stroke-width':fs*0.16});
+    lbl.textContent = s.abbr;   // 地圖上用縮寫，短又是當地慣用
     svg.appendChild(lbl);
   }
 }
@@ -320,8 +325,8 @@ for(const s of STATES){
       </div>`;
   const inner = `
     <div class="top">
-      <span class="nm">${esc(s.label)}</span>
-      <span class="en">${esc(s.name)}</span>
+      <span class="nm">${esc(s.abbr)}</span>
+      <span class="en">${esc(s.name)}　${esc(s.label)}</span>
       <span class="go">${status}</span>
     </div>
     <div class="bar">${seg(s.work,'var(--c-work)')}${seg(s.rebuild,'var(--c-rebuild)')}${seg(s.none,'var(--c-none)')}</div>
@@ -386,7 +391,7 @@ function showHits(list, term){
     const b = document.createElement('button');
     b.type = 'button';
     b.style.setProperty('--hc', CATS[catOf(f)].c);
-    b.innerHTML = `<em></em><b>${pc}</b><i>${esc(nm)}</i><u>${esc(s.label)}</u>`;
+    b.innerHTML = `<em></em><b>${pc}</b><i>${esc(nm)}</i><u>${esc(s.abbr)}</u>`;
     b.addEventListener('click', () => { q.value = nm; clearHits(); render(pc); });
     hitsEl.appendChild(b);
   }
