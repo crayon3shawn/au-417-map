@@ -58,13 +58,32 @@ type 也不同）。在綠色郵區一般工作本來就算，那是次要資訊
 
 ## 資料從哪來
 
-| 資料 | 來源 | 抓取腳本 |
-|---|---|---|
-| 五張指定地區郵區表（417 與 462） | [Home Affairs](https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work) | `fetch/postcodes.py` |
-| 郵區邊界多邊形 | ABS ArcGIS，ASGS2021 POA_GEN 圖層 | `fetch/boundaries.py` |
-| 郵區地區名與中心座標 | [matthewproctor/australianpostcodes](https://github.com/matthewproctor/australianpostcodes) | `fetch/localities.py` |
-| 州界輪廓（僅入口頁用） | [rowanhogan/australian-states](https://github.com/rowanhogan/australian-states) | `fetch/basemap.py`、`fetch/portal.py` |
-| 城市標註 | 人工維護清單，座標自動解析 | `fetch/cities.py`（改 `data/cities-<state>.seed.json`）|
+| 資料 | 來源 | 授權 | 抓取腳本 |
+|---|---|---|---|
+| 五張指定地區郵區表 | [Home Affairs — Specified work (417)](https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work) · [462 版](https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-462/specified-462-work) | [Copyright and disclaimer](https://www.homeaffairs.gov.au/access-and-accountability/using-our-website/copyright-and-disclaimer)（未逐條確認）| `fetch/postcodes.py` |
+| 郵區邊界（Postal Areas 2021） | [ABS ArcGIS — ASGS2021/POA](https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/POA/MapServer) | **CC BY 4.0**（服務中繼資料載明）| `fetch/boundaries.py` |
+| 郵區地名與座標 | [matthewproctor/australianpostcodes](https://github.com/matthewproctor/australianpostcodes) | ⚠️ **未宣告授權** | `fetch/localities.py`、`fetch/cities.py`、`fetch/portal.py` |
+| 州界輪廓（入口頁用） | [rowanhogan/australian-states](https://github.com/rowanhogan/australian-states) | ⚠️ **未宣告授權** | `fetch/basemap.py`、`fetch/portal.py` |
+| 產業與地區表的對應 | Home Affairs 頁面的散文段落，**人工整理** | — | 直接維護 `data/industries.json` |
+| 城市標註 | 人工維護清單，座標自動解析 | — | 改 `data/cities-<state>.seed.json` |
+| 災害宣告查證 | [Disaster Assist — Find a disaster](https://www.disasterassist.gov.au/find-a-disaster) | — | 未自動抓取，供人工核對 |
+
+### ABS POA 是近似值，不是法定郵區界線
+
+ABS 自己的描述：POA 是「an ABS Mesh Block approximation of a general definition of
+postcodes」。它不是 Australia Post 的官方郵區界線——後者並未公開釋出。
+所以郵區交界附近務必以工地實際地址的郵遞區號為準，不要拿地圖上的線去量。
+
+### ABS 與 matthewproctor 的差別
+
+兩者回答的是不同問題，不能互相取代：
+
+* **ABS POA** 給幾何，不給地名。
+* **matthewproctor** 給郵區↔地名、一個代表座標，以及 `type` 欄位
+  （Delivery Area／LVR／Post Office Boxes）——那個欄位是過濾信箱型郵區的關鍵。
+
+覆蓋差異很小且可解釋：只在 matthewproctor 的多半是非地理郵區（信箱、大學、
+郵件中心），ABS 不給它們面是正確的；只在 ABS 的是 0872 這種跨州郵區與外島。
 
 ## 架構：抓取 → 凍結 → 建置
 
@@ -219,8 +238,42 @@ make build STATE=vic
 盯著「兩者的地區表是否仍然相同」，哪天官網讓它們分家會先失敗，提醒我們去
 看發生了什麼事。只是不顯示而已。
 
+## 授權與開源
+
+**目前尚未加上 LICENSE，開源前有事情要處理。**
+
+本專案自己的程式碼（`fetch/`、`build*.py`、`lib.py`、`src/`、`tests/`）沒有問題，
+問題在 `data/` 裡進了版控的衍生資料：
+
+* **ABS 來源的部分沒問題** —— CC BY 4.0，只要標示出處。
+* **兩個 GitHub 來源都沒有宣告授權**，預設就是保留所有權利。
+  `matthewproctor` 的 README 說資料「arguably public domain」，
+  但那是作者的意見，不是授權條款。
+
+幾條可行的路，各有代價：
+
+1. **不把第三方衍生資料進版控**，改成建置時現抓。倉庫裡只有程式碼，
+   完全避開再散布的問題。代價是失去「官網改了什麼在 git diff 看得到」這個優點。
+2. **改用 ABS 的 SAL（Suburbs and Localities）圖層**做空間疊合取得地名，
+   州界改用 ABS 的 STE 圖層。全部變成 CC BY 4.0。代價是要多寫疊合邏輯。
+3. **去問來源作者補上授權**（開個 issue）。成本最低，但不一定有回應。
+
+我不是律師，上面只是把查到的事實列出來，不構成法律意見。
+
+### 放上 GitHub Pages
+
+`dist/` 本來就是自包含的靜態檔案，可以直接當 Pages 的輸出目錄。
+改成 Pages 之後有一個額外好處：各頁之間可以用相對路徑互連
+（`qld.html`），不必再繞 Artifact 的網址，也就沒有 iframe 沙箱那些限制。
+`data/artifacts.json` 屆時可以換成相對路徑。
+
 ## 免責
 
-郵區範圍為 ABS 概化邊界，僅供判讀，非法定界線。
+本專案不是移民建議。郵區範圍為 ABS 概化邊界，僅供判讀，非法定界線；
 個別災害的宣告範圍與日期請對 [Disaster Assist](https://www.disasterassist.gov.au/find-a-disaster) 查證。
-送件前一律以 Home Affairs 官方頁面為準。
+送件前一律以 [Home Affairs 官方頁面](https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work) 為準。
+
+## 出處標示
+
+含有澳洲統計局（ABS）依 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+授權提供的資料：ASGS 2021 Postal Areas。
