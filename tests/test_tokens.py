@@ -80,6 +80,8 @@ class TestBuiltPages(unittest.TestCase):
         for p in PAGES:
             text = p.read_text(encoding="utf-8")
             declared = set(re.findall(r"(--[a-z0-9-]+)\s*:", text))
+            # 也有些區域變數是 JS 在執行時設的（style.setProperty）
+            declared |= set(re.findall(r"setProperty\(\s*['\"](--[a-z0-9-]+)", text))
             used = set(re.findall(r"var\((--[a-z0-9-]+)\)", text))
             with self.subTest(page=p.name):
                 self.assertFalse(used - declared, f"用了但沒定義：{sorted(used - declared)}")

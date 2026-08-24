@@ -56,8 +56,10 @@ def main(state):
         out[str(pc)] = {
             "lon": round(statistics.median(a["lon"]), 4),
             "lat": round(statistics.median(a["lat"]), 4),
-            "names": names[:6],           # 面板只顯示前幾個
-            "n_names": len(names),
+            # 存全部地名，不是只存前幾個——搜尋要用。
+            # 多數人知道自己在哪個鎮，不知道郵區號碼；只存前 6 個的話，
+            # 搜「Manunda」這種郊區會落空（4870 有 32 個地區）。
+            "names": names,
         }
     if len(out) < 100:
         raise SystemExit(f"只取得 {len(out)} 個郵區，明顯過少——來源格式可能變了，已中止")

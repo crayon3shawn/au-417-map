@@ -95,6 +95,22 @@ def categorise(rings, flags):
     return c
 
 
+def nav_links(state):
+    """頁首的導覽：回入口頁，以及切到其他州。
+
+    州頁原本是死路——從入口頁點進來之後沒有任何方式回去或切換。
+    網址取自 data/artifacts.json，沒登記的州不會出現。
+    """
+    art = load(ROOT / "data" / "artifacts.json")
+    out = []
+    if art.get("portal"):
+        out.append({"label": "全澳入口", "url": art["portal"], "home": True})
+    for key, url in art.get("urls", {}).items():
+        out.append({"label": LABELS.get(key, key.upper()), "url": url,
+                    "current": key == state})
+    return out
+
+
 def tokens_css():
     """共用的設計 token。兩個樣板都注入同一份，避免改配色時漏掉一邊。"""
     return (ROOT / "src" / "tokens.css").read_text(encoding="utf-8")
@@ -161,16 +177,16 @@ def main(state):
             n = national.get(str(pc))
             lon, lat = ring_centroid(rings[str(pc)])
             d = {"lon": lon, "lat": lat,
-                 "names": [n[1]] if n else [f"郵區 {pc}"], "n_names": 1}
+                 "names": [n[1]] if n else [f"郵區 {pc}"]}
         if not d:
             no_coord.append(pc)
             continue
         if str(pc) not in rings and is_non_geographic(d["names"]):
             non_geo.append(pc)
             continue
-        records.append([pc, d["lon"], d["lat"], flags[pc], d["names"], d["n_names"]])
+        records.append([pc, d["lon"], d["lat"], flags[pc], d["names"]])
     no_poly = sorted(r[0] for r in records if str(r[0]) not in rings)
-    other = {k: [loc[k]["names"], loc[k]["n_names"]]
+    other = {k: loc[k]["names"]
              for k in rings if int(k) not in flags and k in loc}
 
     src = pcdata["sources"]
@@ -180,6 +196,7 @@ def main(state):
         "stamp": (f"郵區清單 Home Affairs {src[VISA]['page_last_updated']}"
                   f" · 邊界 ABS POA 2021 · 建置 {pcdata['fetched_at'][:10]}"),
         "state_label": LABELS.get(state, STATES[state]["name"]),
+        "nav": nav_links(state),
         "excluded_note": EXCLUDED.get(state, ""),
         "bbox": bbox([r for rs in rings.values() for r in rs]),
         "counts": {**categorise(rings, flags),

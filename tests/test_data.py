@@ -89,12 +89,18 @@ class TestBuiltPages(unittest.TestCase):
             self.assertIn('charset="utf-8"', html, p.name)
 
     def test_產出頁面沒有別州的殘留字串(self):
-        other = {"qld": "新南威爾斯", "nsw": "昆士蘭"}
+        # 導覽列會列出所有州，所以只檢查導覽以外的部分。
+        # 這條擋的是「加新州時忘了把寫死的州名改掉」。
+        import re
+        other = {"qld": "新南威爾斯", "nsw": "昆士蘭", "vic": "昆士蘭", "wa": "昆士蘭"}
         for p in self.pages():
             wrong = other.get(p.stem)
-            if wrong:
-                self.assertNotIn(wrong, p.read_text(encoding="utf-8"),
-                                 f"{p.name} 出現了 {wrong}")
+            if not wrong:
+                continue
+            text = p.read_text(encoding="utf-8")
+            body = re.sub(r'"nav":\[.*?\],', "", text, flags=re.S)   # 拿掉導覽資料
+            with self.subTest(page=p.name):
+                self.assertNotIn(wrong, body, f"{p.name} 出現了 {wrong}")
 
 
 if __name__ == "__main__":

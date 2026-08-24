@@ -81,9 +81,10 @@ def main():
     # 郵區索引：號碼 -> [州, 代表地名, 旗標]
     entries, stats = {}, collections.defaultdict(lambda: dict(work=0, rebuild=0, none=0))
     work_pcs = collections.defaultdict(list)     # 一般工地算的郵區，供少數例外時點名
-    for pc, (st, name) in index.items():
+    for pc, (st, name, others) in index.items():
         f = flags.get(int(pc), 0)
-        entries[pc] = [st, name, f]
+        # [州, 代表地名, 旗標, 其餘地名]——最後一個給搜尋用
+        entries[pc] = [st, name, f, others]
         stats[st]["work" if f & 1 else "rebuild" if f & 6 else "none"] += 1
         if f & 1:
             work_pcs[st].append((int(pc), name))

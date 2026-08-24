@@ -55,11 +55,14 @@ def postcode_index():
 
     out = {}
     for pc, ns in names.items():
-        real = [n for n in ns if not build.is_non_geographic([n])]
+        real = sorted({n for n in ns if not build.is_non_geographic([n])})
         if not real:
             continue
-        # 代表地名取最短的：通常就是主聚落（"Cairns" 而不是 "Cairns North"）
-        out[str(pc)] = [state_of[pc], min(real, key=lambda s: (len(s), s))]
+        # [州, 代表地名, 其餘地名]
+        # 代表地名取最短的：通常就是主聚落（"Cairns" 而不是 "Cairns North"）。
+        # 其餘地名保留下來供搜尋——入口頁要能用地名查，不是只能查號碼。
+        main = min(real, key=lambda s: (len(s), s))
+        out[str(pc)] = [state_of[pc], main, [n for n in real if n != main]]
     if len(out) < 2000:
         raise SystemExit(f"只取得 {len(out)} 個郵區，明顯過少，已中止")
     save(ROOT / "data" / "portal-index.json",

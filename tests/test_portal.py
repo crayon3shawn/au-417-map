@@ -16,7 +16,7 @@ class TestPortalIndex(unittest.TestCase):
 
     def test_每個郵區都落在所屬州的號碼區間內(self):
         # 資料集裡有 9999 NORTH POLE 被標成 VIC，不能讓它進索引
-        for pc, (st, _name) in self.idx.items():
+        for pc, (st, *_rest) in self.idx.items():
             with self.subTest(pc=pc, state=st):
                 self.assertTrue(any(lo <= int(pc) <= hi for lo, hi in STATES[st]["ranges"]))
 

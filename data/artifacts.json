@@ -1,5 +1,6 @@
 {
-  "note": "各州地圖已發佈的 Artifact 網址。入口頁靠這份連過去；重新發佈網址不變，只需設定一次。SA／TAS／NT 全境都在 regional 名單上，整張圖只會是一片綠，所以不做地圖。",
+  "note": "各州地圖已發佈的 Artifact 網址。入口頁靠這份連過去；重新發佈網址不變，只需設定一次。SA／TAS／NT 全境都在 regional 名單上，整張圖只會是一片綠，所以不做地圖。 portal 是入口頁的網址，各州頁靠它連回去。",
+  "portal": "https://claude.ai/code/artifact/15e3af3f-dacb-43a9-ba0d-aca1dea6dde1",
   "urls": {
     "qld": "https://claude.ai/code/artifact/7dcd360e-7370-4e37-ad51-c435f0849e0c",
     "nsw": "https://claude.ai/code/artifact/59cac810-ff59-424b-8bd5-3498cbf0ffcc",

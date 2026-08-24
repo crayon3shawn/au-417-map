@@ -22,6 +22,14 @@ body{
   font-size:26px;letter-spacing:.02em;text-wrap:balance}
 .bar .sub{color:var(--ink-2);font-size:13px}
 .bar .spacer{flex:1 1 40px}
+.nav{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.nav a,.nav span{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
+  font-size:12.5px;letter-spacing:.04em;padding:4px 9px;border-radius:3px;
+  border:1px solid var(--line);text-decoration:none;color:var(--ink-2);white-space:nowrap}
+.nav a:hover{background:var(--sunk);color:var(--ink);border-color:var(--line-2)}
+.nav a:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+.nav .home{border-color:var(--line-2);color:var(--ink)}
+.nav .here{background:var(--ink);color:var(--surface);border-color:var(--ink)}
 /* 這行出處字串很長，nowrap 會在手機上把整個頁面推寬造成橫向捲動 */
 .stamp{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);
   border:1px solid var(--line);border-radius:2px;padding:3px 8px;
@@ -62,6 +70,18 @@ body{
 .srch input{flex:1;min-width:0;font-family:"IBM Plex Mono",monospace;font-size:14px;
   padding:8px 10px;border:1px solid var(--line-2);border-radius:3px;background:var(--paper);color:var(--ink)}
 .srch input:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px;border-color:var(--c-work)}
+.qhint{margin:0;font-size:11.5px;line-height:1.45;color:var(--ink-3)}
+.qhint:empty{display:none}
+.hits{display:flex;flex-direction:column;gap:2px;max-height:210px;overflow-y:auto}
+.hits:empty{display:none}
+.hits button{appearance:none;text-align:left;border:1px solid var(--line);background:var(--paper);
+  color:var(--ink);border-radius:3px;padding:7px 10px;cursor:pointer;font:inherit;font-size:12.5px;
+  display:flex;align-items:baseline;gap:8px}
+.hits button:hover{background:var(--sunk);border-color:var(--line-2)}
+.hits button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+.hits b{font-family:"IBM Plex Mono",monospace;font-weight:600}
+.hits i{font-style:normal;color:var(--ink-3);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hits em{font-style:normal;width:9px;height:9px;border-radius:2px;flex:none;background:var(--hc)}
 .btn{appearance:none;border:1px solid var(--line-2);background:var(--paper);color:var(--ink);
   font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:13px;
   letter-spacing:.06em;padding:8px 12px;border-radius:3px;cursor:pointer}
@@ -127,6 +147,12 @@ svg.map.drag{cursor:grabbing}
 .legend > summary::after{content:"−";font-size:13px;line-height:1;color:var(--ink-3)}
 .legend:not([open]) > summary::after{content:"+"}
 .legend[open] > summary{margin-bottom:7px}
+/* 收合時仍看得到三個顏色——三分類就是這張圖的全部內容，
+   手機上預設收合會把核心答案整個藏起來。 */
+.mini{display:none;gap:3px;margin-left:6px}
+.legend:not([open]) .mini{display:inline-flex}
+.mini i{width:10px;height:10px;border-radius:2px;background:var(--sw);
+  opacity:var(--fill-a);border:.5px solid var(--edge)}
 .legend > summary:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .lg{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ink-2);line-height:1.35;padding:2.5px 0}
 .lg span{flex:1}
@@ -165,17 +191,21 @@ svg.map.drag{cursor:grabbing}
     <h1>__TITLE__</h1>
     <span class="sub">建築工地取向 · 郵遞區號合格性與災區宣告</span>
     <span class="spacer"></span>
+    <nav class="nav" id="nav" aria-label="切換地圖"></nav>
     <span class="stamp" id="stamp"></span>
   </header>
 
   <div class="main">
     <aside class="rail">
       <section class="blk">
-        <span class="eyebrow">查郵遞區號</span>
+        <span class="eyebrow">查郵區或地名</span>
         <div class="srch">
-          <input id="q" inputmode="numeric" maxlength="4" placeholder="例如 4870" aria-label="輸入郵遞區號">
+          <input id="q" maxlength="30" placeholder="4870 或 Cairns" autocomplete="off"
+                 aria-label="輸入郵遞區號或地名" aria-describedby="qhint">
           <button class="btn" id="qb" type="button">查</button>
         </div>
+        <p class="qhint" id="qhint"></p>
+        <div class="hits" id="hits" role="listbox" aria-label="搜尋結果"></div>
       </section>
 
       <section class="blk">
@@ -212,7 +242,11 @@ svg.map.drag{cursor:grabbing}
     <div class="mapwrap" id="mapwrap">
       <svg class="map" id="map" aria-labelledby="maptitle"></svg>
       <details class="legend" id="legend">
-        <summary class="eyebrow">這塊郵區算不算</summary>
+        <summary class="eyebrow">這塊郵區算不算
+          <span class="mini" aria-hidden="true">
+            <i style="--sw:var(--c-work)"></i><i style="--sw:var(--c-rebuild)"></i><i style="--sw:var(--c-none)"></i>
+          </span>
+        </summary>
         <div class="lg" style="--sw:var(--c-work)"><i></i><span>一般建築工地就算</span><b id="n-work"></b></div>
         <div class="lg" id="r-rebuild" style="--sw:var(--c-rebuild)"><i></i><span>只有災後重建工作算</span><b id="n-rebuild"></b></div>
         <div class="lg split" style="--sw:var(--c-fire)"><i></i><span>只有大火重建算</span><b id="n-fire"></b></div>
@@ -240,6 +274,24 @@ const PC = DATA.postcodes, POA = DATA.poa, CITIES = DATA.cities,
 // 頁首出處與 417/462 等同性由資料決定，不寫死在樣板裡
 document.getElementById('stamp').textContent = META.stamp;
 document.getElementById('excluded').textContent = META.excluded_note;
+
+// 導覽：Artifact 在沙箱 iframe 裡不能改上層網址，只能開新分頁。
+// （之後放上 GitHub Pages 就能改成相對路徑原地跳轉。）
+const navEl = document.getElementById('nav');
+for(const n of (META.nav || [])){
+  if(n.current){
+    const s = document.createElement('span');
+    s.className = 'here'; s.textContent = n.label;
+    s.setAttribute('aria-current', 'page');
+    navEl.appendChild(s);
+  } else {
+    const a = document.createElement('a');
+    a.href = n.url; a.target = '_blank'; a.rel = 'noopener';
+    a.className = n.home ? 'home' : '';
+    a.textContent = n.home ? '← ' + n.label : n.label;
+    navEl.appendChild(a);
+  }
+}
 
 const COS = Math.cos(20 * Math.PI / 180);
 const px = lon => lon * COS, py = lat => -lat;
@@ -405,20 +457,70 @@ function zoomAt(bp, nk){
 }
 svg.addEventListener('wheel', e => { e.preventDefault(); zoomAt(toBase(e), k*Math.pow(1.0016, -e.deltaY)); }, {passive:false});
 
-let drag=null;
+// 觸控：一指平移、兩指縮放。
+// CSS 的 touch-action:none 關掉了瀏覽器原生手勢，所以捏合必須自己實作——
+// 否則手機上只能用 +／− 按鈕縮放。
+const pts = new Map();          // pointerId -> 目前的螢幕座標
+let drag = null, pinch = null;
+
+const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+const mid  = (a, b) => ({clientX:(a.x + b.x)/2, clientY:(a.y + b.y)/2});
+
+function startPinch(){
+  const [a, b] = [...pts.values()];
+  pinch = {d: dist(a, b), k, base: toBase(mid(a, b)),
+           tx0: tx, ty0: ty, m0: mid(a, b)};
+  drag = null;
+}
+
 svg.addEventListener('pointerdown', e => {
-  drag = {x:e.clientX, y:e.clientY, tx, ty, moved:false};
-  svg.setPointerCapture(e.pointerId); svg.classList.add('drag');
+  pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  // 補捉失敗不該中斷後面的平移／縮放設定
+  try { svg.setPointerCapture(e.pointerId); } catch (_) {}
+  if(pts.size === 2){ startPinch(); return; }
+  if(pts.size === 1){
+    drag = {x:e.clientX, y:e.clientY, tx, ty, moved:false};
+    svg.classList.add('drag');
+  }
 });
+
 svg.addEventListener('pointermove', e => {
+  if(!pts.has(e.pointerId)) return;
+  pts.set(e.pointerId, {x:e.clientX, y:e.clientY});
+
+  if(pinch && pts.size >= 2){
+    const [a, b] = [...pts.values()];
+    const d = dist(a, b);
+    if(pinch.d > 0 && d > 0){
+      // 縮放同時跟著兩指中點移動，手感才對
+      const nk = Math.max(1, Math.min(40, pinch.k * (d / pinch.d)));
+      const m = mid(a, b), now = toBase(m);
+      tx = now.x - nk * ((pinch.base.x - pinch.tx0) / pinch.k);
+      ty = now.y - nk * ((pinch.base.y - pinch.ty0) / pinch.k);
+      k = nk; apply();
+    }
+    return;
+  }
   if(!drag) return;
   const a = toBase(e), b = toBase({clientX:drag.x, clientY:drag.y});
   if(Math.abs(e.clientX-drag.x)+Math.abs(e.clientY-drag.y) > 3) drag.moved = true;
   tx = drag.tx + (a.x-b.x); ty = drag.ty + (a.y-b.y); apply();
 });
-const endDrag = () => { svg.classList.remove('drag'); setTimeout(()=>{drag=null;},0); };
-svg.addEventListener('pointerup', endDrag);
-svg.addEventListener('pointercancel', endDrag);
+
+function release(e){
+  pts.delete(e.pointerId);
+  if(pts.size < 2) pinch = null;
+  if(pts.size === 0){
+    svg.classList.remove('drag');
+    setTimeout(() => { drag = null; }, 0);
+  } else if(pts.size === 1){
+    // 放開一指後接著單指平移，不要跳一下
+    const [only] = [...pts.values()];
+    drag = {x:only.x, y:only.y, tx, ty, moved:true};
+  }
+}
+svg.addEventListener('pointerup', release);
+svg.addEventListener('pointercancel', release);
 const centre = () => ({x:VB.x+VB.w/2, y:VB.y+VB.h/2});
 document.getElementById('zin').onclick  = () => zoomAt(centre(), k*1.6);
 document.getElementById('zout').onclick = () => zoomAt(centre(), k/1.6);
@@ -461,14 +563,15 @@ function select(pc){
   if(d){ d.node.classList.add('sel'); selNode = d.node; d.node.parentNode.appendChild(d.node); }
 
   if(!d || !d.rec){
-    const names = (OTHER[pc] || [])[0];
+    const names = OTHER[pc];
     const where = names ? `（${esc(names.join('、'))}）` : '';
     detail.innerHTML = `<div class="empty">郵遞區號 <b class="mono">${esc(pc)}</b>${where} 不在${META.state_label}的合格清單上。一般建築工地與災後重建工作都不能用它集簽。</div>`;
     return;
   }
 
-  const [p, , , f, names, total] = d.rec;
-  const more = total > names.length ? ` 等 ${total} 個地區` : '';
+  const [p, , , f, names] = d.rec;
+  const shown = names.slice(0, 6);
+  const more = names.length > shown.length ? ` 等 ${names.length} 個地區` : '';
   const rows = [];
   if(f&1) rows.push(`<div class="verdict" style="--vc:var(--c-work)"><span class="dot"></span><span><b>一般建築工地 → 算</b><br>在 Regional Australia 郵區內，住宅、非住宅、土木、整地、鷹架、油漆、圍籬等都算。</span></div>`);
   else rows.push(`<div class="verdict no"><span class="dot"></span><span><b>一般建築工地 → 不算</b><br>這個郵區不在 Regional Australia 名單上。</span></div>`);
@@ -478,7 +581,7 @@ function select(pc){
   if(d.stray) rows.push(`<div class="note">ABS 沒有這個郵區的對應面，地圖上以小點標示概略位置。</div>`);
 
   detail.innerHTML =
-    `<div class="hd"><span class="pcn" style="color:${colorOf(f, splitBox.checked)}">${p}</span><span class="loc">${esc(names.join('、'))}${more}</span></div>` +
+    `<div class="hd"><span class="pcn" style="color:${colorOf(f, splitBox.checked)}">${p}</span><span class="loc">${esc(shown.join('、'))}${more}</span></div>` +
     `<div class="bd">${rows.join('')}</div>`;
 }
 
@@ -488,7 +591,7 @@ svg.addEventListener('click', e => { if(drag && drag.moved) return; const t = hi
 svg.addEventListener('pointerover', e => {
   const t = hit(e); if(!t) return;
   const d = byPc.get(t.__pc);
-  const names = (d && d.rec) ? d.rec[4] : (OTHER[t.__pc] || [])[0];
+  const names = (d && d.rec) ? d.rec[4] : OTHER[t.__pc];
   tip.textContent = t.__pc + (names ? '  ' + names[0] : '');
   tip.classList.add('on');
 });
@@ -501,17 +604,75 @@ svg.addEventListener('pointermove', e => {
 });
 
 const q = document.getElementById('q');
+const hits = document.getElementById('hits');
+const qhint = document.getElementById('qhint');
+
+// 地名 -> 郵區。多數人知道自己在哪個鎮，不知道郵區號碼。
+const byName = [];
+for(const rec of PC) for(const nm of rec[4]) byName.push([nm.toLowerCase(), rec[0], nm]);
+
+const CAT_COLOR = {work:'var(--c-work)', rebuild:'var(--c-rebuild)', none:'var(--c-none)'};
+
+function clearHits(){ hits.innerHTML = ''; }
+
+function goto(pc){
+  clearHits();
+  select(pc);
+  const d = byPc.get(pc);
+  if(d && d.rec) focusOn(d.rec, Math.max(k, 6));
+}
+
+function showHits(list, term){
+  clearHits();
+  for(const [pc, nm] of list.slice(0, 30)){
+    const f = (byPc.get(pc) || {}).f || 0;
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.style.setProperty('--hc', CAT_COLOR[catOf(f)]);
+    b.innerHTML = `<em></em><b>${pc}</b><i>${esc(nm)}</i>`;
+    b.addEventListener('click', () => { q.value = nm; goto(pc); });
+    hits.appendChild(b);
+  }
+  const extra = list.length - 30;
+  qhint.textContent = list.length
+    ? `找到 ${list.length} 筆` + (extra > 0 ? `，只列出前 30 筆，再打幾個字縮小範圍` : '')
+    : `找不到「${term}」。試試郵遞區號，或只打地名的前幾個字。`;
+}
+
 function doSearch(){
   const v = q.value.trim();
-  if(!/^\d{3,4}$/.test(v)) return;
-  const n = parseInt(v,10);
-  select(n);
-  const d = byPc.get(n);
-  if(!d || !d.rec) return;
-  focusOn(d.rec, Math.max(k, 6));
+  if(!v){ clearHits(); qhint.textContent = ''; return; }
+
+  if(/^\d{3,4}$/.test(v)){          // 純數字當郵遞區號
+    clearHits(); qhint.textContent = '';
+    goto(parseInt(v, 10));
+    return;
+  }
+
+  const term = v.toLowerCase();
+  const starts = [], contains = [];
+  for(const [low, pc, nm] of byName){
+    if(low.startsWith(term)) starts.push([pc, nm]);
+    else if(low.includes(term)) contains.push([pc, nm]);
+  }
+  const list = starts.concat(contains);
+  if(list.length === 1){                 // 只有一個就直接跳過去
+    clearHits(); qhint.textContent = '';
+    q.value = list[0][1];
+    goto(list[0][0]);
+    return;
+  }
+  showHits(list, v);
 }
+
 document.getElementById('qb').onclick = doSearch;
 q.addEventListener('keydown', e => { if(e.key === 'Enter') doSearch(); });
+// 打字時即時給候選，但太短就先不要洗版
+q.addEventListener('input', () => {
+  const v = q.value.trim();
+  if(v.length >= 2 && !/^\d{1,2}$/.test(v)) doSearch();
+  else { clearHits(); qhint.textContent = ''; }
+});
 
 // 從入口頁帶郵區進來：#pc=4870
 function fromHash(){

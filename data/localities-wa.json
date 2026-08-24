@@ -3,7 +3,6 @@
     "6000": {
       "lat": -31.9488,
       "lon": 115.8599,
-      "n_names": 3,
       "names": [
         "City Delivery Centre",
         "Perth",
@@ -13,7 +12,6 @@
     "6003": {
       "lat": -31.9393,
       "lon": 115.8691,
-      "n_names": 2,
       "names": [
         "Highgate",
         "Northbridge"
@@ -22,7 +20,6 @@
     "6004": {
       "lat": -31.9569,
       "lon": 115.8746,
-      "n_names": 1,
       "names": [
         "East Perth"
       ]
@@ -30,7 +27,6 @@
     "6005": {
       "lat": -31.9571,
       "lon": 115.8369,
-      "n_names": 2,
       "names": [
         "Kings Park",
         "West Perth"
@@ -39,7 +35,6 @@
     "6006": {
       "lat": -31.9293,
       "lon": 115.8529,
-      "n_names": 1,
       "names": [
         "North Perth"
       ]
@@ -47,7 +42,6 @@
     "6007": {
       "lat": -31.9357,
       "lon": 115.8343,
-      "n_names": 2,
       "names": [
         "Leederville",
         "West Leederville"
@@ -56,7 +50,6 @@
     "6008": {
       "lat": -31.9566,
       "lon": 115.8114,
-      "n_names": 4,
       "names": [
         "Daglish",
         "Shenton Park",
@@ -67,7 +60,6 @@
     "6009": {
       "lat": -31.9858,
       "lon": 115.8047,
-      "n_names": 5,
       "names": [
         "Broadway Nedlands",
         "Crawley",
@@ -79,7 +71,6 @@
     "6010": {
       "lat": -31.9716,
       "lon": 115.7764,
-      "n_names": 5,
       "names": [
         "Claremont",
         "Claremont North",
@@ -91,7 +82,6 @@
     "6011": {
       "lat": -31.9964,
       "lon": 115.7576,
-      "n_names": 2,
       "names": [
         "Cottesloe",
         "Peppermint Grove"
@@ -100,7 +90,6 @@
     "6012": {
       "lat": -32.016,
       "lon": 115.7634,
-      "n_names": 1,
       "names": [
         "Mosman Park"
       ]
@@ -108,7 +97,6 @@
     "6014": {
       "lat": -31.9364,
       "lon": 115.8082,
-      "n_names": 4,
       "names": [
         "Floreat",
         "Floreat Forum",
@@ -119,7 +107,6 @@
     "6015": {
       "lat": -31.9385,
       "lon": 115.7647,
-      "n_names": 1,
       "names": [
         "City Beach"
       ]
@@ -127,7 +114,6 @@
     "6016": {
       "lat": -31.9212,
       "lon": 115.8312,
-      "n_names": 2,
       "names": [
         "Glendalough",
         "Mount Hawthorn"
@@ -136,7 +122,6 @@
     "6017": {
       "lat": -31.9084,
       "lon": 115.8146,
-      "n_names": 3,
       "names": [
         "Herdsman",
         "Osborne Park",
@@ -146,20 +131,19 @@
     "6018": {
       "lat": -31.892,
       "lon": 115.7868,
-      "n_names": 7,
       "names": [
         "Churchlands",
         "Doubleview",
         "Gwelup",
         "Gwelup Dc",
         "Innaloo",
-        "Karrinyup"
+        "Karrinyup",
+        "Woodlands"
       ]
     },
     "6019": {
       "lat": -31.9073,
       "lon": 115.7692,
-      "n_names": 2,
       "names": [
         "Scarborough",
         "Wembley Downs"
@@ -168,7 +152,6 @@
     "6020": {
       "lat": -31.8527,
       "lon": 115.7654,
-      "n_names": 5,
       "names": [
         "Carine",
         "Marmion",
@@ -180,7 +163,6 @@
     "6021": {
       "lat": -31.8717,
       "lon": 115.8119,
-      "n_names": 2,
       "names": [
         "Balcatta",
         "Stirling"
@@ -189,7 +171,6 @@
     "6022": {
       "lat": -31.852,
       "lon": 115.8092,
-      "n_names": 1,
       "names": [
         "Hamersley"
       ]
@@ -197,7 +178,6 @@
     "6023": {
       "lat": -31.8345,
       "lon": 115.774,
-      "n_names": 2,
       "names": [
         "Duncraig",
         "Glengarry"
@@ -206,7 +186,6 @@
     "6024": {
       "lat": -31.8349,
       "lon": 115.8031,
-      "n_names": 2,
       "names": [
         "Greenwood",
         "Warwick"
@@ -215,7 +194,6 @@
     "6025": {
       "lat": -31.7958,
       "lon": 115.7544,
-      "n_names": 4,
       "names": [
         "Craigie",
         "Hillarys",
@@ -226,7 +204,6 @@
     "6026": {
       "lat": -31.8017,
       "lon": 115.7998,
-      "n_names": 2,
       "names": [
         "Kingsley",
         "Woodvale"
@@ -235,20 +212,20 @@
     "6027": {
       "lat": -31.7633,
       "lon": 115.7564,
-      "n_names": 8,
       "names": [
         "Beldon",
         "Connolly",
         "Edgewater",
         "Heathridge",
         "Joondalup",
-        "Joondalup Dc"
+        "Joondalup Dc",
+        "Mullaloo",
+        "Ocean Reef"
       ]
     },
     "6028": {
       "lat": -31.7337,
       "lon": 115.7477,
-      "n_names": 4,
       "names": [
         "Burns Beach",
         "Currambine",
@@ -259,7 +236,6 @@
     "6029": {
       "lat": -31.8769,
       "lon": 115.7557,
-      "n_names": 1,
       "names": [
         "Trigg"
       ]
@@ -267,7 +243,6 @@
     "6030": {
       "lat": -31.6873,
       "lon": 115.7117,
-      "n_names": 6,
       "names": [
         "Clarkson",
         "Merriwa",
@@ -280,7 +255,6 @@
     "6031": {
       "lat": -31.6925,
       "lon": 115.7721,
-      "n_names": 3,
       "names": [
         "Banksia Grove",
         "Carramar",
@@ -290,7 +264,6 @@
     "6032": {
       "lat": -31.6432,
       "lon": 115.7489,
-      "n_names": 1,
       "names": [
         "Nowergup"
       ]
@@ -298,7 +271,6 @@
     "6033": {
       "lat": -31.6091,
       "lon": 115.7114,
-      "n_names": 1,
       "names": [
         "Carabooda"
       ]
@@ -306,7 +278,6 @@
     "6034": {
       "lat": -31.5856,
       "lon": 115.6639,
-      "n_names": 1,
       "names": [
         "Eglinton"
       ]
@@ -314,7 +285,6 @@
     "6035": {
       "lat": -31.5247,
       "lon": 115.7299,
-      "n_names": 1,
       "names": [
         "Yanchep"
       ]
@@ -322,7 +292,6 @@
     "6036": {
       "lat": -31.6494,
       "lon": 115.7099,
-      "n_names": 2,
       "names": [
         "Butler",
         "Jindalee"
@@ -331,7 +300,6 @@
     "6037": {
       "lat": -31.4885,
       "lon": 115.6161,
-      "n_names": 1,
       "names": [
         "Two Rocks"
       ]
@@ -339,7 +307,6 @@
     "6038": {
       "lat": -32.2891,
       "lon": 115.723,
-      "n_names": 1,
       "names": [
         "Alkimos"
       ]
@@ -347,7 +314,6 @@
     "6041": {
       "lat": -31.3797,
       "lon": 115.5686,
-      "n_names": 5,
       "names": [
         "Caraban",
         "Gabbadah",
@@ -359,7 +325,6 @@
     "6042": {
       "lat": -31.2544,
       "lon": 115.5086,
-      "n_names": 1,
       "names": [
         "Seabird"
       ]
@@ -367,7 +332,6 @@
     "6043": {
       "lat": -31.1418,
       "lon": 115.4245,
-      "n_names": 2,
       "names": [
         "Breton Bay",
         "Ledge Point"
@@ -376,7 +340,6 @@
     "6044": {
       "lat": -30.9728,
       "lon": 115.4247,
-      "n_names": 4,
       "names": [
         "Karakin",
         "Lancelin",
@@ -387,7 +350,6 @@
     "6050": {
       "lat": -31.9306,
       "lon": 115.8719,
-      "n_names": 3,
       "names": [
         "Coolbinia",
         "Menora",
@@ -397,7 +359,6 @@
     "6051": {
       "lat": -31.9381,
       "lon": 115.8996,
-      "n_names": 1,
       "names": [
         "Maylands"
       ]
@@ -405,7 +366,6 @@
     "6052": {
       "lat": -31.9155,
       "lon": 115.884,
-      "n_names": 2,
       "names": [
         "Bedford",
         "Inglewood"
@@ -414,7 +374,6 @@
     "6053": {
       "lat": -31.9209,
       "lon": 115.9149,
-      "n_names": 1,
       "names": [
         "Bayswater"
       ]
@@ -422,7 +381,6 @@
     "6054": {
       "lat": -31.9018,
       "lon": 115.9426,
-      "n_names": 6,
       "names": [
         "Ashfield",
         "Bassendean",
@@ -435,33 +393,44 @@
     "6055": {
       "lat": -31.8425,
       "lon": 115.9808,
-      "n_names": 9,
       "names": [
         "Brabham",
         "Bushmead",
         "Caversham",
         "Dayton",
         "Guildford",
-        "Hazelmere"
+        "Hazelmere",
+        "Henley Brook",
+        "South Guildford",
+        "West Swan"
       ]
     },
     "6056": {
       "lat": -31.8384,
       "lon": 116.0261,
-      "n_names": 17,
       "names": [
         "Baskerville",
         "Bellevue",
         "Boya",
         "Greenmount",
         "Helena Valley",
-        "Herne Hill"
+        "Herne Hill",
+        "Jane Brook",
+        "Koongamia",
+        "Middle Swan",
+        "Midland",
+        "Midvale",
+        "Millendon",
+        "Red Hill",
+        "Stratton",
+        "Swan View",
+        "Viveash",
+        "Woodbridge"
       ]
     },
     "6057": {
       "lat": -31.9499,
       "lon": 116.0042,
-      "n_names": 2,
       "names": [
         "High Wycombe",
         "Maida Vale"
@@ -470,7 +439,6 @@
     "6058": {
       "lat": -31.9852,
       "lon": 116.0067,
-      "n_names": 1,
       "names": [
         "Forrestfield"
       ]
@@ -478,7 +446,6 @@
     "6059": {
       "lat": -31.8829,
       "lon": 115.8617,
-      "n_names": 1,
       "names": [
         "Dianella"
       ]
@@ -486,7 +453,6 @@
     "6060": {
       "lat": -31.9032,
       "lon": 115.8409,
-      "n_names": 5,
       "names": [
         "Dog Swamp",
         "Joondanna",
@@ -498,7 +464,6 @@
     "6061": {
       "lat": -31.8641,
       "lon": 115.8435,
-      "n_names": 4,
       "names": [
         "Balga",
         "Mirrabooka",
@@ -509,7 +474,6 @@
     "6062": {
       "lat": -31.8863,
       "lon": 115.8909,
-      "n_names": 3,
       "names": [
         "Embleton",
         "Morley",
@@ -519,7 +483,6 @@
     "6063": {
       "lat": -31.8629,
       "lon": 115.94,
-      "n_names": 2,
       "names": [
         "Beechboro",
         "Bennett Springs"
@@ -528,7 +491,6 @@
     "6064": {
       "lat": -31.8353,
       "lon": 115.8491,
-      "n_names": 4,
       "names": [
         "Alexander Heights",
         "Girrawheen",
@@ -539,20 +501,30 @@
     "6065": {
       "lat": -31.6944,
       "lon": 115.8453,
-      "n_names": 18,
       "names": [
         "Ashby",
         "Darch",
         "Gnangara",
         "Hocking",
         "Jandabup",
-        "Kingsway"
+        "Kingsway",
+        "Landsdale",
+        "Lexia",
+        "Madeley",
+        "Mariginiup",
+        "Melaleuca",
+        "Pearsall",
+        "Pinjar",
+        "Sinagra",
+        "Tapping",
+        "Wangara",
+        "Wangara Dc",
+        "Wanneroo"
       ]
     },
     "6066": {
       "lat": -31.8427,
       "lon": 115.8965,
-      "n_names": 1,
       "names": [
         "Ballajura"
       ]
@@ -560,7 +532,6 @@
     "6067": {
       "lat": -31.8161,
       "lon": 115.8996,
-      "n_names": 1,
       "names": [
         "Cullacabardee"
       ]
@@ -568,7 +539,6 @@
     "6068": {
       "lat": -31.8262,
       "lon": 115.9411,
-      "n_names": 1,
       "names": [
         "Whiteman"
       ]
@@ -576,20 +546,19 @@
     "6069": {
       "lat": -31.7716,
       "lon": 116.0077,
-      "n_names": 7,
       "names": [
         "Aveley",
         "Belhus",
         "Brigadoon",
         "Ellenbrook",
         "Ellenbrook East",
-        "The Vines"
+        "The Vines",
+        "Upper Swan"
       ]
     },
     "6070": {
       "lat": -31.929,
       "lon": 116.0793,
-      "n_names": 1,
       "names": [
         "Darlington"
       ]
@@ -597,7 +566,6 @@
     "6071": {
       "lat": -31.8891,
       "lon": 116.1004,
-      "n_names": 2,
       "names": [
         "Glen Forrest",
         "Hovea"
@@ -606,7 +574,6 @@
     "6072": {
       "lat": -31.9078,
       "lon": 116.132,
-      "n_names": 1,
       "names": [
         "Mahogany Creek"
       ]
@@ -614,7 +581,6 @@
     "6073": {
       "lat": -31.9493,
       "lon": 116.2814,
-      "n_names": 3,
       "names": [
         "Mundaring",
         "Mundaring Dc",
@@ -624,7 +590,6 @@
     "6074": {
       "lat": -31.8966,
       "lon": 116.2045,
-      "n_names": 1,
       "names": [
         "Sawyers Valley"
       ]
@@ -632,20 +597,24 @@
     "6076": {
       "lat": -32.109,
       "lon": 116.2083,
-      "n_names": 12,
       "names": [
         "Bickley",
         "Carmel",
         "Gooseberry Hill",
         "Hacketts Gully",
         "Kalamunda",
-        "Lesmurdie"
+        "Lesmurdie",
+        "Paulls Valley",
+        "Pickering Brook",
+        "Piesse Brook",
+        "Reservoir",
+        "Walliston",
+        "Walliston Dc"
       ]
     },
     "6077": {
       "lat": -31.6944,
       "lon": 115.8453,
-      "n_names": 2,
       "names": [
         "Gnangara",
         "Jandabup"
@@ -654,7 +623,6 @@
     "6078": {
       "lat": -31.6944,
       "lon": 115.8453,
-      "n_names": 2,
       "names": [
         "Mariginiup",
         "Pinjar"
@@ -663,7 +631,6 @@
     "6079": {
       "lat": -31.6944,
       "lon": 115.8453,
-      "n_names": 2,
       "names": [
         "Lexia",
         "Melaleuca"
@@ -672,7 +639,6 @@
     "6081": {
       "lat": -31.876,
       "lon": 116.1461,
-      "n_names": 2,
       "names": [
         "Parkerville",
         "Stoneville"
@@ -681,7 +647,6 @@
     "6082": {
       "lat": -31.7384,
       "lon": 116.2957,
-      "n_names": 2,
       "names": [
         "Bailup",
         "Mount Helena"
@@ -690,7 +655,6 @@
     "6083": {
       "lat": -31.7931,
       "lon": 116.1966,
-      "n_names": 2,
       "names": [
         "Gidgegannup",
         "Morangup"
@@ -699,7 +663,6 @@
     "6084": {
       "lat": -31.622,
       "lon": 116.0728,
-      "n_names": 5,
       "names": [
         "Avon Valley National Park",
         "Bullsbrook",
@@ -711,7 +674,6 @@
     "6090": {
       "lat": -31.8626,
       "lon": 115.8943,
-      "n_names": 1,
       "names": [
         "Malaga"
       ]
@@ -719,7 +681,6 @@
     "6100": {
       "lat": -31.9717,
       "lon": 115.896,
-      "n_names": 3,
       "names": [
         "Burswood",
         "Lathlain",
@@ -729,7 +690,6 @@
     "6101": {
       "lat": -31.9852,
       "lon": 115.9086,
-      "n_names": 4,
       "names": [
         "Carlisle",
         "Carlisle North",
@@ -740,7 +700,6 @@
     "6102": {
       "lat": -32.0056,
       "lon": 115.9044,
-      "n_names": 4,
       "names": [
         "Bentley",
         "Bentley Dc",
@@ -751,7 +710,6 @@
     "6103": {
       "lat": -31.9604,
       "lon": 115.9135,
-      "n_names": 1,
       "names": [
         "Rivervale"
       ]
@@ -759,7 +717,6 @@
     "6104": {
       "lat": -31.9655,
       "lon": 115.9776,
-      "n_names": 3,
       "names": [
         "Ascot",
         "Belmont",
@@ -769,7 +726,6 @@
     "6105": {
       "lat": -31.9539,
       "lon": 115.9633,
-      "n_names": 3,
       "names": [
         "Cloverdale",
         "Kewdale",
@@ -779,7 +735,6 @@
     "6106": {
       "lat": -31.9921,
       "lon": 115.9456,
-      "n_names": 2,
       "names": [
         "Welshpool",
         "Welshpool Dc"
@@ -788,20 +743,19 @@
     "6107": {
       "lat": -32.0177,
       "lon": 115.9671,
-      "n_names": 7,
       "names": [
         "Beckenham",
         "Cannington",
         "East Cannington",
         "Kenwick",
         "Queens Park",
-        "Wattle Grove"
+        "Wattle Grove",
+        "Wilson"
       ]
     },
     "6108": {
       "lat": -32.0609,
       "lon": 115.9536,
-      "n_names": 1,
       "names": [
         "Thornlie"
       ]
@@ -809,7 +763,6 @@
     "6109": {
       "lat": -32.0399,
       "lon": 116.0132,
-      "n_names": 2,
       "names": [
         "Maddington",
         "Orange Grove"
@@ -818,7 +771,6 @@
     "6110": {
       "lat": -32.0785,
       "lon": 116.0086,
-      "n_names": 4,
       "names": [
         "Gosnells",
         "Huntingdale",
@@ -829,33 +781,41 @@
     "6111": {
       "lat": -32.0979,
       "lon": 116.096,
-      "n_names": 10,
       "names": [
         "Ashendon",
         "Camillo",
         "Canning Mills",
         "Champion Lakes",
         "Karragullen",
-        "Kelmscott"
+        "Kelmscott",
+        "Kelmscott Dc",
+        "Lesley",
+        "Roleystone",
+        "Westfield"
       ]
     },
     "6112": {
       "lat": -32.1587,
       "lon": 115.9979,
-      "n_names": 13,
       "names": [
         "Armadale",
         "Bedfordale",
         "Brookdale",
         "Doobarda",
         "Forrestdale",
-        "Harrisdale"
+        "Harrisdale",
+        "Haynes",
+        "Hilbert",
+        "Mount Nasura",
+        "Mount Richon",
+        "Piara Waters",
+        "Seville Grove",
+        "Wungong"
       ]
     },
     "6121": {
       "lat": -32.2089,
       "lon": 115.9165,
-      "n_names": 2,
       "names": [
         "Oakford",
         "Oldbury"
@@ -864,7 +824,6 @@
     "6122": {
       "lat": -32.2217,
       "lon": 116.0072,
-      "n_names": 4,
       "names": [
         "Byford",
         "Cardup",
@@ -875,7 +834,6 @@
     "6123": {
       "lat": -32.2952,
       "lon": 115.9859,
-      "n_names": 2,
       "names": [
         "Mundijong",
         "Whitby"
@@ -884,7 +842,6 @@
     "6124": {
       "lat": -32.3383,
       "lon": 116.0725,
-      "n_names": 1,
       "names": [
         "Jarrahdale"
       ]
@@ -892,7 +849,6 @@
     "6125": {
       "lat": -32.3644,
       "lon": 115.9013,
-      "n_names": 3,
       "names": [
         "Hopeland",
         "Mardella",
@@ -902,7 +858,6 @@
     "6126": {
       "lat": -32.44,
       "lon": 115.977,
-      "n_names": 1,
       "names": [
         "Keysbrook"
       ]
@@ -910,7 +865,6 @@
     "6147": {
       "lat": -32.0438,
       "lon": 115.9414,
-      "n_names": 3,
       "names": [
         "Langford",
         "Lynwood",
@@ -920,7 +874,6 @@
     "6148": {
       "lat": -32.0302,
       "lon": 115.9247,
-      "n_names": 4,
       "names": [
         "Ferndale",
         "Riverton",
@@ -931,7 +884,6 @@
     "6149": {
       "lat": -32.0649,
       "lon": 115.8587,
-      "n_names": 2,
       "names": [
         "Bull Creek",
         "Leeming"
@@ -940,7 +892,6 @@
     "6150": {
       "lat": -32.0617,
       "lon": 115.8336,
-      "n_names": 3,
       "names": [
         "Bateman",
         "Murdoch",
@@ -950,7 +901,6 @@
     "6151": {
       "lat": -31.9822,
       "lon": 115.8695,
-      "n_names": 3,
       "names": [
         "Kensington",
         "South Perth",
@@ -960,7 +910,6 @@
     "6152": {
       "lat": -32.0085,
       "lon": 115.8701,
-      "n_names": 5,
       "names": [
         "Como",
         "Karawara",
@@ -972,7 +921,6 @@
     "6153": {
       "lat": -32.0244,
       "lon": 115.8375,
-      "n_names": 6,
       "names": [
         "Applecross",
         "Applecross North",
@@ -985,7 +933,6 @@
     "6154": {
       "lat": -32.0401,
       "lon": 115.826,
-      "n_names": 3,
       "names": [
         "Alfred Cove",
         "Booragoon",
@@ -995,7 +942,6 @@
     "6155": {
       "lat": -32.0615,
       "lon": 115.8908,
-      "n_names": 4,
       "names": [
         "Canning Vale",
         "Canning Vale Dc",
@@ -1006,7 +952,6 @@
     "6156": {
       "lat": -32.0395,
       "lon": 115.8002,
-      "n_names": 4,
       "names": [
         "Attadale",
         "Melville",
@@ -1017,7 +962,6 @@
     "6157": {
       "lat": -32.0382,
       "lon": 115.7837,
-      "n_names": 3,
       "names": [
         "Bicton",
         "Palmyra",
@@ -1027,7 +971,6 @@
     "6158": {
       "lat": -32.0385,
       "lon": 115.7666,
-      "n_names": 1,
       "names": [
         "East Fremantle"
       ]
@@ -1035,7 +978,6 @@
     "6159": {
       "lat": -32.0352,
       "lon": 115.7503,
-      "n_names": 1,
       "names": [
         "North Fremantle"
       ]
@@ -1043,7 +985,6 @@
     "6160": {
       "lat": -32.0541,
       "lon": 115.7545,
-      "n_names": 1,
       "names": [
         "Fremantle"
       ]
@@ -1051,7 +992,6 @@
     "6161": {
       "lat": -32.0056,
       "lon": 115.5205,
-      "n_names": 1,
       "names": [
         "Rottnest Island"
       ]
@@ -1059,7 +999,6 @@
     "6162": {
       "lat": -32.0688,
       "lon": 115.759,
-      "n_names": 3,
       "names": [
         "Beaconsfield",
         "South Fremantle",
@@ -1069,33 +1008,41 @@
     "6163": {
       "lat": -32.0848,
       "lon": 115.7987,
-      "n_names": 12,
       "names": [
         "Bibra Lake",
         "Bibra Lake Dc",
         "Coolbellup",
         "Hamilton Hill",
         "Hilton",
-        "Kardinya"
+        "Kardinya",
+        "North Coogee",
+        "North Lake",
+        "O'Connor",
+        "O’Connor",
+        "Samson",
+        "Spearwood"
       ]
     },
     "6164": {
       "lat": -32.132,
       "lon": 115.8546,
-      "n_names": 11,
       "names": [
         "Atwell",
         "Aubin Grove",
         "Banjup",
         "Beeliar",
         "Cockburn Central",
-        "Hammond Park"
+        "Hammond Park",
+        "Jandakot",
+        "South Lake",
+        "Success",
+        "Treeby",
+        "Yangebup"
       ]
     },
     "6165": {
       "lat": -32.196,
       "lon": 115.7994,
-      "n_names": 2,
       "names": [
         "Hope Valley",
         "Naval Base"
@@ -1104,7 +1051,6 @@
     "6166": {
       "lat": -32.1584,
       "lon": 115.7907,
-      "n_names": 5,
       "names": [
         "Coogee",
         "Henderson",
@@ -1116,33 +1062,39 @@
     "6167": {
       "lat": -32.2237,
       "lon": 115.8353,
-      "n_names": 13,
       "names": [
         "Anketell",
         "Bertram",
         "Calista",
         "Casuarina",
         "Kwinana Beach",
-        "Kwinana Town Centre"
+        "Kwinana Town Centre",
+        "Mandogalup",
+        "Medina",
+        "Orelia",
+        "Parmelia",
+        "Postans",
+        "The Spectacles",
+        "Wandi"
       ]
     },
     "6168": {
       "lat": -32.282,
       "lon": 115.7577,
-      "n_names": 8,
       "names": [
         "Cooloongup",
         "East Rockingham",
         "Garden Island",
         "Hillman",
         "Peron",
-        "Rockingham"
+        "Rockingham",
+        "Rockingham Beach",
+        "Rockingham Dc"
       ]
     },
     "6169": {
       "lat": -32.3385,
       "lon": 115.7639,
-      "n_names": 4,
       "names": [
         "Safety Bay",
         "Shoalwater",
@@ -1153,7 +1105,6 @@
     "6170": {
       "lat": -32.2656,
       "lon": 115.836,
-      "n_names": 2,
       "names": [
         "Leda",
         "Wellard"
@@ -1162,7 +1113,6 @@
     "6171": {
       "lat": -32.3289,
       "lon": 115.8333,
-      "n_names": 1,
       "names": [
         "Baldivis"
       ]
@@ -1170,7 +1120,6 @@
     "6172": {
       "lat": -32.3755,
       "lon": 115.7531,
-      "n_names": 1,
       "names": [
         "Port Kennedy"
       ]
@@ -1178,7 +1127,6 @@
     "6173": {
       "lat": -32.4074,
       "lon": 115.7579,
-      "n_names": 1,
       "names": [
         "Secret Harbour"
       ]
@@ -1186,7 +1134,6 @@
     "6174": {
       "lat": -32.4266,
       "lon": 115.7602,
-      "n_names": 1,
       "names": [
         "Golden Bay"
       ]
@@ -1194,7 +1141,6 @@
     "6175": {
       "lat": -32.4459,
       "lon": 115.7553,
-      "n_names": 1,
       "names": [
         "Singleton"
       ]
@@ -1202,7 +1148,6 @@
     "6176": {
       "lat": -32.4217,
       "lon": 115.8143,
-      "n_names": 1,
       "names": [
         "Karnup"
       ]
@@ -1210,7 +1155,6 @@
     "6180": {
       "lat": -32.558,
       "lon": 115.7283,
-      "n_names": 2,
       "names": [
         "Lakelands",
         "Parklands"
@@ -1219,7 +1163,6 @@
     "6181": {
       "lat": -32.558,
       "lon": 115.7283,
-      "n_names": 1,
       "names": [
         "Stake Hill"
       ]
@@ -1227,7 +1170,6 @@
     "6182": {
       "lat": -32.4463,
       "lon": 115.8323,
-      "n_names": 1,
       "names": [
         "Keralup"
       ]
@@ -1235,7 +1177,6 @@
     "6207": {
       "lat": -32.5143,
       "lon": 115.9596,
-      "n_names": 5,
       "names": [
         "Myara",
         "Nambeelup",
@@ -1247,20 +1188,23 @@
     "6208": {
       "lat": -32.6306,
       "lon": 115.8476,
-      "n_names": 11,
       "names": [
         "Blythewood",
         "Fairbridge",
         "Meelon",
         "Nirimba",
         "North Yunderup",
-        "Oakley"
+        "Oakley",
+        "Pinjarra",
+        "Point Grey",
+        "Ravenswood",
+        "South Yunderup",
+        "West Pinjarra"
       ]
     },
     "6209": {
       "lat": -32.558,
       "lon": 115.7283,
-      "n_names": 2,
       "names": [
         "Barragup",
         "Furnissdale"
@@ -1269,20 +1213,36 @@
     "6210": {
       "lat": -32.558,
       "lon": 115.7283,
-      "n_names": 24,
       "names": [
         "Barragup",
         "Bouvard",
         "Clifton",
         "Coodanup",
         "Dawesville",
-        "Dudley Park"
+        "Dudley Park",
+        "Erskine",
+        "Falcon",
+        "Furnissdale",
+        "Greenfields",
+        "Halls Head",
+        "Herron",
+        "Lakelands",
+        "Madora Bay",
+        "Mandurah",
+        "Mandurah Dc",
+        "Mandurah East",
+        "Mandurah North",
+        "Meadow Springs",
+        "Parklands",
+        "San Remo",
+        "Silver Sands",
+        "Stake Hill",
+        "Wannanup"
       ]
     },
     "6211": {
       "lat": -32.558,
       "lon": 115.7283,
-      "n_names": 4,
       "names": [
         "Bouvard",
         "Clifton",
@@ -1293,20 +1253,19 @@
     "6213": {
       "lat": -32.7021,
       "lon": 116.1282,
-      "n_names": 7,
       "names": [
         "Banksiadale",
         "Dwellingup",
         "Etmilyn",
         "Holyoake",
         "Inglehope",
-        "Marrinup"
+        "Marrinup",
+        "Teesdale"
       ]
     },
     "6214": {
       "lat": -32.7504,
       "lon": 115.8594,
-      "n_names": 3,
       "names": [
         "Birchmont",
         "Coolup",
@@ -1316,7 +1275,6 @@
     "6215": {
       "lat": -32.8538,
       "lon": 115.8967,
-      "n_names": 6,
       "names": [
         "Hamel",
         "Lake Clifton",
@@ -1329,7 +1287,6 @@
     "6218": {
       "lat": -32.9462,
       "lon": 115.9031,
-      "n_names": 1,
       "names": [
         "Yarloop"
       ]
@@ -1337,7 +1294,6 @@
     "6219": {
       "lat": -33.0035,
       "lon": 115.8515,
-      "n_names": 1,
       "names": [
         "Cookernup"
       ]
@@ -1345,7 +1301,6 @@
     "6220": {
       "lat": -33.0312,
       "lon": 116.0298,
-      "n_names": 5,
       "names": [
         "Harvey",
         "Hoffman",
@@ -1357,7 +1312,6 @@
     "6221": {
       "lat": -33.1193,
       "lon": 115.9074,
-      "n_names": 2,
       "names": [
         "Mornington",
         "Wokalup"
@@ -1366,7 +1320,6 @@
     "6223": {
       "lat": -33.1821,
       "lon": 115.9032,
-      "n_names": 1,
       "names": [
         "Benger"
       ]
@@ -1374,7 +1327,6 @@
     "6224": {
       "lat": -33.2451,
       "lon": 115.8468,
-      "n_names": 2,
       "names": [
         "Beela",
         "Brunswick"
@@ -1383,20 +1335,30 @@
     "6225": {
       "lat": -33.3526,
       "lon": 116.2049,
-      "n_names": 18,
       "names": [
         "Allanson",
         "Bowelling",
         "Buckingham",
         "Cardiff",
         "Collie",
-        "Collie Burn"
+        "Collie Burn",
+        "Harris River",
+        "Lyalls Mill",
+        "Mcalinden",
+        "Muja",
+        "Mumballup",
+        "Mungalup",
+        "Noggerup",
+        "Palmer",
+        "Preston Settlement",
+        "Shotts",
+        "Worsley",
+        "Yourdamung Lake"
       ]
     },
     "6226": {
       "lat": -33.2918,
       "lon": 115.8472,
-      "n_names": 1,
       "names": [
         "Roelands"
       ]
@@ -1404,7 +1366,6 @@
     "6227": {
       "lat": -33.3228,
       "lon": 115.8686,
-      "n_names": 1,
       "names": [
         "Burekup"
       ]
@@ -1412,7 +1373,6 @@
     "6228": {
       "lat": -33.3381,
       "lon": 115.7765,
-      "n_names": 1,
       "names": [
         "Waterloo"
       ]
@@ -1420,7 +1380,6 @@
     "6229": {
       "lat": -33.3521,
       "lon": 115.7074,
-      "n_names": 2,
       "names": [
         "Picton",
         "Picton East"
@@ -1429,20 +1388,25 @@
     "6230": {
       "lat": -33.3411,
       "lon": 115.6492,
-      "n_names": 13,
       "names": [
         "Bunbury",
         "Carey Park",
         "College Grove",
         "Dalyellup",
         "Davenport",
-        "East Bunbury"
+        "East Bunbury",
+        "Gelorup",
+        "Glen Iris",
+        "Pelican Point",
+        "South Bunbury",
+        "Usher",
+        "Vittoria",
+        "Withers"
       ]
     },
     "6232": {
       "lat": -33.3166,
       "lon": 115.7043,
-      "n_names": 2,
       "names": [
         "Eaton",
         "Millbridge"
@@ -1451,7 +1415,6 @@
     "6233": {
       "lat": -33.279,
       "lon": 115.7144,
-      "n_names": 5,
       "names": [
         "Australind",
         "Binningup",
@@ -1463,20 +1426,20 @@
     "6236": {
       "lat": -33.4104,
       "lon": 115.8289,
-      "n_names": 8,
       "names": [
         "Crooked Brook",
         "Dardanup",
         "Dardanup West",
         "Ferguson",
         "Henty",
-        "Paradise"
+        "Paradise",
+        "Wellington Forest",
+        "Wellington Mill"
       ]
     },
     "6237": {
       "lat": -33.476,
       "lon": 115.6741,
-      "n_names": 6,
       "names": [
         "Boyanup",
         "Elgin",
@@ -1489,20 +1452,23 @@
     "6239": {
       "lat": -33.5649,
       "lon": 115.9239,
-      "n_names": 11,
       "names": [
         "Argyle",
         "Beelerup",
         "Brookhampton",
         "Charley Creek",
         "Donnybrook",
-        "Glen Mervyn"
+        "Glen Mervyn",
+        "Paynedale",
+        "Queenwood",
+        "Thomson Brook",
+        "Upper Capel",
+        "Yabberup"
       ]
     },
     "6240": {
       "lat": -33.5496,
       "lon": 115.9661,
-      "n_names": 1,
       "names": [
         "Lowden"
       ]
@@ -1510,7 +1476,6 @@
     "6243": {
       "lat": -33.6887,
       "lon": 116.2069,
-      "n_names": 2,
       "names": [
         "Wilga",
         "Wilga West"
@@ -1519,20 +1484,20 @@
     "6244": {
       "lat": -33.7832,
       "lon": 116.5069,
-      "n_names": 8,
       "names": [
         "Boyup Brook",
         "Chowerup",
         "Dinninup",
         "Kulikup",
         "Mayanup",
-        "Scotts Brook"
+        "Scotts Brook",
+        "Tonebridge",
+        "Trigwell"
       ]
     },
     "6251": {
       "lat": -33.6827,
       "lon": 115.8887,
-      "n_names": 3,
       "names": [
         "Brazier",
         "Kirup",
@@ -1542,7 +1507,6 @@
     "6252": {
       "lat": -33.7483,
       "lon": 115.9567,
-      "n_names": 1,
       "names": [
         "Mullalyup"
       ]
@@ -1550,7 +1514,6 @@
     "6253": {
       "lat": -33.7739,
       "lon": 116.0365,
-      "n_names": 3,
       "names": [
         "Balingup",
         "Grimwade",
@@ -1560,7 +1523,6 @@
     "6254": {
       "lat": -33.8444,
       "lon": 116.0726,
-      "n_names": 2,
       "names": [
         "Greenbushes",
         "North Greenbushes"
@@ -1569,20 +1531,19 @@
     "6255": {
       "lat": -33.9716,
       "lon": 116.1554,
-      "n_names": 7,
       "names": [
         "Benjinup",
         "Bridgetown",
         "Catterick",
         "Hester",
         "Hester Brook",
-        "Kangaroo Gully"
+        "Kangaroo Gully",
+        "Winnejup"
       ]
     },
     "6256": {
       "lat": -34.0523,
       "lon": 116.1666,
-      "n_names": 6,
       "names": [
         "Glenlynn",
         "Kingston",
@@ -1595,33 +1556,53 @@
     "6258": {
       "lat": -34.3128,
       "lon": 116.4022,
-      "n_names": 24,
       "names": [
         "Balbarrup",
         "Crowea",
         "Deanmill",
         "Diamond Tree",
         "Dingup",
-        "Dixvale"
+        "Dixvale",
+        "Donnelly River",
+        "Glenoran",
+        "Jardee",
+        "Lake Muir",
+        "Linfarne",
+        "Manjimup",
+        "Middlesex",
+        "Mordalup",
+        "Nyamup",
+        "Palgarup",
+        "Perup",
+        "Quinninup",
+        "Ringbark",
+        "Shannon River Mill",
+        "Smith Brook",
+        "Upper Warren",
+        "Wilgarrup",
+        "Yanmah"
       ]
     },
     "6260": {
       "lat": -34.4387,
       "lon": 115.8606,
-      "n_names": 11,
       "names": [
         "Beedelup",
         "Biddelia",
         "Callcup",
         "Channybearup",
         "Collins",
-        "Collins Siding"
+        "Collins Siding",
+        "Eastbrook",
+        "Lake Jasper",
+        "Peerabeelup",
+        "Pemberton",
+        "Yeagarup"
       ]
     },
     "6262": {
       "lat": -34.7061,
       "lon": 116.1412,
-      "n_names": 6,
       "names": [
         "Boorara Brook",
         "Crowea",
@@ -1634,7 +1615,6 @@
     "6271": {
       "lat": -33.6212,
       "lon": 115.6157,
-      "n_names": 5,
       "names": [
         "Capel",
         "Capel River",
@@ -1646,33 +1626,62 @@
     "6275": {
       "lat": -34.0553,
       "lon": 115.6265,
-      "n_names": 10,
       "names": [
         "Barrabup",
         "Carlotta",
         "Cundinup",
         "Darradup",
         "East Nannup",
-        "Jalbarragup"
+        "Jalbarragup",
+        "Jarrahwood",
+        "Nannup",
+        "Scott River East",
+        "Yoganup"
       ]
     },
     "6280": {
       "lat": -33.7289,
       "lon": 115.3027,
-      "n_names": 34,
       "names": [
         "Abba River",
         "Abbey",
         "Acton Park",
         "Ambergate",
         "Anniebrook",
-        "Boallia"
+        "Boallia",
+        "Bovell",
+        "Broadwater",
+        "Busselton",
+        "Carbunup River",
+        "Chapman Hill",
+        "Geographe",
+        "Hithergreen",
+        "Jindong",
+        "Kalgup",
+        "Kaloorup",
+        "Kealy",
+        "Ludlow",
+        "Marybrook",
+        "Metricup",
+        "North Jindong",
+        "Reinscourt",
+        "Ruabon",
+        "Sabina River",
+        "Siesta Park",
+        "Tutunup",
+        "Vasse",
+        "Walsall",
+        "West Busselton",
+        "Wilyabrup",
+        "Wonnerup",
+        "Yalyalup",
+        "Yelverton",
+        "Yoongarillup"
       ]
     },
     "6281": {
       "lat": -33.6108,
       "lon": 115.0768,
-      "n_names": 5,
       "names": [
         "Dunsborough",
         "Eagle Bay",
@@ -1684,7 +1693,6 @@
     "6282": {
       "lat": -33.7229,
       "lon": 115.0239,
-      "n_names": 2,
       "names": [
         "Yallingup",
         "Yallingup Siding"
@@ -1693,7 +1701,6 @@
     "6284": {
       "lat": -33.8576,
       "lon": 115.1887,
-      "n_names": 4,
       "names": [
         "Baudin",
         "Cowaramup",
@@ -1704,20 +1711,22 @@
     "6285": {
       "lat": -33.9414,
       "lon": 115.281,
-      "n_names": 10,
       "names": [
         "Bramley",
         "Burnside",
         "Gnarabup",
         "Margaret River",
         "Osmington",
-        "Prevelly"
+        "Prevelly",
+        "Rosa Brook",
+        "Rosa Glen",
+        "Schroeder",
+        "Yebble"
       ]
     },
     "6286": {
       "lat": -34.0618,
       "lon": 115.1765,
-      "n_names": 4,
       "names": [
         "Boranup",
         "Forest Grove",
@@ -1728,20 +1737,19 @@
     "6288": {
       "lat": -34.171,
       "lon": 115.2336,
-      "n_names": 7,
       "names": [
         "Alexandra Bridge",
         "Courtenay",
         "Hamelin Bay",
         "Karridale",
         "Nillup",
-        "Scott River"
+        "Scott River",
+        "Warner Glen"
       ]
     },
     "6290": {
       "lat": -34.2938,
       "lon": 115.1422,
-      "n_names": 6,
       "names": [
         "Augusta",
         "Deepdene",
@@ -1754,33 +1762,49 @@
     "6302": {
       "lat": -31.8963,
       "lon": 116.7429,
-      "n_names": 24,
       "names": [
         "Badgin",
         "Balladong",
         "Burges",
         "Caljie",
         "Cold Harbour",
-        "Daliak"
+        "Daliak",
+        "Flint",
+        "Flynn",
+        "Gilgering",
+        "Greenhills",
+        "Gwambygine",
+        "Inkpen",
+        "Kauring",
+        "Malebelling",
+        "Mount Hardey",
+        "Mount Observation",
+        "Narraloggan",
+        "Quellington",
+        "Saint Ronans",
+        "St Ronans",
+        "Talbot",
+        "Talbot West",
+        "Wilberforce",
+        "York"
       ]
     },
     "6304": {
       "lat": -32.1766,
       "lon": 116.7603,
-      "n_names": 7,
       "names": [
         "Bally Bally",
         "Beverley",
         "Dale",
         "East Beverley",
         "Kokeby",
-        "Morbinning"
+        "Morbinning",
+        "Westdale"
       ]
     },
     "6306": {
       "lat": -32.2965,
       "lon": 117.1406,
-      "n_names": 5,
       "names": [
         "Aldersyde",
         "Brookton",
@@ -1792,20 +1816,21 @@
     "6308": {
       "lat": -32.579,
       "lon": 116.6652,
-      "n_names": 9,
       "names": [
         "Codjatotine",
         "Dwarda",
         "East Pingelly",
         "Hastings",
         "Pingelly",
-        "Pumphreys Bridge"
+        "Pumphreys Bridge",
+        "Springs",
+        "Wandering",
+        "West Pingelly"
       ]
     },
     "6309": {
       "lat": -32.6683,
       "lon": 117.1292,
-      "n_names": 4,
       "names": [
         "East Popanyinning",
         "Popanyinning",
@@ -1816,33 +1841,35 @@
     "6311": {
       "lat": -32.8035,
       "lon": 117.1209,
-      "n_names": 8,
       "names": [
         "Commodine",
         "Contine",
         "Cuballing",
         "Dryandra",
         "Lol Gray",
-        "Townsendale"
+        "Townsendale",
+        "Wardering",
+        "Yornaning"
       ]
     },
     "6312": {
       "lat": -32.9791,
       "lon": 117.3069,
-      "n_names": 9,
       "names": [
         "Boundain",
         "Dumberning",
         "Hillside",
         "Minigin",
         "Narrogin",
-        "Narrogin Valley"
+        "Narrogin Valley",
+        "Nomans Lake",
+        "Toolibin",
+        "Yilliminning"
       ]
     },
     "6313": {
       "lat": -33.0579,
       "lon": 117.2433,
-      "n_names": 1,
       "names": [
         "Highbury"
       ]
@@ -1850,20 +1877,24 @@
     "6315": {
       "lat": -33.2863,
       "lon": 117.3428,
-      "n_names": 12,
       "names": [
         "Arthur River",
         "Ballaying",
         "Cancanning",
         "Collanilling",
         "Dongolocking",
-        "Gundaring"
+        "Gundaring",
+        "Jaloran",
+        "Lime Lake",
+        "Minding",
+        "Piesseville",
+        "Wagin",
+        "Wedgecarrup"
       ]
     },
     "6316": {
       "lat": -33.5323,
       "lon": 117.3846,
-      "n_names": 6,
       "names": [
         "Boyerine",
         "Cartmeticup",
@@ -1876,20 +1907,26 @@
     "6317": {
       "lat": -33.6474,
       "lon": 117.7389,
-      "n_names": 14,
       "names": [
         "Badgebup",
         "Bullock Hills",
         "Carrolup",
         "Coblinine",
         "Coyrecup",
-        "Datatine"
+        "Datatine",
+        "Ewlyamartup",
+        "Katanning",
+        "Marracoonda",
+        "Moojebing",
+        "Murdong",
+        "Pinwernying",
+        "South Datatine",
+        "South Glencoe"
       ]
     },
     "6318": {
       "lat": -33.862,
       "lon": 117.6511,
-      "n_names": 4,
       "names": [
         "Broomehill",
         "Broomehill East",
@@ -1900,20 +1937,19 @@
     "6320": {
       "lat": -34.0964,
       "lon": 117.7179,
-      "n_names": 7,
       "names": [
         "Bobalong",
         "Borderdale",
         "Dartnall",
         "Lake Toolbrunup",
         "Moonies Hill",
-        "Tambellup"
+        "Tambellup",
+        "Wansbrough"
       ]
     },
     "6321": {
       "lat": -34.2695,
       "lon": 117.3985,
-      "n_names": 1,
       "names": [
         "Cranbrook"
       ]
@@ -1921,7 +1957,6 @@
     "6322": {
       "lat": -34.412,
       "lon": 117.4916,
-      "n_names": 1,
       "names": [
         "Tenterden"
       ]
@@ -1929,7 +1964,6 @@
     "6323": {
       "lat": -34.4862,
       "lon": 117.6255,
-      "n_names": 1,
       "names": [
         "Kendenup"
       ]
@@ -1937,20 +1971,20 @@
     "6324": {
       "lat": -34.6183,
       "lon": 117.7815,
-      "n_names": 8,
       "names": [
         "Denbarker",
         "Forest Hill",
         "Mount Barker",
         "Perillup",
         "Porongurup",
-        "South Stirling"
+        "South Stirling",
+        "Takalarup",
+        "Woogenellup"
       ]
     },
     "6326": {
       "lat": -34.7694,
       "lon": 117.7853,
-      "n_names": 1,
       "names": [
         "Narrikup"
       ]
@@ -1958,7 +1992,6 @@
     "6327": {
       "lat": -34.8585,
       "lon": 117.5934,
-      "n_names": 2,
       "names": [
         "Redmond",
         "Redmond West"
@@ -1967,33 +2000,77 @@
     "6328": {
       "lat": -34.9191,
       "lon": 118.4628,
-      "n_names": 9,
       "names": [
         "Cape Riche",
         "Cheynes",
         "Gnowellen",
         "Green Range",
         "Kojaneerup South",
-        "Manypeaks"
+        "Manypeaks",
+        "Mettler",
+        "Palmdale",
+        "Wellstead"
       ]
     },
     "6330": {
       "lat": -34.9054,
       "lon": 117.8633,
-      "n_names": 50,
       "names": [
         "Albany",
         "Bayonet Head",
         "Big Grove",
         "Bornholm",
         "Centennial Park",
-        "Collingwood Heights"
+        "Collingwood Heights",
+        "Collingwood Park",
+        "Cuthbert",
+        "Drome",
+        "Elleker",
+        "Emu Point",
+        "Frenchman Bay",
+        "Gledhow",
+        "Goode Beach",
+        "Green Valley",
+        "Kalgan",
+        "King River",
+        "Kronkup",
+        "Lange",
+        "Little Grove",
+        "Lockyer",
+        "Lower King",
+        "Lowlands",
+        "Marbelup",
+        "Mckail",
+        "Middleton Beach",
+        "Millbrook",
+        "Milpara",
+        "Mira Mar",
+        "Mount Clarence",
+        "Mount Elphinstone",
+        "Mount Melville",
+        "Nanarup",
+        "Napier",
+        "Nullaki",
+        "Orana",
+        "Port Albany",
+        "Robinson",
+        "Sandpatch",
+        "Seppings",
+        "Spencer Park",
+        "Torbay",
+        "Torndirrup",
+        "Vancouver Peninsula",
+        "Walmsley",
+        "Warrenup",
+        "West Cape Howe",
+        "Willyung",
+        "Yakamia",
+        "Youngs Siding"
       ]
     },
     "6331": {
       "lat": -35.0269,
       "lon": 117.884,
-      "n_names": 1,
       "names": [
         "Albany Dc"
       ]
@@ -2001,20 +2078,30 @@
     "6333": {
       "lat": -34.9025,
       "lon": 117.1589,
-      "n_names": 18,
       "names": [
         "Bow Bridge",
         "Denmark",
         "Hay",
         "Hazelvale",
         "Kentdale",
-        "Kordabup"
+        "Kordabup",
+        "Mount Lindesay",
+        "Mount Lindsay",
+        "Mount Romance",
+        "Nornalup",
+        "Ocean Beach",
+        "Parryville",
+        "Peaceful Bay",
+        "Scotsdale",
+        "Shadforth",
+        "Tingledale",
+        "Trent",
+        "William Bay"
       ]
     },
     "6335": {
       "lat": -33.869,
       "lon": 118.1128,
-      "n_names": 4,
       "names": [
         "Gnowangerup",
         "Jackitup",
@@ -2025,7 +2112,6 @@
     "6336": {
       "lat": -33.9282,
       "lon": 118.5968,
-      "n_names": 6,
       "names": [
         "Cowalellup",
         "Mills Lake",
@@ -2038,7 +2124,6 @@
     "6337": {
       "lat": -33.9904,
       "lon": 119.2372,
-      "n_names": 5,
       "names": [
         "Fitzgerald",
         "Gairdner",
@@ -2050,20 +2135,21 @@
     "6338": {
       "lat": -34.3629,
       "lon": 118.6571,
-      "n_names": 9,
       "names": [
         "Amelup",
         "Borden",
         "Boxwood Hill",
         "Bremer Bay",
         "Magitup",
-        "Monjebup"
+        "Monjebup",
+        "Nalyerlup",
+        "North Stirlings",
+        "Stirling Range National Park"
       ]
     },
     "6341": {
       "lat": -33.5136,
       "lon": 118.2152,
-      "n_names": 1,
       "names": [
         "Nyabing"
       ]
@@ -2071,7 +2157,6 @@
     "6343": {
       "lat": -33.5356,
       "lon": 118.7993,
-      "n_names": 1,
       "names": [
         "Pingrup"
       ]
@@ -2079,7 +2164,6 @@
     "6346": {
       "lat": -33.3191,
       "lon": 120.349,
-      "n_names": 4,
       "names": [
         "Fitzgerald River National Park",
         "Jerdacuttup",
@@ -2090,7 +2174,6 @@
     "6348": {
       "lat": -33.8813,
       "lon": 120.1458,
-      "n_names": 1,
       "names": [
         "Hopetoun"
       ]
@@ -2098,7 +2181,6 @@
     "6350": {
       "lat": -33.2812,
       "lon": 117.7839,
-      "n_names": 4,
       "names": [
         "Bullock Hills",
         "Dumbleyung",
@@ -2109,7 +2191,6 @@
     "6351": {
       "lat": -33.1894,
       "lon": 117.9221,
-      "n_names": 2,
       "names": [
         "Moulyinning",
         "North Moulyinning"
@@ -2118,7 +2199,6 @@
     "6352": {
       "lat": -33.1855,
       "lon": 118.0862,
-      "n_names": 4,
       "names": [
         "Kukerin",
         "Merilup",
@@ -2129,33 +2209,39 @@
     "6353": {
       "lat": -33.1314,
       "lon": 118.5103,
-      "n_names": 10,
       "names": [
         "Beenong",
         "Buniche",
         "Kuender",
         "Lake Grace",
         "Mallee Hill",
-        "Neendaling"
+        "Neendaling",
+        "North Burngup",
+        "North Lake Grace",
+        "South Lake Grace",
+        "Tarin Rock"
       ]
     },
     "6355": {
       "lat": -33.0327,
       "lon": 119.0983,
-      "n_names": 11,
       "names": [
         "Dunn Rock",
         "East Newdegate",
         "Holt Rock",
         "Lake Biddy",
         "Lake Camm",
-        "Little Italy"
+        "Little Italy",
+        "Magenta",
+        "Mount Sheridan",
+        "Newdegate",
+        "South Newdegate",
+        "Varley"
       ]
     },
     "6356": {
       "lat": -33.1219,
       "lon": 119.713,
-      "n_names": 3,
       "names": [
         "Hatter Hill",
         "Lake King",
@@ -2165,7 +2251,6 @@
     "6357": {
       "lat": -32.8097,
       "lon": 118.7242,
-      "n_names": 1,
       "names": [
         "Pingaring"
       ]
@@ -2173,7 +2258,6 @@
     "6358": {
       "lat": -32.4839,
       "lon": 118.6719,
-      "n_names": 1,
       "names": [
         "Karlgarin"
       ]
@@ -2181,7 +2265,6 @@
     "6359": {
       "lat": -32.4254,
       "lon": 119.3112,
-      "n_names": 3,
       "names": [
         "Forrestania",
         "Hyden",
@@ -2191,7 +2274,6 @@
     "6361": {
       "lat": -32.9894,
       "lon": 117.7572,
-      "n_names": 2,
       "names": [
         "Harrismith",
         "Tincurrin"
@@ -2200,7 +2282,6 @@
     "6363": {
       "lat": -32.9198,
       "lon": 118.0042,
-      "n_names": 2,
       "names": [
         "Dudinin",
         "Walyurin"
@@ -2209,7 +2290,6 @@
     "6365": {
       "lat": -32.7231,
       "lon": 118.2888,
-      "n_names": 4,
       "names": [
         "Jilakin",
         "Jitarning",
@@ -2220,7 +2300,6 @@
     "6367": {
       "lat": -32.4226,
       "lon": 118.3519,
-      "n_names": 2,
       "names": [
         "Bendering",
         "Kondinin"
@@ -2229,7 +2308,6 @@
     "6368": {
       "lat": -32.1895,
       "lon": 118.3399,
-      "n_names": 1,
       "names": [
         "South Kumminin"
       ]
@@ -2237,7 +2315,6 @@
     "6369": {
       "lat": -32.0237,
       "lon": 118.8065,
-      "n_names": 6,
       "names": [
         "Emu Hill",
         "Mount Walker",
@@ -2250,7 +2327,6 @@
     "6370": {
       "lat": -32.806,
       "lon": 117.626,
-      "n_names": 6,
       "names": [
         "East Wickepin",
         "Gillimanning",
@@ -2263,7 +2339,6 @@
     "6372": {
       "lat": -32.634,
       "lon": 117.7268,
-      "n_names": 2,
       "names": [
         "Kirk Rock",
         "Yealering"
@@ -2272,7 +2347,6 @@
     "6373": {
       "lat": -32.4954,
       "lon": 117.7639,
-      "n_names": 1,
       "names": [
         "Bullaring"
       ]
@@ -2280,7 +2354,6 @@
     "6375": {
       "lat": -32.2863,
       "lon": 117.8798,
-      "n_names": 6,
       "names": [
         "Adamsvale",
         "Bilbarin",
@@ -2293,20 +2366,25 @@
     "6383": {
       "lat": -31.9511,
       "lon": 117.4063,
-      "n_names": 13,
       "names": [
         "Badjaling",
         "Balkuling",
         "Cubbine",
         "Dangin",
         "Doodenanning",
-        "Dulbelling"
+        "Dulbelling",
+        "Mawson",
+        "Mount Stirling",
+        "Quairading",
+        "South Caroling",
+        "South Quairading",
+        "Wamenusking",
+        "Yoting"
       ]
     },
     "6384": {
       "lat": -31.9556,
       "lon": 117.6662,
-      "n_names": 1,
       "names": [
         "Pantapin"
       ]
@@ -2314,7 +2392,6 @@
     "6385": {
       "lat": -31.9021,
       "lon": 117.7473,
-      "n_names": 1,
       "names": [
         "Kwolyin"
       ]
@@ -2322,7 +2399,6 @@
     "6386": {
       "lat": -31.9501,
       "lon": 117.8151,
-      "n_names": 1,
       "names": [
         "Shackleton"
       ]
@@ -2330,33 +2406,37 @@
     "6390": {
       "lat": -32.8054,
       "lon": 116.4134,
-      "n_names": 11,
       "names": [
         "Bannister",
         "Boddington",
         "Crossman",
         "Lower Hotham",
         "Marradong",
-        "Mount Cooke"
+        "Mount Cooke",
+        "Mount Wells",
+        "North Bannister",
+        "Ranford",
+        "Upper Murray",
+        "Wuraming"
       ]
     },
     "6391": {
       "lat": -33.0633,
       "lon": 116.7732,
-      "n_names": 8,
       "names": [
         "Boraning",
         "Congelin",
         "Culbin",
         "Hillman River",
         "Narrakine",
-        "Quindanning"
+        "Quindanning",
+        "Tarwonga",
+        "Williams"
       ]
     },
     "6392": {
       "lat": -33.4009,
       "lon": 116.6253,
-      "n_names": 5,
       "names": [
         "Bokal",
         "Boolading",
@@ -2368,7 +2448,6 @@
     "6393": {
       "lat": -33.5382,
       "lon": 116.854,
-      "n_names": 4,
       "names": [
         "Cordering",
         "Duranillin",
@@ -2379,20 +2458,20 @@
     "6394": {
       "lat": -33.8332,
       "lon": 116.972,
-      "n_names": 8,
       "names": [
         "Beaufort River",
         "Boilup",
         "Boscabel",
         "Changerup",
         "Mokup",
-        "Muradup"
+        "Muradup",
+        "Orchid Valley",
+        "Qualeup"
       ]
     },
     "6395": {
       "lat": -33.8852,
       "lon": 117.0653,
-      "n_names": 6,
       "names": [
         "Cherry Tree Pool",
         "Jingalup",
@@ -2405,7 +2484,6 @@
     "6396": {
       "lat": -34.3555,
       "lon": 117.0315,
-      "n_names": 2,
       "names": [
         "Frankland",
         "Frankland River"
@@ -2414,7 +2492,6 @@
     "6397": {
       "lat": -34.5437,
       "lon": 116.9554,
-      "n_names": 1,
       "names": [
         "Rocky Gully"
       ]
@@ -2422,7 +2499,6 @@
     "6398": {
       "lat": -34.7886,
       "lon": 116.604,
-      "n_names": 3,
       "names": [
         "Broke",
         "North Walpole",
@@ -2432,20 +2508,31 @@
     "6401": {
       "lat": -31.6403,
       "lon": 116.6817,
-      "n_names": 19,
       "names": [
         "Buckland",
         "Burlong",
         "Cunjardine",
         "Irishtown",
         "Jennacubbine",
-        "Jennapullin"
+        "Jennapullin",
+        "Katrine",
+        "Malabaine",
+        "Meenaar",
+        "Mokine",
+        "Muluckine",
+        "Mumberkine",
+        "Muresk",
+        "Northam",
+        "Rossmore",
+        "Southern Brook",
+        "Spencers Brook",
+        "Throssell",
+        "Wongamine"
       ]
     },
     "6403": {
       "lat": -31.6439,
       "lon": 116.7975,
-      "n_names": 1,
       "names": [
         "Grass Valley"
       ]
@@ -2453,7 +2540,6 @@
     "6405": {
       "lat": -31.6058,
       "lon": 117.0202,
-      "n_names": 4,
       "names": [
         "Greenwoods Valley",
         "Meckering",
@@ -2464,7 +2550,6 @@
     "6407": {
       "lat": -31.6511,
       "lon": 117.2221,
-      "n_names": 6,
       "names": [
         "Cunderdin",
         "Waeel",
@@ -2477,7 +2562,6 @@
     "6409": {
       "lat": -31.6054,
       "lon": 117.471,
-      "n_names": 5,
       "names": [
         "Doongin",
         "North Tammin",
@@ -2489,7 +2573,6 @@
     "6410": {
       "lat": -31.58,
       "lon": 117.68,
-      "n_names": 5,
       "names": [
         "Bungulla",
         "Daadenning Creek",
@@ -2501,7 +2584,6 @@
     "6411": {
       "lat": -31.5505,
       "lon": 117.9053,
-      "n_names": 2,
       "names": [
         "Doodlakine",
         "South Doodlakine"
@@ -2510,7 +2592,6 @@
     "6412": {
       "lat": -31.6011,
       "lon": 117.9798,
-      "n_names": 2,
       "names": [
         "Baandee",
         "North Baandee"
@@ -2519,7 +2600,6 @@
     "6413": {
       "lat": -31.5556,
       "lon": 118.064,
-      "n_names": 1,
       "names": [
         "Hines Hill"
       ]
@@ -2527,7 +2607,6 @@
     "6414": {
       "lat": -31.5268,
       "lon": 118.1678,
-      "n_names": 1,
       "names": [
         "Nangeenan"
       ]
@@ -2535,7 +2614,6 @@
     "6415": {
       "lat": -31.4812,
       "lon": 118.29,
-      "n_names": 6,
       "names": [
         "Goomarin",
         "Korbel",
@@ -2548,7 +2626,6 @@
     "6418": {
       "lat": -31.8955,
       "lon": 118.1626,
-      "n_names": 2,
       "names": [
         "Bruce Rock",
         "Yarding"
@@ -2557,7 +2634,6 @@
     "6419": {
       "lat": -32.0312,
       "lon": 118.0978,
-      "n_names": 1,
       "names": [
         "Ardath"
       ]
@@ -2565,7 +2641,6 @@
     "6420": {
       "lat": -31.7483,
       "lon": 118.7183,
-      "n_names": 2,
       "names": [
         "Cramphorne",
         "Muntadgin"
@@ -2574,7 +2649,6 @@
     "6421": {
       "lat": -31.3275,
       "lon": 118.5242,
-      "n_names": 4,
       "names": [
         "Burracoppin",
         "Campion",
@@ -2585,7 +2659,6 @@
     "6422": {
       "lat": -31.3841,
       "lon": 118.5644,
-      "n_names": 1,
       "names": [
         "Walgoolan"
       ]
@@ -2593,7 +2666,6 @@
     "6423": {
       "lat": -31.1693,
       "lon": 118.6812,
-      "n_names": 4,
       "names": [
         "Boodarockin",
         "Carrabin",
@@ -2604,7 +2676,6 @@
     "6424": {
       "lat": -31.2963,
       "lon": 118.8963,
-      "n_names": 3,
       "names": [
         "Bodallin",
         "North Bodallin",
@@ -2614,7 +2685,6 @@
     "6425": {
       "lat": -31.3981,
       "lon": 119.1432,
-      "n_names": 2,
       "names": [
         "Dulyalbin",
         "Moorine Rock"
@@ -2623,20 +2693,26 @@
     "6426": {
       "lat": -30.3613,
       "lon": 119.3113,
-      "n_names": 14,
       "names": [
         "Corinthia",
         "Ghooli",
         "Holleton",
         "Marvel Loch",
         "Mount Hampton",
-        "Mount Holland"
+        "Mount Holland",
+        "Mount Jackson",
+        "Mount Palmer",
+        "Parker Range",
+        "Skeleton Rock",
+        "South Yilgarn",
+        "Southern Cross",
+        "Turkey Hill",
+        "Yellowdine"
       ]
     },
     "6427": {
       "lat": -30.8506,
       "lon": 119.5409,
-      "n_names": 1,
       "names": [
         "Koolyanobbing"
       ]
@@ -2644,7 +2720,6 @@
     "6428": {
       "lat": -32.142,
       "lon": 118.0205,
-      "n_names": 1,
       "names": [
         "Babakin"
       ]
@@ -2652,46 +2727,59 @@
     "6429": {
       "lat": -30.9498,
       "lon": 120.8989,
-      "n_names": 8,
       "names": [
         "Boorabbin",
         "Bullabulling",
         "Coolgardie",
         "Karramindie",
         "Londonderry",
-        "Mount Burges"
+        "Mount Burges",
+        "Victoria Rock",
+        "Wallaroo"
       ]
     },
     "6430": {
       "lat": -30.5991,
       "lon": 121.4465,
-      "n_names": 14,
       "names": [
         "Binduli",
         "Broadwood",
         "Hannans",
         "Kalgoorlie",
         "Karlkurla",
-        "Lamington"
+        "Lamington",
+        "Mullingar",
+        "Piccadilly",
+        "Somerville",
+        "South Kalgoorlie",
+        "West Kalgoorlie",
+        "West Lamington",
+        "Williamstown",
+        "Yilkari"
       ]
     },
     "6431": {
       "lat": -30.4036,
       "lon": 122.6839,
-      "n_names": 13,
       "names": [
         "Boorara",
         "Brown Hill",
         "Bulong",
         "Emu Flat",
         "Feysville",
-        "Kanowna"
+        "Kanowna",
+        "Kookynie",
+        "Kurnalpi",
+        "Lakewood",
+        "Ora Banda",
+        "Plumridge Lakes",
+        "Trafalgar",
+        "Warburton"
       ]
     },
     "6432": {
       "lat": -30.871,
       "lon": 121.5418,
-      "n_names": 4,
       "names": [
         "Boulder",
         "Fimiston",
@@ -2702,7 +2790,6 @@
     "6434": {
       "lat": -30.8202,
       "lon": 125.6728,
-      "n_names": 5,
       "names": [
         "Cundeelee",
         "Forrest",
@@ -2714,7 +2801,6 @@
     "6435": {
       "lat": -28.2193,
       "lon": 120.4488,
-      "n_names": 1,
       "names": [
         "Agnew"
       ]
@@ -2722,7 +2808,6 @@
     "6436": {
       "lat": -29.6023,
       "lon": 124.8568,
-      "n_names": 2,
       "names": [
         "Menzies",
         "Ularring"
@@ -2731,7 +2816,6 @@
     "6437": {
       "lat": -27.6844,
       "lon": 120.5298,
-      "n_names": 2,
       "names": [
         "Leinster",
         "Sir Samuel"
@@ -2740,7 +2824,6 @@
     "6438": {
       "lat": -28.9,
       "lon": 121.0927,
-      "n_names": 2,
       "names": [
         "Lake Darlot",
         "Leonora"
@@ -2749,20 +2832,19 @@
     "6440": {
       "lat": -26.1689,
       "lon": 125.7332,
-      "n_names": 7,
       "names": [
         "Bandya",
         "Beadell",
         "Burtville",
         "Cosmo Newbery",
         "Lake Wells",
-        "Laverton"
+        "Laverton",
+        "Neale"
       ]
     },
     "6442": {
       "lat": -31.211,
       "lon": 121.705,
-      "n_names": 3,
       "names": [
         "Kambalda",
         "Kambalda East",
@@ -2772,20 +2854,23 @@
     "6443": {
       "lat": -32.395,
       "lon": 123.7442,
-      "n_names": 11,
       "names": [
         "Balladonia",
         "Caiguna",
         "Cocklebiddy",
         "Dundas",
         "Eucla",
-        "Fraser Range"
+        "Fraser Range",
+        "Higginsville",
+        "Madura",
+        "Mundrabilla",
+        "Norseman",
+        "Widgiemooltha"
       ]
     },
     "6445": {
       "lat": -32.9817,
       "lon": 121.6387,
-      "n_names": 2,
       "names": [
         "North Cascade",
         "Salmon Gums"
@@ -2794,7 +2879,6 @@
     "6446": {
       "lat": -33.2234,
       "lon": 121.6823,
-      "n_names": 1,
       "names": [
         "Grass Patch"
       ]
@@ -2802,7 +2886,6 @@
     "6447": {
       "lat": -33.4513,
       "lon": 121.7322,
-      "n_names": 4,
       "names": [
         "Lort River",
         "Mount Ney",
@@ -2813,7 +2896,6 @@
     "6448": {
       "lat": -33.6506,
       "lon": 121.7989,
-      "n_names": 1,
       "names": [
         "Gibson"
       ]
@@ -2821,20 +2903,35 @@
     "6450": {
       "lat": -33.4012,
       "lon": 122.2111,
-      "n_names": 23,
       "names": [
         "Bandy Creek",
         "Beaumont",
         "Boyatup",
         "Cape Le Grand",
         "Cascade",
-        "Castletown"
+        "Castletown",
+        "Chadwick",
+        "Condingup",
+        "Coomalbidgup",
+        "Dalyup",
+        "East Munglinup",
+        "Esperance",
+        "Howick",
+        "Merivale",
+        "Monjingup",
+        "Munglinup",
+        "Myrup",
+        "Neridup",
+        "Nulsen",
+        "Pink Lake",
+        "Sinclair",
+        "West Beach",
+        "Windabout"
       ]
     },
     "6452": {
       "lat": -32.9183,
       "lon": 122.895,
-      "n_names": 3,
       "names": [
         "Buraminya",
         "Cape Arid",
@@ -2844,7 +2941,6 @@
     "6460": {
       "lat": -31.2666,
       "lon": 116.779,
-      "n_names": 5,
       "names": [
         "Goomalling",
         "Hulongine",
@@ -2856,7 +2952,6 @@
     "6461": {
       "lat": -31.1407,
       "lon": 117.0833,
-      "n_names": 2,
       "names": [
         "Dowerin",
         "Koomberkine"
@@ -2865,7 +2960,6 @@
     "6462": {
       "lat": -31.1253,
       "lon": 117.2043,
-      "n_names": 3,
       "names": [
         "Hindmarsh",
         "Minnivale",
@@ -2875,7 +2969,6 @@
     "6463": {
       "lat": -31.1265,
       "lon": 117.2493,
-      "n_names": 1,
       "names": [
         "Benjaberring"
       ]
@@ -2883,7 +2976,6 @@
     "6465": {
       "lat": -30.86,
       "lon": 117.0712,
-      "n_names": 1,
       "names": [
         "Manmanning"
       ]
@@ -2891,7 +2983,6 @@
     "6466": {
       "lat": -30.7191,
       "lon": 117.1004,
-      "n_names": 1,
       "names": [
         "Cadoux"
       ]
@@ -2899,7 +2990,6 @@
     "6467": {
       "lat": -30.5613,
       "lon": 117.1534,
-      "n_names": 1,
       "names": [
         "Burakin"
       ]
@@ -2907,7 +2997,6 @@
     "6468": {
       "lat": -30.2146,
       "lon": 117.1445,
-      "n_names": 3,
       "names": [
         "Goodlands",
         "Kalannie",
@@ -2917,7 +3006,6 @@
     "6470": {
       "lat": -30.4664,
       "lon": 117.287,
-      "n_names": 1,
       "names": [
         "Kulja"
       ]
@@ -2925,20 +3013,19 @@
     "6472": {
       "lat": -30.2614,
       "lon": 117.7899,
-      "n_names": 7,
       "names": [
         "Beacon",
         "Bimbijy",
         "Cleary",
         "Karroun Hill",
         "Mouroubra",
-        "Remlap"
+        "Remlap",
+        "Tampu"
       ]
     },
     "6473": {
       "lat": -30.489,
       "lon": 118.1335,
-      "n_names": 2,
       "names": [
         "North Wialki",
         "Wialki"
@@ -2947,20 +3034,19 @@
     "6475": {
       "lat": -30.614,
       "lon": 117.4405,
-      "n_names": 7,
       "names": [
         "Badgerin Rock",
         "Booralaming",
         "Dukin",
         "Koorda",
         "Lake Margarette",
-        "Mollerin"
+        "Mollerin",
+        "Newcarlbeon"
       ]
     },
     "6476": {
       "lat": -30.7649,
       "lon": 117.6792,
-      "n_names": 1,
       "names": [
         "Gabbin"
       ]
@@ -2968,7 +3054,6 @@
     "6477": {
       "lat": -30.776,
       "lon": 117.9388,
-      "n_names": 2,
       "names": [
         "Bencubbin",
         "Welbungin"
@@ -2977,20 +3062,22 @@
     "6479": {
       "lat": -30.7484,
       "lon": 118.4485,
-      "n_names": 10,
       "names": [
         "Barbalin",
         "Bonnie Rock",
         "Dandanning",
         "Elachbutting",
         "Karloning",
-        "Lake Brown"
+        "Lake Brown",
+        "Mangowine",
+        "Mukinbudin",
+        "Wattoning",
+        "Wilgoyne"
       ]
     },
     "6480": {
       "lat": -31.2901,
       "lon": 118.2206,
-      "n_names": 1,
       "names": [
         "Nukarni"
       ]
@@ -2998,7 +3085,6 @@
     "6484": {
       "lat": -30.9607,
       "lon": 119.0789,
-      "n_names": 3,
       "names": [
         "Bullfinch",
         "Ennuin",
@@ -3008,7 +3094,6 @@
     "6485": {
       "lat": -31.1847,
       "lon": 117.3811,
-      "n_names": 5,
       "names": [
         "Cowcowing",
         "Korrelocking",
@@ -3020,7 +3105,6 @@
     "6487": {
       "lat": -31.1683,
       "lon": 117.6601,
-      "n_names": 3,
       "names": [
         "North Yelbeni",
         "South Yelbeni",
@@ -3030,7 +3114,6 @@
     "6488": {
       "lat": -31.1276,
       "lon": 117.7358,
-      "n_names": 3,
       "names": [
         "North Trayning",
         "South Trayning",
@@ -3040,7 +3123,6 @@
     "6489": {
       "lat": -31.1233,
       "lon": 117.9456,
-      "n_names": 3,
       "names": [
         "Kununoppin",
         "North Kununoppin",
@@ -3050,7 +3132,6 @@
     "6490": {
       "lat": -31.1618,
       "lon": 118.1071,
-      "n_names": 6,
       "names": [
         "Burran Rock",
         "Chandler",
@@ -3063,7 +3144,6 @@
     "6501": {
       "lat": -31.5418,
       "lon": 115.9455,
-      "n_names": 1,
       "names": [
         "Muchea"
       ]
@@ -3071,7 +3151,6 @@
     "6502": {
       "lat": -31.2976,
       "lon": 116.1843,
-      "n_names": 2,
       "names": [
         "Bindoon",
         "Bindoon Training Area"
@@ -3080,20 +3159,32 @@
     "6503": {
       "lat": -31.2374,
       "lon": 115.8211,
-      "n_names": 20,
       "names": [
         "Bambun",
         "Beermullah",
         "Boonanarring",
         "Breera",
         "Coonabidgee",
-        "Cowalla"
+        "Cowalla",
+        "Cullalla",
+        "Gingin",
+        "Ginginup",
+        "Granville",
+        "Lennard Brook",
+        "Mindarra",
+        "Moondah",
+        "Moore River National Park",
+        "Muckenburra",
+        "Neergabby",
+        "Orange Springs",
+        "Red Gully",
+        "Wanerie",
+        "Yeal"
       ]
     },
     "6504": {
       "lat": -31.3108,
       "lon": 116.0423,
-      "n_names": 1,
       "names": [
         "Mooliabeenee"
       ]
@@ -3101,7 +3192,6 @@
     "6505": {
       "lat": -31.1614,
       "lon": 116.1044,
-      "n_names": 1,
       "names": [
         "Wannamal"
       ]
@@ -3109,7 +3199,6 @@
     "6506": {
       "lat": -31.0703,
       "lon": 116.1103,
-      "n_names": 1,
       "names": [
         "Mogumber"
       ]
@@ -3117,7 +3206,6 @@
     "6507": {
       "lat": -30.7216,
       "lon": 115.7187,
-      "n_names": 6,
       "names": [
         "Cataby",
         "Cooljarloo",
@@ -3130,7 +3218,6 @@
     "6509": {
       "lat": -30.9123,
       "lon": 116.2526,
-      "n_names": 4,
       "names": [
         "Glentromie",
         "New Norcia",
@@ -3141,7 +3228,6 @@
     "6510": {
       "lat": -30.7011,
       "lon": 116.0903,
-      "n_names": 6,
       "names": [
         "Barberton",
         "Berkshire Valley",
@@ -3154,7 +3240,6 @@
     "6511": {
       "lat": -30.5681,
       "lon": 115.2502,
-      "n_names": 1,
       "names": [
         "Cervantes"
       ]
@@ -3162,7 +3247,6 @@
     "6512": {
       "lat": -30.4467,
       "lon": 116.0702,
-      "n_names": 2,
       "names": [
         "Coomberdale",
         "Namban"
@@ -3171,7 +3255,6 @@
     "6513": {
       "lat": -30.2737,
       "lon": 116.0606,
-      "n_names": 2,
       "names": [
         "Gunyidi",
         "Watheroo"
@@ -3180,7 +3263,6 @@
     "6514": {
       "lat": -30.0274,
       "lon": 115.0872,
-      "n_names": 2,
       "names": [
         "Green Head",
         "Leeman"
@@ -3189,7 +3271,6 @@
     "6515": {
       "lat": -29.9673,
       "lon": 115.8564,
-      "n_names": 4,
       "names": [
         "Coorow",
         "Eganu",
@@ -3200,7 +3281,6 @@
     "6516": {
       "lat": -30.2255,
       "lon": 115.2093,
-      "n_names": 1,
       "names": [
         "Jurien Bay"
       ]
@@ -3208,7 +3288,6 @@
     "6517": {
       "lat": -29.7407,
       "lon": 115.8394,
-      "n_names": 2,
       "names": [
         "Carnamah",
         "Winchester"
@@ -3217,7 +3296,6 @@
     "6518": {
       "lat": -29.7749,
       "lon": 115.1807,
-      "n_names": 2,
       "names": [
         "Eneabba",
         "Warradarge"
@@ -3226,7 +3304,6 @@
     "6519": {
       "lat": -29.5143,
       "lon": 115.5977,
-      "n_names": 6,
       "names": [
         "Arrino",
         "Arrowsmith East",
@@ -3239,7 +3316,6 @@
     "6521": {
       "lat": -30.3485,
       "lon": 115.6409,
-      "n_names": 5,
       "names": [
         "Badgingarra",
         "Boothendarra",
@@ -3251,33 +3327,40 @@
     "6522": {
       "lat": -29.1394,
       "lon": 115.4856,
-      "n_names": 10,
       "names": [
         "Bundanoon",
         "Holmwood",
         "Ikewa",
         "Lockier",
         "Mingenew",
-        "Mooriary"
+        "Mooriary",
+        "Mount Budd",
+        "Nangetty",
+        "Yandanooka",
+        "Yarragadee"
       ]
     },
     "6525": {
       "lat": -29.3273,
       "lon": 115.0981,
-      "n_names": 12,
       "names": [
         "Allanooka",
         "Arrowsmith",
         "Bonniefield",
         "Bookara",
         "Dongara",
-        "Irwin"
+        "Irwin",
+        "Milo",
+        "Mount Adams",
+        "Mount Horner",
+        "Port Denison",
+        "Springfield",
+        "Yardarino"
       ]
     },
     "6528": {
       "lat": -28.9859,
       "lon": 114.8152,
-      "n_names": 3,
       "names": [
         "Mount Hill",
         "South Greenough",
@@ -3287,46 +3370,117 @@
     "6530": {
       "lat": -28.8025,
       "lon": 114.8625,
-      "n_names": 24,
       "names": [
         "Beachlands",
         "Beresford",
         "Bluff Point",
         "Geraldton",
         "Geraldton Dc",
-        "Houtman Abrolhos"
+        "Houtman Abrolhos",
+        "Karloo",
+        "Mahomets Flats",
+        "Meru",
+        "Moresby",
+        "Mount Tarcoola",
+        "Raaf Waggrakine",
+        "Rangeway",
+        "Spalding",
+        "Strathalbyn",
+        "Sunset Beach",
+        "Tarcoola Beach",
+        "Utakarra",
+        "Waggrakine",
+        "Wandina",
+        "Webberton",
+        "West End",
+        "Wonthella",
+        "Woorree"
       ]
     },
     "6532": {
       "lat": -28.4409,
       "lon": 115.0046,
-      "n_names": 59,
       "names": [
         "Ajana",
         "Binnu",
         "Bootenal",
         "Bringo",
         "Buller",
-        "Burma Road"
+        "Burma Road",
+        "Cape Burney",
+        "Carrarang",
+        "Coburn",
+        "Coolcalalaya",
+        "Dartmoor",
+        "Deepdale",
+        "Dindiloa",
+        "Drummond Cove",
+        "Durawah",
+        "East Chapman",
+        "East Nabawa",
+        "East Yuna",
+        "Ellendale",
+        "Eradu",
+        "Eradu South",
+        "Eurardy",
+        "Georgina",
+        "Glenfield",
+        "Greenough",
+        "Hamelin Pool",
+        "Hickety",
+        "Howatharra",
+        "Kojarena",
+        "Marrah",
+        "Meadow",
+        "Minnenooka",
+        "Moonyoonooka",
+        "Mount Erin",
+        "Nabawa",
+        "Nanson",
+        "Naraling",
+        "Narngulu",
+        "Narra Tarra",
+        "Nerren Nerren",
+        "Nolba",
+        "North Eradu",
+        "Northern Gully",
+        "Oakajee",
+        "Rockwell",
+        "Rudds Gully",
+        "Sandsprings",
+        "South Yuna",
+        "Tamala",
+        "Tibradden",
+        "Toolonga",
+        "Valentine",
+        "Wandana",
+        "West Binnu",
+        "White Peak",
+        "Wicherina",
+        "Wicherina South",
+        "Yetna",
+        "Yuna"
       ]
     },
     "6535": {
       "lat": -27.8322,
       "lon": 114.8524,
-      "n_names": 10,
       "names": [
         "Alma",
         "Bowes",
         "East Bowes",
         "Gregory",
         "Horrocks",
-        "Isseka"
+        "Isseka",
+        "Northampton",
+        "Ogilvie",
+        "Sandy Gully",
+        "Yallabatharra"
       ]
     },
     "6536": {
       "lat": -27.5418,
       "lon": 114.3797,
-      "n_names": 3,
       "names": [
         "Kalbarri",
         "Kalbarri National Park",
@@ -3336,20 +3490,20 @@
     "6537": {
       "lat": -26.9049,
       "lon": 114.6273,
-      "n_names": 8,
       "names": [
         "Denham",
         "Dirk Hartog",
         "Dirk Hartog Island",
         "Francois Peron National Park",
         "Monkey Mia",
-        "Nanga"
+        "Nanga",
+        "Shark Bay",
+        "Useless Loop"
       ]
     },
     "6556": {
       "lat": -31.8606,
       "lon": 116.3102,
-      "n_names": 5,
       "names": [
         "Beechina",
         "Chidlow",
@@ -3361,7 +3515,6 @@
     "6558": {
       "lat": -31.7714,
       "lon": 116.3134,
-      "n_names": 1,
       "names": [
         "Wooroloo"
       ]
@@ -3369,7 +3522,6 @@
     "6560": {
       "lat": -31.8177,
       "lon": 116.4286,
-      "n_names": 1,
       "names": [
         "Wundowie"
       ]
@@ -3377,7 +3529,6 @@
     "6562": {
       "lat": -31.7462,
       "lon": 116.4734,
-      "n_names": 3,
       "names": [
         "Bakers Hill",
         "Copley",
@@ -3387,7 +3538,6 @@
     "6564": {
       "lat": -31.7266,
       "lon": 116.539,
-      "n_names": 1,
       "names": [
         "Clackline"
       ]
@@ -3395,20 +3545,21 @@
     "6566": {
       "lat": -31.4849,
       "lon": 116.3806,
-      "n_names": 9,
       "names": [
         "Bejoording",
         "Carani",
         "Coondle",
         "Culham",
         "Dumbarton",
-        "Hoddys Well"
+        "Hoddys Well",
+        "Nunile",
+        "Toodyay",
+        "West Toodyay"
       ]
     },
     "6567": {
       "lat": -31.4592,
       "lon": 116.42,
-      "n_names": 3,
       "names": [
         "Dewars Pool",
         "Julimar",
@@ -3418,7 +3569,6 @@
     "6568": {
       "lat": -31.2466,
       "lon": 116.5375,
-      "n_names": 3,
       "names": [
         "Bolgart",
         "Wattening",
@@ -3428,7 +3578,6 @@
     "6569": {
       "lat": -31.0851,
       "lon": 116.4528,
-      "n_names": 3,
       "names": [
         "Calingiri",
         "Carani",
@@ -3438,7 +3587,6 @@
     "6571": {
       "lat": -30.9404,
       "lon": 116.3966,
-      "n_names": 1,
       "names": [
         "Yerecoin"
       ]
@@ -3446,7 +3594,6 @@
     "6572": {
       "lat": -30.8047,
       "lon": 116.3963,
-      "n_names": 1,
       "names": [
         "Piawaning"
       ]
@@ -3454,7 +3601,6 @@
     "6574": {
       "lat": -30.6509,
       "lon": 116.4252,
-      "n_names": 2,
       "names": [
         "Bindi Bindi",
         "Gabalong"
@@ -3463,7 +3609,6 @@
     "6575": {
       "lat": -30.4109,
       "lon": 116.4244,
-      "n_names": 1,
       "names": [
         "Miling"
       ]
@@ -3471,7 +3616,6 @@
     "6603": {
       "lat": -30.8742,
       "lon": 116.726,
-      "n_names": 5,
       "names": [
         "Konnongorring",
         "Lake Hinds",
@@ -3483,7 +3627,6 @@
     "6605": {
       "lat": -30.7302,
       "lon": 116.763,
-      "n_names": 1,
       "names": [
         "Kondut"
       ]
@@ -3491,7 +3634,6 @@
     "6606": {
       "lat": -30.6143,
       "lon": 116.8292,
-      "n_names": 4,
       "names": [
         "Ballidu",
         "East Ballidu",
@@ -3502,7 +3644,6 @@
     "6608": {
       "lat": -30.4293,
       "lon": 116.8266,
-      "n_names": 3,
       "names": [
         "East Damboring",
         "Marne",
@@ -3512,7 +3653,6 @@
     "6609": {
       "lat": -30.2665,
       "lon": 116.7506,
-      "n_names": 3,
       "names": [
         "Dalwallinu",
         "Nugadong",
@@ -3522,7 +3662,6 @@
     "6612": {
       "lat": -29.5451,
       "lon": 117.8352,
-      "n_names": 4,
       "names": [
         "Jibberding",
         "Miamoon",
@@ -3533,7 +3672,6 @@
     "6613": {
       "lat": -29.9626,
       "lon": 116.5236,
-      "n_names": 1,
       "names": [
         "Buntine"
       ]
@@ -3541,7 +3679,6 @@
     "6614": {
       "lat": -29.8888,
       "lon": 116.5519,
-      "n_names": 1,
       "names": [
         "Maya"
       ]
@@ -3549,7 +3686,6 @@
     "6616": {
       "lat": -29.7669,
       "lon": 116.4342,
-      "n_names": 1,
       "names": [
         "Latham"
       ]
@@ -3557,7 +3693,6 @@
     "6620": {
       "lat": -29.3405,
       "lon": 116.7026,
-      "n_names": 3,
       "names": [
         "Bunjil",
         "Perenjori",
@@ -3567,7 +3702,6 @@
     "6623": {
       "lat": -29.0217,
       "lon": 116.1205,
-      "n_names": 6,
       "names": [
         "Bowgada",
         "Bunjil",
@@ -3580,7 +3714,6 @@
     "6625": {
       "lat": -29.1074,
       "lon": 115.9467,
-      "n_names": 1,
       "names": [
         "Merkanooka"
       ]
@@ -3588,7 +3721,6 @@
     "6627": {
       "lat": -28.8505,
       "lon": 115.902,
-      "n_names": 1,
       "names": [
         "Canna"
       ]
@@ -3596,7 +3728,6 @@
     "6628": {
       "lat": -28.8338,
       "lon": 115.7648,
-      "n_names": 1,
       "names": [
         "Tardun"
       ]
@@ -3604,20 +3735,20 @@
     "6630": {
       "lat": -27.5697,
       "lon": 115.7238,
-      "n_names": 8,
       "names": [
         "Devils Creek",
         "Mullewa",
         "Murchison",
         "Nerramyne",
         "Nunierra",
-        "West Casuarinas"
+        "West Casuarinas",
+        "Wongoondy",
+        "Woolgorong"
       ]
     },
     "6631": {
       "lat": -28.4637,
       "lon": 115.7554,
-      "n_names": 1,
       "names": [
         "Pindar"
       ]
@@ -3625,7 +3756,6 @@
     "6632": {
       "lat": -28.6199,
       "lon": 115.3384,
-      "n_names": 2,
       "names": [
         "Ambania",
         "Tenindewa"
@@ -3634,7 +3764,6 @@
     "6635": {
       "lat": -28.1507,
       "lon": 116.6894,
-      "n_names": 2,
       "names": [
         "South Murchison",
         "Yalgoo"
@@ -3643,7 +3772,6 @@
     "6638": {
       "lat": -28.6124,
       "lon": 118.1576,
-      "n_names": 4,
       "names": [
         "Cooladar Hill",
         "Daggar Hills",
@@ -3654,7 +3782,6 @@
     "6639": {
       "lat": -27.6849,
       "lon": 119.4098,
-      "n_names": 1,
       "names": [
         "Sandstone"
       ]
@@ -3662,7 +3789,6 @@
     "6640": {
       "lat": -27.0032,
       "lon": 117.6746,
-      "n_names": 5,
       "names": [
         "Cue",
         "East Murchison",
@@ -3674,7 +3800,6 @@
     "6642": {
       "lat": -25.6394,
       "lon": 118.5549,
-      "n_names": 6,
       "names": [
         "Angelo River",
         "Capricorn",
@@ -3687,7 +3812,6 @@
     "6646": {
       "lat": -25.9127,
       "lon": 121.2149,
-      "n_names": 3,
       "names": [
         "Lake Carnegie",
         "Little Sandy Desert",
@@ -3697,20 +3821,41 @@
     "6701": {
       "lat": -24.7345,
       "lon": 115.152,
-      "n_names": 29,
       "names": [
         "Babbage Island",
         "Bernier Island",
         "Brockman",
         "Brown Range",
         "Carbla",
-        "Carnarvon"
+        "Carnarvon",
+        "Coral Bay",
+        "Dorre Island",
+        "East Carnarvon",
+        "Gilroyd",
+        "Greys Plain",
+        "Inggarda",
+        "Kennedy Range",
+        "Kingsford",
+        "Lyndon",
+        "Macleod",
+        "Massey Bay",
+        "Mauds Landing",
+        "Minilya",
+        "Morgantown",
+        "Ningaloo",
+        "North Plantations",
+        "South Carnarvon",
+        "South Plantations",
+        "Talisker",
+        "Woodleigh",
+        "Wooramel",
+        "Yalardy",
+        "Yandoo Creek"
       ]
     },
     "6705": {
       "lat": -25.1113,
       "lon": 115.0115,
-      "n_names": 4,
       "names": [
         "East Lyons River",
         "Gascoyne Junction",
@@ -3721,7 +3866,6 @@
     "6707": {
       "lat": -22.265,
       "lon": 113.9548,
-      "n_names": 5,
       "names": [
         "Cape Range National Park",
         "Exmouth",
@@ -3733,7 +3877,6 @@
     "6710": {
       "lat": -22.1335,
       "lon": 115.449,
-      "n_names": 5,
       "names": [
         "Cane",
         "Onslow",
@@ -3745,7 +3888,6 @@
     "6711": {
       "lat": -21.4619,
       "lon": 115.0011,
-      "n_names": 1,
       "names": [
         "Thevenard Island"
       ]
@@ -3753,7 +3895,6 @@
     "6712": {
       "lat": -20.7858,
       "lon": 115.4073,
-      "n_names": 1,
       "names": [
         "Barrow Island"
       ]
@@ -3761,7 +3902,6 @@
     "6713": {
       "lat": -20.6763,
       "lon": 116.7095,
-      "n_names": 2,
       "names": [
         "Dampier",
         "Dampier Archipelago"
@@ -3770,20 +3910,32 @@
     "6714": {
       "lat": -21.1451,
       "lon": 116.3499,
-      "n_names": 20,
       "names": [
         "Antonymyre",
         "Balla Balla",
         "Baynton",
         "Bulgarra",
         "Burrup",
-        "Cleaverville"
+        "Cleaverville",
+        "Cooya Pooya",
+        "Gap Ridge",
+        "Gnoorea",
+        "Karratha",
+        "Karratha Industrial Estate",
+        "Maitland",
+        "Mardie",
+        "Millars Well",
+        "Mount Anketell",
+        "Mulataga",
+        "Nickol",
+        "Pegs Creek",
+        "Sherlock",
+        "Stove Hill"
       ]
     },
     "6716": {
       "lat": -21.6053,
       "lon": 116.312,
-      "n_names": 4,
       "names": [
         "Fortescue",
         "Hamersley Range",
@@ -3794,7 +3946,6 @@
     "6718": {
       "lat": -20.9715,
       "lon": 117.741,
-      "n_names": 2,
       "names": [
         "Roebourne",
         "Whim Creek"
@@ -3803,7 +3954,6 @@
     "6720": {
       "lat": -20.6993,
       "lon": 117.0676,
-      "n_names": 3,
       "names": [
         "Cossack",
         "Point Samson",
@@ -3813,20 +3963,20 @@
     "6721": {
       "lat": -20.7108,
       "lon": 118.4417,
-      "n_names": 8,
       "names": [
         "Indee",
         "Mundabullangana",
         "Pardoo",
         "Port Hedland",
         "Redbank",
-        "Strelley"
+        "Strelley",
+        "Wallareenya",
+        "Wedgefield"
       ]
     },
     "6722": {
       "lat": -20.4079,
       "lon": 118.6067,
-      "n_names": 5,
       "names": [
         "Boodarie",
         "De Grey",
@@ -3838,7 +3988,6 @@
     "6723": {
       "lat": -20.2103,
       "lon": 119.7275,
-      "n_names": 1,
       "names": [
         "Goldsworthy"
       ]
@@ -3846,20 +3995,22 @@
     "6725": {
       "lat": -18.7734,
       "lon": 122.7538,
-      "n_names": 10,
       "names": [
         "Bilingurr",
         "Broome",
         "Dampier Peninsula",
         "Djugun",
         "Eighty Mile Beach",
-        "Gingerah"
+        "Gingerah",
+        "Lagrange",
+        "Minyirr",
+        "Roebuck",
+        "Waterbank"
       ]
     },
     "6726": {
       "lat": -17.9502,
       "lon": 122.1964,
-      "n_names": 1,
       "names": [
         "Cable Beach"
       ]
@@ -3867,20 +4018,21 @@
     "6728": {
       "lat": -17.0906,
       "lon": 124.592,
-      "n_names": 9,
       "names": [
         "Camballin",
         "Derby",
         "Geegully Creek",
         "Jarlmadangah Burru",
         "Kimbolton",
-        "King Leopold Ranges"
+        "King Leopold Ranges",
+        "Meda",
+        "St George Ranges",
+        "Willare"
       ]
     },
     "6731": {
       "lat": -16.0986,
       "lon": 123.6105,
-      "n_names": 1,
       "names": [
         "Cockatoo Island"
       ]
@@ -3888,7 +4040,6 @@
     "6733": {
       "lat": -16.1349,
       "lon": 123.754,
-      "n_names": 1,
       "names": [
         "Koolan Island"
       ]
@@ -3896,7 +4047,6 @@
     "6740": {
       "lat": -14.9627,
       "lon": 128.3972,
-      "n_names": 6,
       "names": [
         "Drysdale River",
         "Kalumburu",
@@ -3909,33 +4059,35 @@
     "6743": {
       "lat": -17.2935,
       "lon": 129.662,
-      "n_names": 7,
       "names": [
         "Cambridge Gulf",
         "Durack",
         "Gibb",
         "Kununurra",
         "Lake Argyle",
-        "Warmun"
+        "Warmun",
+        "Wijilawarrim"
       ]
     },
     "6751": {
       "lat": -22.1413,
       "lon": 117.0578,
-      "n_names": 10,
       "names": [
         "Chichester",
         "Innawanga",
         "Juna Downs",
         "Karijini",
         "Mount Sheila",
-        "Mulga Downs"
+        "Mulga Downs",
+        "Nanutarra",
+        "Rocklea",
+        "Tom Price",
+        "Wittenoom"
       ]
     },
     "6753": {
       "lat": -23.25,
       "lon": 120.2617,
-      "n_names": 2,
       "names": [
         "Jigalong",
         "Newman"
@@ -3944,7 +4096,6 @@
     "6754": {
       "lat": -23.3038,
       "lon": 117.4766,
-      "n_names": 1,
       "names": [
         "Paraburdoo"
       ]
@@ -3952,7 +4103,6 @@
     "6758": {
       "lat": -22.0556,
       "lon": 120.2823,
-      "n_names": 1,
       "names": [
         "Nullagine"
       ]
@@ -3960,7 +4110,6 @@
     "6760": {
       "lat": -22.0266,
       "lon": 124.3839,
-      "n_names": 1,
       "names": [
         "Marble Bar"
       ]
@@ -3968,7 +4117,6 @@
     "6761": {
       "lat": -20.4036,
       "lon": 120.47,
-      "n_names": 1,
       "names": [
         "Shay Gap"
       ]
@@ -3976,7 +4124,6 @@
     "6762": {
       "lat": -21.7122,
       "lon": 122.2248,
-      "n_names": 1,
       "names": [
         "Telfer"
       ]
@@ -3984,7 +4131,6 @@
     "6765": {
       "lat": -18.7528,
       "lon": 125.2821,
-      "n_names": 3,
       "names": [
         "Fitzroy Crossing",
         "Kupartiya",
@@ -3994,20 +4140,20 @@
     "6770": {
       "lat": -18.7055,
       "lon": 127.7464,
-      "n_names": 8,
       "names": [
         "Halls Creek",
         "Kundat Djaru",
         "Mcbeath",
         "Mueller Ranges",
         "Ord River",
-        "Purnululu"
+        "Purnululu",
+        "Sturt Creek",
+        "Tanami"
       ]
     },
     "6803": {
       "lat": -31.9393,
       "lon": 115.8691,
-      "n_names": 1,
       "names": [
         "Northbridge"
       ]
@@ -4015,7 +4161,6 @@
     "6832": {
       "lat": -31.9582,
       "lon": 115.8667,
-      "n_names": 1,
       "names": [
         "Perth East St Georges Tce"
       ]
@@ -4023,7 +4168,6 @@
     "6849": {
       "lat": -31.9488,
       "lon": 115.864,
-      "n_names": 1,
       "names": [
         "Perth Bc"
       ]
@@ -4031,7 +4175,6 @@
     "6865": {
       "lat": -31.9393,
       "lon": 115.8691,
-      "n_names": 1,
       "names": [
         "Northbridge"
       ]
@@ -4039,7 +4182,6 @@
     "6900": {
       "lat": -31.9357,
       "lon": 115.8343,
-      "n_names": 1,
       "names": [
         "Leederville"
       ]
@@ -4047,7 +4189,6 @@
     "6902": {
       "lat": -31.9357,
       "lon": 115.8343,
-      "n_names": 1,
       "names": [
         "Leederville"
       ]
@@ -4055,7 +4196,6 @@
     "6903": {
       "lat": -31.9357,
       "lon": 115.8343,
-      "n_names": 1,
       "names": [
         "Leederville"
       ]
@@ -4063,7 +4203,6 @@
     "6905": {
       "lat": -27.6728,
       "lon": 121.628,
-      "n_names": 2,
       "names": [
         "Northlands",
         "Northlands Po"
@@ -4072,7 +4211,6 @@
     "6907": {
       "lat": -31.9858,
       "lon": 115.8047,
-      "n_names": 1,
       "names": [
         "Nedlands"
       ]
@@ -4080,7 +4218,6 @@
     "6909": {
       "lat": -31.9858,
       "lon": 115.8047,
-      "n_names": 1,
       "names": [
         "Nedlands"
       ]
@@ -4088,7 +4225,6 @@
     "6913": {
       "lat": -31.9364,
       "lon": 115.8082,
-      "n_names": 1,
       "names": [
         "Wembley"
       ]
@@ -4096,7 +4232,6 @@
     "6918": {
       "lat": -31.892,
       "lon": 115.7868,
-      "n_names": 1,
       "names": [
         "Innaloo"
       ]
@@ -4104,7 +4239,6 @@
     "6919": {
       "lat": -31.7633,
       "lon": 115.7564,
-      "n_names": 1,
       "names": [
         "Joondalup Dc"
       ]
@@ -4112,7 +4246,6 @@
     "6923": {
       "lat": -31.7958,
       "lon": 115.7544,
-      "n_names": 1,
       "names": [
         "Hillarys"
       ]
@@ -4120,7 +4253,6 @@
     "6925": {
       "lat": -32.109,
       "lon": 116.2083,
-      "n_names": 1,
       "names": [
         "Walliston Dc"
       ]
@@ -4128,7 +4260,6 @@
     "6931": {
       "lat": -31.9381,
       "lon": 115.8996,
-      "n_names": 1,
       "names": [
         "Maylands"
       ]
@@ -4136,7 +4267,6 @@
     "6936": {
       "lat": -31.8918,
       "lon": 116.013,
-      "n_names": 1,
       "names": [
         "Midland Dc"
       ]
@@ -4144,7 +4274,6 @@
     "6942": {
       "lat": -31.9018,
       "lon": 115.9426,
-      "n_names": 1,
       "names": [
         "Bassendean Dc"
       ]
@@ -4152,7 +4281,6 @@
     "6945": {
       "lat": -31.8556,
       "lon": 115.893,
-      "n_names": 1,
       "names": [
         "Malaga Dc"
       ]
@@ -4160,7 +4288,6 @@
     "6947": {
       "lat": -31.6944,
       "lon": 115.8453,
-      "n_names": 1,
       "names": [
         "Wangara Dc"
       ]
@@ -4168,7 +4295,6 @@
     "6953": {
       "lat": -32.0244,
       "lon": 115.8375,
-      "n_names": 1,
       "names": [
         "Applecross"
       ]
@@ -4176,7 +4302,6 @@
     "6954": {
       "lat": -32.0401,
       "lon": 115.826,
-      "n_names": 1,
       "names": [
         "Booragoon"
       ]
@@ -4184,7 +4309,6 @@
     "6955": {
       "lat": -32.0615,
       "lon": 115.8908,
-      "n_names": 1,
       "names": [
         "Willetton"
       ]
@@ -4192,7 +4316,6 @@
     "6957": {
       "lat": -32.0382,
       "lon": 115.7837,
-      "n_names": 1,
       "names": [
         "Palmyra"
       ]
@@ -4200,7 +4323,6 @@
     "6961": {
       "lat": -32.0382,
       "lon": 115.7837,
-      "n_names": 1,
       "names": [
         "Palmyra Dc"
       ]
@@ -4208,7 +4330,6 @@
     "6965": {
       "lat": -32.0848,
       "lon": 115.7987,
-      "n_names": 1,
       "names": [
         "Bibra Lake Dc"
       ]
@@ -4216,7 +4337,6 @@
     "6967": {
       "lat": -32.282,
       "lon": 115.7577,
-      "n_names": 1,
       "names": [
         "Rockingham Dc"
       ]
@@ -4224,7 +4344,6 @@
     "6970": {
       "lat": -32.0615,
       "lon": 115.8908,
-      "n_names": 1,
       "names": [
         "Canning Vale Dc"
       ]
@@ -4232,7 +4351,6 @@
     "6980": {
       "lat": -32.0177,
       "lon": 115.9671,
-      "n_names": 1,
       "names": [
         "Cannington"
       ]
@@ -4240,7 +4358,6 @@
     "6983": {
       "lat": -32.0056,
       "lon": 115.9044,
-      "n_names": 1,
       "names": [
         "Bentley Dc"
       ]
@@ -4248,7 +4365,6 @@
     "6986": {
       "lat": -31.9921,
       "lon": 115.9456,
-      "n_names": 1,
       "names": [
         "Welshpool Dc"
       ]
@@ -4256,7 +4372,6 @@
     "6987": {
       "lat": -32.0177,
       "lon": 115.9671,
-      "n_names": 1,
       "names": [
         "Cannington"
       ]
@@ -4264,7 +4379,6 @@
     "6991": {
       "lat": -32.0979,
       "lon": 116.096,
-      "n_names": 1,
       "names": [
         "Kelmscott"
       ]
@@ -4272,7 +4386,6 @@
     "6997": {
       "lat": -32.0979,
       "lon": 116.096,
-      "n_names": 1,
       "names": [
         "Kelmscott Dc"
       ]

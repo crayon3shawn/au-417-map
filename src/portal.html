@@ -38,6 +38,17 @@ h1{margin:0 0 6px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-
 .qrow button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 
 .result{margin-top:16px}
+.hits{display:flex;flex-direction:column;gap:3px;margin-top:12px;max-height:280px;overflow-y:auto}
+.hits:empty{display:none}
+.hits button{appearance:none;text-align:left;border:1px solid var(--line);background:var(--paper);
+  color:var(--ink);border-radius:4px;padding:9px 12px;cursor:pointer;font:inherit;font-size:13px;
+  display:flex;align-items:baseline;gap:10px}
+.hits button:hover{background:var(--sunk);border-color:var(--line-2)}
+.hits button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+.hits em{font-style:normal;width:10px;height:10px;border-radius:2px;flex:none;background:var(--hc)}
+.hits b{font-family:"IBM Plex Mono",monospace;font-weight:600}
+.hits i{font-style:normal;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hits u{text-decoration:none;color:var(--ink-3);font-size:11.5px}
 .hint{color:var(--ink-3);font-size:12.5px}
 .verdict{display:flex;gap:14px;align-items:flex-start;padding:15px;border-radius:5px;
   border:1px solid var(--line);background:var(--paper)}
@@ -144,14 +155,16 @@ table.imap .diff{color:var(--c-rebuild);font-weight:700}
   </header>
 
   <section class="finder">
-    <span class="eyebrow">查郵遞區號</span>
+    <span class="eyebrow">查郵區或地名</span>
     <div class="qrow">
-      <input id="q" inputmode="numeric" maxlength="4" placeholder="4870" aria-label="輸入郵遞區號" autocomplete="off">
+      <input id="q" maxlength="30" placeholder="4870 或 Cairns" autocomplete="off"
+             aria-label="輸入郵遞區號或地名">
       <button type="button" id="qb">查</button>
     </div>
     <div class="result" id="result" role="status" aria-live="polite">
       <p class="hint" id="hint"></p>
     </div>
+    <div class="hits" id="hits" role="listbox" aria-label="搜尋結果"></div>
   </section>
 
   <div class="cols">
@@ -356,18 +369,60 @@ document.getElementById('samelist').innerHTML =
 
 // ---- 查詢 ----
 const q = document.getElementById('q'), result = document.getElementById('result');
+const hitsEl = document.getElementById('hits');
 function show(html){ result.innerHTML = html; }
+
+// 地名索引：多數人知道自己在哪個鎮，不知道郵區號碼
+const byName = [];
+for(const pc in IDX){
+  const [st, main, , others] = IDX[pc];   // 第 3 個是旗標，跳過
+  for(const nm of [main, ...(others || [])]) byName.push([nm.toLowerCase(), pc, nm, st]);
+}
+const clearHits = () => { hitsEl.innerHTML = ''; };
+
+function showHits(list, term){
+  clearHits();
+  for(const [pc, nm, st] of list.slice(0, 40)){
+    const f = IDX[pc][2], s = stateOf(st);
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.style.setProperty('--hc', CATS[catOf(f)].c);
+    b.innerHTML = `<em></em><b>${pc}</b><i>${esc(nm)}</i><u>${esc(s.label)}</u>`;
+    b.addEventListener('click', () => { q.value = nm; clearHits(); render(pc); });
+    hitsEl.appendChild(b);
+  }
+  const extra = list.length - 40;
+  show(`<p class="hint">${list.length
+    ? `找到 ${list.length} 筆` + (extra > 0 ? `，只列出前 40 筆，再打幾個字縮小範圍` : '') + '，點一筆看結果。'
+    : `找不到「${esc(term)}」。試試郵遞區號，或只打地名的前幾個字。`}</p>`);
+}
+
 function lookup(){
   const v = q.value.trim();
+  if(!v){ clearHits(); show(`<p class="hint" id="hint"></p>`); return; }
   if(!/^\d{3,4}$/.test(v)){
-    show(`<p class="hint">請輸入 3 到 4 位的郵遞區號。</p>`);
+    const term = v.toLowerCase();
+    const starts = [], contains = [];
+    for(const [low, pc, nm, st] of byName){
+      if(low.startsWith(term)) starts.push([pc, nm, st]);
+      else if(low.includes(term)) contains.push([pc, nm, st]);
+    }
+    const list = starts.concat(contains);
+    if(list.length === 1){ q.value = list[0][1]; clearHits(); render(list[0][0]); return; }
+    showHits(list, v);
     return;
   }
-  const hit = IDX[String(parseInt(v,10))] || IDX[v];
+  clearHits();
+  render(String(parseInt(v,10)));
+}
+
+function render(key){
+  const hit = IDX[key];
   if(!hit){
-    show(`<p class="hint">找不到郵遞區號 <b class="mono">${esc(v)}</b>。可能是信箱型號碼，或這個號碼澳洲郵政沒有發行。</p>`);
+    show(`<p class="hint">找不到郵遞區號 <b class="mono">${esc(key)}</b>。可能是信箱型號碼，或這個號碼澳洲郵政沒有發行。</p>`);
     return;
   }
+  const v = key;
   const [stKey, name, f] = hit;
   const s = stateOf(stKey), cat = CATS[catOf(f)];
   const routes = [];
@@ -389,5 +444,9 @@ function lookup(){
 }
 document.getElementById('qb').addEventListener('click', lookup);
 q.addEventListener('keydown', e => { if(e.key === 'Enter') lookup(); });
-q.addEventListener('input', () => { if(q.value.trim().length >= 4) lookup(); });
+q.addEventListener('input', () => {
+  const v = q.value.trim();
+  if(/^\d{4}$/.test(v) || (v.length >= 2 && !/^\d+$/.test(v))) lookup();
+  else { clearHits(); }
+});
 </script>
