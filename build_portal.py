@@ -26,6 +26,24 @@ LABEL_POS = {
 FEW = 5   # 一般工地只有這麼少郵區算的話，直接把它們點名出來
 
 
+def area_coverage(pcdata, real):
+    """五張地區表各自涵蓋多少個實際存在的郵區，用來說明它們的大小差距。"""
+    out = {}
+    for area in ("remote", "northern", "regional", "bushfire", "disaster"):
+        s = set()
+        for st in STATES:
+            s |= expand(pcdata["areas"][VISA].get(area, {}).get(st), st)
+        out[area] = len(s & real)
+    # 觀光餐旅看的是 remote 與 northern 的聯集。兩張表有重疊，不能相加。
+    tour = set()
+    for area in ("remote", "northern"):
+        for st in STATES:
+            tour |= expand(pcdata["areas"][VISA].get(area, {}).get(st), st)
+    out["_tourism"] = len(tour & real)
+    out["_total"] = len(real)
+    return out
+
+
 def summarise(state, s, work_pcs):
     """給沒有地圖的行政區一句準確的說明，取代含糊的「尚無地圖」。"""
     if s["rebuild"] == 0 and s["none"] == 0 and s["work"] > 0:
@@ -80,7 +98,20 @@ def main():
             **s,
         })
 
+    # 產業對應表直接從 industries.json 生成，頁面不寫死——對應改了頁面會跟著變
+    ind = load(ROOT / "data" / "industries.json")
+    AREA_LABEL = {"regional": "Regional Australia", "northern": "Northern Australia",
+                  "remote": "Remote and Very Remote", "bushfire": "大火宣告區",
+                  "disaster": "天災宣告區"}
+    industries = []
+    for key, v in ind["industries"].items():
+        areas = v["areas"][VISA]
+        industries.append({"label": v["label"], "en": v["en"],
+                           "areas": None if areas is None else [AREA_LABEL[a] for a in areas]})
+
     payload = {
+        "industries": industries,
+        "area_coverage": area_coverage(pcdata, {int(p) for p in index}),
         "meta": {
             "visa": VISA,
             "stamp": (f"郵區清單 Home Affairs {pcdata['sources'][VISA]['page_last_updated']}"

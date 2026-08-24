@@ -224,14 +224,14 @@ svg.map.drag{cursor:grabbing}
           <p><b>1. 一般工地只認 regional。</b>建築業在 Regional Australia 郵區內的工作才算集簽。<span id="excluded"></span></p>
           <p><b>2. 災區是另一條路。</b>被宣告為災區的郵區，就算不在 regional 名單裡，做<b>災後重建</b>的土建、拆除、修繕、道路橋樑一樣算，志工也算。但同一個郵區的一般新建案不算。</p>
           <p><b>3. 二簽 88 天、三簽 179 天。</b>算的是等同全職的工作天數，不能壓縮在比 3 個月／6 個月更短的期間內完成。</p>
-          <p><b>4. 417 與 462。</b><span id="visanote"></span></p>
         </div>
       </section>
 
       <section class="blk">
         <span class="eyebrow">出處與查證</span>
         <div class="src">
-          郵遞區號四張清單逐字取自
+          本圖只處理 <b>417</b>（Working Holiday）；462 的產業規則不同，不適用。
+          郵遞區號清單逐字取自
           <a href="https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work" target="_blank" rel="noopener">Home Affairs — Specified work (subclass 417)</a>（頁面標示更新於 2026 年 8 月 18 日）。
           郵區範圍為 ABS Postal Areas 2021 概化邊界，僅供判讀，非法定界線；
           個別災害的宣告範圍與日期請對
@@ -272,7 +272,6 @@ const PC = DATA.postcodes, POA = DATA.poa, CITIES = DATA.cities,
 
 // 頁首出處與 417/462 等同性由資料決定，不寫死在樣板裡
 document.getElementById('stamp').textContent = META.stamp;
-document.getElementById('visanote').textContent = META.visa_note;
 document.getElementById('excluded').textContent = META.excluded_note;
 
 const COS = Math.cos(20 * Math.PI / 180);

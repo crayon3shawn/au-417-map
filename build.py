@@ -55,21 +55,6 @@ def to_path(rings):
     return "".join(out)
 
 
-def visa_note(pcdata, state):
-    """比對 417 與 462 在這一州的五張表，回傳給頁面的說明句。"""
-    diff = []
-    for area in ("remote", "northern", "regional", "bushfire", "disaster"):
-        a = expand(pcdata["areas"]["417"].get(area, {}).get(state), state)
-        b = expand(pcdata["areas"]["462"].get(area, {}).get(state), state)
-        if a != b:
-            diff.append(area)
-    if not diff:
-        return ("這一州的五張指定地區郵區表，417 與 462 完全相同，所以這張地圖兩種簽證都適用。"
-                "差別在產業：417 的礦業算集簽，462 沒有礦業這一項；漁業與林業 462 只限 northern Australia。"
-                "在礦區接土建案子拿 462 的話，雇主證明要寫成 construction 才算。")
-    return f"注意：417 與 462 在這一州的 {', '.join(diff)} 郵區表並不相同，本圖以 {VISA} 為準。"
-
-
 # 郵件處理中心／信箱型郵區：不是真實地區，地名資料給的座標也不可靠
 # （例如 2348 "New England Mc" 落在離 New England 400 公里外）。
 # 這種郵區 ABS 本來就沒有對應面，畫成點只會誤導，所以整個排除。
@@ -190,7 +175,6 @@ def main(state):
         "visa": VISA,
         "stamp": (f"郵區清單 Home Affairs {src[VISA]['page_last_updated']}"
                   f" · 邊界 ABS POA 2021 · 建置 {pcdata['fetched_at'][:10]}"),
-        "visa_note": visa_note(pcdata, state),
         "state_label": LABELS.get(state, STATES[state]["name"]),
         "excluded_note": EXCLUDED.get(state, ""),
         "bbox": bbox([r for rs in rings.values() for r in rs]),

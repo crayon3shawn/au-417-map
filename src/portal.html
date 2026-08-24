@@ -120,6 +120,38 @@ a.card:hover{border-color:var(--ink-3);background:var(--sunk)}
 .card.nomap{opacity:.62}
 .card.nomap .go{color:var(--ink-3)}
 
+.basis{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}
+.basis h2{margin:0 0 8px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
+  font-weight:700;font-size:22px;letter-spacing:.02em}
+.basis-lede{margin:0 0 16px;font-size:13.5px;line-height:1.65;color:var(--ink-2);max-width:70ch}
+.cov{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.cov div{display:flex;align-items:baseline;gap:7px;background:var(--surface);
+  border:1px solid var(--line);border-radius:4px;padding:7px 11px;font-size:11.5px;color:var(--ink-2)}
+.cov b{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
+  color:var(--ink);font-weight:600;font-size:13px}
+.cov i{font-style:normal;color:var(--ink-3);font-size:10.5px}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:5px;background:var(--surface)}
+table.imap{border-collapse:collapse;width:100%;min-width:520px;font-size:12.5px}
+table.imap th,table.imap td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--line);
+  vertical-align:top;line-height:1.5}
+table.imap thead th{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);
+  background:var(--sunk);white-space:nowrap}
+table.imap tbody tr:last-child th,table.imap tbody tr:last-child td{border-bottom:0}
+table.imap td.na{color:var(--ink-3)}
+table.imap td.na b{color:var(--c-rebuild)}
+table.imap th[scope="row"]{font-weight:700;white-space:nowrap}
+table.imap th[scope="row"] em{display:block;font-style:normal;font-weight:400;
+  font-size:10.5px;color:var(--ink-3);letter-spacing:0}
+table.imap .diff{color:var(--c-rebuild);font-weight:700}
+.basis-note{margin:14px 0 0;font-size:12.5px;line-height:1.6;color:var(--ink-2);
+  border-left:3px solid var(--c-work);padding-left:11px}
+.prov{margin-top:20px}
+.prov h3{margin:0 0 7px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
+  font-weight:700;font-size:15px}
+.prov ul{margin:0;padding-left:18px;font-size:12.5px;line-height:1.65;color:var(--ink-2)}
+.prov li{margin-bottom:4px}
+.prov b{color:var(--ink)}
 .notes{margin-top:38px;padding-top:22px;border-top:1px solid var(--line);
   display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
 .notes h3{margin:0 0 7px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
@@ -160,6 +192,33 @@ a.card:hover{border-color:var(--ink-3);background:var(--sunk)}
     </section>
   </div>
 
+  <section class="basis">
+    <h2>這些區域是怎麼來的</h2>
+    <p class="basis-lede">Home Affairs 的頁面上有<strong>五張各自獨立的郵區表</strong>。
+      每個產業各自對應到其中一張或幾張——所以「哪裡算集簽」完全取決於你做什麼行業。</p>
+
+    <div class="cov" id="cov"></div>
+
+    <div class="tblwrap">
+      <table class="imap" id="imap">
+        <thead><tr><th>產業</th><th>看哪張郵區表</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <p class="basis-note" id="samelist"></p>
+
+    <div class="prov">
+      <h3>資料出處</h3>
+      <ul>
+        <li><b>五張郵區表</b>——從 Home Affairs 頁面逐字解析，不是人工轉錄。頁面上標的日期就是官網自己的更新日期。</li>
+        <li><b>郵區邊界</b>——ABS（澳洲統計局）官方 ASGS 2021 Postal Areas 概化圖層。</li>
+        <li><b>產業對應表</b>——<strong>這是唯一人工整理的部分</strong>。官網把它寫成散文（「construction in regional Australia」這種句子），沒有做成表，所以是我讀了逐條整理的。</li>
+        <li><b>三分類</b>（就算／只有重建算／不算）——由上面兩者算出來的，不是另一份資料。</li>
+      </ul>
+    </div>
+  </section>
+
   <div class="notes">
     <div>
       <h3>一般工地只認 regional</h3>
@@ -170,12 +229,12 @@ a.card:hover{border-color:var(--ink-3);background:var(--sunk)}
       <p>被宣告為災區的郵區，就算不在 regional 名單裡，做<strong>災後重建</strong>的土建、拆除、修繕、道路橋樑一樣算，志工也算。但同一個郵區的一般新建案不算。</p>
     </div>
     <div>
-      <h3>417 與 462 地點相同</h3>
-      <p>全澳八區的五張指定地區郵區表，417 與 462 完全相同。差別在產業：417 的礦業算集簽，462 沒有礦業這一項；漁業與林業 462 只限 northern Australia。</p>
+      <h3>只看 417</h3>
+      <p>本站處理的是 417（Working Holiday）。462（Work and Holiday）的地區表雖然目前跟 417 相同，但產業規則不同——462 沒有礦業這一項，漁業與林業只限 Northern Australia。拿 462 的人不要照這裡判斷。</p>
     </div>
     <div>
       <h3>出處與查證</h3>
-      <p>郵區清單逐字取自 <a href="https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work" target="_blank" rel="noopener">Home Affairs — Specified work</a>。
+      <p>本站只處理 <b>417</b>（Working Holiday）。郵區清單逐字取自 <a href="https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work" target="_blank" rel="noopener">Home Affairs — Specified work</a>。
         個別災害的宣告範圍與日期請對 <a href="https://www.disasterassist.gov.au/find-a-disaster" target="_blank" rel="noopener">Disaster Assist</a> 查證。送件前務必以官方頁面為準。</p>
     </div>
   </div>
@@ -290,6 +349,37 @@ for(const s of STATES){
   node.innerHTML = inner;
   cards.appendChild(node);
 }
+
+// ---- 依據：五張表的大小、產業對應 ----
+const COV = DATA.area_coverage, INDS = DATA.industries;
+const COV_LABEL = {regional:'Regional Australia', remote:'Remote and Very Remote',
+                   northern:'Northern Australia', bushfire:'大火宣告區', disaster:'天災宣告區'};
+const covEl = document.getElementById('cov');
+for(const k of ['regional','disaster','bushfire','remote','northern']){
+  const n = COV[k], pct = Math.round(n / COV._total * 100);
+  const div = document.createElement('div');
+  div.innerHTML = `<span>${COV_LABEL[k]}</span><b>${n}</b><i>個 · ${pct}%</i>`;
+  covEl.appendChild(div);
+}
+
+const tb = document.querySelector('#imap tbody');
+for(const ind of INDS){
+  if(!ind.areas) continue;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<th scope="row">${esc(ind.label)}<em>${esc(ind.en)}</em></th>`
+    + `<td>${ind.areas.map(esc).join('　＋　')}</td>`;
+  tb.appendChild(tr);
+}
+
+// 哪些產業跟建築吃同一張表——這是最常被問的一句
+const base = JSON.stringify(INDS.find(i => i.en === 'Construction').areas);
+const same = INDS.filter(i => i.en !== 'Construction' && JSON.stringify(i.areas) === base)
+                 .map(i => i.label);
+document.getElementById('samelist').innerHTML =
+  `<b>${esc(same.join('、'))}跟建築吃同一張 Regional Australia 表</b>，判斷完全相同——`
+  + `所以這張地圖對做農場、肉廠、礦區的人一樣有效。`
+  + `觀光餐旅差最多：它看的是 Remote 與 Northern，可用郵區只有 ${COV._tourism} 個，`
+  + `不到 Regional（${COV.regional} 個）的 ${Math.round(COV.regional / COV._tourism)} 分之一。`;
 
 // ---- 查詢 ----
 const q = document.getElementById('q'), result = document.getElementById('result');
