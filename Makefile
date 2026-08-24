@@ -20,7 +20,6 @@ update:
 	python3 fetch/postcodes.py --keep-raw
 	python3 fetch/localities.py $(STATE)
 	python3 fetch/boundaries.py $(STATE)
-	python3 fetch/basemap.py $(STATE)
 	python3 fetch/cities.py $(STATE)
 	python3 fetch/portal.py
 	@echo ""

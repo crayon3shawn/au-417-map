@@ -63,7 +63,7 @@ type 也不同）。在綠色郵區一般工作本來就算，那是次要資訊
 | 五張指定地區郵區表 | [Home Affairs — Specified work (417)](https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work) · [462 版](https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-462/specified-462-work) | [Copyright and disclaimer](https://www.homeaffairs.gov.au/access-and-accountability/using-our-website/copyright-and-disclaimer)（未逐條確認）| `fetch/postcodes.py` |
 | 郵區邊界（Postal Areas 2021） | [ABS ArcGIS — ASGS2021/POA](https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/POA/MapServer) | **CC BY 4.0**（服務中繼資料載明）| `fetch/boundaries.py` |
 | 郵區地名與座標 | [matthewproctor/australianpostcodes](https://github.com/matthewproctor/australianpostcodes) | ⚠️ **未宣告授權** | `fetch/localities.py`、`fetch/cities.py`、`fetch/portal.py` |
-| 州界輪廓（入口頁用） | [rowanhogan/australian-states](https://github.com/rowanhogan/australian-states) | ⚠️ **未宣告授權** | `fetch/basemap.py`、`fetch/portal.py` |
+| 州界輪廓（入口頁用） | [ABS ArcGIS — ASGS2021/STE](https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/STE/MapServer) | **CC BY 4.0** | `fetch/portal.py` |
 | 產業與地區表的對應 | Home Affairs 頁面的散文段落，**人工整理** | — | 直接維護 `data/industries.json` |
 | 城市標註 | 人工維護清單，座標自動解析 | — | 改 `data/cities-<state>.seed.json` |
 | 災害宣告查證 | [Disaster Assist — Find a disaster](https://www.disasterassist.gov.au/find-a-disaster) | — | 未自動抓取，供人工核對 |
@@ -246,16 +246,19 @@ make build STATE=vic
 問題在 `data/` 裡進了版控的衍生資料：
 
 * **ABS 來源的部分沒問題** —— CC BY 4.0，只要標示出處。
-* **兩個 GitHub 來源都沒有宣告授權**，預設就是保留所有權利。
-  `matthewproctor` 的 README 說資料「arguably public domain」，
-  但那是作者的意見，不是授權條款。
+* **只剩 `matthewproctor` 一個來源沒有宣告授權**，預設就是保留所有權利。
+  它的 README 說資料「arguably public domain」，但那是作者的意見，不是授權條款。
+  受影響的檔案只有 `data/localities-*.json`、`portal-index.json`、`cities-*.json`。
+  （州界原本用的 rowanhogan 已改為 ABS STE。）
 
 幾條可行的路，各有代價：
 
 1. **不把第三方衍生資料進版控**，改成建置時現抓。倉庫裡只有程式碼，
    完全避開再散布的問題。代價是失去「官網改了什麼在 git diff 看得到」這個優點。
-2. **改用 ABS 的 SAL（Suburbs and Localities）圖層**做空間疊合取得地名，
-   州界改用 ABS 的 STE 圖層。全部變成 CC BY 4.0。代價是要多寫疊合邏輯。
+2. **改用 ABS 的 SAL（Suburbs and Localities）圖層**做空間疊合取得地名。
+   代價不小：郊區與郵區是兩套分區系統，疊合在交界必然出錯；而且會失去
+   `type` 欄位（Delivery Area／LVR／Post Office Boxes），那是過濾信箱型郵區的
+   關鍵——ABS 沒有這個資訊，它是 Australia Post 的屬性。**不建議。**
 3. **去問來源作者補上授權**（開個 issue）。成本最低，但不一定有回應。
 
 我不是律師，上面只是把查到的事實列出來，不構成法律意見。
@@ -276,4 +279,4 @@ make build STATE=vic
 ## 出處標示
 
 含有澳洲統計局（ABS）依 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-授權提供的資料：ASGS 2021 Postal Areas。
+授權提供的資料：ASGS 2021 Postal Areas（POA）與 State and Territory（STE）。
