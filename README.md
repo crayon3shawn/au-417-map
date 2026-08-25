@@ -42,18 +42,19 @@ Pages 一次只能部署一份成品，所以 workflow 把兩個分支都建出�
 開發版在 Pages 上是公開的，擋不了人進來，但要擋住搜尋引擎，也要讓人一眼
 知道那不是正式版。
 
-### 自訂網域
+### 自訂網域（目前未綁）
 
-workflow 的 `CUSTOM_DOMAIN` 會產生 `CNAME` 檔。但**只有這個不夠**——
-還要在 DNS 加一筆記錄，兩邊都設才會通：
+站台在 `<帳號>.github.io/<repo>/`。要綁自訂網域時，**兩件事都要做**：
 
-```
-類型    名稱   值
-CNAME   417    <帳號>.github.io
-```
+1. workflow 的 `CUSTOM_DOMAIN` 填上子網域 → 產生 `CNAME` 檔
+2. DNS 加一筆記錄：`CNAME  417  <帳號>.github.io`
 
-GitHub 只能決定「這個網域指到哪個 repo」，瀏覽器要先透過 DNS 找到 GitHub 的
-伺服器。HTTPS 憑證 GitHub 會自動申請。
+驗證（TXT）與路由（CNAME）是**不同的兩件事**：驗證只是宣告網域是你的、
+防止被接管，不會導流；沒有 CNAME 的話子網域根本解析不到。
+
+**Cloudflare 要注意兩點**：CNAME 先設 **DNS only（灰雲）**，橘雲會讓 GitHub
+的 Let's Encrypt 驗證過不了、HTTPS 永遠發不出來；之後若要開橘雲，
+SSL/TLS 模式要選 **Full**，選 Flexible 會跟 Pages 的強制 HTTPS 打成轉址迴圈。
 
 產出五頁，各自獨立（`dist/` 不進版控，由 `make all` 產生）：
 

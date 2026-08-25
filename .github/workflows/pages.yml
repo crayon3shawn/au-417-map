@@ -15,10 +15,13 @@ on:
     branches: [main, dev]
   workflow_dispatch:
 
-# 自訂網域。GitHub 只認這個檔，但瀏覽器還要 DNS 那筆 CNAME 才找得到，
-# 兩邊都要設。留空字串就用預設的 <帳號>.github.io/<repo>/。
+# 自訂網域。填了會產生 CNAME 檔——用 Actions 部署時，自訂網域是靠成品裡的
+# 這個檔決定的，只在 repo Settings 填而成品沒有，下次部署可能被洗掉。
+#
+# 目前留空，站台在 <帳號>.github.io/<repo>/。要綁網域時填上子網域，
+# 並在 DNS 加一筆 CNAME 指到 <帳號>.github.io（Cloudflare 要設灰雲）。
 env:
-  CUSTOM_DOMAIN: 417.chengche.one
+  CUSTOM_DOMAIN: ''
 
 permissions:
   contents: read
@@ -71,7 +74,9 @@ jobs:
           if [ -n "$CUSTOM_DOMAIN" ]; then
             echo "$CUSTOM_DOMAIN" > /tmp/site/CNAME
           fi
-          # 開發版擋索引，免得搜尋「417 集簽」跳出開發版而不是正式版
+          # 擋開發版被索引。注意：robots.txt 只有在網域根目錄才會被爬蟲讀到，
+          # 專案站台在 /<repo>/ 底下時這個檔是無效的——真正在擋的是開發版頁面
+          # 自己加的 noindex meta。等綁了自訂網域這個檔才會生效。
           printf 'User-agent: *\nDisallow: /dev/\n' > /tmp/site/robots.txt
 
       - uses: actions/upload-pages-artifact@v3
