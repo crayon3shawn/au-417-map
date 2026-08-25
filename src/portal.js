@@ -32,6 +32,9 @@ const HA = `<a href="${META.source_url}" target="_blank" rel="noopener">`;
 // 三個互斥的答案，跟各州地圖用同一套說法
 // 判定文字要跟著選定的產業變，所以是函式不是常數
 const CAT_COLOR = {work:'var(--c-work)', rebuild:'var(--c-rebuild)', none:'var(--c-none)'};
+// 目前顯示的是哪一筆（郵區或行政區）。換產業／換語言時要照原樣重畫，
+// 所以宣告在所有會用到它的函式之前。
+let shownPc = null, shownName = null, shownRegion = null;
 function cats(){
   const n = indLabel();
   return {
@@ -63,13 +66,32 @@ function applyIndustry(){
   drawStates();
   drawCards();
   drawSameList();
-  if(q.value.trim()) lookup();
+  // 換產業／換語言之後要把目前看的東西重畫一次。不能一律走 lookup()——
+  // 有些行政區名同時也是地名（Newcastle、Cairns、Sydney），重查會退回列表，
+  // 使用者已經選好的區域就被收起來了。
+  if(shownRegion) showRegion(shownRegion);
+  else if(shownPc) render(shownPc, shownName);
+  else if(q.value.trim()) lookup();
 }
 indSel.addEventListener('change', () => {
   industry = DATA.industry_masks.find(i => i.key === indSel.value) || industry;
   applyIndustry();
 });
 const stateOf = k => STATES.find(s => s.key === k);
+
+// ---- 行政區 ----
+// 職缺廣告是用行政區名寫的（「Central Coast」「Moreton Bay」），郵政資料裡
+// 只有地名，所以另外從 ABS 的 LGA 圖層算了一份對照表。這只是查詢的入口——
+// 判定永遠來自郵區，一個行政區內的郵區判定可以不一致。
+const REGIONS = (DATA.regions || []).map(([name, st, pcs]) => ({name, st, pcs}));
+function regionStats(r){
+  const n = {work:0, rebuild:0, none:0};
+  for(const pc of r.pcs){
+    const hit = IDX[String(pc)];
+    if(hit) n[catOf(hit[2])]++;
+  }
+  return n;
+}
 
 // ---- 全澳概觀圖 ----
 const svg = document.getElementById('au');
@@ -250,8 +272,67 @@ for(const pc in IDX){
 }
 const clearHits = () => { hitsEl.innerHTML = ''; };
 
-function showHits(list, term){
+// 區域列排在地名之前——打「Cairns」時行政區是比較大的答案，先給它。
+function regionRow(r){
+  const n = regionStats(r);
+  const total = (n.work + n.rebuild + n.none) || 1;
+  const seg = (c, v) => c ? `<i style="width:${(c/total*100).toFixed(1)}%;background:${v}"></i>` : '';
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'reg';
+  b.innerHTML = `<span class="rn">${esc(r.name)}</span>`
+    + `<u>${esc((stateOf(r.st) || {abbr:r.st.toUpperCase()}).abbr)}</u>`
+    + `<span class="rc">${esc(T('p_reg_count', {n:r.pcs.length}))}</span>`
+    + `<span class="rbar">${seg(n.work,'var(--c-work)')}${seg(n.rebuild,'var(--c-rebuild)')}${seg(n.none,'var(--c-none)')}</span>`;
+  b.addEventListener('click', () => { q.value = r.name; showRegion(r); });
+  return b;
+}
+
+function showRegion(r){
+  shownRegion = r; shownPc = null; shownName = null;
+  const n = regionStats(r);
+  const ind = indLabel();
+  const only = n.rebuild === 0 && n.none === 0 ? T('p_reg_all_work', {ind})
+             : n.work === 0 && n.none === 0    ? T('p_reg_all_rebuild', {ind})
+             : n.work === 0 && n.rebuild === 0 ? T('p_reg_all_none')
+             : T('p_reg_mixed');
+  const cat = n.rebuild === 0 && n.none === 0 ? 'work'
+            : n.work === 0 && n.none === 0    ? 'rebuild'
+            : n.work === 0 && n.rebuild === 0 ? 'none' : null;
+  // 判定不一致時沒有代表色可用。用 --line-2 會讓標題比內文還淡、主次顛倒，
+  // 所以退回一般文字色，而不是更淡的線條色。
+  show(`<div class="verdict region" style="--vc:${cat ? CAT_COLOR[cat] : 'var(--ink)'}">
+      <span class="chip"></span>
+      <div class="body">
+        <div><span class="rname">${esc(r.name)}</span>
+             <span class="where">${esc(T('p_reg_count', {n:r.pcs.length}))}</span></div>
+        <div class="say">${esc(only)}</div>
+        <div class="sub">${esc(T('p_reg_lead'))}</div>
+        <div class="legend2">
+          <span style="--sw:var(--c-work)"><i></i>${esc(T('p_leg_work', {ind}))} <b>${n.work}</b></span>
+          <span style="--sw:var(--c-rebuild)"><i></i>${esc(T('p_leg_rebuild'))} <b>${n.rebuild}</b></span>
+          <span style="--sw:var(--c-none)"><i></i>${esc(T('p_leg_none'))} <b>${n.none}</b></span>
+        </div>
+      </div>
+    </div>`);
   clearHits();
+  for(const pc of r.pcs){
+    const hit = IDX[String(pc)];
+    if(!hit) continue;
+    const s = stateOf(hit[0]);
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.style.setProperty('--hc', CAT_COLOR[catOf(hit[2])]);
+    b.innerHTML = `<em></em><b>${pad4(pc)}<u>${esc(s.abbr)}</u></b><i>${esc(hit[1])}</i>`;
+    b.addEventListener('click', () => { q.value = hit[1]; clearHits(); render(String(pc), hit[1]); });
+    hitsEl.appendChild(b);
+  }
+}
+
+function showHits(list, term, regs){
+  clearHits();
+  shownRegion = null;
+  for(const r of (regs || []).slice(0, 8)) hitsEl.appendChild(regionRow(r));
   for(const [pc, nm, st] of list.slice(0, 40)){
     const f = IDX[pc][2], s = stateOf(st);
     const b = document.createElement('button');
@@ -262,14 +343,30 @@ function showHits(list, term){
     hitsEl.appendChild(b);
   }
   const extra = list.length - 40;
-  show(`<p class="hint">${list.length
-    ? esc(T('hits_found', {n:list.length}) + (extra > 0 ? T('hits_more', {n:40}) : '') + T('p_hits_tail'))
-    : esc(T('hits_none', {q:term}))}</p>`);
+  const nreg = (regs || []).length;
+  // 行政區與地名可能同時命中（打「Cairns」兩種都有），兩邊的筆數都要講，
+  // 不然使用者不知道下面那些列是兩種東西混在一起。
+  const parts = [];
+  if(nreg) parts.push(T('p_reg_found', {q:term, n:nreg}));
+  if(list.length) parts.push(T('hits_found', {n:list.length})
+                             + (extra > 0 ? T('hits_more', {n:40}) : '')
+                             + T('p_hits_tail'));
+  show(`<p class="hint">${esc(parts.length ? parts.join(' ') : T('hits_none', {q:term}))}</p>`);
+}
+
+// 清掉目前顯示的東西。輸入框空了就該回到初始狀態，否則換語言／換產業時
+// 那些函式會照著 shownPc 把舊結果又畫回來。
+function clearShown(){
+  shownPc = null; shownName = null; shownRegion = null;
+  clearHits();
+  show(`<p class="hint" id="hint"></p>`);
+  const h = document.getElementById('hint');
+  if(h) h.textContent = T('p_hint', {n: META.n_postcodes, m: META.n_maps});
 }
 
 function lookup(){
   const v = q.value.trim();
-  if(!v){ clearHits(); show(`<p class="hint" id="hint"></p>`); return; }
+  if(!v){ clearShown(); return; }
   if(!/^\d{3,4}$/.test(v)){
     const term = v.toLowerCase();
     const starts = [], contains = [];
@@ -278,23 +375,27 @@ function lookup(){
       else if(low.includes(term)) contains.push([pc, nm, st]);
     }
     const list = starts.concat(contains);
+    const regs = REGIONS.filter(r => r.name.toLowerCase().includes(term));
+    // 只對到一個行政區、而且沒有地名同名，就直接展開它——打完整的
+    // 「central coast」不該還要再點一次。
+    if(regs.length === 1 && !list.length){ showRegion(regs[0]); return; }
     // 只剩一筆就直接顯示結果，但**不能動輸入框**——這是每敲一個鍵都會跑的
     // 路徑，改掉 value 等於搶走使用者正在打的字。打「central c」時全澳只有
     // Central Colo 一筆，輸入框被換成它，接著打的 oast 就接在後面變成
     // 「Central Colooast」，再也查不到東西。點選結果時改 value 才是對的，
     // 那是使用者明確選的。
-    if(list.length === 1){ clearHits(); render(list[0][0]); return; }
-    showHits(list, v);
+    if(list.length === 1 && !regs.length){ clearHits(); render(list[0][0]); return; }
+    showHits(list, v, regs);
     return;
   }
   clearHits();
   render(String(parseInt(v,10)));
 }
 
-let shownPc = null, shownName = null;   // 記住目前顯示哪一筆，切語言時要重畫
 // pick 是使用者實際點的那個地名。一個郵區底下可能有幾十個地名，點了
 // 「Gosford」卻顯示代表地名「Calga」會讓人以為點錯了。
 function render(key, pick){
+  shownRegion = null;
   const hit = IDX[key];
   if(!hit){
     shownPc = null; shownName = null;
@@ -329,7 +430,7 @@ q.addEventListener('keydown', e => { if(e.key === 'Enter') lookup(); });
 q.addEventListener('input', () => {
   const v = q.value.trim();
   if(v.length >= 2 && !/^\d{1,2}$/.test(v)) lookup();
-  else { clearHits(); show(`<p class="hint" id="hint"></p>`); }
+  else clearShown();
 });
 
 // ---- 套用語言 ----
@@ -354,8 +455,11 @@ function applyLang(){
   });
   document.getElementById('stamp').textContent =
     T('p_stamp', {d: META.page_date, b: META.built_at});
-  document.getElementById('hint').textContent =
-    T('p_hint', {n: META.n_postcodes, m: META.n_maps});
+  // #hint 住在 #result 裡面，顯示查詢結果時整塊會被換掉，這個元素就不在了。
+  // 沒有防呆的話這裡會丟例外，applyLang 後面的東西（包括重畫目前的結果）
+  // 全部不會跑——切語言看起來像「只換了一半」。
+  const hintEl = document.getElementById('hint');
+  if(hintEl) hintEl.textContent = T('p_hint', {n: META.n_postcodes, m: META.n_maps});
 
   // 開發版只在本機建（CHANNEL=dev），不上 Pages。橫幅是提醒手上這份不是
   // 線上那份，連結指向已發佈的站台方便對照。
@@ -375,8 +479,7 @@ function applyLang(){
   fillIndustries();
   drawCov();
   drawTable();
-  applyIndustry();          // 會重畫地圖、卡片、同表清單，必要時重跑查詢
-  if(shownPc) render(shownPc, shownName);
+  applyIndustry();          // 會重畫地圖、卡片、同表清單，以及目前顯示的結果
 }
 langBtn.addEventListener('click', () => {
   lang = lang === 'zh' ? 'en' : 'zh';

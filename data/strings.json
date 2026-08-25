@@ -492,6 +492,34 @@
     "p_area_join": {
       "zh": "　＋　",
       "en": " + "
+    },
+    "p_reg_count": {
+      "zh": "{n} 個郵區",
+      "en": "{n} postcodes"
+    },
+    "p_reg_found": {
+      "zh": "「{q}」對到 {n} 個行政區。點一個看它涵蓋哪些郵區。",
+      "en": "\"{q}\" matches {n} local government areas. Pick one to see the postcodes it covers."
+    },
+    "p_reg_lead": {
+      "zh": "這是行政區名，不是郵區。合格與否是一個郵區一個郵區認定的，所以下面列出它涵蓋的每一個。",
+      "en": "This is a local government area, not a postcode. Eligibility is decided postcode by postcode, so every postcode it covers is listed below."
+    },
+    "p_reg_all_work": {
+      "zh": "整個區域的一般{ind}工作都算。",
+      "en": "Ordinary {ind} work counts everywhere in this area."
+    },
+    "p_reg_all_rebuild": {
+      "zh": "整個區域都只有災後重建工作算，一般{ind}工作不算。",
+      "en": "Only disaster recovery work counts anywhere in this area — ordinary {ind} work does not."
+    },
+    "p_reg_all_none": {
+      "zh": "整個區域都不算。",
+      "en": "Nothing in this area counts."
+    },
+    "p_reg_mixed": {
+      "zh": "這個區域內的判定不一致，要看是哪一個郵區。",
+      "en": "Verdicts differ within this area — it depends which postcode."
     }
   }
 }

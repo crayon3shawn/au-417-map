@@ -145,6 +145,32 @@ postcodes」。它不是 Australia Post 的官方郵區界線——後者並未�
 覆蓋差異很小且可解釋：只在 matthewproctor 的多半是非地理郵區（信箱、大學、
 郵件中心），ABS 不給它們面是正確的；只在 ABS 的是 0872 這種跨州郵區與外島。
 
+## 行政區搜尋
+
+職缺廣告是用**行政區名**寫的（Seek 的地點分類就是「Gosford & Central Coast」
+「Sunshine Coast」這種），但郵政資料裡只有地名（suburb）。使用者打
+「Central Coast」查不到東西——而那正是他決定要不要投履歷的當下，手上唯一的
+資訊。所以另外建了一份行政區（LGA）對照表。
+
+**這只是查詢的入口，不是判定依據。** 判定永遠來自郵區，而一個行政區內的
+郵區判定可以不一致（Sunshine Coast 就是 21 個算、1 個只有重建），所以區域
+結果一律列出它涵蓋的每一個郵區。
+
+`fetch/regions.py` 用 ABS 的 LGA 與 POA 兩個圖層對算：在每個郵區面內部灑
+8×8 格點，看落在哪個行政區，佔到 10% 以上才算涵蓋。等於粗略地算面積重疊。
+
+**為什麼不用現成的欄位或座標**，兩個都試過了：
+
+- 地名 CSV 有 `lgaregion` 欄位，抽驗八個錯兩個（GOSFORD 標成 Hawkesbury、
+  MOUNT ISA 標成 Carpentaria）。
+- CSV 的座標也不能拿來做幾何運算。它給同一郵區底下大多數地名同一組座標，
+  而那組座標本身可能是錯的——郵區 2000 的九個地名有八個共用 `151.2566`，
+  那在雪梨 CBD 東邊五公里的海上。用它判斷會得到「2000 不在 Sydney 市內」。
+
+單點判斷還有另一個問題：一個壞座標就能製造假歸屬（`CABOOLTURE BC` 的座標
+在 900 公里外，會讓 Caboolture 被歸到 Charters Towers）。用面積取樣加比例
+門檻兩個問題一起解決。`tests/test_regions.py` 拿這些踩過的坑當樣本釘住。
+
 ## 語言
 
 介面有中英文，右上角切換，偏好記在 `localStorage` 的 `lang` 鍵。**預設中文**，
@@ -182,6 +208,7 @@ postcodes」。它不是 Australia Post 的官方郵區界線——後者並未�
 | `src/map.css`、`src/portal.css` | 樣式 | ✅ |
 | `src/map.js`、`src/portal.js` | 程式，開頭有 `// @ts-check` | ✅ |
 | `data/strings.json` | 中英文介面字串 | ✅ |
+| `data/regions.json` | 行政區（LGA）→ 郵區對照表 | ✅ |
 | `data/*.json` | 凍結的資料 | ✅ |
 | `dist/*.html` | **建置產出** | ❌ 見下 |
 

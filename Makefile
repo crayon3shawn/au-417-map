@@ -22,6 +22,7 @@ update:
 	python3 fetch/boundaries.py $(STATE)
 	python3 fetch/cities.py $(STATE)
 	python3 fetch/portal.py
+	python3 fetch/regions.py
 	@echo ""
 	@echo "資料已更新。請先看 git diff data/ 再 make build。"
 

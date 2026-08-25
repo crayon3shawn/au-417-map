@@ -76,6 +76,21 @@ h1{margin:0 0 6px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-
 .hits u,.verdict .pc u{text-decoration:none;color:var(--ink-3);font-weight:600;
   font-family:"Barlow Condensed","Noto Sans TC",sans-serif;letter-spacing:.04em;
   margin-left:5px;font-size:11.5px}
+/* 行政區列。排在地名之前，外觀要一眼看得出「這是一整個區域，不是一個郵區」：
+   沒有左邊的顏色方塊（區域不是單一判定），改用右邊一條比例條表示區內組成。 */
+.hits button.reg{gap:8px;background:var(--sunk);border-color:var(--line-2)}
+/* 名字吃掉剩下的空間並在窄螢幕上截字；比例條寬度固定，否則兩個都要彈性
+   就會互相擠，在 375px 上整列被切掉。 */
+.hits .rn{font-weight:700;flex:1;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hits .rc{color:var(--ink-3);font-size:11.5px;flex:none;white-space:nowrap}
+.hits .rbar{display:flex;height:6px;border-radius:2px;overflow:hidden;
+  background:var(--paper);flex:none;width:64px;align-self:center}
+.hits .rbar i{display:block}
+.verdict.region .chip{height:auto;align-self:stretch}
+.verdict .rname{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
+  font-weight:700;font-size:19px;letter-spacing:.01em}
+.verdict .legend2{margin-top:10px}
 .hint{color:var(--ink-3);font-size:12.5px}
 .verdict{display:flex;gap:14px;align-items:flex-start;padding:15px;border-radius:5px;
   border:1px solid var(--line);background:var(--paper)}

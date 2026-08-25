@@ -125,8 +125,21 @@ def main():
                            "scope_en": v.get("scope_en", ""),
                            "areas": None if areas is None else list(areas)})
 
+    # 行政區對照表。職缺廣告用的是「Central Coast」「Moreton Bay」這種行政區
+    # 名，郵政資料裡沒有，所以另外從 ABS 的 LGA 圖層算出來（見 fetch/regions.py）。
+    # 只留至少有一個郵區在索引裡的行政區，並且把索引裡沒有的郵區濾掉——
+    # 那些是信箱型或不可投遞的號碼，列出來只會讓人點了說「查不到」。
+    regions = []
+    rpath = ROOT / "data" / "regions.json"
+    if rpath.exists():
+        for name, v in load(rpath)["regions"].items():
+            pcs = [pc for pc in v["postcodes"] if str(pc) in index]
+            if pcs:
+                regions.append([name, v["state"], pcs])
+
     payload = {
         "industries": industries,
+        "regions": regions,
         "industry_masks": [
             {"key": key, "label": v["label"], "label_en": v.get("label_en", v["en"]),
              "scope": v.get("scope", ""), "scope_en": v.get("scope_en", ""),
