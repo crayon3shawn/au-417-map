@@ -158,6 +158,7 @@ def main():
         html = html.replace(token, value)
 
     dest = ROOT / "dist" / "index.html"
+    dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(html, encoding="utf-8")
     have = ", ".join(s["label"] for s in states if s["url"])
     print(f"可查郵區 {len(entries)} 個 · 已有地圖的州：{have}")

@@ -29,12 +29,17 @@ build:
 	python3 build.py $(STATE)
 
 all:
-	@for s in $(STATES); do python3 build.py $$s | tail -1; done
-	python3 build_portal.py | tail -1
+	@set -e; for s in $(STATES); do \
+		out=$$(python3 build.py $$s) || { echo "$$out"; exit 1; }; \
+		echo "$$out" | tail -1; \
+	done; \
+	out=$$(python3 build_portal.py) || { echo "$$out"; exit 1; }; \
+	echo "$$out" | tail -1
 
 portal:
 	python3 build_portal.py
-	@python3 -m unittest discover -s tests 2>&1 | tail -3
+	@out=$$(python3 -m unittest discover -s tests 2>&1) || { echo "$$out"; exit 1; }; \
+	echo "$$out" | tail -3
 
 serve: all
 	@echo "http://127.0.0.1:$(PORT)/index.html"

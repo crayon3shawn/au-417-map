@@ -296,6 +296,7 @@ def main(state):
         html = html.replace(token, value)
 
     dest = ROOT / "dist" / f"{state}.html"
+    dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(html, encoding="utf-8")
 
     print(f"郵區 {len(rings)}，各產業的「一般工作就算」數量：")
