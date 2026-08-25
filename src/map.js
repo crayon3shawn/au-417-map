@@ -405,10 +405,13 @@ function applyIndustry(){
   const tables = areasOf(industry.mask).join(' + ');
   document.getElementById('n-work-label').textContent = T('cat_work', {ind: indLabel()});
   // 範圍是官方定義的中文摘要，不是官方文字，所以一定要附原文連結讓人核對
-  indNote.innerHTML = esc(T('industry_table', {tables})).replace(esc(tables), `<b>${esc(tables)}</b>`)
+  // 跟郵區詳情用同一種卡片：上面一條標題列說看的是哪張表，下面是範圍。
+  // 兩塊資訊的份量差不多，之前一個是卡片一個是引言樣式，看起來像不同層級。
+  indNote.innerHTML =
+    `<div class="hd">${esc(T('industry_table', {tables})).replace(esc(tables), `<b>${esc(tables)}</b>`)}</div>`
     + (indScope()
-        ? `<span class="scope">${esc(indScope())} `
-          + `<a href="${META.source_url}" target="_blank" rel="noopener">${esc(T('official_def'))}</a></span>`
+        ? `<div class="bd">${esc(indScope())} `
+          + `<a href="${META.source_url}" target="_blank" rel="noopener">${esc(T('official_def'))}</a></div>`
         : '');
   document.getElementById('subind').textContent = `${T('showing')}: ${indLabel()}`;
   document.getElementById('fact1').textContent = T('fact1_body', {ind: indLabel(), tables});

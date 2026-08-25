@@ -80,12 +80,15 @@ body{
   background-repeat:no-repeat;background-position:right 11px center;background-size:11px;
   padding-right:30px;}
 .ind:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px;border-color:var(--c-work)}
-.indnote{margin:0;font-size:11.5px;line-height:1.5;color:var(--ink-3)}
-.indnote b{color:var(--ink-2);font-weight:600}
-/* 官方對每個產業的範圍有明確定義，搞錯會被拒——所以直接寫在選單下面 */
-.scope{display:block;margin-top:4px;padding-left:8px;border-left:2px solid var(--line);color:var(--ink-3)}
-.scope a{display:inline-block;margin-top:3px;color:var(--ink-2);white-space:nowrap}
-.scope a:hover{color:var(--c-work)}
+/* 官方對每個產業的範圍有明確定義，搞錯會被拒——所以直接寫在選單下面。
+   用跟郵區詳情同一種卡片：兩塊資訊的份量差不多，之前一個是卡片一個是引言
+   樣式，看起來像不同層級。標題列比郵區的小一號——那邊的主角是郵遞區號，
+   這邊只是一句話。 */
+.indcard .hd{font-size:12.5px;line-height:1.5;color:var(--ink-2);display:block}
+.indcard .hd b{color:var(--ink);font-weight:600}
+.indcard .bd{font-size:11.5px;line-height:1.55;color:var(--ink-3);gap:0}
+.indcard .bd a{color:var(--ink-2);white-space:nowrap}
+.indcard .bd a:hover{color:var(--c-work)}
 .srch{display:flex}
 .srch input{flex:1;min-width:0;font-family:"IBM Plex Mono",monospace;font-size:14px;
   padding:8px 10px;border:1px solid var(--line-2);border-radius:3px;background:var(--paper);color:var(--ink)}
