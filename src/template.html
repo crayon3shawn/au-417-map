@@ -411,14 +411,20 @@ if(minLat < TROPIC && TROPIC < maxLat){
 // ---- 城市 ----
 const cityG = el('g',{}); over.appendChild(cityG);
 const cityNodes = [];
+// 窄螢幕只留英文名：「Sunshine Coast 陽光海岸」在 375px 上佔 111px，
+// 接近螢幕三分之一，一定會被切掉。而且字級是以螢幕像素定義再換算成世界單位的，
+// 所以「撐開視野」會讓字級的世界單位跟著變大，追不上、收斂不了。
+const shortName = n => n.replace(/\s+[\u4e00-\u9fff][^\s]*$/, '');
+const narrow = () => svg.getBoundingClientRect().width < 560;
+
 for(const [name, lon, lat, tier, side] of CITIES){
   const g = el('g',{class:'city' + (tier===2 ? ' t2' : '')});
   const cx = px(lon), cy = py(lat);
   g.appendChild(el('circle',{cx, cy, r:tier===1?SZ.dot1:SZ.dot2, 'stroke-width':SZ.halo}));
   const t = el('text',{x:cx+SZ.gap*side, y:cy+SZ.lbl1*0.26, 'text-anchor': side<0 ? 'end' : 'start'});
-  t.textContent = name;
+  t.textContent = narrow() ? shortName(name) : name;
   g.appendChild(t);
-  g.__c = {cx, cy, t, dot:g.firstChild, tier, side};
+  g.__c = {cx, cy, t, dot:g.firstChild, tier, side, name};
   cityG.appendChild(g);
   cityNodes.push(g);
 }
@@ -466,7 +472,12 @@ function fitLabels(){
 }
 if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitLabels);
 else fitLabels();
-addEventListener('resize', () => { sizeToViewport(); apply(); });
+addEventListener('resize', () => {
+  sizeToViewport();
+  const s = narrow();
+  for(const g of cityNodes) g.__c.t.textContent = s ? shortName(g.__c.name) : g.__c.name;
+  apply();
+});
 
 function toBase(e){
   const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
