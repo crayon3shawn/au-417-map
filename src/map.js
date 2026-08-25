@@ -501,21 +501,6 @@ function fromHash(){
 addEventListener('hashchange', fromHash);
 fromHash();
 
-// ---- 開發版橫幅 ----
-// 開發版在 Pages 上是公開的（/dev/），擋不了人進來，但要讓人一眼知道
-// 這不是正式版，也要擋住搜尋引擎索引。
-if(META.channel === 'dev'){
-  const bar = document.getElementById('devbar');
-  if(bar){
-    bar.hidden = false;
-    bar.textContent = T('dev_banner');
-    const a = document.createElement('a');
-    a.href = '../';                       // /dev/ 的上一層就是穩定版
-    a.textContent = T('dev_stable_link');
-    bar.appendChild(a);
-  }
-}
-
 // ---- 無障礙 ----
 // 地圖不是可逐格 tab 的（幾百個郵區當 tab stop 反而更難用），
 // 鍵盤與螢幕閱讀器的路徑是「查郵遞區號」欄位加上 live region 的詳情面板。
@@ -525,6 +510,23 @@ svg.insertBefore(mt, svg.firstChild);
 function applyMapA11y(){
   svg.setAttribute('aria-roledescription', T('map_role'));
   mt.textContent = T('map_title', {state: stateName(), n: META.counts.boundaries});
+}
+
+// ---- 開發版橫幅 ----
+// 開發版現在只在本機建（CHANNEL=dev），不會上 Pages。橫幅的用處是讓人一眼
+// 知道手上這份不是線上那份，連結指向已發佈的站台方便對照。
+function drawDevBar(){
+  const bar = document.getElementById('devbar');
+  if(!bar || META.channel !== 'dev') return;
+  bar.hidden = false;
+  bar.textContent = T('dev_banner');
+  if(META.site_url){
+    const a = document.createElement('a');
+    a.href = META.site_url;
+    a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = T('dev_stable_link');
+    bar.appendChild(a);
+  }
 }
 
 // ---- 語言切換 ----
@@ -564,13 +566,7 @@ function applyLang(){
   }
   document.getElementById('excluded').textContent =
     lang === 'zh' ? META.excluded_note : (META.excluded_note_en || '');
-  const bar = document.getElementById('devbar');
-  if(bar && !bar.hidden){
-    bar.textContent = T('dev_banner');
-    const a = document.createElement('a');
-    a.href = '../'; a.textContent = T('dev_stable_link');
-    bar.appendChild(a);
-  }
+  drawDevBar();
   langBtn.textContent = lang === 'zh' ? 'EN' : '中文';
   langBtn.setAttribute('aria-label', lang === 'zh' ? 'Switch to English' : '切換為中文');
   applyIndustry();

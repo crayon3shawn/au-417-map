@@ -122,6 +122,9 @@ TARGET = os.environ.get("TARGET", "pages")
 # 發佈管道。dev 會多一條細橫幅與 noindex——開發版在 Pages 上是公開的，
 # 要擋的是「被搜尋引擎索引」和「有人誤以為那是正式版」，不是擋人進來。
 CHANNEL = os.environ.get("CHANNEL", "stable")
+# 已發佈站台的網址。開發版橫幅要連過去讓人對照——開發版現在只在本機建，
+# 相對路徑沒有意義。留空就只出橫幅不出連結。
+SITE_URL = "https://crayon3shawn.github.io/au-417-map/"
 ARTIFACTS = ROOT / "data" / "artifacts.json"
 
 
@@ -261,6 +264,7 @@ def main(state):
         "state_label": LABELS.get(state, STATES[state]["name"]),
         "state_abbr": state.upper(),
         "channel": CHANNEL,
+        "site_url": SITE_URL,
         "source_url": src[VISA]["url"],
         "strings": load(ROOT / "data" / "strings.json")["s"],
         "state_name_en": STATES[state]["name"],

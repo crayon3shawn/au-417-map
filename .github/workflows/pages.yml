@@ -1,10 +1,9 @@
-# 建置並部署到 GitHub Pages，一個站台兩個版本：
+# 建置並部署到 GitHub Pages。站台只有一份，就是 main。
 #
-#   /        main 分支，穩定版
-#   /dev/    dev  分支，開發版（有橫幅與 noindex）
-#
-# Pages 一次只能部署一份成品，所以這裡把兩個分支都建出來再一起送。
-# 推任一分支都會重建兩者，不會有一邊卡在舊版。
+# 開發版不上線：本機 `CHANNEL=dev make all` 就能看到帶橫幅的版本，測完再推
+# main。以前 /dev/ 是掛在站台上的第二條線，但那要多維護一整套東西（環境的
+# 分支白名單、noindex、robots.txt），而目前的流程是「本機測完才推」，
+# 那條線沒有存在的必要。
 #
 # 建置完全離線（只讀 data/），不會連到 Home Affairs 或 ABS——
 # 資料更新是手動跑 `make update` 之後提交的，CI 不會偷偷改資料。
@@ -12,7 +11,7 @@ name: Build and deploy
 
 on:
   push:
-    branches: [main, dev]
+    branches: [main]
   workflow_dispatch:
 
 # 自訂網域。填了會產生 CNAME 檔——用 Actions 部署時，自訂網域是靠成品裡的
@@ -36,48 +35,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: 取出穩定版（main）
-        uses: actions/checkout@v7
-        with:
-          ref: main
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v7
         with:
           python-version: '3.11'
 
-      - name: 建置穩定版
+      - name: 建置並測試
         run: |
           make all
           make test
           mkdir -p /tmp/site
           cp dist/*.html /tmp/site/
 
-      - name: 取出開發版（dev）
-        id: devsrc
-        uses: actions/checkout@v7
-        continue-on-error: true
-        with:
-          ref: dev
-          path: devsrc
-
-      - name: 建置開發版
-        if: steps.devsrc.outcome == 'success'
-        env:
-          CHANNEL: dev
-        run: |
-          make -C devsrc all
-          mkdir -p /tmp/site/dev
-          cp devsrc/dist/*.html /tmp/site/dev/
-
-      - name: 加上 CNAME 與 robots.txt
-        run: |
-          if [ -n "$CUSTOM_DOMAIN" ]; then
-            echo "$CUSTOM_DOMAIN" > /tmp/site/CNAME
-          fi
-          # 擋開發版被索引。注意：robots.txt 只有在網域根目錄才會被爬蟲讀到，
-          # 專案站台在 /<repo>/ 底下時這個檔是無效的——真正在擋的是開發版頁面
-          # 自己加的 noindex meta。等綁了自訂網域這個檔才會生效。
-          printf 'User-agent: *\nDisallow: /dev/\n' > /tmp/site/robots.txt
+      - name: 加上 CNAME
+        if: env.CUSTOM_DOMAIN != ''
+        run: echo "$CUSTOM_DOMAIN" > /tmp/site/CNAME
 
       - uses: actions/upload-pages-artifact@v5
         with:

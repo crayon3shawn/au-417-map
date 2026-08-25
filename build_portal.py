@@ -12,7 +12,7 @@ import sys, json, pathlib, collections
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from lib import expand, load, STATES
 from build import (LABELS, VISA, AREA_BITS, REBUILD_MASK, DEFAULT_INDUSTRY,
-                   work_mask, site_links, robots_meta, CHANNEL)
+                   work_mask, site_links, robots_meta, CHANNEL, SITE_URL)
 
 ROOT = pathlib.Path(__file__).resolve().parent
 
@@ -138,6 +138,7 @@ def main():
         "meta": {
             "source_url": pcdata["sources"][VISA]["url"],
             "channel": CHANNEL,
+            "site_url": SITE_URL,
             "visa": VISA,
             "page_date": pcdata["sources"][VISA]["page_last_updated"],
             "built_at": pcdata["fetched_at"][:10],

@@ -25,22 +25,28 @@ make serve    # 建置並在 http://127.0.0.1:8731/index.html 預覽
 
 ## 部署
 
-推上 GitHub 之後，`.github/workflows/pages.yml` 會建置、跑測試、部署到 Pages，
-一個站台兩個版本：
+推 `main` 之後，`.github/workflows/pages.yml` 會建置、跑測試、部署到 Pages。
+**站台只有一份**，就是 `main`。
 
+開發流程是**本機測完才推**：
+
+```bash
+CHANNEL=dev make all      # 建出帶開發版橫幅的一份
+make serve                # http://127.0.0.1:8731/index.html
+make test                 # 73 項，不連網
+git push origin main      # 確認沒問題才推
 ```
-/        main 分支，穩定版
-/dev/    dev  分支，開發版
-```
 
-Pages 一次只能部署一份成品，所以 workflow 把兩個分支都建出來再一起送。
-推任一分支都會重建兩者，不會有一邊卡在舊版。
+`CHANNEL=dev` 建出來的頁面會多一條細橫幅（連到已發佈的站台方便對照）與
+`noindex`。橫幅的用處是提醒你手上這份不是線上那份。
 
-開發流程：改東西推 `dev` → 看 `/dev/` 確認 → merge 到 `main`。
+以前 `/dev/` 是掛在站台上的第二條線，後來拿掉了——那要多維護一整套東西
+（Pages 環境的分支白名單、`robots.txt`、兩份成品的組裝），而既然流程是本機
+測完才推，那條線沒有存在的必要。`noindex` 保留著，萬一哪天真的把開發版放上去
+才不會裸奔。
 
-開發版會多一條細橫幅與 `noindex`，站台根目錄的 `robots.txt` 也擋掉 `/dev/`——
-開發版在 Pages 上是公開的，擋不了人進來，但要擋住搜尋引擎，也要讓人一眼
-知道那不是正式版。
+> 順帶記一個坑：`robots.txt` 只有放在**網域根目錄**才會被爬蟲讀到。專案站台在
+> `/<repo>/` 底下時那個檔是無效的，所以擋索引真正靠的是頁面自己的 `noindex`。
 
 ### 自訂網域（目前未綁）
 

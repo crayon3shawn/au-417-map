@@ -349,11 +349,15 @@ function applyLang(){
   document.getElementById('hint').textContent =
     T('p_hint', {n: META.n_postcodes, m: META.n_maps});
 
-  if(DATA.meta.channel === 'dev'){
+  // 開發版只在本機建（CHANNEL=dev），不上 Pages。橫幅是提醒手上這份不是
+  // 線上那份，連結指向已發佈的站台方便對照。
+  if(META.channel === 'dev'){
     const bar = document.getElementById('devbar');
     if(bar){
       bar.hidden = false;
-      bar.innerHTML = esc(T('dev_banner')) + `<a href="../">${esc(T('dev_stable_link'))}</a>`;
+      bar.innerHTML = esc(T('dev_banner')) + (META.site_url
+        ? `<a href="${META.site_url}" target="_blank" rel="noopener">${esc(T('dev_stable_link'))}</a>`
+        : '');
     }
   }
 

@@ -65,10 +65,10 @@ if __name__ == "__main__":
 
 
 class TestRobotsMeta(unittest.TestCase):
-    """開發版是公開的，靠這行 meta 擋搜尋引擎收錄。
+    """開發版現在只在本機建，不上 Pages，但這行 meta 還是留著當保險。
 
-    robots.txt 在專案站台的子路徑下讀不到，所以它是唯一真正在擋的東西——
-    掉了不會有任何錯誤，只會安靜地被 Google 收錄，所以這裡把它釘住。
+    真要哪天把開發版放上去，擋索引就只剩它——robots.txt 在專案站台的子路徑
+    下讀不到。掉了不會有任何錯誤，只會安靜地被 Google 收錄，所以釘住。
     """
 
     def _with_channel(self, channel):
