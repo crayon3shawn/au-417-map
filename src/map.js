@@ -436,13 +436,21 @@ function clearSel(){
 
 function markSelection(d){
   if(!d || !d.rec){ selSize = -1; updateRing(); return; }
-  // 信箱型郵區只有一個點，量不出範圍，一律標環
+  // 環要對準「被框起來的那塊多邊形」，不能用 rec 的座標。rec 是地名點
+  // （郵政地名的位置），跟多邊形的幾何中心可以差好幾公里——郵區 2000 就差
+  // 4.4 公里。縮小時看不出來，放大到上百倍就整個跑掉。
+  // 信箱型郵區沒有多邊形，只有一個點，那才用 rec。
   selSize = 0;
+  let cx = px(d.rec[1]), cy = py(d.rec[2]);
   if(!d.stray && d.node){
     let bb; try { bb = d.node.getBBox(); } catch(_) { bb = null; }
-    if(bb && bb.width) selSize = Math.max(bb.width*COS, bb.height);
+    if(bb && bb.width){
+      // getBBox() 拿到的是經緯度（areasG 掛在 proj 底下），要換算到 px/py
+      selSize = Math.max(bb.width*COS, bb.height);
+      cx = (bb.x + bb.width/2) * COS;
+      cy = -(bb.y + bb.height/2);
+    }
   }
-  const cx = px(d.rec[1]), cy = py(d.rec[2]);
   for(const c of ringG.children){ c.setAttribute('cx', cx); c.setAttribute('cy', cy); }
   updateRing();
 }
