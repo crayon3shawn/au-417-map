@@ -69,15 +69,20 @@ h1{margin:0 0 6px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-
 .hits button:hover{background:var(--sunk);border-color:var(--line-2)}
 .hits button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
 .hits em{font-style:normal;width:10px;height:10px;border-radius:2px;flex:none;background:var(--hc)}
-.hits b{font-family:"IBM Plex Mono",monospace;font-weight:600}
+.hits b{font-family:"IBM Plex Mono",monospace;font-weight:600;flex:none}
 .hits i{font-style:normal;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hits u{text-decoration:none;color:var(--ink-3);font-size:11.5px}
+/* 州代號緊跟在號碼後面，讀起來是一組識別資訊（4870 QLD），所以放在 <b> 裡面，
+   靠自己的 margin 控制間距，不吃 flex 的 gap。 */
+.hits u,.verdict .pc u{text-decoration:none;color:var(--ink-3);font-weight:600;
+  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;letter-spacing:.04em;
+  margin-left:5px;font-size:11.5px}
 .hint{color:var(--ink-3);font-size:12.5px}
 .verdict{display:flex;gap:14px;align-items:flex-start;padding:15px;border-radius:5px;
   border:1px solid var(--line);background:var(--paper)}
 .verdict .chip{width:14px;height:38px;border-radius:3px;flex:none;background:var(--vc)}
 .verdict .body{flex:1;min-width:0}
 .verdict .pc{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:20px}
+.verdict .pc u{font-size:13px;margin-left:6px}
 .verdict .where{color:var(--ink-2);font-size:13px}
 .verdict .say{margin-top:5px;font-size:15px;font-weight:700;color:var(--vc)}
 .verdict .sub{margin-top:3px;font-size:12.5px;color:var(--ink-2);line-height:1.5}

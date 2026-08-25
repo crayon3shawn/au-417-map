@@ -3,6 +3,8 @@ const DATA = __DATA__;
 const IDX = DATA.postcodes, STATES = DATA.states, META = DATA.meta;
 const NS = 'http://www.w3.org/2000/svg';
 const el = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
+// 索引鍵去掉了前導零（'872'），顯示要補回四位，否則 NT 的 08xx 看起來像打錯
+const pad4 = n => String(n).padStart(4, '0');
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 // ---- 語言 ----
@@ -255,7 +257,7 @@ function showHits(list, term){
     const b = document.createElement('button');
     b.type = 'button';
     b.style.setProperty('--hc', CAT_COLOR[catOf(f)]);
-    b.innerHTML = `<em></em><b>${pc}</b><i>${esc(nm)}</i><u>${esc(s.abbr)}</u>`;
+    b.innerHTML = `<em></em><b>${pad4(pc)}<u>${esc(s.abbr)}</u></b><i>${esc(nm)}</i>`;
     b.addEventListener('click', () => { q.value = nm; clearHits(); render(pc); });
     hitsEl.appendChild(b);
   }
@@ -285,8 +287,6 @@ function lookup(){
 }
 
 let shownPc = null;   // 記住目前顯示哪一筆，切語言時要重畫
-// 索引鍵去掉了前導零（'872'），顯示要補回四位，否則 NT 的 08xx 看起來像打錯
-const pad4 = n => String(n).padStart(4, '0');
 function render(key){
   const hit = IDX[key];
   if(!hit){
@@ -308,7 +308,7 @@ function render(key){
   show(`<div class="verdict" style="--vc:${cat.c}">
       <span class="chip"></span>
       <div class="body">
-        <div><span class="pc">${pad4(v)}</span> <span class="where">${esc(T('p_where', {name, state:stLabel(s)}))}</span></div>
+        <div><span class="pc">${pad4(v)}<u>${esc(s.abbr)}</u></span> <span class="where">${esc(name)}</span></div>
         <div class="say">${esc(cat.say)}</div>
         <div class="sub">${esc(cat.sub)}${extra}</div>
         ${link}

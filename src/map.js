@@ -226,7 +226,7 @@ function toBase(e){
   return p.matrixTransform(svg.getScreenCTM().inverse());
 }
 function zoomAt(bp, nk){
-  nk = Math.max(1, Math.min(40, nk));
+  nk = Math.max(1, Math.min(MAX_K, nk));
   tx = bp.x - nk*((bp.x - tx)/k);
   ty = bp.y - nk*((bp.y - ty)/k);
   k = nk; apply();
@@ -269,7 +269,7 @@ svg.addEventListener('pointermove', e => {
     const d = dist(a, b);
     if(pinch.d > 0 && d > 0){
       // 縮放同時跟著兩指中點移動，手感才對
-      const nk = Math.max(1, Math.min(40, pinch.k * (d / pinch.d)));
+      const nk = Math.max(1, Math.min(MAX_K, pinch.k * (d / pinch.d)));
       const m = mid(a, b), now = toBase(m);
       tx = now.x - nk * ((pinch.base.x - pinch.tx0) / pinch.k);
       ty = now.y - nk * ((pinch.base.y - pinch.ty0) / pinch.k);
@@ -301,11 +301,39 @@ const centre = () => ({x:VB.x+VB.w/2, y:VB.y+VB.h/2});
 document.getElementById('zin').onclick  = () => zoomAt(centre(), k*1.6);
 document.getElementById('zout').onclick = () => zoomAt(centre(), k/1.6);
 document.getElementById('zrst').onclick = () => { k=1; tx=0; ty=0; apply(); };
-function focusOn(rec, nk){
-  k = nk;
-  tx = (VB.x+VB.w/2) - k*px(rec[1]);
-  ty = (VB.y+VB.h/2) - k*py(rec[2]);
+// 縮放上限用「畫面上至少要看得到多寬的地面」定義，不用固定倍率——各州的
+// viewBox 大小差好幾倍，固定 40 倍在面積大的州放不夠（市區郵區只有兩三
+// 公里，全州上千公里），面積小的州又放過頭。
+// 為什麼是 0.08（約 9 公里）：邊界是用 maxAllowableOffset=0.0015 度（約 165
+// 公尺）抓的概化圖層。放到「畫面寬度＝3 公里」時 1 像素約 5 公尺，那 165 公尺
+// 就變成 30 幾像素的鋸齒，相鄰郵區之間還會出現黑色縫隙——簡化後兩邊的邊界
+// 不再完全貼合。看起來像資料壞掉，比看不清楚更糟。
+// 9 公里寬時 1 像素約 15 公尺，概化誤差約 10 像素，還在可接受範圍。
+// 要再放大就得把 maxAllowableOffset 調小重抓，代價是頁面變大。
+const MIN_SPAN = 0.08;                          // 世界單位，約 9 公里
+const MAX_K = Math.max(40, VB.w / MIN_SPAN);
+
+// 置中到指定的世界座標與縮放倍率。倍率沿用平移縮放的上下限。
+function centreOn(cx, cy, nk){
+  k = Math.max(1, Math.min(MAX_K, nk));
+  tx = (VB.x+VB.w/2) - k*cx;
+  ty = (VB.y+VB.h/2) - k*cy;
   apply();
+}
+
+// 郵區大小差好幾個數量級——內城區只有幾公里，內陸一個郵區比台灣還大。
+// 固定倍率一定有一邊不對：小的看不到，大的爆框。所以依實際範圍算。
+// 目標是讓郵區佔視野約六成，留點周邊當參考。
+const FOCUS_FILL = 0.6;
+function focusOnNode(node, fallback){
+  // areasG 掛在 proj 底下，proj 的 transform 是 scale(COS,-1)，
+  // 所以 getBBox() 拿到的是經緯度，要自己換算到 px/py 空間。
+  let bb;
+  try { bb = node.getBBox(); } catch(_) { bb = null; }
+  if(!bb || !bb.width || !bb.height) return fallback();
+  const w = bb.width * COS, h = bb.height;
+  const cx = (bb.x + bb.width/2) * COS, cy = -(bb.y + bb.height/2);
+  centreOn(cx, cy, Math.min(VB.w*FOCUS_FILL/w, VB.h*FOCUS_FILL/h));
 }
 
 // ---- 圖例：數量與細分開關 ----
@@ -436,7 +464,11 @@ function goto(pc){
   clearHits();
   select(pc);
   const d = byPc.get(pc);
-  if(d && d.rec) focusOn(d.rec, Math.max(k, 6));
+  if(!d || !d.rec) return;
+  // 沒有對應面的郵區（信箱型）只有一個點，量不出範圍，退回固定倍率
+  const toPoint = () => centreOn(px(d.rec[1]), py(d.rec[2]), Math.max(k, 8));
+  if(d.node && !d.stray) focusOnNode(d.node, toPoint);
+  else toPoint();
 }
 
 function showHits(list, term){

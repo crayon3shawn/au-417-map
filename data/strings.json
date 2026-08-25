@@ -433,10 +433,6 @@
       "zh": "{state}還沒做地圖。上面的判斷仍然有效。",
       "en": "There is no map for {state} yet. The verdict above still applies."
     },
-    "p_where": {
-      "zh": "{name}，{state}",
-      "en": "{name}, {state}"
-    },
     "p_list_sep": {
       "zh": "、",
       "en": ", "
