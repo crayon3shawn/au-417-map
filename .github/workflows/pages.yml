@@ -37,11 +37,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 取出穩定版（main）
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: main
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.11'
 
@@ -54,7 +54,7 @@ jobs:
 
       - name: 取出開發版（dev）
         id: devsrc
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         continue-on-error: true
         with:
           ref: dev
@@ -79,7 +79,7 @@ jobs:
           # 自己加的 noindex meta。等綁了自訂網域這個檔才會生效。
           printf 'User-agent: *\nDisallow: /dev/\n' > /tmp/site/robots.txt
 
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: /tmp/site
 
@@ -91,4 +91,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
