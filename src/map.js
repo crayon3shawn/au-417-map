@@ -59,11 +59,13 @@ const padX=(x1-x0)*0.04, padY=(y1-y0)*0.04, padE=(x1-x0)*0.13;  // 東側多留�
 const VB={x:x0-padX, y:y0-padY, w:(x1-x0)+padX+padE, h:(y1-y0)+padY*2};
 // 字級與點徑以「目標螢幕像素」定義，再換算成世界單位。
 // 各州的視野比例不同（QLD 貼高度、NSW 貼寬度），寫死世界單位會讓字忽大忽小。
-const PX = {lbl1:11.5, lbl2:9.5, dot1:3.2, dot2:2.3, halo:1.5, gap:5, trop:8.5, stray:2.2};
+const PX = {lbl1:11.5, lbl2:9.5, dot1:3.2, dot2:2.3, halo:1.5, gap:5, trop:8.5, stray:2.2,
+            ring:21, ringhalo:5};
 const SZ = {};
+let perUnit = 1;                  // k=1 時，一個世界單位有幾個螢幕像素
 function sizeToViewport(){
   const r = svg.getBoundingClientRect();
-  const perUnit = Math.min(r.width / VB.w, r.height / VB.h) || 1;   // preserveAspectRatio meet
+  perUnit = Math.min(r.width / VB.w, r.height / VB.h) || 1;   // preserveAspectRatio meet
   for(const key in PX) SZ[key] = PX[key] / perUnit;
 }
 svg.setAttribute('viewBox', `${VB.x} ${VB.y} ${VB.w} ${VB.h}`);
@@ -108,6 +110,26 @@ function colorOf(f, split){
 
 const areasG = el('g',{}); proj.appendChild(areasG);    // 郵區面（原始經緯度）
 const strayG = el('g',{}); over.appendChild(strayG);    // 沒有邊界面的郵區，以小點代替
+// 選取環。郵區小到在畫面上只有幾個像素時，白色描邊根本看不出來，而放大到
+// 看得見又會讓概化邊界露餡（見 MIN_SPAN）。所以改成標一個畫面尺寸固定的環，
+// 位置永遠看得到，地圖也不必放到失真。
+const ringG = el('g',{class:'ring'}); over.appendChild(ringG);
+const ringHalo = el('circle',{class:'ringhalo'}); ringG.appendChild(ringHalo);
+const ringDot  = el('circle',{class:'ringline'}); ringG.appendChild(ringDot);
+ringG.setAttribute('visibility','hidden');
+
+// 選取的郵區在世界座標下的最長邊。0 代表沒有選取或量不出來（信箱型郵區）。
+let selSize = -1;
+
+// 小於這個像素數就加標選取環。40px 大約是一眼掃過去還找得到的下限。
+const RING_BELOW = 40;
+
+// 環該不該出現取決於「目前畫面上有多大」，所以縮放與改變視窗大小都要重算，
+// 由 apply() 呼叫。這裡只做算術，不碰 getBBox——那是每幀都會跑的路徑。
+function updateRing(){
+  const show = selSize === 0 || (selSize > 0 && selSize * k * perUnit < RING_BELOW);
+  ringG.setAttribute('visibility', show ? 'visible' : 'hidden');
+}
 const byPc = new Map();
 const flagOf = new Map(Object.entries(FLAGS).map(([pc, f]) => [+pc, f]));
 
@@ -167,6 +189,9 @@ for(const [name, lon, lat, tier, side] of CITIES){
   cityG.appendChild(g);
   cityNodes.push(g);
 }
+// 選取環要蓋在城市標記上面——市區郵區的環幾乎一定會跟城市點重疊，
+// 被蓋住就失去意義。over 的子節點按加入順序疊，所以搬到最後。
+over.appendChild(ringG);
 
 // ---- 平移縮放 ----
 let k=1, tx=0, ty=0;
@@ -184,6 +209,10 @@ function apply(){
     if(c.tier===2) g.classList.toggle('on', k >= 2);
   }
   for(const s of strayG.children) s.setAttribute('r', SZ.stray/k);
+  ringHalo.setAttribute('r', SZ.ring/k);
+  ringDot.setAttribute('r', SZ.ring/k);
+  ringHalo.setAttribute('stroke-width', SZ.ringhalo/k);
+  updateRing();          // 放大到郵區本身夠明顯之後，環就該退場
   if(tlbl){
     tlbl.setAttribute('font-size', SZ.trop/k);
     tlbl.setAttribute('x', VB.x + SZ.gap/k);
@@ -304,13 +333,14 @@ document.getElementById('zrst').onclick = () => { k=1; tx=0; ty=0; apply(); };
 // 縮放上限用「畫面上至少要看得到多寬的地面」定義，不用固定倍率——各州的
 // viewBox 大小差好幾倍，固定 40 倍在面積大的州放不夠（市區郵區只有兩三
 // 公里，全州上千公里），面積小的州又放過頭。
-// 為什麼是 0.08（約 9 公里）：邊界是用 maxAllowableOffset=0.0015 度（約 165
-// 公尺）抓的概化圖層。放到「畫面寬度＝3 公里」時 1 像素約 5 公尺，那 165 公尺
-// 就變成 30 幾像素的鋸齒，相鄰郵區之間還會出現黑色縫隙——簡化後兩邊的邊界
-// 不再完全貼合。看起來像資料壞掉，比看不清楚更糟。
-// 9 公里寬時 1 像素約 15 公尺，概化誤差約 10 像素，還在可接受範圍。
-// 要再放大就得把 maxAllowableOffset 調小重抓，代價是頁面變大。
-const MIN_SPAN = 0.08;                          // 世界單位，約 9 公里
+// 為什麼要有下限：邊界是用 maxAllowableOffset=0.0015 度（約 165 公尺）抓的
+// 概化圖層。放得太大時那個誤差會變成幾十像素的鋸齒，相鄰郵區之間還會冒出
+// 黑色縫隙——簡化後兩邊的邊界不再貼合。看起來像資料壞掉，比看不清楚更糟。
+//
+// 0.25 世界單位約 28 公里，這時 1 像素約 48 公尺，概化誤差不到 4 像素，
+// 邊界還是乾淨的。小到這樣還看不清楚的郵區（市區那些）不靠放大解決，
+// 改用畫面尺寸固定的選取環標位置（見 markSelection）。
+const MIN_SPAN = 0.25;                          // 世界單位，約 28 公里
 const MAX_K = Math.max(40, VB.w / MIN_SPAN);
 
 // 置中到指定的世界座標與縮放倍率。倍率沿用平移縮放的上下限。
@@ -398,13 +428,31 @@ splitBox.addEventListener('change', () => {
 // ---- 詳情 ----
 const detail = document.getElementById('detail');
 
-function clearSel(){ if(selNode){ selNode.classList.remove('sel'); selNode = null; } }
+function clearSel(){
+  if(selNode){ selNode.classList.remove('sel'); selNode = null; }
+  selSize = -1;
+  ringG.setAttribute('visibility','hidden');
+}
+
+function markSelection(d){
+  if(!d || !d.rec){ selSize = -1; updateRing(); return; }
+  // 信箱型郵區只有一個點，量不出範圍，一律標環
+  selSize = 0;
+  if(!d.stray && d.node){
+    let bb; try { bb = d.node.getBBox(); } catch(_) { bb = null; }
+    if(bb && bb.width) selSize = Math.max(bb.width*COS, bb.height);
+  }
+  const cx = px(d.rec[1]), cy = py(d.rec[2]);
+  for(const c of ringG.children){ c.setAttribute('cx', cx); c.setAttribute('cy', cy); }
+  updateRing();
+}
 
 function select(pc){
   selPc = pc;
   clearSel();
   const d = byPc.get(pc);
-  if(d){ d.node.classList.add('sel'); selNode = d.node; d.node.parentNode.appendChild(d.node); }
+  if(d){ d.node.classList.add('sel'); selNode = d.node; d.node.parentNode.appendChild(d.node);
+         markSelection(d); }
 
   if(!d || !d.rec){
     const names = OTHER[pc];
@@ -469,6 +517,7 @@ function goto(pc){
   const toPoint = () => centreOn(px(d.rec[1]), py(d.rec[2]), Math.max(k, 8));
   if(d.node && !d.stray) focusOnNode(d.node, toPoint);
   else toPoint();
+  markSelection(d);        // 要在縮放之後判斷，畫面尺寸取決於 k
 }
 
 function showHits(list, term){

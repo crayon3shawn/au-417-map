@@ -146,6 +146,12 @@ svg.map.drag{cursor:grabbing}
 .poa:hover{fill-opacity:.92;stroke:var(--ink-3);stroke-width:1.4}
 .poa.sel{stroke:var(--ink);stroke-width:2.2;fill-opacity:.95}
 .stray{fill:var(--ink-3);stroke:var(--halo);stroke-width:1;cursor:pointer}
+/* 選取環：郵區太小時用它標位置。畫面尺寸固定（半徑在 apply() 裡除以 k），
+   所以無論放多大都是同樣大小。halo 墊在下面，讓它在深淺兩種填色上都看得見。
+   pointer-events:none 才不會擋住底下郵區的點擊。 */
+.ring{pointer-events:none}
+.ringhalo{fill:none;stroke:var(--halo);opacity:.75}
+.ringline{fill:none;stroke:var(--ink);stroke-width:2.2;vector-effect:non-scaling-stroke}
 .city circle{fill:var(--ink);stroke:var(--halo);stroke-linejoin:round}
 .city text{fill:var(--ink);font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
   paint-order:stroke;stroke:var(--halo);stroke-linejoin:round}
