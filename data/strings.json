@@ -192,6 +192,14 @@
     "disclaimer": {
       "zh": "非移民建議。郵區界線為 ABS 概化資料，僅供判讀；送件前務必以 Home Affairs 官方頁面為準。",
       "en": "Not migration advice. Boundaries are ABS generalised data, for orientation only. Always check the official Home Affairs page before you apply."
+    },
+    "dev_banner": {
+      "zh": "開發版 · 資料與判定可能不正確，正式版請看 ",
+      "en": "Development build — data and verdicts may be wrong. Stable version: "
+    },
+    "dev_stable_link": {
+      "zh": "穩定版",
+      "en": "stable site"
     }
   }
 }

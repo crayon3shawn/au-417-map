@@ -1,7 +1,7 @@
 # 建置並部署到 GitHub Pages，一個站台兩個版本：
 #
 #   /        main 分支，穩定版
-#   /dev/    dev  分支，開發版
+#   /dev/    dev  分支，開發版（有橫幅與 noindex）
 #
 # Pages 一次只能部署一份成品，所以這裡把兩個分支都建出來再一起送。
 # 推任一分支都會重建兩者，不會有一邊卡在舊版。
@@ -14,6 +14,11 @@ on:
   push:
     branches: [main, dev]
   workflow_dispatch:
+
+# 自訂網域。GitHub 只認這個檔，但瀏覽器還要 DNS 那筆 CNAME 才找得到，
+# 兩邊都要設。留空字串就用預設的 <帳號>.github.io/<repo>/。
+env:
+  CUSTOM_DOMAIN: 417.chengche.one
 
 permissions:
   contents: read
@@ -45,6 +50,7 @@ jobs:
           cp dist/*.html /tmp/site/
 
       - name: 取出開發版（dev）
+        id: devsrc
         uses: actions/checkout@v4
         continue-on-error: true
         with:
@@ -52,14 +58,21 @@ jobs:
           path: devsrc
 
       - name: 建置開發版
+        if: steps.devsrc.outcome == 'success'
+        env:
+          CHANNEL: dev
         run: |
-          if [ -d devsrc ]; then
-            make -C devsrc all
-            mkdir -p /tmp/site/dev
-            cp devsrc/dist/*.html /tmp/site/dev/
-          else
-            echo "沒有 dev 分支，略過"
+          make -C devsrc all
+          mkdir -p /tmp/site/dev
+          cp devsrc/dist/*.html /tmp/site/dev/
+
+      - name: 加上 CNAME 與 robots.txt
+        run: |
+          if [ -n "$CUSTOM_DOMAIN" ]; then
+            echo "$CUSTOM_DOMAIN" > /tmp/site/CNAME
           fi
+          # 開發版擋索引，免得搜尋「417 集簽」跳出開發版而不是正式版
+          printf 'User-agent: *\nDisallow: /dev/\n' > /tmp/site/robots.txt
 
       - uses: actions/upload-pages-artifact@v3
         with:

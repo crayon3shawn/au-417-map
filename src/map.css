@@ -204,3 +204,10 @@ svg.map.drag{cursor:grabbing}
 .count b{font-family:"IBM Plex Mono",monospace;color:var(--ink);font-weight:600;font-size:14px}
 @media (max-width:560px){ .count{display:none} }
 @media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+
+/* 開發版橫幅：細細一條，夠明顯但不佔版面 */
+.devbar{position:sticky;top:0;z-index:20;padding:3px 12px;text-align:center;
+  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
+  font-size:11.5px;letter-spacing:.06em;line-height:1.5;
+  background:var(--c-rebuild);color:#1a1205}
+.devbar a{color:#1a1205;text-decoration:underline}

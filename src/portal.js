@@ -165,6 +165,18 @@ for(const s of STATES){
 }
 }
 
+// ---- 開發版橫幅 ----
+if(DATA.meta.channel === 'dev'){
+  const bar = document.getElementById('devbar');
+  if(bar){
+    bar.hidden = false;
+    bar.innerHTML = '開發版 · 資料與判定可能不正確，正式版請看 <a href="../">穩定版</a>';
+  }
+  const m = document.createElement('meta');
+  m.name = 'robots'; m.content = 'noindex, nofollow';
+  document.head.appendChild(m);
+}
+
 // ---- 依據：五張表的大小、產業對應 ----
 const COV = DATA.area_coverage, INDS = DATA.industries;
 const COV_LABEL = {regional:'Regional Australia', remote:'Remote and Very Remote',

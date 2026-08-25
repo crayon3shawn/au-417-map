@@ -38,6 +38,23 @@ Pages 一次只能部署一份成品，所以 workflow 把兩個分支都建出�
 
 開發流程：改東西推 `dev` → 看 `/dev/` 確認 → merge 到 `main`。
 
+開發版會多一條細橫幅與 `noindex`，站台根目錄的 `robots.txt` 也擋掉 `/dev/`——
+開發版在 Pages 上是公開的，擋不了人進來，但要擋住搜尋引擎，也要讓人一眼
+知道那不是正式版。
+
+### 自訂網域
+
+workflow 的 `CUSTOM_DOMAIN` 會產生 `CNAME` 檔。但**只有這個不夠**——
+還要在 DNS 加一筆記錄，兩邊都設才會通：
+
+```
+類型    名稱   值
+CNAME   417    <帳號>.github.io
+```
+
+GitHub 只能決定「這個網域指到哪個 repo」，瀏覽器要先透過 DNS 找到 GitHub 的
+伺服器。HTTPS 憑證 GitHub 會自動申請。
+
 產出五頁，各自獨立（`dist/` 不進版控，由 `make all` 產生）：
 
 | 頁面 | 內容 | 大小 |

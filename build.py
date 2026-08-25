@@ -119,6 +119,10 @@ def categorise(rings, flags, mask):
 #   artifact －－ 用 data/artifacts.json 裡的絕對網址。那個檔不進版控
 #              （裡面是私人的 Artifact 連結），所以只有本機才建得出來。
 TARGET = os.environ.get("TARGET", "pages")
+
+# 發佈管道。dev 會多一條細橫幅與 noindex——開發版在 Pages 上是公開的，
+# 要擋的是「被搜尋引擎索引」和「有人誤以為那是正式版」，不是擋人進來。
+CHANNEL = os.environ.get("CHANNEL", "stable")
 ARTIFACTS = ROOT / "data" / "artifacts.json"
 STATE_ORDER = ["qld", "nsw", "vic", "wa"]
 
@@ -243,6 +247,7 @@ def main(state):
                   f" · 邊界 ABS POA 2021 · 建置 {pcdata['fetched_at'][:10]}"),
         "state_label": LABELS.get(state, STATES[state]["name"]),
         "state_abbr": state.upper(),
+        "channel": CHANNEL,
         "source_url": src[VISA]["url"],
         "strings": load(ROOT / "data" / "strings.json")["s"],
         "state_name_en": STATES[state]["name"],

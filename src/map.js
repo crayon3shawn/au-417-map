@@ -495,6 +495,24 @@ function fromHash(){
 addEventListener('hashchange', fromHash);
 fromHash();
 
+// ---- 開發版橫幅 ----
+// 開發版在 Pages 上是公開的（/dev/），擋不了人進來，但要讓人一眼知道
+// 這不是正式版，也要擋住搜尋引擎索引。
+if(META.channel === 'dev'){
+  const bar = document.getElementById('devbar');
+  if(bar){
+    bar.hidden = false;
+    bar.textContent = T('dev_banner');
+    const a = document.createElement('a');
+    a.href = '../';                       // /dev/ 的上一層就是穩定版
+    a.textContent = T('dev_stable_link');
+    bar.appendChild(a);
+  }
+  const m = document.createElement('meta');
+  m.name = 'robots'; m.content = 'noindex, nofollow';
+  document.head.appendChild(m);
+}
+
 // ---- 語言切換 ----
 const langBtn = document.getElementById('lang');
 
@@ -520,6 +538,13 @@ function applyLang(){
   }
   document.getElementById('excluded').textContent =
     lang === 'zh' ? META.excluded_note : (META.excluded_note_en || '');
+  const bar = document.getElementById('devbar');
+  if(bar && !bar.hidden){
+    bar.textContent = T('dev_banner');
+    const a = document.createElement('a');
+    a.href = '../'; a.textContent = T('dev_stable_link');
+    bar.appendChild(a);
+  }
   langBtn.textContent = lang === 'zh' ? 'EN' : '中文';
   langBtn.setAttribute('aria-label', lang === 'zh' ? 'Switch to English' : '切換為中文');
   applyIndustry();
