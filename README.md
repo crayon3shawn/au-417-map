@@ -13,6 +13,31 @@ make test     # 跑測試（不連網）
 make serve    # 建置並在 http://127.0.0.1:8731/index.html 預覽
 ```
 
+## 建置目標
+
+| | 頁面之間的連結 | 用在哪 |
+|---|---|---|
+| `make all`（預設）| 相對路徑 `qld.html` | GitHub Pages。同站台原地跳轉 |
+| `TARGET=artifact make all` | `data/artifacts.json` 的絕對網址 | 發佈成 Claude Artifact |
+
+`data/artifacts.json` **不進版控**——裡面是私人的 Artifact 連結，推上公開 repo
+等於把「知道網址就能看」的頁面攤開。所以 `TARGET=artifact` 只有本機建得出來。
+
+## 部署
+
+推上 GitHub 之後，`.github/workflows/pages.yml` 會建置、跑測試、部署到 Pages，
+一個站台兩個版本：
+
+```
+/        main 分支，穩定版
+/dev/    dev  分支，開發版
+```
+
+Pages 一次只能部署一份成品，所以 workflow 把兩個分支都建出來再一起送。
+推任一分支都會重建兩者，不會有一邊卡在舊版。
+
+開發流程：改東西推 `dev` → 看 `/dev/` 確認 → merge 到 `main`。
+
 產出五頁，各自獨立（`dist/` 不進版控，由 `make all` 產生）：
 
 | 頁面 | 內容 | 大小 |
