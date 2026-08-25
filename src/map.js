@@ -355,15 +355,23 @@ function centreOn(cx, cy, nk){
 // 固定倍率一定有一邊不對：小的看不到，大的爆框。所以依實際範圍算。
 // 目標是讓郵區佔視野約六成，留點周邊當參考。
 const FOCUS_FILL = 0.6;
+// 把一個經緯度 bbox 放進視野。areasG 掛在 proj 底下（transform 是
+// scale(COS,-1)），所以 getBBox() 拿到的是經緯度，要自己換算到 px/py。
+function focusOnLonLatBox(x0, y0, x1, y1){
+  const w = (x1 - x0) * COS, h = y1 - y0;
+  if(!w || !h) return false;
+  centreOn((x0 + x1) / 2 * COS, -(y0 + y1) / 2,
+           Math.min(VB.w * FOCUS_FILL / w, VB.h * FOCUS_FILL / h));
+  return true;
+}
+
 function focusOnNode(node, fallback){
   // areasG 掛在 proj 底下，proj 的 transform 是 scale(COS,-1)，
   // 所以 getBBox() 拿到的是經緯度，要自己換算到 px/py 空間。
   let bb;
   try { bb = node.getBBox(); } catch(_) { bb = null; }
   if(!bb || !bb.width || !bb.height) return fallback();
-  const w = bb.width * COS, h = bb.height;
-  const cx = (bb.x + bb.width/2) * COS, cy = -(bb.y + bb.height/2);
-  centreOn(cx, cy, Math.min(VB.w*FOCUS_FILL/w, VB.h*FOCUS_FILL/h));
+  focusOnLonLatBox(bb.x, bb.y, bb.x + bb.width, bb.y + bb.height);
 }
 
 // ---- 圖例：數量與細分開關 ----
@@ -386,13 +394,19 @@ for(const i of META.industries){
   indSel.appendChild(o);
 }
 
+// 重上色只該換「判定」那一類 class。整個 setAttribute('class', …) 蓋掉的話，
+// 選取（sel）與行政區框選（inreg／outreg）會一起被洗掉——換產業時框選消失，
+// 而且載入時只要 applyLang 排在讀網址之後，框選根本畫不出來。
+const CAT_CLASS = ['work', 'rebuild', 'none'];
+function recolour(s, f, on){
+  s.classList.remove(...CAT_CLASS);
+  s.classList.add(catOf(f));
+  s.setAttribute('fill', colorOf(f, on));
+}
+
 function applyIndustry(){
   const on = splitBox.checked;
-  for(const s of areasG.children){
-    const f = byPc.get(s.__pc).f;
-    s.setAttribute('class', 'poa ' + catOf(f) + (s.classList.contains('sel') ? ' sel' : ''));
-    s.setAttribute('fill', colorOf(f, on));
-  }
+  for(const s of areasG.children) recolour(s, byPc.get(s.__pc).f, on);
   for(const s of strayG.children){
     const f = byPc.get(s.__pc).f;
     s.setAttribute('fill', colorOf(f, on));
@@ -417,6 +431,7 @@ function applyIndustry(){
   document.getElementById('fact1').textContent = T('fact1_body', {ind: indLabel(), tables});
   splitBox.closest('.lgtoggle').style.display = c.rebuild ? '' : 'none';
   if(selPc !== null) select(selPc);
+  else renderRegionPanel();
 }
 
 indSel.addEventListener('change', () => {
@@ -521,6 +536,7 @@ function clearHits(){ hits.innerHTML = ''; }
 
 function goto(pc){
   clearHits();
+  clearRegion();
   select(pc);
   const d = byPc.get(pc);
   if(!d || !d.rec) return;
@@ -586,8 +602,61 @@ q.addEventListener('input', () => {
 });
 
 // 從入口頁帶郵區進來：#pc=4870
+// ---- 框選行政區 ----
+// 入口頁點「在地圖上框出來」會帶著 #lga=<名稱>|<郵區,郵區,…> 過來。郵區清單
+// 直接放在網址裡，州頁就不必多存一份行政區對照表（NSW 的 LGA 界線本身要
+// 355 KB，而我們要的只是「哪些郵區屬於它」，那個資訊清單裡就有了）。
+let regPcs = null, regName = '';
+function clearRegion(){
+  if(!regPcs) return;
+  regPcs = null; regName = '';
+  for(const [, d] of byPc) if(d.node) d.node.classList.remove('inreg', 'outreg');
+  detail.innerHTML = `<div class="empty">${esc(T('detail_empty'))}</div>`;
+}
+
+// 面板內容跟框選本身分開：切語言／換產業要重畫文字，但不該把視野拉回去。
+function renderRegionPanel(){
+  if(!regPcs) return;
+  detail.innerHTML =
+    `<div class="hd"><span class="rgn">${esc(regName)}</span></div>`
+    + `<div class="bd"><div class="rgnsub">${esc(T('map_reg_sub', {n: regPcs.size}))}</div>`
+    + `<button type="button" class="rgnclr" id="rgnclr">${esc(T('map_reg_clear'))}</button></div>`;
+  const btn = document.getElementById('rgnclr');
+  if(btn) btn.addEventListener('click', () => { location.hash = ''; clearRegion(); });
+}
+
+function showLga(name, pcs){
+  const members = new Set(pcs);
+  regPcs = members; regName = name;
+  let x0=1e9, y0=1e9, x1=-1e9, y1=-1e9, n=0;
+  for(const [pc, d] of byPc){
+    if(!d.node) continue;
+    const inn = members.has(pc);
+    d.node.classList.toggle('inreg', inn);
+    d.node.classList.toggle('outreg', !inn);
+    if(!inn || d.stray) continue;
+    let bb; try { bb = d.node.getBBox(); } catch(_) { continue; }
+    if(!bb || !bb.width) continue;
+    x0 = Math.min(x0, bb.x); y0 = Math.min(y0, bb.y);
+    x1 = Math.max(x1, bb.x + bb.width); y1 = Math.max(y1, bb.y + bb.height);
+    n++;
+  }
+  clearSel();
+  selPc = null;
+  if(n) focusOnLonLatBox(x0, y0, x1, y1);
+  renderRegionPanel();
+}
+
 function fromHash(){
-  const m = /pc=(\d{3,4})/.exec(location.hash || '');
+  const h = location.hash || '';
+  const lga = /lga=([^&]*)/.exec(h);
+  if(lga){
+    const [name, list] = decodeURIComponent(lga[1]).split('|');
+    const pcs = (list || '').split(',').map(Number).filter(Boolean);
+    if(pcs.length){ showLga(name, pcs); return; }
+  }
+  clearRegion();
+  const m = /pc=(\d{3,4})/.exec(h);
   if(!m) return;
   q.value = m[1];
   doSearch();

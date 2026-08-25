@@ -299,6 +299,13 @@ function showRegion(r){
   const cat = n.rebuild === 0 && n.none === 0 ? 'work'
             : n.work === 0 && n.none === 0    ? 'rebuild'
             : n.work === 0 && n.rebuild === 0 ? 'none' : null;
+  // 郵區清單直接放進網址，州頁就不必多存一份行政區對照表
+  const st = stateOf(r.st);
+  const mapLink = (st && st.url)
+    ? `<a class="golink" href="${st.url}#lga=${encodeURIComponent(r.name + '|' + r.pcs.join(','))}"`
+      + `${/^https?:/.test(st.url) ? ' target="_blank" rel="noopener"' : ''}>`
+      + `${esc(T('p_reg_open_map', {state: stLabel(st)}))}</a>`
+    : '';
   // 判定不一致時沒有代表色可用。用 --line-2 會讓標題比內文還淡、主次顛倒，
   // 所以退回一般文字色，而不是更淡的線條色。
   show(`<div class="verdict region" style="--vc:${cat ? CAT_COLOR[cat] : 'var(--ink)'}">
@@ -313,6 +320,7 @@ function showRegion(r){
           <span style="--sw:var(--c-rebuild)"><i></i>${esc(T('p_leg_rebuild'))} <b>${n.rebuild}</b></span>
           <span style="--sw:var(--c-none)"><i></i>${esc(T('p_leg_none'))} <b>${n.none}</b></span>
         </div>
+        ${mapLink}
       </div>
     </div>`);
   clearHits();

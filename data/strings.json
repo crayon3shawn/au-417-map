@@ -520,6 +520,18 @@
     "p_reg_mixed": {
       "zh": "這個區域內的判定不一致，要看是哪一個郵區。",
       "en": "Verdicts differ within this area — it depends which postcode."
+    },
+    "p_reg_open_map": {
+      "zh": "在{state}地圖上框出來 →",
+      "en": "Outline it on the {state} map →"
+    },
+    "map_reg_sub": {
+      "zh": "這個行政區涵蓋 {n} 個郵區，其餘郵區已淡化。點任一塊看它的判定。",
+      "en": "This area covers {n} postcodes; everything else is dimmed. Tap any one for its verdict."
+    },
+    "map_reg_clear": {
+      "zh": "清除框選",
+      "en": "Clear outline"
     }
   }
 }

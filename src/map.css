@@ -148,6 +148,18 @@ svg.map.drag{cursor:grabbing}
 .poa.none{fill-opacity:calc(var(--fill-a) * .55)}
 .poa:hover{fill-opacity:.92;stroke:var(--ink-3);stroke-width:1.4}
 .poa.sel{stroke:var(--ink);stroke-width:2.2;fill-opacity:.95}
+/* 框選行政區：淡化非成員比替成員加外框更能讀成「一個區域」——外框會跟郵區
+   本身的邊界混在一起。成員之間的分界留著，那是有意義的（同一個行政區內的
+   郵區判定可以不一樣）。 */
+.poa.outreg{fill-opacity:.1;stroke-opacity:.25}
+.poa.inreg{fill-opacity:.9;stroke:var(--ink);stroke-width:1.2}
+.card .rgn{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
+  font-weight:700;font-size:17px;letter-spacing:.01em}
+.rgnsub{font-size:12.5px;line-height:1.55;color:var(--ink-2)}
+.rgnclr{align-self:flex-start;appearance:none;cursor:pointer;font:inherit;font-size:12px;
+  padding:5px 11px;border:1px solid var(--line-2);border-radius:3px;
+  background:var(--surface);color:var(--ink-2)}
+.rgnclr:hover{background:var(--sunk);color:var(--ink)}
 .stray{fill:var(--ink-3);stroke:var(--halo);stroke-width:1;cursor:pointer}
 /* 選取環：郵區太小時用它標位置。畫面尺寸固定（半徑在 apply() 裡除以 k），
    所以無論放多大都是同樣大小。halo 墊在下面，讓它在深淺兩種填色上都看得見。
