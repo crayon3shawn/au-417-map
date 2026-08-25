@@ -75,6 +75,8 @@ body{
 .indnote b{color:var(--ink-2);font-weight:600}
 /* 官方對每個產業的範圍有明確定義，搞錯會被拒——所以直接寫在選單下面 */
 .scope{display:block;margin-top:4px;padding-left:8px;border-left:2px solid var(--line);color:var(--ink-3)}
+.scope a{display:inline-block;margin-top:3px;color:var(--ink-2);white-space:nowrap}
+.scope a:hover{color:var(--c-work)}
 .srch{display:flex}
 .srch input{flex:1;min-width:0;font-family:"IBM Plex Mono",monospace;font-size:14px;
   padding:8px 10px;border:1px solid var(--line-2);border-radius:3px;background:var(--paper);color:var(--ink)}
@@ -591,8 +593,12 @@ function applyIndustry(){
   document.getElementById('r-none').style.display = c.none ? '' : 'none';
   const tables = areasOf(industry.mask).join(' ＋ ');
   document.getElementById('n-work-label').textContent = `一般${industry.label}工作就算`;
+  // 範圍是官方定義的中文摘要，不是官方文字，所以一定要附原文連結讓人核對
   indNote.innerHTML = `看的是 <b>${esc(tables)}</b> 這張表。`
-    + (industry.scope ? `<br><span class="scope">${esc(industry.scope)}</span>` : '');
+    + (industry.scope
+        ? `<span class="scope">${esc(industry.scope)}`
+          + `<a href="${META.source_url}" target="_blank" rel="noopener">官方定義 →</a></span>`
+        : '');
   document.getElementById('subind').textContent = `目前顯示：${industry.label}`;
   document.getElementById('fact1').textContent =
     `${industry.label}在 ${tables} 郵區內的工作才算集簽。`;

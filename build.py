@@ -206,6 +206,7 @@ def main(state):
                   f" · 邊界 ABS POA 2021 · 建置 {pcdata['fetched_at'][:10]}"),
         "state_label": LABELS.get(state, STATES[state]["name"]),
         "state_abbr": state.upper(),
+        "source_url": src[VISA]["url"],
         "nav": nav_links(state),
         "excluded_note": EXCLUDED.get(state, ""),
         "bbox": bbox([r for rs in rings.values() for r in rs]),

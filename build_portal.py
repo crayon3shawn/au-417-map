@@ -127,6 +127,7 @@ def main():
         "industry": DEFAULT_INDUSTRY,
         "area_coverage": area_coverage(pcdata, {int(p) for p in index}),
         "meta": {
+            "source_url": pcdata["sources"][VISA]["url"],
             "visa": VISA,
             "stamp": (f"郵區清單 Home Affairs {pcdata['sources'][VISA]['page_last_updated']}"
                       f" · 州界 ABS/公開資料 · 建置 {pcdata['fetched_at'][:10]}"),

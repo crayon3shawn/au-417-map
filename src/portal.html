@@ -144,6 +144,9 @@ table.imap td.sc{color:var(--ink-3);font-size:11.5px;min-width:260px}
 table.imap th[scope="row"] em{display:block;font-style:normal;font-weight:400;
   font-size:10.5px;color:var(--ink-3);letter-spacing:0}
 table.imap .diff{color:var(--c-rebuild);font-weight:700}
+.basis-note2{margin:0 0 10px;font-size:12px;line-height:1.6;color:var(--ink-3)}
+.basis-note2 a{color:var(--ink-2)}
+.indrow a{color:var(--ink-2);white-space:nowrap}
 .basis-note{margin:14px 0 0;font-size:12.5px;line-height:1.6;color:var(--ink-2);
   border-left:3px solid var(--c-work);padding-left:11px}
 .prov{margin-top:20px}
@@ -204,6 +207,9 @@ table.imap .diff{color:var(--c-rebuild);font-weight:700}
       每個產業各自對應到其中一張或幾張——所以「哪裡算集簽」完全取決於你做什麼行業。</p>
 
     <div class="cov" id="cov"></div>
+
+    <p class="basis-note2">下表的「範圍」是官方定義與例示的中文摘要，不是官方文字。
+      判斷不確定時請以 <a href="https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work" target="_blank" rel="noopener">Home Affairs 原文</a> 為準。</p>
 
     <div class="tblwrap">
       <table class="imap" id="imap">
@@ -286,6 +292,7 @@ for(const i of DATA.industry_masks){
 }
 function applyIndustry(){
   document.getElementById('indnote').innerHTML = esc(industry.scope || '')
+    + ` <a href="${DATA.meta.source_url}" target="_blank" rel="noopener">官方定義 →</a>`
     + `<br><span class="dim">切換行業會改變下面的判定與各州統計。</span>`;
   drawStates();
   drawCards();
