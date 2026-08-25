@@ -62,3 +62,31 @@ if __name__ == "__main__":
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class TestRobotsMeta(unittest.TestCase):
+    """開發版是公開的，靠這行 meta 擋搜尋引擎收錄。
+
+    robots.txt 在專案站台的子路徑下讀不到，所以它是唯一真正在擋的東西——
+    掉了不會有任何錯誤，只會安靜地被 Google 收錄，所以這裡把它釘住。
+    """
+
+    def _with_channel(self, channel):
+        old = build.CHANNEL
+        build.CHANNEL = channel
+        try:
+            return build.robots_meta()
+        finally:
+            build.CHANNEL = old
+
+    def test_開發版有noindex(self):
+        self.assertIn("noindex", self._with_channel("dev"))
+
+    def test_穩定版沒有(self):
+        self.assertEqual("", self._with_channel("stable"))
+
+    def test_必須是寫死在html不是靠JS插入(self):
+        for src in ("src/map.js", "src/portal.js"):
+            self.assertNotIn("noindex", (ROOT / src).read_text(encoding="utf-8"), src)
+        for tpl in ("src/template.html", "src/portal.html"):
+            self.assertIn("__ROBOTS__", (ROOT / tpl).read_text(encoding="utf-8"), tpl)

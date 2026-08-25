@@ -508,9 +508,6 @@ if(META.channel === 'dev'){
     a.textContent = T('dev_stable_link');
     bar.appendChild(a);
   }
-  const m = document.createElement('meta');
-  m.name = 'robots'; m.content = 'noindex, nofollow';
-  document.head.appendChild(m);
 }
 
 // ---- 語言切換 ----

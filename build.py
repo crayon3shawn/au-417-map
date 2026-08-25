@@ -124,6 +124,17 @@ TARGET = os.environ.get("TARGET", "pages")
 # 要擋的是「被搜尋引擎索引」和「有人誤以為那是正式版」，不是擋人進來。
 CHANNEL = os.environ.get("CHANNEL", "stable")
 ARTIFACTS = ROOT / "data" / "artifacts.json"
+
+
+def robots_meta():
+    """開發版擋搜尋引擎收錄的 meta，建置時就寫進 head。
+
+    不留給 JS 去插入：爬蟲不保證會執行 JS。而 robots.txt 只有放在網域根目錄
+    才會被讀到，站台掛在 /<repo>/ 底下時那個檔是無效的，所以這行 meta 是
+    唯一真正在擋的東西。
+    """
+    return '<meta name="robots" content="noindex, nofollow">\n' if CHANNEL == "dev" else ""
+
 STATE_ORDER = ["qld", "nsw", "vic", "wa"]
 
 
@@ -286,7 +297,8 @@ def main(state):
                            -1 if c.get("side") == "l" else 1] for c in cities]}
 
     html = (ROOT / "src" / "template.html").read_text(encoding="utf-8")
-    for token, value in (("__TOKENS__", tokens_css()),
+    for token, value in (("__ROBOTS__", robots_meta()),
+                         ("__TOKENS__", tokens_css()),
                          ("__CSS__", part("map.css")),
                          ("__JS__", part("map.js").replace("// @ts-check\n", "", 1)),
                          ("__TITLE__", TITLES.get(state, f"{STATES[state]['name']} 417 集簽地圖")),

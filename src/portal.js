@@ -172,9 +172,6 @@ if(DATA.meta.channel === 'dev'){
     bar.hidden = false;
     bar.innerHTML = '開發版 · 資料與判定可能不正確，正式版請看 <a href="../">穩定版</a>';
   }
-  const m = document.createElement('meta');
-  m.name = 'robots'; m.content = 'noindex, nofollow';
-  document.head.appendChild(m);
 }
 
 // ---- 依據：五張表的大小、產業對應 ----
