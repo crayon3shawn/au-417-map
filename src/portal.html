@@ -1,64 +1,68 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-__ROBOTS__<title>澳洲 417 集簽地圖</title>
+__ROBOTS__<title>澳洲 417 集簽地圖 · Australia 417 Visa Map</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap">
 <style>__TOKENS__
 __CSS__</style>
 
+<!-- 文字一律由 portal.js 從 strings.json 填入，兩種語言共用同一份樣板。
+     data-t 是內容，data-t-ph／data-t-aria 是屬性。這裡不寫死任何一種語言的
+     字，否則改字要改兩個地方，遲早會漂掉。 -->
 <div class="devbar" id="devbar" hidden></div>
 <div class="wrap">
   <header>
-    <h1>澳洲 417 集簽地圖</h1>
-    <p class="lede"><strong>417</strong> 打工度假簽證的集簽合格郵遞區號。
-      選你的行業、輸入郵遞區號或地名，馬上知道算不算，或直接進各州地圖看整體分布。
-      <span class="lede-note">（462 的產業規則不同，不適用。）</span></p>
-    <p class="disclaim">非移民建議。郵區界線為 ABS 概化資料，僅供判讀；送件前務必以
-      <a href="https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work" target="_blank" rel="noopener">Home Affairs 官方頁面</a>為準。</p>
+    <button class="lang" id="lang" type="button"></button>
+    <h1 data-t="p_title"></h1>
+    <p class="lede"><span data-t="p_lede"></span>
+      <span class="lede-note" data-t="p_lede_note"></span></p>
+    <p class="disclaim" id="disclaim"></p>
   </header>
 
   <section class="finder">
     <div class="indrow">
-      <label for="ind">你做哪一行</label>
-      <select id="ind" aria-label="選擇產業"></select>
+      <label for="ind" data-t="industry_label"></label>
+      <select id="ind" data-t-aria="p_ind_aria"></select>
       <span id="indnote"></span>
     </div>
-    <span class="eyebrow">查郵區或地名</span>
+    <span class="eyebrow" data-t="search_label"></span>
     <div class="qrow">
-      <input id="q" maxlength="30" placeholder="4870 或 Cairns" autocomplete="off"
-             aria-label="輸入郵遞區號或地名">
+      <input id="q" maxlength="30" autocomplete="off"
+             data-t-ph="search_ph" data-t-aria="p_q_aria">
     </div>
     <div class="result" id="result" role="status" aria-live="polite">
       <p class="hint" id="hint"></p>
     </div>
-    <div class="hits" id="hits" role="listbox" aria-label="搜尋結果"></div>
+    <div class="hits" id="hits" role="listbox" data-t-aria="p_hits_aria"></div>
   </section>
 
   <div class="cols">
     <section class="panel mapbox">
-      <span class="eyebrow">各州地圖</span>
+      <span class="eyebrow" data-t="p_eyebrow_maps"></span>
       <svg class="au" id="au" aria-labelledby="autitle"></svg>
     </section>
     <section class="panel">
-      <span class="eyebrow">郵區分布</span>
+      <span class="eyebrow" data-t="p_eyebrow_dist"></span>
       <div class="cards" id="cards"></div>
     </section>
   </div>
 
   <section class="basis">
-    <h2>這些區域是怎麼來的</h2>
-    <p class="basis-lede">Home Affairs 的頁面上有<strong>五張各自獨立的郵區表</strong>。
-      每個產業各自對應到其中一張或幾張——所以「哪裡算集簽」完全取決於你做什麼行業。</p>
+    <h2 data-t="p_basis_h2"></h2>
+    <p class="basis-lede" data-t="p_basis_lede"></p>
 
     <div class="cov" id="cov"></div>
 
-    <p class="basis-note2">下表的「範圍」是官方定義與例示的中文摘要，不是官方文字。
-      判斷不確定時請以 <a href="https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work" target="_blank" rel="noopener">Home Affairs 原文</a> 為準。</p>
+    <p class="basis-note2" id="basisnote"></p>
 
     <div class="tblwrap">
       <table class="imap" id="imap">
-        <thead><tr><th>產業</th><th>看哪張郵區表</th><th>範圍</th></tr></thead>
+        <thead><tr>
+          <th data-t="p_th_industry"></th>
+          <th data-t="p_th_table"></th>
+          <th data-t="p_th_scope"></th>
+        </tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -66,33 +70,32 @@ __CSS__</style>
     <p class="basis-note" id="samelist"></p>
 
     <div class="prov">
-      <h3>資料出處</h3>
+      <h3 data-t="p_prov_h3"></h3>
       <ul>
-        <li><b>五張郵區表</b>——從 Home Affairs 頁面逐字解析，不是人工轉錄。頁面上標的日期就是官網自己的更新日期。</li>
-        <li><b>郵區邊界</b>——ABS（澳洲統計局）官方 ASGS 2021 Postal Areas 概化圖層。</li>
-        <li><b>產業對應表</b>——<strong>這是唯一人工整理的部分</strong>。官網把它寫成散文（「construction in regional Australia」這種句子），沒有做成表，所以是我讀了逐條整理的。</li>
-        <li><b>三分類</b>（就算／只有重建算／不算）——由上面兩者算出來的，不是另一份資料。</li>
+        <li data-t="p_prov1"></li>
+        <li data-t="p_prov2"></li>
+        <li data-t="p_prov3"></li>
+        <li data-t="p_prov4"></li>
       </ul>
     </div>
   </section>
 
   <div class="notes">
     <div>
-      <h3>一般工地只認 regional</h3>
-      <p>建築業在 Regional Australia 郵區內的工作才算集簽。雪梨、墨爾本、布里斯本、黃金海岸這些都會區的郵區不在名單上。</p>
+      <h3 data-t="p_note1_h"></h3>
+      <p data-t="p_note1_b"></p>
     </div>
     <div>
-      <h3>災區是另一條路</h3>
-      <p>被宣告為災區的郵區，就算不在 regional 名單裡，做<strong>災後重建</strong>的土建、拆除、修繕、道路橋樑一樣算，志工也算。但同一個郵區的一般新建案不算。</p>
+      <h3 data-t="p_note2_h"></h3>
+      <p data-t="p_note2_b"></p>
     </div>
     <div>
-      <h3>只看 417</h3>
-      <p>本站處理的是 417（Working Holiday）。462（Work and Holiday）的地區表雖然目前跟 417 相同，但產業規則不同——462 沒有礦業這一項，漁業與林業只限 Northern Australia。拿 462 的人不要照這裡判斷。</p>
+      <h3 data-t="p_note3_h"></h3>
+      <p data-t="p_note3_b"></p>
     </div>
     <div>
-      <h3>出處與查證</h3>
-      <p>本站只處理 <b>417</b>（Working Holiday）。郵區清單逐字取自 <a href="https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work" target="_blank" rel="noopener">Home Affairs — Specified work</a>。
-        個別災害的宣告範圍與日期請對 <a href="https://www.disasterassist.gov.au/find-a-disaster" target="_blank" rel="noopener">Disaster Assist</a> 查證。送件前務必以官方頁面為準。</p>
+      <h3 data-t="p_note4_h"></h3>
+      <p id="note4"></p>
       <p class="stamp" id="stamp"></p>
     </div>
   </div>

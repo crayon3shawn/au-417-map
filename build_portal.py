@@ -116,19 +116,20 @@ def main():
 
     # 產業對應表直接從 industries.json 生成，頁面不寫死——對應改了頁面會跟著變
     ind = {"industries": inds}
-    AREA_LABEL = {"regional": "Regional Australia", "northern": "Northern Australia",
-                  "remote": "Remote and Very Remote", "bushfire": "大火宣告區",
-                  "disaster": "天災宣告區"}
     industries = []
     for key, v in ind["industries"].items():
         areas = v["areas"][VISA]
-        industries.append({"label": v["label"], "en": v["en"], "scope": v.get("scope", ""),
-                           "areas": None if areas is None else [AREA_LABEL[a] for a in areas]})
+        # 送 key 不送標籤：其中兩張表的名字要跟著介面語言變，前端才有得選。
+        industries.append({"label": v["label"], "label_en": v.get("label_en", v["en"]),
+                           "en": v["en"], "scope": v.get("scope", ""),
+                           "scope_en": v.get("scope_en", ""),
+                           "areas": None if areas is None else list(areas)})
 
     payload = {
         "industries": industries,
         "industry_masks": [
-            {"key": key, "label": v["label"], "scope": v.get("scope", ""),
+            {"key": key, "label": v["label"], "label_en": v.get("label_en", v["en"]),
+             "scope": v.get("scope", ""), "scope_en": v.get("scope_en", ""),
              "mask": work_mask(v["areas"][VISA])}
             for key, v in inds.items() if v["areas"][VISA]
         ],
@@ -138,8 +139,9 @@ def main():
             "source_url": pcdata["sources"][VISA]["url"],
             "channel": CHANNEL,
             "visa": VISA,
-            "stamp": (f"郵區清單 Home Affairs {pcdata['sources'][VISA]['page_last_updated']}"
-                      f" · 州界 ABS/公開資料 · 建置 {pcdata['fetched_at'][:10]}"),
+            "page_date": pcdata["sources"][VISA]["page_last_updated"],
+            "built_at": pcdata["fetched_at"][:10],
+            "strings": load(ROOT / "data" / "strings.json")["s"],
             "n_postcodes": len(entries),
             "n_maps": sum(1 for s in states if s["url"]),
         },

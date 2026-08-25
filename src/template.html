@@ -10,10 +10,10 @@ __CSS__</style>
 <div class="devbar" id="devbar" hidden></div>
 <div class="shell">
   <header class="bar">
-    <h1>__TITLE__</h1>
+    <h1 id="h1"></h1>
     <span class="sub"><span data-t="subtitle"></span> · <span id="subind"></span></span>
     <span class="spacer"></span>
-    <nav class="nav" id="nav" aria-label="切換地圖"></nav>
+    <nav class="nav" id="nav" data-t-aria="nav_aria"></nav>
     <button class="lang" id="lang" type="button"></button>
   </header>
   <p class="disclaim" data-t="disclaimer"></p>
@@ -24,18 +24,18 @@ __CSS__</style>
     <aside class="rail">
       <section class="blk">
         <span class="eyebrow" data-t="industry_label"></span>
-        <select id="ind" class="ind" aria-label="選擇產業"></select>
+        <select id="ind" class="ind" data-t-aria="p_ind_aria"></select>
         <p class="indnote" id="indnote"></p>
       </section>
 
       <section class="blk">
         <span class="eyebrow" data-t="search_label"></span>
         <div class="srch">
-          <input id="q" maxlength="30" placeholder="4870 或 Cairns" autocomplete="off"
-                 aria-label="輸入郵遞區號或地名" aria-describedby="qhint">
+          <input id="q" maxlength="30" autocomplete="off" aria-describedby="qhint"
+                 data-t-ph="search_ph" data-t-aria="p_q_aria">
         </div>
         <p class="qhint" id="qhint"></p>
-        <div class="hits" id="hits" role="listbox" aria-label="搜尋結果"></div>
+        <div class="hits" id="hits" role="listbox" data-t-aria="p_hits_aria"></div>
       </section>
 
       <section class="blk">
@@ -57,14 +57,7 @@ __CSS__</style>
       <section class="blk">
         <span class="eyebrow" data-t="source_title"></span>
         <div class="src">
-          本圖只處理 <b>417</b>（Working Holiday）；462 的產業規則不同，不適用。
-          郵遞區號清單逐字取自
-          <a href="https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work" target="_blank" rel="noopener">Home Affairs — Specified work (subclass 417)</a>（頁面標示更新於 2026 年 8 月 18 日）。
-          郵區範圍為 ABS Postal Areas 2021 概化邊界，僅供判讀，非法定界線；
-          個別災害的宣告範圍與日期請對
-          <a href="https://www.disasterassist.gov.au/find-a-disaster" target="_blank" rel="noopener">Disaster Assist — Find a disaster</a> 查證。
-          有 8 個合格郵區在 ABS 沒有對應面（多為信箱型郵區），以小點標示。
-          送件前務必以官方頁面為準。
+          <span id="srctext"></span>
           <span class="stamp" id="stamp"></span>
         </div>
       </section>
@@ -78,7 +71,7 @@ __CSS__</style>
             <i style="--sw:var(--c-work)"></i><i style="--sw:var(--c-rebuild)"></i><i style="--sw:var(--c-none)"></i>
           </span>
         </summary>
-        <div class="lg" style="--sw:var(--c-work)"><i></i><span id="n-work-label">一般工作就算</span><b id="n-work"></b></div>
+        <div class="lg" style="--sw:var(--c-work)"><i></i><span id="n-work-label"></span><b id="n-work"></b></div>
         <div class="lg" id="r-rebuild" style="--sw:var(--c-rebuild)"><i></i><span data-t="cat_rebuild"></span><b id="n-rebuild"></b></div>
         <div class="lg split" style="--sw:var(--c-fire)"><i></i><span data-t="cat_fire_only"></span><b id="n-fire"></b></div>
         <div class="lg split" style="--sw:var(--c-flood)"><i></i><span data-t="cat_flood_only"></span><b id="n-flood"></b></div>
@@ -89,9 +82,9 @@ __CSS__</style>
       </details>
       <div class="tip" id="tip"></div>
       <div class="zoom">
-        <button type="button" id="zin" aria-label="放大">＋</button>
-        <button type="button" id="zout" aria-label="縮小">−</button>
-        <button type="button" id="zrst" aria-label="回到全州視野" title="回到全州視野">⤢</button>
+        <button type="button" id="zin" data-t-aria="zoom_in">＋</button>
+        <button type="button" id="zout" data-t-aria="zoom_out">−</button>
+        <button type="button" id="zrst" data-t-aria="reset_view" data-t-title="reset_view">⤢</button>
       </div>
     </div>
   </div>

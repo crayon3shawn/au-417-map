@@ -5,22 +5,37 @@ const NS = 'http://www.w3.org/2000/svg';
 const el = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-document.getElementById('stamp').textContent = META.stamp;
-document.getElementById('hint').textContent =
-  `可查 ${META.n_postcodes} 個郵遞區號，涵蓋全澳。目前有 ${META.n_maps} 個州做了地圖。`;
+// ---- 語言 ----
+// 兩種語言的字串都在頁面裡，靠切換鈕換。跟各州地圖共用 localStorage 的 'lang'
+// 鍵——同源，所以從這裡點進地圖會沿用同一個語言，不會中文入口配英文地圖。
+// 預設中文：不猜 navigator.language，猜的話瀏覽器語言與站台預設不一致的人
+// 每頁看到的語言都不一樣。想看英文的人按一次鈕，之後都記得。
+const S = META.strings;
+const savedLang = (() => { try { return localStorage.getItem('lang'); } catch (_) { return null; } })();
+let lang = (savedLang === 'zh' || savedLang === 'en') ? savedLang : 'zh';
+
+/** @param {string} key @param {Record<string,string|number>} [vars] */
+function T(key, vars){
+  let s = (S[key] && S[key][lang]) || (S[key] && S[key].zh) || key;
+  if(vars) for(const k in vars) s = s.split('{' + k + '}').join(String(vars[k]));
+  return s;
+}
+const stLabel  = s => lang === 'zh' ? s.label : s.name;
+const indLabel = () => lang === 'zh' ? industry.label : (industry.label_en || industry.label);
+const indScope = () => lang === 'zh' ? industry.scope : (industry.scope_en || industry.scope);
+const joinList = a => a.join(T('p_list_sep'));
+
+const HA = `<a href="${META.source_url}" target="_blank" rel="noopener">`;
 
 // 三個互斥的答案，跟各州地圖用同一套說法
 // 判定文字要跟著選定的產業變，所以是函式不是常數
 const CAT_COLOR = {work:'var(--c-work)', rebuild:'var(--c-rebuild)', none:'var(--c-none)'};
 function cats(){
-  const n = industry.label;
+  const n = indLabel();
   return {
-    work:    {c:CAT_COLOR.work,    say:`一般${n}工作就算`,
-              sub:`這個郵區在${n}適用的地區名單上。`},
-    rebuild: {c:CAT_COLOR.rebuild, say:'只有災後重建工作算',
-              sub:`一般${n}工作不算。重建的土建、拆除、修繕、道路橋樑才算，志工也算，記得留下能證明工程屬於災後修復的紀錄。`},
-    none:    {c:CAT_COLOR.none,    say:'完全不算',
-              sub:'這個郵區不在任何一張合格清單上。'},
+    work:    {c:CAT_COLOR.work,    say:T('cat_work', {ind:n}),   sub:T('v_work_yes_sub', {ind:n})},
+    rebuild: {c:CAT_COLOR.rebuild, say:T('cat_rebuild'),         sub:T('p_rebuild_sub', {ind:n})},
+    none:    {c:CAT_COLOR.none,    say:T('cat_none'),            sub:T('p_none_sub')},
   };
 }
 // 位元記的是地區表成員資格，判定取決於選了哪個產業
@@ -29,18 +44,23 @@ let industry = DATA.industry_masks.find(i => i.key === DATA.industry) || DATA.in
 const catOf = f => (f & industry.mask) ? 'work' : (f & REBUILD) ? 'rebuild' : 'none';
 
 const indSel = document.getElementById('ind');
-for(const i of DATA.industry_masks){
-  const o = document.createElement('option');
-  o.value = i.key; o.textContent = i.label;
-  if(i.key === industry.key) o.selected = true;
-  indSel.appendChild(o);
+function fillIndustries(){
+  indSel.innerHTML = '';
+  for(const i of DATA.industry_masks){
+    const o = document.createElement('option');
+    o.value = i.key;
+    o.textContent = lang === 'zh' ? i.label : (i.label_en || i.label);
+    if(i.key === industry.key) o.selected = true;
+    indSel.appendChild(o);
+  }
 }
 function applyIndustry(){
-  document.getElementById('indnote').innerHTML = esc(industry.scope || '')
-    + ` <a href="${DATA.meta.source_url}" target="_blank" rel="noopener">官方定義 →</a>`
-    + `<br><span class="dim">切換行業會改變下面的判定與各州統計。</span>`;
+  document.getElementById('indnote').innerHTML = esc(indScope() || '')
+    + ` ${HA}${T('official_def')}</a>`
+    + `<br><span class="dim">${T('p_indnote_switch')}</span>`;
   drawStates();
   drawCards();
+  drawSameList();
   if(q.value.trim()) lookup();
 }
 indSel.addEventListener('change', () => {
@@ -62,7 +82,6 @@ const pad=(x1-x0)*0.02;
 svg.setAttribute('viewBox', `${x0-pad} ${y0-pad} ${(x1-x0)+pad*2} ${(y1-y0)+pad*2}`);
 svg.setAttribute('preserveAspectRatio','xMidYMid meet');
 const at = el('title',{id:'autitle'});
-at.textContent = '澳洲各州地圖導覽。有做地圖的州可以點進去，其餘僅供參考。';
 svg.appendChild(at);
 
 // 各州統計依選定產業即時算，不用 build 端算好的固定值——換產業數字要跟著變
@@ -81,6 +100,7 @@ function statsFor(s){
 }
 
 function drawStates(){
+at.textContent = T('p_au_title');
 for(const n of [...svg.querySelectorAll('path.st, a, text.stlbl')]) n.remove();
 for(const s of STATES){
   Object.assign(s, statsFor(s));
@@ -95,8 +115,9 @@ for(const s of STATES){
     fill: CAT_COLOR[dominant], 'vector-effect':'non-scaling-stroke'});
   const t = el('title',{});
   t.textContent = s.all_work
-    ? `${s.abbr} ${s.label}：全境都算，${s.work} 個郵區`
-    : `${s.abbr} ${s.label}：一般${industry.label} ${s.work}、只有重建 ${s.rebuild}、不算 ${s.none}`;
+    ? T('p_state_all', {abbr:s.abbr, name:stLabel(s), w:s.work})
+    : T('p_state_mix', {abbr:s.abbr, name:stLabel(s), ind:indLabel(),
+                        w:s.work, r:s.rebuild, n:s.none});
   node.appendChild(t);
   // Artifact 在沙箱 iframe 裡執行，改變上層網址會被擋掉（畫面變成一片白），
   // 所以一律用 <a target="_blank"> 在新分頁開啟。
@@ -129,29 +150,32 @@ cards.innerHTML = '';
 for(const s of STATES){
   const total = s.total || 1;
   const seg = (n, v) => n ? `<i style="width:${(n/total*100).toFixed(1)}%;background:${v}"></i>` : '';
-  const status = s.url ? '看地圖 →'
-               : s.all_work ? '全境都算'
-               : s.work === 0 ? '一般工作不算'
-               : s.work <= 5 ? '幾乎都不算' : '尚無地圖';
+  const status = s.url ? T('p_card_go')
+               : s.all_work ? T('p_card_all')
+               : s.work === 0 ? T('p_card_nowork')
+               : s.work <= 5 ? T('p_card_few') : T('p_card_nomap');
   const note = s.all_work
-    ? `整個州都在${esc(industry.label)}適用的地區名單上，在哪裡工作都算，所以不需要地圖。共 ${s.work} 個郵區。`
+    ? T('p_card_note_all', {ind:indLabel(), w:s.work})
     : s.work === 0
-      ? `一般${esc(industry.label)}工作在這裡都不算。但全境被宣告為災區，災後重建工作在哪裡都算。`
+      ? T('p_card_note_none', {ind:indLabel()})
       : s.work <= 5
-        ? `一般${esc(industry.label)}工作只有 ${s.work} 個郵區算，其餘只有災後重建工作算。`
+        ? T('p_card_note_few', {ind:indLabel(), w:s.work,
+                                unit:T(s.work === 1 ? 'p_unit_pc_one' : 'p_unit_pc_many')})
         : null;
   const detail = (!s.url && note)
     ? `<div class="allwork">${esc(note)}</div>`
     : `<div class="legend2">
-        <span style="--sw:var(--c-work)"><i></i>一般${esc(industry.label)} <b>${s.work}</b></span>
-        <span style="--sw:var(--c-rebuild)"><i></i>只有重建 <b>${s.rebuild}</b></span>
-        <span style="--sw:var(--c-none)"><i></i>不算 <b>${s.none}</b></span>
+        <span style="--sw:var(--c-work)"><i></i>${esc(T('p_leg_work', {ind:indLabel()}))} <b>${s.work}</b></span>
+        <span style="--sw:var(--c-rebuild)"><i></i>${esc(T('p_leg_rebuild'))} <b>${s.rebuild}</b></span>
+        <span style="--sw:var(--c-none)"><i></i>${esc(T('p_leg_none'))} <b>${s.none}</b></span>
       </div>`;
+  // 中文版兩個名字都給（縮寫＋英文＋中文），英文版重複的中文就不用出現
+  const names = lang === 'zh' ? `${esc(s.name)}　${esc(s.label)}` : esc(s.name);
   const inner = `
     <div class="top">
       <span class="nm">${esc(s.abbr)}</span>
-      <span class="en">${esc(s.name)}　${esc(s.label)}</span>
-      <span class="go">${status}</span>
+      <span class="en">${names}</span>
+      <span class="go">${esc(status)}</span>
     </div>
     <div class="bar">${seg(s.work,'var(--c-work)')}${seg(s.rebuild,'var(--c-rebuild)')}${seg(s.none,'var(--c-none)')}</div>
     ${detail}`;
@@ -165,46 +189,51 @@ for(const s of STATES){
 }
 }
 
-// ---- 開發版橫幅 ----
-if(DATA.meta.channel === 'dev'){
-  const bar = document.getElementById('devbar');
-  if(bar){
-    bar.hidden = false;
-    bar.innerHTML = '開發版 · 資料與判定可能不正確，正式版請看 <a href="../">穩定版</a>';
+// ---- 依據：五張表的大小、產業對應 ----
+const COV = DATA.area_coverage, INDS = DATA.industries;
+// 前三張表的名字是官方英文專有名詞，兩種語言都照原文；後兩張是描述，要翻。
+const AREA_FIXED = {regional:'Regional Australia', remote:'Remote and Very Remote',
+                    northern:'Northern Australia'};
+const AREA_KEY = {bushfire:'p_area_bushfire', disaster:'p_area_disaster'};
+const covName = k => AREA_FIXED[k] || T(AREA_KEY[k]);
+const covEl = document.getElementById('cov');
+function drawCov(){
+  covEl.innerHTML = '';
+  for(const k of ['regional','disaster','bushfire','remote','northern']){
+    const n = COV[k], pct = Math.round(n / COV._total * 100);
+    const div = document.createElement('div');
+    div.innerHTML = `<span>${esc(covName(k))}</span><b>${n}</b><i>${esc(T('p_cov_unit', {pct}))}</i>`;
+    covEl.appendChild(div);
   }
 }
 
-// ---- 依據：五張表的大小、產業對應 ----
-const COV = DATA.area_coverage, INDS = DATA.industries;
-const COV_LABEL = {regional:'Regional Australia', remote:'Remote and Very Remote',
-                   northern:'Northern Australia', bushfire:'大火宣告區', disaster:'天災宣告區'};
-const covEl = document.getElementById('cov');
-for(const k of ['regional','disaster','bushfire','remote','northern']){
-  const n = COV[k], pct = Math.round(n / COV._total * 100);
-  const div = document.createElement('div');
-  div.innerHTML = `<span>${COV_LABEL[k]}</span><b>${n}</b><i>個 · ${pct}%</i>`;
-  covEl.appendChild(div);
-}
-
 const tb = document.querySelector('#imap tbody');
-for(const ind of INDS){
-  if(!ind.areas) continue;
-  const tr = document.createElement('tr');
-  tr.innerHTML = `<th scope="row">${esc(ind.label)}<em>${esc(ind.en)}</em></th>`
-    + `<td>${ind.areas.map(esc).join('　＋　')}</td>`
-    + `<td class="sc">${esc(ind.scope || '')}</td>`;
-  tb.appendChild(tr);
+function drawTable(){
+  tb.innerHTML = '';
+  for(const ind of INDS){
+    if(!ind.areas) continue;
+    const label = lang === 'zh' ? ind.label : (ind.label_en || ind.en);
+    const scope = lang === 'zh' ? ind.scope : (ind.scope_en || ind.scope);
+    // 中文版把英文原名附在下面（官網用語，查得到）；英文版就是原名，不必重複
+    const sub = lang === 'zh' ? `<em>${esc(ind.en)}</em>` : '';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<th scope="row">${esc(label)}${sub}</th>`
+      + `<td>${ind.areas.map(a => esc(covName(a))).join(T('p_area_join'))}</td>`
+      + `<td class="sc">${esc(scope || '')}</td>`;
+    tb.appendChild(tr);
+  }
 }
 
 // 哪些產業跟建築吃同一張表——這是最常被問的一句
-const base = JSON.stringify(INDS.find(i => i.en === 'Construction').areas);
-const same = INDS.filter(i => i.en !== 'Construction' && JSON.stringify(i.areas) === base)
-                 .map(i => i.label);
-document.getElementById('samelist').innerHTML =
-  `<b>${esc(same.join('、'))}跟建築吃同一張 Regional Australia 表</b>，判斷完全相同——`
-  + `所以這張地圖對做農場、肉廠、礦區的人一樣有效。`
-  + `觀光餐旅差最多：它看的是 Remote 與 Northern，可用郵區只有 ${COV._tourism} 個，`
-  + `不到 Regional（${COV.regional} 個）的 ${Math.round(COV.regional / COV._tourism)} 分之一。`;
+function drawSameList(){
+  const base = JSON.stringify(INDS.find(i => i.en === 'Construction').areas);
+  const same = INDS.filter(i => i.en !== 'Construction' && JSON.stringify(i.areas) === base)
+                   .map(i => lang === 'zh' ? i.label : (i.label_en || i.en));
+  document.getElementById('samelist').innerHTML = T('p_samelist', {
+    same: esc(joinList(same)), tour: COV._tourism, reg: COV.regional,
+    ratio: Math.round(COV.regional / COV._tourism),
+  });
+}
 
 // ---- 查詢 ----
 const q = document.getElementById('q'), result = document.getElementById('result');
@@ -232,8 +261,8 @@ function showHits(list, term){
   }
   const extra = list.length - 40;
   show(`<p class="hint">${list.length
-    ? `找到 ${list.length} 筆` + (extra > 0 ? `，只列出前 40 筆，再打幾個字縮小範圍` : '') + '，點一筆看結果。'
-    : `找不到「${esc(term)}」。試試郵遞區號，或只打地名的前幾個字。`}</p>`);
+    ? esc(T('hits_found', {n:list.length}) + (extra > 0 ? T('hits_more', {n:40}) : '') + T('p_hits_tail'))
+    : esc(T('hits_none', {q:term}))}</p>`);
 }
 
 function lookup(){
@@ -255,28 +284,33 @@ function lookup(){
   render(String(parseInt(v,10)));
 }
 
+let shownPc = null;   // 記住目前顯示哪一筆，切語言時要重畫
+// 索引鍵去掉了前導零（'872'），顯示要補回四位，否則 NT 的 08xx 看起來像打錯
+const pad4 = n => String(n).padStart(4, '0');
 function render(key){
   const hit = IDX[key];
   if(!hit){
-    show(`<p class="hint">找不到郵遞區號 <b class="mono">${esc(key)}</b>。可能是信箱型號碼，或這個號碼澳洲郵政沒有發行。</p>`);
+    shownPc = null;
+    show(`<p class="hint">${T('p_nf_pc', {pc:esc(key)})}</p>`);
     return;
   }
+  shownPc = key;
   const v = key;
   const [stKey, name, f] = hit;
   const s = stateOf(stKey), cat = cats()[catOf(f)];
   const routes = [];
-  if(f & BIT_FIRE) routes.push('叢林大火重建（2019/7/31 之後）');
-  if(f & BIT_DISASTER) routes.push('洪水／氣旋等天災重建（2021/12/31 之後）');
-  const extra = routes.length ? `<br>這裡也被宣告為災區：${routes.join('、')}。` : '';
+  if(f & BIT_FIRE) routes.push(T('p_route_fire'));
+  if(f & BIT_DISASTER) routes.push(T('p_route_flood'));
+  const extra = routes.length ? '<br>' + esc(T('p_also_declared', {list:joinList(routes)})) : '';
   const link = s.url
-    ? `<a class="golink" href="${s.url}#pc=${parseInt(v,10)}"${/^https?:/.test(s.url) ? ' target="_blank" rel="noopener"' : ''}>在${esc(s.label)}地圖上看 →</a>`
-    : `<p class="nomap">${esc(s.label)}還沒做地圖。上面的判斷仍然有效。</p>`;
+    ? `<a class="golink" href="${s.url}#pc=${parseInt(v,10)}"${/^https?:/.test(s.url) ? ' target="_blank" rel="noopener"' : ''}>${esc(T('p_golink', {state:stLabel(s)}))}</a>`
+    : `<p class="nomap">${esc(T('p_nomap_line', {state:stLabel(s)}))}</p>`;
   show(`<div class="verdict" style="--vc:${cat.c}">
       <span class="chip"></span>
       <div class="body">
-        <div><span class="pc">${parseInt(v,10)}</span> <span class="where">${esc(name)}，${esc(s.label)}</span></div>
-        <div class="say">${cat.say}</div>
-        <div class="sub">${cat.sub}${extra}</div>
+        <div><span class="pc">${pad4(v)}</span> <span class="where">${esc(T('p_where', {name, state:stLabel(s)}))}</span></div>
+        <div class="say">${esc(cat.say)}</div>
+        <div class="sub">${esc(cat.sub)}${extra}</div>
         ${link}
       </div>
     </div>`);
@@ -290,4 +324,52 @@ q.addEventListener('input', () => {
   else { clearHits(); show(`<p class="hint" id="hint"></p>`); }
 });
 
-applyIndustry();   // 初次繪製。放最後是因為它會用到上面宣告的 q 與 lookup。
+// ---- 套用語言 ----
+const langBtn = document.getElementById('lang');
+function applyLang(){
+  document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
+  document.title = T('p_title');
+
+  for(const n of document.querySelectorAll('[data-t]'))      n.innerHTML = T(n.getAttribute('data-t'));
+  for(const n of document.querySelectorAll('[data-t-ph]'))   n.setAttribute('placeholder', T(n.getAttribute('data-t-ph')));
+  for(const n of document.querySelectorAll('[data-t-aria]')) n.setAttribute('aria-label', T(n.getAttribute('data-t-aria')));
+
+  // 帶連結或變數的句子，佔位符在 strings.json 裡，這裡才組得起來
+  const a = (url, text) => `<a href="${url}" target="_blank" rel="noopener">${esc(text)}</a>`;
+  document.getElementById('disclaim').innerHTML =
+    T('p_disclaim', {link: a(META.source_url, T('p_official_page'))});
+  document.getElementById('basisnote').innerHTML =
+    T('p_basis_note2', {link: a(META.source_url, T('p_official_text'))});
+  document.getElementById('note4').innerHTML = T('p_note4_b', {
+    ha: a(META.source_url, T('p_ha_link')),
+    da: a('https://www.disasterassist.gov.au/find-a-disaster', T('p_da_link')),
+  });
+  document.getElementById('stamp').textContent =
+    T('p_stamp', {d: META.page_date, b: META.built_at});
+  document.getElementById('hint').textContent =
+    T('p_hint', {n: META.n_postcodes, m: META.n_maps});
+
+  if(DATA.meta.channel === 'dev'){
+    const bar = document.getElementById('devbar');
+    if(bar){
+      bar.hidden = false;
+      bar.innerHTML = esc(T('dev_banner')) + `<a href="../">${esc(T('dev_stable_link'))}</a>`;
+    }
+  }
+
+  langBtn.textContent = lang === 'zh' ? 'EN' : '中文';
+  langBtn.setAttribute('aria-label', lang === 'zh' ? 'Switch to English' : '切換為中文');
+
+  fillIndustries();
+  drawCov();
+  drawTable();
+  applyIndustry();          // 會重畫地圖、卡片、同表清單，必要時重跑查詢
+  if(shownPc) render(shownPc);
+}
+langBtn.addEventListener('click', () => {
+  lang = lang === 'zh' ? 'en' : 'zh';
+  try { localStorage.setItem('lang', lang); } catch (_) {}
+  applyLang();
+});
+
+applyLang();   // 初次繪製。放最後是因為它會用到上面宣告的每一樣東西。

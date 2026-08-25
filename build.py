@@ -21,23 +21,22 @@ AREA_BITS = {"remote": 1, "northern": 2, "regional": 4, "bushfire": 8, "disaster
 BIT_FIRE, BIT_DISASTER = AREA_BITS["bushfire"], AREA_BITS["disaster"]
 REBUILD_MASK = BIT_FIRE | BIT_DISASTER
 
-TITLES = {"qld": "昆士蘭 417 集簽地圖", "nsw": "新南威爾斯 417 集簽地圖",
-          "vic": "維多利亞 417 集簽地圖", "wa": "西澳 417 集簽地圖"}
 LABELS = {"qld": "昆士蘭", "nsw": "新南威爾斯", "vic": "維多利亞",
           "sa": "南澳", "wa": "西澳", "tas": "塔斯馬尼亞",
           "nt": "北領地", "act": "首都領地"}
-EXCLUDED_EN = {
-    "qld": "Inner Brisbane and most of the Gold Coast are not on the list.",
-    "nsw": "Sydney, Newcastle, Wollongong and the Central Coast are not on the list.",
-    "vic": "Metropolitan Melbourne is not on the list.",
-    "wa": "Metropolitan Perth is not on the list.",
-}
+
 
 EXCLUDED = {
     "qld": "布里斯本市區與黃金海岸多數郵區不在名單上。",
     "nsw": "雪梨、紐卡索、臥龍崗、中央海岸的郵區不在名單上。",
     "vic": "墨爾本都會區的郵區不在名單上。",
     "wa": "珀斯都會區的郵區不在名單上。",
+}
+EXCLUDED_EN = {
+    "qld": "Inner Brisbane and most of the Gold Coast are not on the list.",
+    "nsw": "Sydney, Newcastle, Wollongong and the Central Coast are not on the list.",
+    "vic": "Metropolitan Melbourne is not on the list.",
+    "wa": "Metropolitan Perth is not on the list.",
 }
 COORD_DP = 3          # 約 110 公尺，與邊界抓取的 165 公尺概化容差相稱
 
@@ -254,8 +253,11 @@ def main(state):
     meta = {
         "state": state,
         "visa": VISA,
-        "stamp": (f"郵區清單 Home Affairs {src[VISA]['page_last_updated']}"
-                  f" · 邊界 ABS POA 2021 · 建置 {pcdata['fetched_at'][:10]}"),
+        # 落款與出處段落都要用到這些值。不在這裡組成句子——組好的句子只有一種
+        # 語言，而且樣板裡若另外寫死一份日期，官網一更新那份就開始說謊。
+        "page_date": src[VISA]["page_last_updated"],
+        "built_at": pcdata["fetched_at"][:10],
+        "n_no_poly": len(no_poly),
         "state_label": LABELS.get(state, STATES[state]["name"]),
         "state_abbr": state.upper(),
         "channel": CHANNEL,
@@ -301,7 +303,10 @@ def main(state):
                          ("__TOKENS__", tokens_css()),
                          ("__CSS__", part("map.css")),
                          ("__JS__", part("map.js").replace("// @ts-check\n", "", 1)),
-                         ("__TITLE__", TITLES.get(state, f"{STATES[state]['name']} 417 集簽地圖")),
+                         # JS 一跑就會依語言改寫 document.title，這裡只是後備，
+                         # 所以雙語並列——寫死單一語言的話切語言標題不會動。
+                         ("__TITLE__", f"{LABELS.get(state, STATES[state]['name'])}"
+                                       f" 417 集簽地圖 · {STATES[state]['name']} 417 Visa Map"),
                          ("__DATA__", json.dumps(payload, ensure_ascii=False, separators=(",", ":")))):
         if token not in html:
             raise SystemExit(f"樣板裡找不到注入點 {token}")
@@ -328,7 +333,7 @@ def main(state):
         print(f"  郵件中心／信箱型郵區，已排除：{', '.join(str(x) for x in non_geo)}")
     if no_poly:
         print(f"  有郵區但 ABS 無對應面（以小點顯示）：{', '.join(str(x) for x in no_poly)}")
-    print(f"  {meta['stamp']}")
+    print(f"  Home Affairs {meta['page_date']} · 建置 {meta['built_at']}")
     print(f"-> {dest.relative_to(ROOT)}  ({dest.stat().st_size/1e6:.2f} MB)")
 
 

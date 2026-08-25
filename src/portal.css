@@ -7,7 +7,15 @@ body{margin:0;background:var(--paper);color:var(--ink);
   letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
 
 .wrap{max-width:1080px;margin:0 auto;padding:0 22px 56px}
-header{padding:38px 0 26px}
+header{padding:38px 0 26px;position:relative}
+/* 語言鈕跟各州地圖頁同一個外觀。放在標題右上——標題本身會換行（text-wrap
+   balance），所以用絕對定位釘在角落，不跟著行高跑。 */
+.lang{position:absolute;top:38px;right:0;appearance:none;
+  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
+  font-size:12.5px;letter-spacing:.06em;padding:4px 10px;border-radius:3px;
+  border:1px solid var(--line-2);background:var(--paper);color:var(--ink-2);cursor:pointer}
+.lang:hover{background:var(--sunk);color:var(--ink)}
+.lang:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
 h1{margin:0 0 6px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
   font-size:clamp(30px,5vw,44px);letter-spacing:.02em;line-height:1.05;text-wrap:balance}
 .lede{margin:0;color:var(--ink-2);font-size:15px;max-width:62ch}

@@ -4,7 +4,6 @@ const PC = DATA.postcodes, POA = DATA.poa, CITIES = DATA.cities,
       META = DATA.meta, OTHER = DATA.other || {}, FLAGS = DATA.flags;
 
 // 頁首出處與 417/462 等同性由資料決定，不寫死在樣板裡
-document.getElementById('stamp').textContent = META.stamp;
 document.getElementById('excluded').textContent = META.excluded_note;
 
 // 導覽：Artifact 在沙箱 iframe 裡不能改上層網址，只能開新分頁。
@@ -37,8 +36,10 @@ const el = (n, a) => { const e = document.createElementNS(NS, n); for (const k i
 // 每份都要單獨設分享權限——那個摩擦比多帶幾 KB 字串大得多。
 const S = META.strings;
 const savedLang = (() => { try { return localStorage.getItem('lang'); } catch (_) { return null; } })();
-let lang = (savedLang === 'zh' || savedLang === 'en') ? savedLang
-         : ((navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en');
+// 預設中文，不猜 navigator.language。猜的話瀏覽器語言是英文的人會看到
+// 中文入口頁配英文地圖；而且入口頁與這裡共用 localStorage 的 'lang'，
+// 從入口頁點進來自然沿用同一個語言。
+let lang = (savedLang === 'zh' || savedLang === 'en') ? savedLang : 'zh';
 
 /** @param {string} key @param {Record<string,string|number>} [vars] */
 function T(key, vars){
@@ -140,7 +141,7 @@ let tlbl = null;
 if(minLat < TROPIC && TROPIC < maxLat){
   over.appendChild(el('line',{class:'tropic',x1:VB.x,y1:tropY,x2:VB.x+VB.w,y2:tropY,'vector-effect':'non-scaling-stroke'}));
   tlbl = el('text',{class:'tropiclbl'});
-  tlbl.textContent='TROPIC OF CAPRICORN 南回歸線';
+  tlbl.textContent=T('tropic');
   over.appendChild(tlbl);
 }
 
@@ -152,13 +153,15 @@ const cityNodes = [];
 // 所以「撐開視野」會讓字級的世界單位跟著變大，追不上、收斂不了。
 const shortName = n => n.replace(/\s+[\u4e00-\u9fff][^\s]*$/, '');
 const narrow = () => svg.getBoundingClientRect().width < 560;
+// 英文介面下中文市名沒有意義，一律拿掉；中文介面才看螢幕寬度決定要不要縮。
+const cityLabel = n => (lang === 'en' || narrow()) ? shortName(n) : n;
 
 for(const [name, lon, lat, tier, side] of CITIES){
   const g = el('g',{class:'city' + (tier===2 ? ' t2' : '')});
   const cx = px(lon), cy = py(lat);
   g.appendChild(el('circle',{cx, cy, r:tier===1?SZ.dot1:SZ.dot2, 'stroke-width':SZ.halo}));
   const t = el('text',{x:cx+SZ.gap*side, y:cy+SZ.lbl1*0.26, 'text-anchor': side<0 ? 'end' : 'start'});
-  t.textContent = narrow() ? shortName(name) : name;
+  t.textContent = cityLabel(name);
   g.appendChild(t);
   g.__c = {cx, cy, t, dot:g.firstChild, tier, side, name};
   cityG.appendChild(g);
@@ -210,10 +213,13 @@ if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitLabels);
 else fitLabels();
 addEventListener('resize', () => {
   sizeToViewport();
-  const s = narrow();
-  for(const g of cityNodes) g.__c.t.textContent = s ? shortName(g.__c.name) : g.__c.name;
+  relabelCities();
   apply();
 });
+
+function relabelCities(){
+  for(const g of cityNodes) g.__c.t.textContent = cityLabel(g.__c.name);
+}
 
 function toBase(e){
   const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
@@ -510,21 +516,44 @@ if(META.channel === 'dev'){
   }
 }
 
+// ---- 無障礙 ----
+// 地圖不是可逐格 tab 的（幾百個郵區當 tab stop 反而更難用），
+// 鍵盤與螢幕閱讀器的路徑是「查郵遞區號」欄位加上 live region 的詳情面板。
+const mt = el('title',{id:'maptitle'});
+svg.insertBefore(mt, svg.firstChild);
+// 這兩個是給螢幕閱讀器唸的，切語言時也要跟著換，所以由 applyLang 負責填。
+function applyMapA11y(){
+  svg.setAttribute('aria-roledescription', T('map_role'));
+  mt.textContent = T('map_title', {state: stateName(), n: META.counts.boundaries});
+}
+
 // ---- 語言切換 ----
 const langBtn = document.getElementById('lang');
+const h1 = document.getElementById('h1');
 
 function applyLang(){
   document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
+  document.title = h1.textContent = T('title_state', {state: stateName()});
+  applyMapA11y();
+  relabelCities();
   for(const el2 of document.querySelectorAll('[data-t]')){
     const key = el2.getAttribute('data-t');
     if(key) el2.textContent = T(key);
   }
-  q.placeholder = T('search_ph');
-  document.getElementById('zin').setAttribute('aria-label', T('zoom_in'));
-  document.getElementById('zout').setAttribute('aria-label', T('zoom_out'));
-  const zr = document.getElementById('zrst');
-  zr.setAttribute('aria-label', T('reset_view'));
-  zr.setAttribute('title', T('reset_view'));
+  for(const n of document.querySelectorAll('[data-t-ph]'))    n.setAttribute('placeholder', T(n.getAttribute('data-t-ph')));
+  for(const n of document.querySelectorAll('[data-t-aria]'))  n.setAttribute('aria-label', T(n.getAttribute('data-t-aria')));
+  for(const n of document.querySelectorAll('[data-t-title]')) n.setAttribute('title', T(n.getAttribute('data-t-title')));
+
+  // 出處整段與落款。日期與無邊界郵區數一律取自 META——樣板裡再寫一份的話，
+  // 官網更新後那份會安靜地開始說謊。
+  const a = (url, text) => `<a href="${url}" target="_blank" rel="noopener">${esc(text)}</a>`;
+  document.getElementById('srctext').innerHTML = T('map_src', {
+    ha: a(META.source_url, T('map_ha_link')),
+    da: a('https://www.disasterassist.gov.au/find-a-disaster', T('map_da_link')),
+    date: META.page_date, strays: META.n_no_poly,
+  });
+  document.getElementById('stamp').textContent =
+    T('map_stamp', {d: META.page_date, b: META.built_at});
   // 導覽的「全澳入口」也要換
   const home = document.querySelector('#nav a.home');
   if(home) home.textContent = '← ' + T('nav_home');
@@ -555,13 +584,5 @@ langBtn.addEventListener('click', () => {
 
 applyLang();
 
-// ---- 無障礙 ----
-// 地圖不是可逐格 tab 的（幾百個郵區當 tab stop 反而更難用），
-// 鍵盤與螢幕閱讀器的路徑是「查郵遞區號」欄位加上 live region 的詳情面板。
-svg.setAttribute('aria-roledescription', '地圖');
-const mt = el('title',{id:'maptitle'});
-mt.textContent = `${META.state_label} 417 集簽合格郵遞區號地圖，共 ${META.counts.boundaries} 個郵區。`
-              + `用左側「查郵遞區號」欄位查詢個別郵區。`;
-svg.insertBefore(mt, svg.firstChild);
 // 圖例在手機上會蓋掉半張地圖，所以窄螢幕預設收起，桌機維持展開
 document.getElementById('legend').open = !matchMedia('(max-width:900px)').matches;
