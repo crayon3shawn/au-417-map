@@ -379,7 +379,7 @@ function select(pc){
 
   const [p, , , f, names] = d.rec;
   const shown = names.slice(0, 6);
-  const more = names.length > shown.length ? ` 等 ${names.length} 個地區` : '';
+  const more = names.length > shown.length ? T('more_areas', {n: names.length}) : '';
   const rows = [];
   const ind = indLabel();
   if(f & workMask()) rows.push(`<div class="verdict" style="--vc:var(--c-work)"><span class="dot"></span><span><b>${esc(T('v_work_yes',{ind}))}</b><br>${esc(T('v_work_yes_sub',{ind}))}</span></div>`);
@@ -390,7 +390,7 @@ function select(pc){
   if(d.stray) rows.push(`<div class="note">${esc(T('v_no_polygon'))}</div>`);
 
   detail.innerHTML =
-    `<div class="hd"><span class="pcn" style="color:${colorOf(f, splitBox.checked)}">${p}</span><span class="loc">${esc(shown.join('、'))}${more}</span></div>` +
+    `<div class="hd"><span class="pcn" style="color:${colorOf(f, splitBox.checked)}">${p}</span><span class="loc">${esc(shown.join(lang === 'zh' ? '、' : ', '))}${more}</span></div>` +
     `<div class="bd">${rows.join('')}</div>`;
 }
 

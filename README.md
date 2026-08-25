@@ -96,12 +96,26 @@ postcodes」。它不是 Australia Post 的官方郵區界線——後者並未�
 覆蓋差異很小且可解釋：只在 matthewproctor 的多半是非地理郵區（信箱、大學、
 郵件中心），ABS 不給它們面是正確的；只在 ABS 的是 0872 這種跨州郵區與外島。
 
+## 語言
+
+介面有中英文，右上角切換，偏好記在 `localStorage`，預設看瀏覽器語言。
+
+**用切換而不是分成兩份產出**——那樣 Artifact 數量會加倍，每份都要單獨設分享
+權限，那個摩擦比多帶幾 KB 字串大得多。字串在 `data/strings.json`，靜態文字用
+`data-t` 標記。
+
+產業的英文標籤與範圍**直接取自官網原文**，不是把中文再翻回英文——後者會二次
+失真。頁面 `<title>` 維持中文，因為那是 Artifact 在列表上的名稱。
+
 ## 檔案怎麼分
 
 | | 是什麼 | 進版控？ |
 |---|---|---|
 | `src/tokens.css` | **設計 token 的唯一來源**——配色、字級尺度 | ✅ |
-| `src/template.html`、`src/portal.html` | 版面與程式，不含 token（用 `__TOKENS__` 注入）| ✅ |
+| `src/template.html`、`src/portal.html` | 只有結構，各約 100 行 | ✅ |
+| `src/map.css`、`src/portal.css` | 樣式 | ✅ |
+| `src/map.js`、`src/portal.js` | 程式，開頭有 `// @ts-check` | ✅ |
+| `data/strings.json` | 中英文介面字串 | ✅ |
 | `data/*.json` | 凍結的資料 | ✅ |
 | `dist/*.html` | **建置產出** | ❌ 見下 |
 
@@ -113,6 +127,18 @@ postcodes」。它不是 Australia Post 的官方郵區界線——後者並未�
 
 現在是單一來源，而且 `tests/test_tokens.py` 會檢查：樣板裡不准再宣告 token、
 三個主題區塊的 token 名稱必須一致、所有產出頁面的配色必須完全相同。
+
+### 為什麼樣板要拆成三個檔
+
+`jsconfig.json` 讓 VS Code 內建的 TypeScript 引擎檢查 `src/*.js`——**不需要
+`npm install`，也沒有 build 步驟**，這個專案維持零外部相依。
+
+`strict` 打開的重點是 `strictNullChecks`：`getElementById` 回傳
+`HTMLElement | null`，這個專案已經因為引用被刪掉的元素而壞過兩次
+（`statelbl`、`lgnone`）。JS 塞在 HTML 裡的話這個檢查跑不起來。
+
+拆的是原始碼，**產出完全一樣**——build 會把三個檔合成單一自包含 HTML，
+使用者拿到的東西沒有任何差別。
 
 ### 為什麼 dist 不進版控
 
