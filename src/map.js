@@ -554,9 +554,11 @@ function doSearch(){
     else if(low.includes(term)) contains.push([pc, nm]);
   }
   const list = starts.concat(contains);
-  if(list.length === 1){                 // 只有一個就直接跳過去
+  // 只剩一筆就直接跳過去，但**不能動輸入框**——這是每敲一個鍵都會跑的路徑，
+  // 改掉 value 等於搶走使用者正在打的字（打到一半剛好只剩一筆時，後面的字
+  // 會接到被換上的地名後面，整串就毀了）。點選結果時改 value 才是對的。
+  if(list.length === 1){
     clearHits(); qhint.textContent = '';
-    q.value = list[0][1];
     goto(list[0][0]);
     return;
   }

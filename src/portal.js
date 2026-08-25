@@ -258,7 +258,7 @@ function showHits(list, term){
     b.type = 'button';
     b.style.setProperty('--hc', CAT_COLOR[catOf(f)]);
     b.innerHTML = `<em></em><b>${pad4(pc)}<u>${esc(s.abbr)}</u></b><i>${esc(nm)}</i>`;
-    b.addEventListener('click', () => { q.value = nm; clearHits(); render(pc); });
+    b.addEventListener('click', () => { q.value = nm; clearHits(); render(pc, nm); });
     hitsEl.appendChild(b);
   }
   const extra = list.length - 40;
@@ -278,7 +278,12 @@ function lookup(){
       else if(low.includes(term)) contains.push([pc, nm, st]);
     }
     const list = starts.concat(contains);
-    if(list.length === 1){ q.value = list[0][1]; clearHits(); render(list[0][0]); return; }
+    // 只剩一筆就直接顯示結果，但**不能動輸入框**——這是每敲一個鍵都會跑的
+    // 路徑，改掉 value 等於搶走使用者正在打的字。打「central c」時全澳只有
+    // Central Colo 一筆，輸入框被換成它，接著打的 oast 就接在後面變成
+    // 「Central Colooast」，再也查不到東西。點選結果時改 value 才是對的，
+    // 那是使用者明確選的。
+    if(list.length === 1){ clearHits(); render(list[0][0]); return; }
     showHits(list, v);
     return;
   }
@@ -286,17 +291,20 @@ function lookup(){
   render(String(parseInt(v,10)));
 }
 
-let shownPc = null;   // 記住目前顯示哪一筆，切語言時要重畫
-function render(key){
+let shownPc = null, shownName = null;   // 記住目前顯示哪一筆，切語言時要重畫
+// pick 是使用者實際點的那個地名。一個郵區底下可能有幾十個地名，點了
+// 「Gosford」卻顯示代表地名「Calga」會讓人以為點錯了。
+function render(key, pick){
   const hit = IDX[key];
   if(!hit){
-    shownPc = null;
+    shownPc = null; shownName = null;
     show(`<p class="hint">${T('p_nf_pc', {pc:esc(key)})}</p>`);
     return;
   }
-  shownPc = key;
+  shownPc = key; shownName = pick || null;
   const v = key;
-  const [stKey, name, f] = hit;
+  const [stKey, mainName, f] = hit;
+  const name = pick || mainName;
   const s = stateOf(stKey), cat = cats()[catOf(f)];
   const routes = [];
   if(f & BIT_FIRE) routes.push(T('p_route_fire'));
@@ -368,7 +376,7 @@ function applyLang(){
   drawCov();
   drawTable();
   applyIndustry();          // 會重畫地圖、卡片、同表清單，必要時重跑查詢
-  if(shownPc) render(shownPc);
+  if(shownPc) render(shownPc, shownName);
 }
 langBtn.addEventListener('click', () => {
   lang = lang === 'zh' ? 'en' : 'zh';
