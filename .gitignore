@@ -9,3 +9,7 @@ data/raw/
 # 不進版控的理由：每次改一行文案都會重寫 4 MB，git log 會被淹沒。
 # GitHub Pages 由 .github/workflows/pages.yml 建置後部署。
 dist/
+
+# 私人的 Artifact 連結。推上公開 repo 等於把「知道網址就能看」的頁面攤開，
+# 而 Pages 版用相對路徑根本不需要它。只有 TARGET=artifact 時本機才會用到。
+data/artifacts.json

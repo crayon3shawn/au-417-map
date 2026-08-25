@@ -18,7 +18,9 @@ for(const n of (META.nav || [])){
     navEl.appendChild(s);
   } else {
     const a = document.createElement('a');
-    a.href = n.url; a.target = '_blank'; a.rel = 'noopener';
+    a.href = n.url;
+    // 絕對網址代表在 Artifact 沙箱裡，只能開新分頁；相對路徑是同站台，原地跳轉即可
+    if(/^https?:/.test(n.url)){ a.target = '_blank'; a.rel = 'noopener'; }
     a.className = n.home ? 'home' : '';
     a.textContent = n.home ? '← ' + n.label : n.label;
     navEl.appendChild(a);

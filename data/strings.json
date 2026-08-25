@@ -188,6 +188,10 @@
     "title_state": {
       "zh": "{state} 417 集簽地圖",
       "en": "{state} 417 Second-Visa Map"
+    },
+    "disclaimer": {
+      "zh": "非移民建議。郵區界線為 ABS 概化資料，僅供判讀；送件前務必以 Home Affairs 官方頁面為準。",
+      "en": "Not migration advice. Boundaries are ABS generalised data, for orientation only. Always check the official Home Affairs page before you apply."
     }
   }
 }

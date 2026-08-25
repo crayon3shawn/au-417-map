@@ -2,7 +2,8 @@
 """建入口頁：全澳郵區查詢 + 各州地圖導覽。
 
 入口頁不放郵區多邊形，只放郵區號碼對應的身分與州界輪廓，所以很輕。
-各州地圖的網址取自 data/artifacts.json——那些州頁必須先發佈過。
+各州地圖的網址由 build.site_links() 決定：預設相對路徑（GitHub Pages），
+TARGET=artifact 時用 data/artifacts.json 的絕對網址。
 
 用法： python3 build_portal.py
 輸出： dist/index.html
@@ -10,7 +11,8 @@
 import sys, json, pathlib, collections
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from lib import expand, load, STATES
-from build import LABELS, VISA, AREA_BITS, REBUILD_MASK, DEFAULT_INDUSTRY, work_mask
+from build import (LABELS, VISA, AREA_BITS, REBUILD_MASK, DEFAULT_INDUSTRY,
+                   work_mask, site_links)
 
 ROOT = pathlib.Path(__file__).resolve().parent
 
@@ -75,7 +77,7 @@ def main():
     pcdata = load(ROOT / "data" / "postcodes.json")
     index  = load(ROOT / "data" / "portal-index.json")["postcodes"]
     out    = load(ROOT / "data" / "outline-au.json")["outlines"]
-    urls   = load(ROOT / "data" / "artifacts.json")["urls"]
+    urls   = {n["label"].lower(): n["url"] for n in site_links() if not n.get("home")}
     inds   = load(ROOT / "data" / "industries.json")["industries"]
     default_mask = work_mask(inds[DEFAULT_INDUSTRY]["areas"][VISA])
 

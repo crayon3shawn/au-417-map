@@ -1,12 +1,18 @@
-# 建置並部署到 GitHub Pages。
+# 建置並部署到 GitHub Pages，一個站台兩個版本：
 #
-# dist/ 不進版控，所以這裡負責產生它。建置完全離線（只讀 data/），
-# 不會連到 Home Affairs 或 ABS——資料更新是手動跑 `make update` 後提交的。
+#   /        main 分支，穩定版
+#   /dev/    dev  分支，開發版
+#
+# Pages 一次只能部署一份成品，所以這裡把兩個分支都建出來再一起送。
+# 推任一分支都會重建兩者，不會有一邊卡在舊版。
+#
+# 建置完全離線（只讀 data/），不會連到 Home Affairs 或 ABS——
+# 資料更新是手動跑 `make update` 之後提交的，CI 不會偷偷改資料。
 name: Build and deploy
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
   workflow_dispatch:
 
 permissions:
@@ -22,21 +28,42 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: 取出穩定版（main）
+        uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: 建置全部頁面
-        run: make all
+      - name: 建置穩定版
+        run: |
+          make all
+          make test
+          mkdir -p /tmp/site
+          cp dist/*.html /tmp/site/
 
-      - name: 跑測試
-        run: make test
+      - name: 取出開發版（dev）
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: dev
+          path: devsrc
+
+      - name: 建置開發版
+        run: |
+          if [ -d devsrc ]; then
+            make -C devsrc all
+            mkdir -p /tmp/site/dev
+            cp devsrc/dist/*.html /tmp/site/dev/
+          else
+            echo "沒有 dev 分支，略過"
+          fi
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: /tmp/site
 
   deploy:
     needs: build

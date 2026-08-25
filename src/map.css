@@ -8,7 +8,7 @@ body{
 .eyebrow{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:12px;
   letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
 
-.shell{display:grid;grid-template-rows:auto 1fr;height:100vh}
+.shell{display:grid;grid-template-rows:auto auto 1fr;height:100vh}
 .bar{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;
   padding:14px 22px;border-bottom:1px solid var(--line);background:var(--surface)}
 .bar h1{margin:0;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
@@ -32,6 +32,10 @@ body{
    字串很長，nowrap 會在手機上把整個頁面推寬造成橫向捲動。 */
 .stamp{display:block;margin-top:8px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
   color:var(--ink-3);white-space:normal;overflow-wrap:anywhere}
+/* 公開網址看起來比私人連結「官方」，免責要在看得到的地方，不能只放頁尾 */
+.disclaim{margin:0;padding:7px 22px;font-size:11.5px;line-height:1.5;color:var(--ink-3);
+  background:var(--sunk);border-bottom:1px solid var(--line)}
+.hdrspacer{display:contents}
 .main{display:grid;grid-template-columns:352px 1fr;min-height:0}
 @media (max-width:900px){ .shell{height:auto;min-height:100vh} .main{grid-template-columns:1fr} }
 

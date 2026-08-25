@@ -6,7 +6,7 @@
 用法： python3 build.py qld
 輸出： dist/<state>.html
 """
-import sys, json, pathlib
+import os, sys, json, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from lib import expand, load, STATES
 
@@ -113,20 +113,44 @@ def categorise(rings, flags, mask):
     return c
 
 
+# 建置目標。
+#   pages    －－ 頁面之間用相對路徑（qld.html）。給 GitHub Pages 用，也是預設。
+#              相對路徑在同一個站台裡原地跳轉，沒有 iframe 沙箱那些限制。
+#   artifact －－ 用 data/artifacts.json 裡的絕對網址。那個檔不進版控
+#              （裡面是私人的 Artifact 連結），所以只有本機才建得出來。
+TARGET = os.environ.get("TARGET", "pages")
+ARTIFACTS = ROOT / "data" / "artifacts.json"
+STATE_ORDER = ["qld", "nsw", "vic", "wa"]
+
+
+def site_links(state=None):
+    """各頁之間的連結。
+
+    導覽用縮寫：澳洲當地（求職廣告、地址）就是講 QLD／NSW，比中文州名好認也省空間。
+    """
+    if TARGET == "artifact":
+        if not ARTIFACTS.exists():
+            raise SystemExit("TARGET=artifact 需要 data/artifacts.json（該檔不進版控）")
+        art = load(ARTIFACTS)
+        home, urls = art.get("portal"), art.get("urls", {})
+    else:
+        home, urls = "index.html", {k: f"{k}.html" for k in STATE_ORDER}
+
+    out = []
+    if home:
+        out.append({"label": "全澳入口", "url": home, "home": True})
+    for key in STATE_ORDER:
+        if key in urls:
+            out.append({"label": key.upper(), "url": urls[key], "current": key == state})
+    return out
+
+
 def nav_links(state):
     """頁首的導覽：回入口頁，以及切到其他州。
 
     州頁原本是死路——從入口頁點進來之後沒有任何方式回去或切換。
-    網址取自 data/artifacts.json，沒登記的州不會出現。
     """
-    art = load(ROOT / "data" / "artifacts.json")
-    out = []
-    if art.get("portal"):
-        out.append({"label": "全澳入口", "url": art["portal"], "home": True})
-    for key, url in art.get("urls", {}).items():
-        # 導覽用縮寫：澳洲當地（求職廣告、地址）就是講 QLD／NSW，比中文州名好認也省空間
-        out.append({"label": key.upper(), "url": url, "current": key == state})
-    return out
+    return site_links(state)
 
 
 def part(name):

@@ -103,8 +103,7 @@ for(const s of STATES){
   if(s.url){
     const a = el('a',{});
     a.setAttribute('href', s.url);
-    a.setAttribute('target', '_blank');
-    a.setAttribute('rel', 'noopener');
+    if(/^https?:/.test(s.url)){ a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener'); }
     a.appendChild(node);
     svg.appendChild(a);
   } else {
@@ -158,7 +157,7 @@ for(const s of STATES){
     ${detail}`;
   let node;
   if(s.url){ node = document.createElement('a'); node.href = s.url; node.className = 'card';
-             node.target = '_blank'; node.rel = 'noopener'; }
+             if(/^https?:/.test(s.url)){ node.target = '_blank'; node.rel = 'noopener'; } }
   else { node = document.createElement('div');
          node.className = 'card ' + (note ? 'off' : 'nomap'); }
   node.innerHTML = inner;
@@ -261,7 +260,7 @@ function render(key){
   if(f & BIT_DISASTER) routes.push('洪水／氣旋等天災重建（2021/12/31 之後）');
   const extra = routes.length ? `<br>這裡也被宣告為災區：${routes.join('、')}。` : '';
   const link = s.url
-    ? `<a class="golink" href="${s.url}#pc=${parseInt(v,10)}" target="_blank" rel="noopener">在${esc(s.label)}地圖上看 →</a>`
+    ? `<a class="golink" href="${s.url}#pc=${parseInt(v,10)}"${/^https?:/.test(s.url) ? ' target="_blank" rel="noopener"' : ''}>在${esc(s.label)}地圖上看 →</a>`
     : `<p class="nomap">${esc(s.label)}還沒做地圖。上面的判斷仍然有效。</p>`;
   show(`<div class="verdict" style="--vc:${cat.c}">
       <span class="chip"></span>

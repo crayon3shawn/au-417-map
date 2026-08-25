@@ -11,6 +11,10 @@ header{padding:38px 0 26px}
 h1{margin:0 0 6px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
   font-size:clamp(30px,5vw,44px);letter-spacing:.02em;line-height:1.05;text-wrap:balance}
 .lede{margin:0;color:var(--ink-2);font-size:15px;max-width:62ch}
+/* 公開網址看起來比私人連結「官方」，免責要在看得到的地方 */
+.disclaim{margin:14px 0 0;padding:8px 12px;font-size:12px;line-height:1.55;color:var(--ink-3);
+  background:var(--sunk);border-left:3px solid var(--line-2);border-radius:0 3px 3px 0;max-width:70ch}
+.disclaim a{color:var(--ink-2)}
 .lede-note{color:var(--ink-3);font-size:13px}
 /* 出處與建置日期是溯源資訊，不是要操作的東西，所以放在最下面的出處段落裡 */
 .stamp{margin:8px 0 0;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
