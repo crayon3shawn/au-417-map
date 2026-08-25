@@ -1,0 +1,202 @@
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Noto Sans TC","Hiragino Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.eyebrow{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:12px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+
+.shell{display:grid;grid-template-rows:auto 1fr;height:100vh}
+.bar{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;
+  padding:14px 22px;border-bottom:1px solid var(--line);background:var(--surface)}
+.bar h1{margin:0;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
+  font-size:26px;letter-spacing:.02em;text-wrap:balance}
+.bar .sub{color:var(--ink-2);font-size:13px}
+.bar .spacer{flex:1 1 40px}
+.nav{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.nav a,.nav span{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
+  font-size:12.5px;letter-spacing:.04em;padding:4px 9px;border-radius:3px;
+  border:1px solid var(--line);text-decoration:none;color:var(--ink-2);white-space:nowrap}
+.nav a:hover{background:var(--sunk);color:var(--ink);border-color:var(--line-2)}
+.nav a:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+.nav .home{border-color:var(--line-2);color:var(--ink)}
+.nav .here{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.lang{appearance:none;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
+  font-size:12.5px;letter-spacing:.06em;padding:4px 10px;border-radius:3px;
+  border:1px solid var(--line-2);background:var(--paper);color:var(--ink-2);cursor:pointer}
+.lang:hover{background:var(--sunk);color:var(--ink)}
+.lang:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+/* 出處與建置日期是溯源資訊，不是要操作的東西，所以放在最下面的出處段落裡。
+   字串很長，nowrap 會在手機上把整個頁面推寬造成橫向捲動。 */
+.stamp{display:block;margin-top:8px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  color:var(--ink-3);white-space:normal;overflow-wrap:anywhere}
+.main{display:grid;grid-template-columns:352px 1fr;min-height:0}
+@media (max-width:900px){ .shell{height:auto;min-height:100vh} .main{grid-template-columns:1fr} }
+
+.rail{border-right:1px solid var(--line);background:var(--surface);
+  padding:20px;display:flex;flex-direction:column;gap:22px;
+  min-height:0;max-height:100%;overflow-y:auto}
+@media (max-width:900px){ .rail{max-height:none;overflow:visible;border-right:none;
+  border-top:1px solid var(--line);order:2} }
+.blk{display:flex;flex-direction:column;gap:10px}
+
+.layers{display:flex;flex-direction:column;gap:2px}
+.lay{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;
+  padding:9px 10px;border-radius:3px;cursor:pointer;transition:background .12s}
+.lay:hover{background:var(--sunk)}
+.lay:has(input:focus-visible){outline:2px solid var(--ink);outline-offset:1px}
+.lay input{appearance:none;width:15px;height:15px;margin:0;border:1.5px solid var(--line-2);
+  border-radius:2px;background:var(--paper);cursor:pointer;position:relative;flex:none}
+.lay input:checked{background:var(--sw);border-color:var(--sw)}
+.lay input:checked::after{content:"";position:absolute;left:4px;top:1px;width:4px;height:8px;
+  border:solid var(--surface);border-width:0 2px 2px 0;transform:rotate(42deg)}
+.lay .nm{font-weight:500;font-size:13.5px;line-height:1.35}
+.lay .nm small{display:block;font-weight:400;font-size:11.5px;color:var(--ink-3)}
+.lay .ct{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+.seg{display:flex;border:1px solid var(--line-2);border-radius:3px;overflow:hidden}
+.seg button{flex:1;appearance:none;border:0;background:var(--paper);color:var(--ink-2);
+  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:13px;
+  letter-spacing:.06em;padding:7px 4px;cursor:pointer}
+.seg button + button{border-left:1px solid var(--line-2)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
+.seg button:focus-visible{outline:2px solid var(--ink);outline-offset:-3px}
+
+/* 產業決定整張圖的意思，所以放在搜尋上面 */
+.ind{width:100%;font-family:"Noto Sans TC",system-ui,sans-serif;font-size:14px;
+  padding:8px 10px;border:1px solid var(--line-2);border-radius:3px;
+  background-color:var(--paper);color:var(--ink);cursor:pointer;
+/* 原生 select 會沿用作業系統外觀（箭頭、內距、深色模式配色都不受控），
+   所以關掉 appearance 自己畫，才跟頁面其他輸入元件一致。
+   展開後的選項清單由作業系統繪製，那部分無法設定樣式。 */
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23767676' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 11px center;background-size:11px;
+  padding-right:30px;}
+.ind:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px;border-color:var(--c-work)}
+.indnote{margin:0;font-size:11.5px;line-height:1.5;color:var(--ink-3)}
+.indnote b{color:var(--ink-2);font-weight:600}
+/* 官方對每個產業的範圍有明確定義，搞錯會被拒——所以直接寫在選單下面 */
+.scope{display:block;margin-top:4px;padding-left:8px;border-left:2px solid var(--line);color:var(--ink-3)}
+.scope a{display:inline-block;margin-top:3px;color:var(--ink-2);white-space:nowrap}
+.scope a:hover{color:var(--c-work)}
+.srch{display:flex}
+.srch input{flex:1;min-width:0;font-family:"IBM Plex Mono",monospace;font-size:14px;
+  padding:8px 10px;border:1px solid var(--line-2);border-radius:3px;background:var(--paper);color:var(--ink)}
+.srch input:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px;border-color:var(--c-work)}
+.qhint{margin:0;font-size:11.5px;line-height:1.45;color:var(--ink-3)}
+.qhint:empty{display:none}
+.hits{display:flex;flex-direction:column;gap:2px;max-height:210px;overflow-y:auto}
+.hits:empty{display:none}
+.hits button{appearance:none;text-align:left;border:1px solid var(--line);background:var(--paper);
+  color:var(--ink);border-radius:3px;padding:7px 10px;cursor:pointer;font:inherit;font-size:12.5px;
+  display:flex;align-items:baseline;gap:8px}
+.hits button:hover{background:var(--sunk);border-color:var(--line-2)}
+.hits button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+.hits b{font-family:"IBM Plex Mono",monospace;font-weight:600}
+.hits i{font-style:normal;color:var(--ink-3);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hits em{font-style:normal;width:9px;height:9px;border-radius:2px;flex:none;background:var(--hc)}
+.btn{appearance:none;border:1px solid var(--line-2);background:var(--paper);color:var(--ink);
+  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:13px;
+  letter-spacing:.06em;padding:8px 12px;border-radius:3px;cursor:pointer}
+.btn:hover{background:var(--sunk)}
+.btn:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+
+.card{border:1px solid var(--line);border-radius:4px;background:var(--paper);overflow:hidden}
+.card .hd{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;
+  align-items:baseline;gap:10px;background:var(--sunk)}
+.card .pcn{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:22px}
+.card .loc{font-size:12px;color:var(--ink-2);line-height:1.45;flex:1}
+.card .bd{padding:12px 14px;display:flex;flex-direction:column;gap:11px}
+.verdict{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.5}
+.verdict .dot{width:9px;height:9px;border-radius:2px;margin-top:6px;flex:none;background:var(--vc)}
+.verdict b{font-weight:700}
+.verdict .no{color:var(--ink-3)}
+.verdict.no .dot{background:var(--line-2)}
+.note{font-size:12px;line-height:1.55;color:var(--ink-2);background:var(--warn-bg);
+  border:1px solid var(--warn-line);border-radius:3px;padding:9px 11px}
+.empty{padding:16px 14px;font-size:13px;color:var(--ink-2);line-height:1.6}
+.facts{display:flex;flex-direction:column;gap:9px;font-size:12.5px;line-height:1.55;color:var(--ink-2)}
+.facts p{margin:0}
+.facts b{color:var(--ink)}
+.src{font-size:11.5px;line-height:1.6;color:var(--ink-3)}
+.src a{color:var(--ink-2)}
+.src a:hover{color:var(--c-work)}
+
+.mapwrap{position:relative;background:var(--paper-2);min-height:0;overflow:hidden}
+@media (max-width:900px){ .mapwrap{height:72vh;min-height:460px;order:1} }
+svg.map{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+svg.map.drag{cursor:grabbing}
+.grat{stroke:var(--grat);stroke-width:.6;fill:none}
+.tropic{stroke:var(--ink-3);stroke-width:.9;stroke-dasharray:5 4;fill:none;opacity:.6}
+.tropiclbl{fill:var(--ink-3);font-family:"Barlow Condensed",sans-serif;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase}
+/* 每個郵區只有一條 path。沒被篩選到時 fill-opacity 為 0，只剩邊界線，
+   所以永遠看得到郵區格線，而切換篩選只是加減一個 class，不動幾何。 */
+/* 每個郵區只有一條 path，顏色直接就是答案：沒有篩選、沒有第二個軸 */
+.poa{fill-opacity:var(--fill-a);stroke:var(--edge);stroke-width:.8;
+  stroke-linejoin:round;cursor:pointer}
+.poa.none{fill-opacity:calc(var(--fill-a) * .55)}
+.poa:hover{fill-opacity:.92;stroke:var(--ink-3);stroke-width:1.4}
+.poa.sel{stroke:var(--ink);stroke-width:2.2;fill-opacity:.95}
+.stray{fill:var(--ink-3);stroke:var(--halo);stroke-width:1;cursor:pointer}
+.city circle{fill:var(--ink);stroke:var(--halo);stroke-linejoin:round}
+.city text{fill:var(--ink);font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
+  paint-order:stroke;stroke:var(--halo);stroke-linejoin:round}
+.city.t2{display:none}
+.city.t2.on{display:inline}
+
+.zoom{position:absolute;right:14px;bottom:14px;display:flex;flex-direction:column;gap:5px}
+.zoom button{width:34px;height:34px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);
+  border-radius:3px;cursor:pointer;font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:17px;
+  box-shadow:var(--shadow);line-height:1}
+.zoom button:hover{background:var(--sunk)}
+.zoom button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+
+.legend{position:absolute;left:14px;top:14px;background:var(--surface);border:1px solid var(--line);
+  border-radius:4px;padding:11px 13px;box-shadow:var(--shadow);max-width:248px}
+.legend > summary{font-size:10.5px;cursor:pointer;list-style:none;display:flex;
+  align-items:center;justify-content:space-between;gap:8px}
+.legend > summary::-webkit-details-marker{display:none}
+.legend > summary::after{content:"−";font-size:13px;line-height:1;color:var(--ink-3)}
+.legend:not([open]) > summary::after{content:"+"}
+.legend[open] > summary{margin-bottom:7px}
+/* 收合時仍看得到三個顏色——三分類就是這張圖的全部內容，
+   手機上預設收合會把核心答案整個藏起來。 */
+.mini{display:none;gap:3px;margin-left:6px}
+.legend:not([open]) .mini{display:inline-flex}
+.mini i{width:10px;height:10px;border-radius:2px;background:var(--sw);
+  opacity:var(--fill-a);border:.5px solid var(--edge)}
+.legend > summary:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.lg{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ink-2);line-height:1.35;padding:2.5px 0}
+.lg span{flex:1}
+.lg b{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
+  font-weight:600;font-size:11px;color:var(--ink)}
+.lg.split{display:none}
+.legend.split .lg.split{display:flex}
+.legend.split #r-rebuild{display:none}
+.lgtoggle{display:flex;align-items:center;gap:7px;margin-top:8px;padding-top:8px;
+  border-top:1px solid var(--line);font-size:11px;color:var(--ink-2);cursor:pointer}
+.lgtoggle input{appearance:none;width:13px;height:13px;margin:0;flex:none;cursor:pointer;
+  border:1.5px solid var(--line-2);border-radius:2px;background:var(--paper);position:relative}
+.lgtoggle input:checked{background:var(--ink);border-color:var(--ink)}
+.lgtoggle input:checked::after{content:"";position:absolute;left:3.5px;top:.5px;width:3.5px;height:7px;
+  border:solid var(--surface);border-width:0 2px 2px 0;transform:rotate(42deg)}
+.lgtoggle:has(input:focus-visible){outline:2px solid var(--ink);outline-offset:2px}
+.lg i{width:13px;height:11px;border-radius:2px;flex:none;background:var(--sw);
+  opacity:var(--fill-a);border:.5px solid var(--edge)}
+.lgnote{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);
+  font-size:11px;line-height:1.45;color:var(--ink-3)}
+@media (max-width:560px){ .legend{max-width:190px;padding:8px 10px} .lg{font-size:10.5px} }
+
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);
+  padding:5px 8px;border-radius:3px;font-size:11.5px;white-space:nowrap;opacity:0;
+  transition:opacity .1s;font-family:"IBM Plex Mono",monospace;z-index:5}
+.tip.on{opacity:1}
+.count{position:absolute;right:14px;top:14px;background:var(--surface);border:1px solid var(--line);
+  border-radius:4px;padding:7px 11px;box-shadow:var(--shadow);font-size:11.5px;color:var(--ink-2)}
+.count b{font-family:"IBM Plex Mono",monospace;color:var(--ink);font-weight:600;font-size:14px}
+@media (max-width:560px){ .count{display:none} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }

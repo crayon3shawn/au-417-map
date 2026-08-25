@@ -1,0 +1,165 @@
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Noto Sans TC","Hiragino Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.eyebrow{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:12px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px 56px}
+header{padding:38px 0 26px}
+h1{margin:0 0 6px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
+  font-size:clamp(30px,5vw,44px);letter-spacing:.02em;line-height:1.05;text-wrap:balance}
+.lede{margin:0;color:var(--ink-2);font-size:15px;max-width:62ch}
+.lede-note{color:var(--ink-3);font-size:13px}
+/* 出處與建置日期是溯源資訊，不是要操作的東西，所以放在最下面的出處段落裡 */
+.stamp{margin:8px 0 0;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  color:var(--ink-3);overflow-wrap:anywhere}
+
+/* ---- 查詢 ---- */
+.finder{background:var(--surface);border:1px solid var(--line);border-radius:6px;
+  padding:20px;box-shadow:var(--shadow)}
+.finder .eyebrow{display:block;margin-bottom:10px}
+.indrow{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-bottom:14px;
+  padding-bottom:14px;border-bottom:1px solid var(--line)}
+.indrow label{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
+  font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.indrow select{font-family:"Noto Sans TC",system-ui,sans-serif;font-size:14px;
+  padding:7px 10px;border:1px solid var(--line-2);border-radius:3px;
+  background-color:var(--paper);color:var(--ink);cursor:pointer;
+/* 原生 select 會沿用作業系統外觀（箭頭、內距、深色模式配色都不受控），
+   所以關掉 appearance 自己畫，才跟頁面其他輸入元件一致。
+   展開後的選項清單由作業系統繪製，那部分無法設定樣式。 */
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23767676' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 11px center;background-size:11px;
+  padding-right:30px;}
+.indrow select:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px}
+.indrow span{font-size:11.5px;color:var(--ink-3);line-height:1.5;flex:1;min-width:240px}
+.indrow .dim{color:var(--ink-3);opacity:.75}
+.qrow{display:flex}
+.qrow input{flex:1;min-width:0;font-family:"IBM Plex Mono",monospace;font-size:26px;
+  letter-spacing:.06em;padding:10px 14px;border:1px solid var(--line-2);border-radius:4px;
+  background:var(--paper);color:var(--ink)}
+.qrow input:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px;border-color:var(--c-work)}
+.qrow button{appearance:none;border:1px solid var(--ink);background:var(--ink);color:var(--surface);
+  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:15px;
+  letter-spacing:.08em;padding:0 20px;border-radius:4px;cursor:pointer}
+.qrow button:hover{opacity:.88}
+.qrow button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+.result{margin-top:16px}
+.hits{display:flex;flex-direction:column;gap:3px;margin-top:12px;max-height:280px;overflow-y:auto}
+.hits:empty{display:none}
+.hits button{appearance:none;text-align:left;border:1px solid var(--line);background:var(--paper);
+  color:var(--ink);border-radius:4px;padding:9px 12px;cursor:pointer;font:inherit;font-size:13px;
+  display:flex;align-items:baseline;gap:10px}
+.hits button:hover{background:var(--sunk);border-color:var(--line-2)}
+.hits button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+.hits em{font-style:normal;width:10px;height:10px;border-radius:2px;flex:none;background:var(--hc)}
+.hits b{font-family:"IBM Plex Mono",monospace;font-weight:600}
+.hits i{font-style:normal;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hits u{text-decoration:none;color:var(--ink-3);font-size:11.5px}
+.hint{color:var(--ink-3);font-size:12.5px}
+.verdict{display:flex;gap:14px;align-items:flex-start;padding:15px;border-radius:5px;
+  border:1px solid var(--line);background:var(--paper)}
+.verdict .chip{width:14px;height:38px;border-radius:3px;flex:none;background:var(--vc)}
+.verdict .body{flex:1;min-width:0}
+.verdict .pc{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:20px}
+.verdict .where{color:var(--ink-2);font-size:13px}
+.verdict .say{margin-top:5px;font-size:15px;font-weight:700;color:var(--vc)}
+.verdict .sub{margin-top:3px;font-size:12.5px;color:var(--ink-2);line-height:1.5}
+.golink{display:inline-flex;align-items:center;gap:6px;margin-top:11px;
+  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:14px;
+  letter-spacing:.06em;color:var(--ink);text-decoration:none;
+  border:1px solid var(--line-2);border-radius:4px;padding:7px 13px;background:var(--surface)}
+.golink:hover{background:var(--sunk)}
+.nomap{margin-top:11px;font-size:12px;color:var(--ink-3)}
+
+/* ---- 版面 ---- */
+/* 地圖與卡片原本並排，但兩者高度差很多（地圖 526px、卡片 944px），
+   左欄下半整片空著。改成上下堆疊，地圖有空間、卡片變成清楚的次要清單。 */
+.cols{display:flex;flex-direction:column;gap:26px;margin-top:34px}
+.mapbox{max-width:640px;margin:0 auto;width:100%}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:9px}
+.panel > .eyebrow{display:block;margin-bottom:12px}
+svg.au{display:block;width:100%;height:auto;background:var(--paper-2);
+  border:1px solid var(--line);border-radius:6px}
+.st{cursor:pointer;stroke:var(--edge);stroke-width:1;stroke-linejoin:round;fill-opacity:var(--fill-a)}
+/* 「沒有地圖」用虛線邊框表示，不用透明度——降透明度會被讀成「比較不合格」，
+   而 SA、TAS、NT 全境都算，那樣講就反了。 */
+.st.nomap{cursor:default;stroke-dasharray:4 3}
+.st:not(.nomap):hover{fill-opacity:.92}
+/* 描邊寬度必須跟 font-size 一起用 user unit 換算：viewBox 只有 37 度寬，
+   寫死 stroke-width:3 等於 3 度，會變成蓋住標籤的一大團色塊。 */
+.stlbl{fill:var(--ink);font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
+  paint-order:stroke;stroke:var(--halo);stroke-linejoin:round;
+  pointer-events:none;text-anchor:middle}
+.stlbl.dim{fill:var(--ink-3)}
+
+.card{display:block;text-decoration:none;color:inherit;background:var(--surface);
+  border:1px solid var(--line);border-radius:5px;padding:13px 15px}
+a.card:hover{border-color:var(--ink-3);background:var(--sunk)}
+.card .top{display:flex;align-items:baseline;gap:9px}
+.card .nm{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;font-size:19px}
+.card .en{font-size:11px;color:var(--ink-3);flex:1}
+.card .go{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:13px;
+  letter-spacing:.06em;color:var(--ink-2)}
+.card.off{opacity:.62}
+.bar{display:flex;height:7px;border-radius:2px;overflow:hidden;margin-top:9px;background:var(--sunk)}
+.bar i{display:block}
+.legend2{display:flex;flex-wrap:wrap;gap:5px 14px;margin-top:7px;font-size:11px;color:var(--ink-2)}
+.legend2 span{display:flex;align-items:center;gap:5px}
+.legend2 i{width:9px;height:9px;border-radius:2px;background:var(--sw)}
+.legend2 b{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--ink)}
+.allwork{margin-top:8px;font-size:11.5px;line-height:1.5;color:var(--ink-2)}
+.allwork b{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--ink)}
+.card.off{opacity:1}
+.card.off .go{font-weight:700}
+.card.nomap{opacity:.62}
+.card.nomap .go{color:var(--ink-3)}
+
+.basis{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}
+.basis h2{margin:0 0 8px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
+  font-weight:700;font-size:22px;letter-spacing:.02em}
+.basis-lede{margin:0 0 16px;font-size:13.5px;line-height:1.65;color:var(--ink-2);max-width:70ch}
+.cov{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.cov div{display:flex;align-items:baseline;gap:7px;background:var(--surface);
+  border:1px solid var(--line);border-radius:4px;padding:7px 11px;font-size:11.5px;color:var(--ink-2)}
+.cov b{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
+  color:var(--ink);font-weight:600;font-size:13px}
+.cov i{font-style:normal;color:var(--ink-3);font-size:10.5px}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:5px;background:var(--surface)}
+table.imap{border-collapse:collapse;width:100%;min-width:680px;font-size:12.5px}
+table.imap th,table.imap td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--line);
+  vertical-align:top;line-height:1.5}
+table.imap thead th{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);
+  background:var(--sunk);white-space:nowrap}
+table.imap tbody tr:last-child th,table.imap tbody tr:last-child td{border-bottom:0}
+table.imap td.na{color:var(--ink-3)}
+table.imap td.na b{color:var(--c-rebuild)}
+table.imap th[scope="row"]{font-weight:700;white-space:nowrap}
+table.imap td.sc{color:var(--ink-3);font-size:11.5px;min-width:260px}
+table.imap th[scope="row"] em{display:block;font-style:normal;font-weight:400;
+  font-size:10.5px;color:var(--ink-3);letter-spacing:0}
+table.imap .diff{color:var(--c-rebuild);font-weight:700}
+.basis-note2{margin:0 0 10px;font-size:12px;line-height:1.6;color:var(--ink-3)}
+.basis-note2 a{color:var(--ink-2)}
+.indrow a{color:var(--ink-2);white-space:nowrap}
+.basis-note{margin:14px 0 0;font-size:12.5px;line-height:1.6;color:var(--ink-2);
+  border-left:3px solid var(--c-work);padding-left:11px}
+.prov{margin-top:20px}
+.prov h3{margin:0 0 7px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
+  font-weight:700;font-size:15px}
+.prov ul{margin:0;padding-left:18px;font-size:12.5px;line-height:1.65;color:var(--ink-2)}
+.prov li{margin-bottom:4px}
+.prov b{color:var(--ink)}
+.notes{margin-top:38px;padding-top:22px;border-top:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
+.notes h3{margin:0 0 7px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
+  font-weight:700;font-size:15px;letter-spacing:.02em}
+.notes p{margin:0;font-size:12.5px;line-height:1.6;color:var(--ink-2)}
+.notes a{color:var(--ink-2)}
+.notes a:hover{color:var(--c-work)}
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }

@@ -26,6 +26,12 @@ LABEL_POS = {
 FEW = 5   # 一般工地只有這麼少郵區算的話，直接把它們點名出來
 
 
+def part(name):
+    """樣板拆成結構／樣式／程式三個檔，建置時再合成單一自包含 HTML。
+    產出完全一樣，拆的是原始碼不是成品。"""
+    return (ROOT / "src" / name).read_text(encoding="utf-8")
+
+
 def tokens_css():
     """共用的設計 token。兩個樣板都注入同一份，避免改配色時漏掉一邊。"""
     return (ROOT / "src" / "tokens.css").read_text(encoding="utf-8")
@@ -141,6 +147,8 @@ def main():
 
     html = (ROOT / "src" / "portal.html").read_text(encoding="utf-8")
     for token, value in (("__TOKENS__", tokens_css()),
+                         ("__CSS__", part("portal.css")),
+                         ("__JS__", part("portal.js").replace("// @ts-check\n", "", 1)),
                          ("__DATA__", json.dumps(payload, ensure_ascii=False, separators=(",", ":")))):
         if token not in html:
             raise SystemExit(f"樣板裡找不到注入點 {token}")

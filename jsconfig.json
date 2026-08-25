@@ -1,0 +1,11 @@
+{
+  "//": "讓 VS Code 內建的 TypeScript 引擎檢查 src/*.js。不需要 npm install，也沒有 build 步驟——只是打開編輯器內建的檢查。搭配檔案開頭的 // @ts-check 使用。strict 打開的主要目的是 strictNullChecks：getElementById 會回傳 HTMLElement | null，這個專案已經因為引用被刪掉的元素而壞過兩次。",
+  "compilerOptions": {
+    "checkJs": true,
+    "strict": true,
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "noEmit": true
+  },
+  "include": ["src/*.js", "tests/*.js"]
+}

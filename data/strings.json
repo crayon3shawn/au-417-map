@@ -1,0 +1,193 @@
+{
+  "note": "介面文字。每個 key 一組 zh／en。頁面同時載入兩種語言，靠切換鈕換——分成兩份產出的話 Artifact 數量會加倍，每份都要單獨設分享權限。",
+  "s": {
+    "title_suffix": {
+      "zh": "417 集簽地圖",
+      "en": "417 Second-Visa Map"
+    },
+    "subtitle": {
+      "zh": "郵遞區號合格性與災區宣告",
+      "en": "Postcode eligibility and disaster declarations"
+    },
+    "showing": {
+      "zh": "目前顯示",
+      "en": "Showing"
+    },
+    "nav_home": {
+      "zh": "全澳入口",
+      "en": "All of Australia"
+    },
+    "industry_label": {
+      "zh": "你做哪一行",
+      "en": "Your industry"
+    },
+    "industry_table": {
+      "zh": "看的是 {tables} 這張表。",
+      "en": "Uses the {tables} list."
+    },
+    "official_def": {
+      "zh": "官方定義 →",
+      "en": "Official definition →"
+    },
+    "search_label": {
+      "zh": "查郵區或地名",
+      "en": "Postcode or place"
+    },
+    "search_ph": {
+      "zh": "4870 或 Cairns",
+      "en": "4870 or Cairns"
+    },
+    "hits_found": {
+      "zh": "找到 {n} 筆",
+      "en": "{n} matches"
+    },
+    "hits_more": {
+      "zh": "，只列出前 {n} 筆，再打幾個字縮小範圍",
+      "en": " — showing the first {n}; type more to narrow it down"
+    },
+    "hits_none": {
+      "zh": "找不到「{q}」。試試郵遞區號，或只打地名的前幾個字。",
+      "en": "No match for \"{q}\". Try a postcode, or just the first few letters of a place."
+    },
+    "detail_label": {
+      "zh": "郵區詳情",
+      "en": "Postcode detail"
+    },
+    "detail_empty": {
+      "zh": "點地圖上任一塊郵區，或在上面輸入郵遞區號，這裡會顯示這個郵區算不算集簽、哪一種工作算。",
+      "en": "Tap any postcode on the map, or search above, to see whether it counts and which kind of work qualifies."
+    },
+    "legend_title": {
+      "zh": "這塊郵區算不算",
+      "en": "Does this postcode count?"
+    },
+    "cat_work": {
+      "zh": "一般{ind}工作就算",
+      "en": "Ordinary {ind} work counts"
+    },
+    "cat_rebuild": {
+      "zh": "只有災後重建工作算",
+      "en": "Only disaster recovery work counts"
+    },
+    "cat_none": {
+      "zh": "完全不算",
+      "en": "Does not count at all"
+    },
+    "split_toggle": {
+      "zh": "區分大火與天災",
+      "en": "Split bushfire vs other disasters"
+    },
+    "cat_fire_only": {
+      "zh": "只有大火重建算",
+      "en": "Only bushfire recovery counts"
+    },
+    "cat_flood_only": {
+      "zh": "只有天災重建算",
+      "en": "Only flood/cyclone recovery counts"
+    },
+    "cat_both": {
+      "zh": "大火與天災重建都算",
+      "en": "Both bushfire and disaster recovery count"
+    },
+    "legend_note": {
+      "zh": "災害種類只有在「重建是唯一路徑」時才影響你的判斷。在綠色郵區一般工作本來就算，災害資訊點進去看。",
+      "en": "Disaster type only matters where recovery work is the only route. In green postcodes ordinary work already counts — tap for the disaster details."
+    },
+    "v_work_yes": {
+      "zh": "一般{ind}工作 → 算",
+      "en": "Ordinary {ind} work → counts"
+    },
+    "v_work_yes_sub": {
+      "zh": "這個郵區在{ind}適用的地區名單上。",
+      "en": "This postcode is on the area list that applies to {ind}."
+    },
+    "v_work_no": {
+      "zh": "一般{ind}工作 → 不算",
+      "en": "Ordinary {ind} work → does not count"
+    },
+    "v_work_no_sub": {
+      "zh": "這個郵區不在{ind}適用的地區名單上。",
+      "en": "This postcode is not on the area list that applies to {ind}."
+    },
+    "v_fire": {
+      "zh": "叢林大火重建工作 → 算",
+      "en": "Bushfire recovery work → counts"
+    },
+    "v_fire_sub": {
+      "zh": "2019 年 7 月 31 日之後執行的重建、拆除、整地、修繕，有給薪或志工都算。",
+      "en": "Rebuilding, demolition, land clearing and repairs carried out after 31 July 2019. Paid or volunteer."
+    },
+    "v_flood": {
+      "zh": "洪水／氣旋等天災重建工作 → 算",
+      "en": "Flood, cyclone and severe weather recovery → counts"
+    },
+    "v_flood_sub": {
+      "zh": "2021 年 12 月 31 日之後執行；申請時「Employment type」要選 flood recovery。",
+      "en": "Carried out after 31 December 2021. Select \"flood recovery\" as Employment type when you apply."
+    },
+    "v_rebuild_only": {
+      "zh": "注意：這個郵區只走災後重建這條路。一般{ind}工作、跟災後復原無關的，不能算。留好能證明工程屬於災後修復的紀錄。",
+      "en": "Note: recovery work is the only route here. Ordinary {ind} work unrelated to disaster recovery does not count. Keep records showing the work was disaster repair."
+    },
+    "v_no_polygon": {
+      "zh": "ABS 沒有這個郵區的對應面，地圖上以小點標示概略位置。",
+      "en": "The ABS has no boundary for this postcode; it is shown as a dot at an approximate location."
+    },
+    "v_not_listed": {
+      "zh": "郵遞區號 {pc}{where} 不在{state}的合格清單上。一般{ind}工作與災後重建工作都不能用它集簽。",
+      "en": "Postcode {pc}{where} is not on any eligible list for {state}. Neither ordinary {ind} work nor recovery work counts here."
+    },
+    "facts_title": {
+      "zh": "三個重點",
+      "en": "Three things that matter"
+    },
+    "fact1_head": {
+      "zh": "地區名單看產業。",
+      "en": "The area list depends on your industry."
+    },
+    "fact1_body": {
+      "zh": "{ind}在 {tables} 郵區內的工作才算集簽。",
+      "en": "Only {ind} work inside {tables} postcodes counts."
+    },
+    "fact2_head": {
+      "zh": "災區是另一條路。",
+      "en": "Disaster areas are a separate route."
+    },
+    "fact2_body": {
+      "zh": "被宣告為災區的郵區，就算不在上面那些名單裡，做災後重建的土建、拆除、修繕、道路橋樑一樣算，志工也算。但同一個郵區的一般工作不算。",
+      "en": "In a declared disaster area, recovery work — earthworks, demolition, repairs, roads and bridges — counts even if the postcode is not on the lists above. Volunteering counts too. Ordinary work in the same postcode does not."
+    },
+    "fact3_head": {
+      "zh": "二簽 88 天、三簽 179 天。",
+      "en": "88 days for a second visa, 179 for a third."
+    },
+    "fact3_body": {
+      "zh": "算的是等同全職的工作天數，不能壓縮在比 3 個月／6 個月更短的期間內完成。",
+      "en": "Counted as full-time equivalent days. You cannot compress them into less than 3 or 6 calendar months."
+    },
+    "source_title": {
+      "zh": "出處與查證",
+      "en": "Sources"
+    },
+    "reset_view": {
+      "zh": "回到全州視野",
+      "en": "Reset view"
+    },
+    "zoom_in": {
+      "zh": "放大",
+      "en": "Zoom in"
+    },
+    "zoom_out": {
+      "zh": "縮小",
+      "en": "Zoom out"
+    },
+    "more_areas": {
+      "zh": " 等 {n} 個地區",
+      "en": " and {n} localities in total"
+    },
+    "title_state": {
+      "zh": "{state} 417 集簽地圖",
+      "en": "{state} 417 Second-Visa Map"
+    }
+  }
+}

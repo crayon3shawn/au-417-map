@@ -1,5 +1,5 @@
 {
-  "note": "產業與地區表的對應。官方沒有這張表——它是 Home Affairs 頁面上的散文規則，人工整理自 417 與 462 的『Approved industries and areas for specified work』段落。地區表本身在 postcodes.json。 scope 是該產業的範圍摘要，同樣整理自官網的定義與例示，用意是避免把不算的工作誤認為算（例如農牧的二次加工）。",
+  "note": "產業與地區表的對應。官方沒有這張表——它是 Home Affairs 頁面上的散文規則，人工整理自 417 與 462 的『Approved industries and areas for specified work』段落。地區表本身在 postcodes.json。 scope 是該產業的範圍摘要，同樣整理自官網的定義與例示，用意是避免把不算的工作誤認為算（例如農牧的二次加工）。 label_en／scope_en 直接取自官網原文，不是把中文再翻回英文。",
   "source": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work",
   "checked_against_page_dated": "2026-08-18",
   "industries": {
@@ -16,7 +16,9 @@
         ]
       },
       "note": "462 頁面寫『northern Australia and other specified areas of regional Australia』，但兩份的 regional 表逐字相同，所以實際結果一致。",
-      "scope": "住宅與非住宅營造、土木工程、整地、鷹架、油漆、圍籬，含支援與清潔服務。"
+      "scope": "住宅與非住宅營造、土木工程、整地、鷹架、油漆、圍籬，含支援與清潔服務。",
+      "label_en": "Construction",
+      "scope_en": "Residential and non-residential building, heavy and civil engineering, land development and site preparation, building structure, installation and completion services. Support and cleaning services count."
     },
     "cultivation": {
       "label": "農牧",
@@ -31,7 +33,9 @@
         ]
       },
       "note": "集簽最大宗。二次加工不算（釀酒、製麵、製作加工肉品）。",
-      "scope": "採收與包裝蔬果、剪毛、屠宰、包裝、以生乳製作乳製品、種植與育苗、環境復育造林。二次加工不算：釀酒、蒸餾、碾磨、加工肉品、乳製品或肉品零售。"
+      "scope": "採收與包裝蔬果、剪毛、屠宰、包裝、以生乳製作乳製品、種植與育苗、環境復育造林。二次加工不算：釀酒、蒸餾、碾磨、加工肉品、乳製品或肉品零售。",
+      "label_en": "Farm work (plant and animal cultivation)",
+      "scope_en": "Harvesting and packing fruit and vegetables, shearing, butchery, packing, tanning, manufacturing dairy produce from raw material, cultivating or propagating plants, conservation and reforestation. Secondary processing does NOT count: winemaking, brewing, distillation, milling, small goods manufacturing, dairy or butchery retail."
     },
     "mining": {
       "label": "礦業",
@@ -43,7 +47,9 @@
         "462": null
       },
       "note": "462 的核准產業清單裡沒有礦業這一項。null 代表『不適用』，跟『不算』不同——礦區的土建案子若歸類為 construction 則 462 仍算。",
-      "scope": "煤礦、油氣開採、金屬與非金屬礦、採石、探勘，以及礦業支援服務（含清潔）。"
+      "scope": "煤礦、油氣開採、金屬與非金屬礦、採石、探勘，以及礦業支援服務（含清潔）。",
+      "label_en": "Mining",
+      "scope_en": "Coal mining, oil and gas extraction, metal ore mining, quarrying and other construction materials, exploration, and mining support services including cleaning."
     },
     "fishing": {
       "label": "漁業與採珠",
@@ -57,7 +63,9 @@
         ]
       },
       "note": "官方原文 \"Fishing and pearling\"。pearling 是採珠業，不是「珍珠」這個物品——先前譯為「漁業與珍珠」不準。",
-      "scope": "捕撈魚類與其他水生物；採集或養殖珍珠與珠貝。"
+      "scope": "捕撈魚類與其他水生物；採集或養殖珍珠與珠貝。",
+      "label_en": "Fishing and pearling",
+      "scope_en": "Operations relating directly to taking or catching fish and other aquatic species; taking or culturing pearls or pearl shell."
     },
     "forestry": {
       "label": "林業伐木",
@@ -70,7 +78,9 @@
           "northern"
         ]
       },
-      "scope": "在林場或森林種植、撫育、砍伐供伐採的樹木，以及把伐倒的樹運送到第一個加工或轉運地點。"
+      "scope": "在林場或森林種植、撫育、砍伐供伐採的樹木，以及把伐倒的樹運送到第一個加工或轉運地點。",
+      "label_en": "Tree farming and felling",
+      "scope_en": "Planting or tending trees in a plantation or forest intended to be felled, felling them, and transporting felled trees to the place where they are first milled or processed."
     },
     "tourism": {
       "label": "觀光與餐旅",
@@ -86,7 +96,9 @@
         ]
       },
       "note": "2021/6/22 起適用。remote 表已含官方另列的 4406、4416、4498、7215。",
-      "scope": "住宿（旅館、背包客棧、露營區）、餐飲（餐廳、外帶、酒吧）、直接面向遊客的服務（導遊、潛水教練、遊覽車司機、票務與活動場館）。"
+      "scope": "住宿（旅館、背包客棧、露營區）、餐飲（餐廳、外帶、酒吧）、直接面向遊客的服務（導遊、潛水教練、遊覽車司機、票務與活動場館）。",
+      "label_en": "Tourism and hospitality",
+      "scope_en": "Accommodation (hotels, motels, backpacker hostels, caravan parks), food and beverage (cafes, restaurants, takeaway, catering, pubs and bars), and services provided directly to tourists (guides, dive and adventure instructors, tourist transport, galleries and museums, travel agencies, event venues)."
     }
   },
   "recovery": {

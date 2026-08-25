@@ -63,6 +63,13 @@ const sandbox = {
   window: stub('window'),
   performance: { now: () => 0, getEntriesByType: () => [{}] },
   location: { hash: '#pc=4870', href: 'about:blank', search: '' },
+  navigator: { language: 'zh-TW' },
+  localStorage: {
+    _v: {},
+    getItem(k) { return Object.prototype.hasOwnProperty.call(this._v, k) ? this._v[k] : null; },
+    setItem(k, v) { this._v[k] = String(v); },
+    removeItem(k) { delete this._v[k]; },
+  },
   requestAnimationFrame: (f) => f(0),
   addEventListener: () => {},
   matchMedia: () => ({ matches: false, addEventListener: () => {} }),

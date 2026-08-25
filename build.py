@@ -26,6 +26,13 @@ TITLES = {"qld": "昆士蘭 417 集簽地圖", "nsw": "新南威爾斯 417 集�
 LABELS = {"qld": "昆士蘭", "nsw": "新南威爾斯", "vic": "維多利亞",
           "sa": "南澳", "wa": "西澳", "tas": "塔斯馬尼亞",
           "nt": "北領地", "act": "首都領地"}
+EXCLUDED_EN = {
+    "qld": "Inner Brisbane and most of the Gold Coast are not on the list.",
+    "nsw": "Sydney, Newcastle, Wollongong and the Central Coast are not on the list.",
+    "vic": "Metropolitan Melbourne is not on the list.",
+    "wa": "Metropolitan Perth is not on the list.",
+}
+
 EXCLUDED = {
     "qld": "布里斯本市區與黃金海岸多數郵區不在名單上。",
     "nsw": "雪梨、紐卡索、臥龍崗、中央海岸的郵區不在名單上。",
@@ -122,6 +129,12 @@ def nav_links(state):
     return out
 
 
+def part(name):
+    """樣板拆成結構／樣式／程式三個檔，建置時再合成單一自包含 HTML。
+    產出完全一樣，拆的是原始碼不是成品。"""
+    return (ROOT / "src" / name).read_text(encoding="utf-8")
+
+
 def tokens_css():
     """共用的設計 token。兩個樣板都注入同一份，避免改配色時漏掉一邊。"""
     return (ROOT / "src" / "tokens.css").read_text(encoding="utf-8")
@@ -207,12 +220,16 @@ def main(state):
         "state_label": LABELS.get(state, STATES[state]["name"]),
         "state_abbr": state.upper(),
         "source_url": src[VISA]["url"],
+        "strings": load(ROOT / "data" / "strings.json")["s"],
+        "state_name_en": STATES[state]["name"],
         "nav": nav_links(state),
         "excluded_note": EXCLUDED.get(state, ""),
+        "excluded_note_en": EXCLUDED_EN.get(state, ""),
         "bbox": bbox([r for rs in rings.values() for r in rs]),
         "industries": [
             {"key": key, "label": v["label"], "en": v["en"],
-             "scope": v.get("scope", ""),
+             "scope": v.get("scope", ""), "scope_en": v.get("scope_en", ""),
+             "label_en": v.get("label_en", v["en"]),
              "mask": work_mask(v["areas"][VISA]),
              "counts": categorise(rings, flags, work_mask(v["areas"][VISA]))}
             for key, v in industries.items() if v["areas"][VISA]
@@ -241,6 +258,8 @@ def main(state):
 
     html = (ROOT / "src" / "template.html").read_text(encoding="utf-8")
     for token, value in (("__TOKENS__", tokens_css()),
+                         ("__CSS__", part("map.css")),
+                         ("__JS__", part("map.js").replace("// @ts-check\n", "", 1)),
                          ("__TITLE__", TITLES.get(state, f"{STATES[state]['name']} 417 集簽地圖")),
                          ("__DATA__", json.dumps(payload, ensure_ascii=False, separators=(",", ":")))):
         if token not in html:
