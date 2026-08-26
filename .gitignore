@@ -13,3 +13,9 @@ dist/
 # 私人的 Artifact 連結。推上公開 repo 等於把「知道網址就能看」的頁面攤開，
 # 而 Pages 版用相對路徑根本不需要它。只有 TARGET=artifact 時本機才會用到。
 data/artifacts.json
+
+# 開發時裝的 skill（npx skills add）。是本機的工具設定，不是專案的一部分——
+# 別人 clone 這個 repo 不需要它，也不該被綁著用同一份。
+.agents/
+.claude/
+skills-lock.json
