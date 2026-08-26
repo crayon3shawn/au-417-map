@@ -45,24 +45,23 @@ body{
   background:var(--sunk);border-bottom:1px solid var(--line)}
 .hdrspacer{display:contents}
 /* 側欄拆成兩段：上段（產業、查詢、詳情）是「問問題與看答案」，下段是背景資料。
-   桌機上兩段疊成同一條左欄，上段固定、下段捲動——這樣換產業與查詢框不會被
-   捲走。手機上上段排在地圖之前。 */
-.main{display:grid;grid-template-columns:352px 1fr;grid-template-rows:auto 1fr;min-height:0}
-.rail-a{grid-column:1;grid-row:1}
-.rail-b{grid-column:1;grid-row:2}
-.mapwrap{grid-column:2;grid-row:1 / span 2}
+   分兩段只是為了手機能把上段排在地圖之前——桌機上兩段裝在同一個容器裡，
+   **整條左欄一起捲**。曾經讓上段固定、只有下段捲，結果搜尋結果一多或詳情
+   一長，上段就被切掉而且捲不到，等於看不到答案。
+   手機上 railwrap 用 display:contents 退出版面，讓兩段各自排到地圖前後。 */
+.main{display:grid;grid-template-columns:352px 1fr;min-height:0}
+.railwrap{min-height:0;overflow-y:auto;border-right:1px solid var(--line)}
 @media (max-width:900px){
   .shell{height:auto;min-height:100vh}
   .main{display:flex;flex-direction:column}
-  .rail-a,.rail-b,.mapwrap{grid-column:auto;grid-row:auto}
+  .railwrap{display:contents}
 }
 
-.rail{border-right:1px solid var(--line);background:var(--surface);
-  padding:20px;display:flex;flex-direction:column;gap:22px;min-height:0}
+.rail{background:var(--surface);
+  padding:20px;display:flex;flex-direction:column;gap:22px}
 .rail-a{padding-bottom:0}
-.rail-b{padding-top:22px;max-height:100%;overflow-y:auto}
+.rail-b{padding-top:22px}
 @media (max-width:900px){
-  .rail{max-height:none;overflow:visible;border-right:none}
   /* 手機順序：產業→查詢→詳情→地圖→背景資料。搜尋要在地圖上面，而答案必須
      緊跟著搜尋——中間隔一張 72vh 的地圖的話，打完字還要滑過整張圖才看得到
      結果，等於把搜尋往上搬的好處抵消掉。 */
