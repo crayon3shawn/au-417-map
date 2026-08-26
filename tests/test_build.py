@@ -90,3 +90,30 @@ class TestRobotsMeta(unittest.TestCase):
             self.assertNotIn("noindex", (ROOT / src).read_text(encoding="utf-8"), src)
         for tpl in ("src/template.html", "src/portal.html"):
             self.assertIn("__ROBOTS__", (ROOT / tpl).read_text(encoding="utf-8"), tpl)
+
+
+class TestSearchIndex(unittest.TestCase):
+    """跨州查詢用的共用地名索引。
+
+    這個東西壞掉不會有任何徵兆：fetch 失敗被 catch 吃掉，頁面照樣運作，
+    只是打別州的地名永遠「找不到」。所以要從兩頭釘住——檔案有產出，
+    而且部署流程真的會把它帶上去。
+    """
+
+    def test_旗標表涵蓋全澳且分好州(self):
+        nat = build.national_flags()
+        self.assertGreater(sum(len(v) for v in nat.values()), 2000)
+        self.assertIn("nsw", nat)
+        self.assertIn("qld", nat)
+
+    def test_地名表每筆都有內容(self):
+        names = build.national_names()
+        self.assertGreater(len(names), 2000)
+        for pc in ("2000", "4870", "3000"):
+            self.assertTrue(names.get(pc, "").strip(), f"{pc} 沒有地名")
+        self.assertIn("Byron Bay", names["2481"])
+
+    def test_部署流程有帶上共用索引(self):
+        wf = (ROOT / ".github" / "workflows" / "pages.yml").read_text(encoding="utf-8")
+        self.assertIn("dist/*.json", wf,
+                      "workflow 只複製 *.html 的話，跨州查詢會靜靜地失效")

@@ -80,6 +80,9 @@ const sandbox = {
   addEventListener: () => {},
   matchMedia: () => ({ matches: false, addEventListener: () => {} }),
   MouseEvent: function () {}, Event: function () {},
+  // 頁面會抓共用的地名索引。這裡回一個永遠不完成的 promise——smoke test 只驗
+  // 「腳本跑得完」，不驗非同步之後的行為，而真的去抓檔案會讓測試依賴檔案系統。
+  fetch: () => new Promise(() => {}),
   // 頁面用它來偵測「地圖區從沒有尺寸變成有尺寸」。假的 DOM 不會真的變動，
   // 所以只要能建立、observe 不拋錯就好。
   ResizeObserver: function () { this.observe = () => {}; this.disconnect = () => {}; },

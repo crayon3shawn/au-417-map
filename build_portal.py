@@ -12,6 +12,7 @@ import sys, json, pathlib, collections
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from lib import expand, load, STATES
 from build import (LABELS, VISA, AREA_BITS, REBUILD_MASK, DEFAULT_INDUSTRY, tokens_css,
+                   national_flags, national_names, write_search_index, TARGET,
                    work_mask, site_links, robots_meta, CHANNEL, SITE_URL)
 
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -156,10 +157,12 @@ def main():
             "page_date": pcdata["sources"][VISA]["page_last_updated"],
             "built_at": pcdata["fetched_at"][:10],
             "strings": load(ROOT / "data" / "strings.json")["s"],
+            "nat": national_flags(),
+            "index_url": write_search_index(),
+            "index_inline": national_names() if TARGET == "artifact" else None,
             "n_postcodes": len(entries),
             "n_maps": sum(1 for s in states if s["url"]),
         },
-        "postcodes": entries,
         "states": states,
         "outlines": out,
     }

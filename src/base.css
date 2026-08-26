@@ -78,11 +78,16 @@ body{
 .qhint{margin:0;font-size:11.5px;line-height:1.45;color:var(--ink-3)}
 .hits{display:flex;flex-direction:column;gap:2px;max-height:210px;overflow-y:auto}
 .hits:empty{display:none}
-.hits button{appearance:none;text-align:left;border:1px solid var(--line);background:var(--paper);
+/* 別州的結果是連結不是按鈕（點下去換頁），但要跟本州的結果長一樣。 */
+.hits .xstate{display:flex;text-decoration:none}
+.hits .xstate u{text-decoration:none;color:var(--ink-3);font-weight:600;
+  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;letter-spacing:.04em;
+  margin-left:5px;font-size:11px}
+.hits button,.hits .xstate{appearance:none;text-align:left;border:1px solid var(--line);background:var(--paper);
   color:var(--ink);border-radius:3px;padding:7px 10px;cursor:pointer;font:inherit;font-size:12.5px;
   display:flex;align-items:baseline;gap:8px}
-.hits button:hover{background:var(--sunk);border-color:var(--line-2)}
-.hits button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+.hits button:hover,.hits .xstate:hover{background:var(--sunk);border-color:var(--line-2)}
+.hits button:focus-visible,.hits .xstate:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
 .hits b{font-family:"IBM Plex Mono",monospace;font-weight:600}
 .hits i{font-style:normal;color:var(--ink-3);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hits em{font-style:normal;width:9px;height:9px;border-radius:2px;flex:none;background:var(--hc)}

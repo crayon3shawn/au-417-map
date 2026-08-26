@@ -536,6 +536,14 @@
     "map_strays": {
       "zh": "有 {n} 個合格郵區在 ABS 沒有對應面（多為信箱型郵區），以小點標示。",
       "en": "{n} eligible postcodes have no ABS boundary (mostly PO Box ranges) and are shown as dots."
+    },
+    "loading_index": {
+      "zh": "地名索引載入中…",
+      "en": "Loading place names…"
+    },
+    "hits_other": {
+      "zh": "其他州還有 {n} 筆，點下去會跳到那一州的地圖。",
+      "en": "{n} more in other states — tap to open that state’s map."
     }
   }
 }

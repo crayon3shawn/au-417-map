@@ -46,7 +46,9 @@ jobs:
           make all
           make test
           mkdir -p /tmp/site
-          cp dist/*.html /tmp/site/
+          # 不能只複製 *.html——search-index.json 是五個頁面共用的地名索引，
+          # 漏了的話跨州查詢會靜靜地失效（fetch 失敗被吃掉，只剩本州能查）。
+          cp dist/*.html dist/*.json /tmp/site/
 
       - name: 加上 CNAME
         if: env.CUSTOM_DOMAIN != ''

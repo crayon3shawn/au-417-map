@@ -8,7 +8,7 @@
 """
 import os, sys, json, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from lib import expand, load, STATES
+from lib import expand, load, save, STATES
 
 ROOT = pathlib.Path(__file__).resolve().parent
 VISA = "417"          # 顯示用的主要簽證；地點清單 417/462 相同時會註明
@@ -138,6 +138,51 @@ def robots_meta():
     return '<meta name="robots" content="noindex, nofollow">\n' if CHANNEL == "dev" else ""
 
 STATE_ORDER = ["qld", "nsw", "vic", "wa"]
+
+
+SEARCH_INDEX = "search-index.json"
+
+
+def national_flags():
+    """全澳郵區的「州別 + 地區表旗標」，依州分組。
+
+    這一份小（約 26 KB）所以每個頁面都內嵌：入口頁的地圖上色、各州統計、
+    行政區統計全部要用它，延後載入的話一進頁面會先看到一張沒有顏色的地圖。
+    """
+    idx = load(ROOT / "data" / "portal-index.json")["postcodes"]
+    src = load(ROOT / "data" / "postcodes.json")["areas"][VISA]
+    flags = {}
+    for area, bit in AREA_BITS.items():
+        for st, ranges in src.get(area, {}).items():
+            for n in expand(ranges, st):
+                flags[n] = flags.get(n, 0) | bit
+    out = {}
+    for pc, v in idx.items():
+        out.setdefault(v[0], {})[pc] = flags.get(int(pc), 0)
+    return out
+
+
+def national_names():
+    """全澳郵區的地名，用 | 串接。
+
+    這一份大（約 217 KB），而且只有「用地名搜尋」才需要，所以 pages 版抽成
+    一個共用檔：入口頁與四個州頁指向同一個網址，瀏覽器只下載一次，之後走
+    快取。內嵌到每一頁的話光四個州頁就多將近 900 KB，而使用者多半只會開一兩頁。
+
+    artifact 版沒有第二個檔可以放，只能內嵌。
+    """
+    idx = load(ROOT / "data" / "portal-index.json")["postcodes"]
+    return {pc: "|".join([v[1]] + list(v[2] or [])) for pc, v in idx.items()}
+
+
+def write_search_index():
+    """pages 版把地名表寫成獨立檔，回傳頁面要用的網址；artifact 版回傳 None。"""
+    if TARGET == "artifact":
+        return None
+    path = ROOT / "dist" / SEARCH_INDEX
+    path.parent.mkdir(parents=True, exist_ok=True)
+    save(path, national_names(), compact=True)
+    return SEARCH_INDEX
 
 
 def site_links(state=None):
@@ -273,6 +318,10 @@ def main(state):
         "site_url": SITE_URL,
         "source_url": src[VISA]["url"],
         "strings": load(ROOT / "data" / "strings.json")["s"],
+        # 跨州查詢：旗標表小所以內嵌，地名表大所以指向共用檔（見 national_names）
+        "nat": national_flags(),
+        "index_url": write_search_index(),
+        "index_inline": national_names() if TARGET == "artifact" else None,
         "state_name_en": STATES[state]["name"],
         "nav": nav_links(state),
         "excluded_note": EXCLUDED.get(state, ""),

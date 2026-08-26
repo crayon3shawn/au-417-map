@@ -617,10 +617,22 @@ function showHits(list, term){
     b.addEventListener('click', () => { q.value = nm; goto(pc); });
     hits.appendChild(b);
   }
+  // 別州的結果排在本州之後，標上州別縮寫；點下去換頁並帶著郵區。
+  const other = otherHits(term);
+  for(const [pc, nm, st] of other){
+    const a = document.createElement('a');
+    a.className = 'xstate';
+    a.href = `${stateUrl[st]}#pc=${pc}`;
+    if(/^https?:/.test(stateUrl[st])){ a.target = '_blank'; a.rel = 'noopener'; }
+    a.style.setProperty('--hc', CAT_COLOR[catOf(NAT[st][pc] || 0)]);
+    a.innerHTML = `<em></em><b>${pc}<u>${esc(st.toUpperCase())}</u></b><i>${esc(nm)}</i>`;
+    hits.appendChild(a);
+  }
   const extra = list.length - 30;
-  qhint.textContent = list.length
-    ? T('hits_found', {n: list.length}) + (extra > 0 ? T('hits_more', {n: 30}) : '')
-    : T('hits_none', {q: term});
+  const parts = [];
+  if(list.length) parts.push(T('hits_found', {n: list.length}) + (extra > 0 ? T('hits_more', {n: 30}) : ''));
+  if(other.length) parts.push(T('hits_other', {n: other.length}));
+  qhint.textContent = parts.length ? parts.join(' ') : T('hits_none', {q: term});
 }
 
 function doSearch(){
@@ -643,7 +655,10 @@ function doSearch(){
   // 只剩一筆就直接跳過去，但**不能動輸入框**——這是每敲一個鍵都會跑的路徑，
   // 改掉 value 等於搶走使用者正在打的字（打到一半剛好只剩一筆時，後面的字
   // 會接到被換上的地名後面，整串就毀了）。點選結果時改 value 才是對的。
-  if(list.length === 1){
+  // 本州只命中一筆就直接跳過去——但別州也有結果時不行。打「byron」時本州剛好
+  // 有個 Mount Byron，直接跳過去的話 NSW 的 Byron Bay 就沒機會出現，而那多半
+  // 才是使用者要找的。
+  if(list.length === 1 && !otherHits(term).length){
     clearHits(); qhint.textContent = '';
     goto(list[0][0]);
     return;
@@ -814,6 +829,48 @@ function drawDevBar(){
   }
 }
 
+// ---- 跨州查詢 ----
+// 這一頁只有自己州的郵區資料，所以打「Byron Bay」原本會得到「找不到」——
+// 那個地方明明存在，只是在隔壁州。旗標表（州別）內嵌，地名表是四個州頁與
+// 入口頁共用的一個檔，瀏覽器只下載一次。
+const NAT = META.nat || {};
+const stateUrl = {};
+for(const n of (META.nav || [])) if(!n.home) stateUrl[n.label.toLowerCase()] = n.url;
+const pcState = {};
+for(const st in NAT) if(st !== META.state) for(const pc in NAT[st]) pcState[pc] = st;
+
+let NAMES = META.index_inline || null;
+let otherNames = [];                 // [小寫地名, 郵區, 原地名, 州]
+function buildOtherNames(){
+  otherNames = [];
+  if(!NAMES) return;
+  for(const pc in NAMES){
+    const st = pcState[pc];
+    if(!st || !stateUrl[st]) continue;   // 沒做地圖的州跳過，點了沒地方去
+    for(const nm of NAMES[pc].split('|')) otherNames.push([nm.toLowerCase(), pc, nm, st]);
+  }
+}
+function loadNames(){
+  if(NAMES){ buildOtherNames(); return; }
+  if(!META.index_url) return;
+  fetch(META.index_url)
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { if(!d) return; NAMES = d; buildOtherNames(); if(q.value.trim()) doSearch(); })
+    .catch(() => {});                    // 抓不到就只剩本州查詢，不讓整頁掛掉
+}
+
+// 完全相符 > 開頭相符 > 包含。只分兩層不夠：打「perth」時 Perthville 也是
+// 「開頭相符」，而索引順序讓 NSW 排在 WA 前面，結果西澳的 Perth 被擠到後面。
+function otherHits(term){
+  const exact = [], starts = [], contains = [];
+  for(const [low, pc, nm, st] of otherNames){
+    if(low === term) exact.push([pc, nm, st]);
+    else if(low.startsWith(term)) starts.push([pc, nm, st]);
+    else if(low.includes(term)) contains.push([pc, nm, st]);
+  }
+  return exact.concat(starts, contains).slice(0, 15);
+}
+
 // ---- 語言切換 ----
 const langBtn = document.getElementById('lang');
 const h1 = document.getElementById('h1');
@@ -871,3 +928,6 @@ applyLang();
 
 // 圖例在手機上會蓋掉半張地圖，所以窄螢幕預設收起，桌機維持展開
 document.getElementById('legend').open = !matchMedia('(max-width:900px)').matches;
+
+// 放最後：地名表的宣告在上面的「跨州查詢」段落，提早呼叫會踩到 TDZ。
+loadNames();

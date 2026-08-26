@@ -1,6 +1,18 @@
 // @ts-check
 const DATA = __DATA__;
-const IDX = DATA.postcodes, STATES = DATA.states, META = DATA.meta;
+const STATES = DATA.states, META = DATA.meta;
+
+// 郵區索引拆成兩份。旗標表（州別＋地區表旗標）小，內嵌——地圖上色、各州統計、
+// 行政區統計都要用它，延後載入的話一進頁面會先看到一張沒有顏色的地圖。
+// 地名表大（約 216 KB）而且只有「用地名搜尋」才需要，所以抽成一個共用檔，
+// 入口頁與四個州頁指向同一個網址，瀏覽器只下載一次。
+const IDX = {};                       // 郵區 -> [州, 旗標]
+for(const st in META.nat) for(const pc in META.nat[st]) IDX[pc] = [st, META.nat[st][pc]];
+let NAMES = META.index_inline || null;   // 郵區 -> "地名|地名|…"，可能還沒載入
+const stOf = pc => (IDX[pc] || [])[0];
+const flagOf = pc => (IDX[pc] || [])[1] || 0;
+const namesOf = pc => (NAMES && NAMES[pc] ? NAMES[pc].split('|') : []);
+const mainName = pc => namesOf(pc)[0] || pc;
 const NS = 'http://www.w3.org/2000/svg';
 const el = (n, a) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); return e; };
 // 索引鍵去掉了前導零（'872'），顯示要補回四位，否則 NT 的 08xx 看起來像打錯
@@ -92,8 +104,7 @@ const REGIONS = (DATA.regions || []).map(([name, st, pcs]) => ({name, st, pcs}))
 function regionStats(r){
   const n = {work:0, rebuild:0, none:0};
   for(const pc of r.pcs){
-    const hit = IDX[String(pc)];
-    if(hit) n[catOf(hit[2])]++;
+    if(IDX[String(pc)]) n[catOf(flagOf(String(pc)))]++;
   }
   return n;
 }
@@ -139,7 +150,7 @@ function statsFor(s){
   let work = 0, rebuild = 0, none = 0;
   for(const pc in IDX){
     if(IDX[pc][0] !== s.key) continue;
-    const f = IDX[pc][2];
+    const f = IDX[pc][1];
     if(f & industry.mask) work++;
     else if(f & REBUILD) rebuild++;
     else none++;
@@ -290,11 +301,17 @@ const q = document.getElementById('q'), result = document.getElementById('result
 const hitsEl = document.getElementById('hits');
 function show(html){ result.innerHTML = html; }
 
-// 地名索引：多數人知道自己在哪個鎮，不知道郵區號碼
-const byName = [];
-for(const pc in IDX){
-  const [st, main, , others] = IDX[pc];   // 第 3 個是旗標，跳過
-  for(const nm of [main, ...(others || [])]) byName.push([nm.toLowerCase(), pc, nm, st]);
+// 地名索引：多數人知道自己在哪個鎮，不知道郵區號碼。
+// 要等地名表載進來才建得起來。
+let byName = [];
+function buildNameIndex(){
+  byName = [];
+  if(!NAMES) return;
+  for(const pc in NAMES){
+    const st = stOf(pc);
+    if(!st) continue;
+    for(const nm of NAMES[pc].split('|')) byName.push([nm.toLowerCase(), pc, nm, st]);
+  }
 }
 const clearHits = () => { hitsEl.innerHTML = ''; };
 
@@ -352,14 +369,14 @@ function showRegion(r){
     </div>`);
   clearHits();
   for(const pc of r.pcs){
-    const hit = IDX[String(pc)];
-    if(!hit) continue;
-    const s = stateOf(hit[0]);
+    const key = String(pc);
+    if(!IDX[key]) continue;
+    const s = stateOf(stOf(key)), nm = mainName(key);
     const b = document.createElement('button');
     b.type = 'button';
-    b.style.setProperty('--hc', CAT_COLOR[catOf(hit[2])]);
-    b.innerHTML = `<em></em><b>${pad4(pc)}<u>${esc(s.abbr)}</u></b><i>${esc(hit[1])}</i>`;
-    b.addEventListener('click', () => { q.value = hit[1]; clearHits(); render(String(pc), hit[1]); });
+    b.style.setProperty('--hc', CAT_COLOR[catOf(flagOf(key))]);
+    b.innerHTML = `<em></em><b>${pad4(pc)}<u>${esc(s.abbr)}</u></b><i>${esc(nm)}</i>`;
+    b.addEventListener('click', () => { q.value = nm; clearHits(); render(key, nm); });
     hitsEl.appendChild(b);
   }
 }
@@ -372,7 +389,7 @@ function showHits(list, term, regs){
   show(`<div class="empty">${esc(T('detail_empty'))}</div>`);
   for(const r of (regs || []).slice(0, 8)) hitsEl.appendChild(regionRow(r));
   for(const [pc, nm, st] of list.slice(0, 40)){
-    const f = IDX[pc][2], s = stateOf(st);
+    const f = flagOf(pc), s = stateOf(st);
     const b = document.createElement('button');
     b.type = 'button';
     b.style.setProperty('--hc', CAT_COLOR[catOf(f)]);
@@ -412,6 +429,8 @@ function lookup(){
   const v = q.value.trim();
   if(!v){ clearShown(); return; }
   if(!/^\d{3,4}$/.test(v)){
+    // 郵區號碼不必等地名表；用地名查就得等。載好之後會自動重跑一次。
+    if(!NAMES){ clearHits(); setHint(T('loading_index')); return; }
     const term = v.toLowerCase();
     const starts = [], contains = [];
     for(const [low, pc, nm, st] of byName){
@@ -449,8 +468,8 @@ function render(key, pick){
   shownPc = key; shownName = pick || null;
   setHint('');
   const v = key;
-  const [stKey, mainName, f] = hit;
-  const name = pick || mainName;
+  const stKey = hit[0], f = hit[1];
+  const name = pick || mainName(key);
   const s = stateOf(stKey), cat = cats()[catOf(f)];
   const routes = [];
   if(f & BIT_FIRE) routes.push(T('p_route_fire'));
@@ -535,4 +554,22 @@ langBtn.addEventListener('click', () => {
   applyLang();
 });
 
+// 地名表是共用檔，跟四個州頁指向同一個網址，所以多半直接命中瀏覽器快取。
+// 抓失敗不讓整頁掛掉——郵區號碼查詢與地圖都不依賴它。
+function loadNames(){
+  if(NAMES){ buildNameIndex(); return; }
+  if(!META.index_url) return;
+  fetch(META.index_url)
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if(!d) return;
+      NAMES = d;
+      buildNameIndex();
+      if(q.value.trim()) lookup();     // 補上載入期間打的字
+      else clearShown();
+    })
+    .catch(() => {});
+}
+
 applyLang();   // 初次繪製。放最後是因為它會用到上面宣告的每一樣東西。
+loadNames();
