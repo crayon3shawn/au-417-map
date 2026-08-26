@@ -694,6 +694,22 @@ function applyMapA11y(){
   mt.textContent = T('map_title', {state: stateName(), n: META.counts.boundaries});
 }
 
+// ---- 手機上收合標頭 ----
+// 捲過標題的高度就把標題與副標收起來，只留換州按鈕黏在頂端。門檻用標頭
+// 自己的高度而不是固定值——中英文與不同州名的標題高度不一樣。
+// 有 hysteresis（收起來的門檻比展開高）才不會在臨界點反覆跳。
+const bar = document.getElementById('bar');
+if(bar){
+  let compact = false;
+  const onScroll = () => {
+    const y = scrollY;
+    if(!compact && y > 90) { compact = true; bar.classList.add('compact'); }
+    else if(compact && y < 40) { compact = false; bar.classList.remove('compact'); }
+  };
+  addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+}
+
 // ---- 開發版橫幅 ----
 // 開發版現在只在本機建（CHANNEL=dev），不會上 Pages。橫幅的用處是讓人一眼
 // 知道手上這份不是線上那份，連結指向已發佈的站台方便對照。

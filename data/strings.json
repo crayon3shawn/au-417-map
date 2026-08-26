@@ -54,8 +54,8 @@
       "en": "Tap any postcode on the map, or search above, to see whether it counts and which kind of work qualifies."
     },
     "legend_title": {
-      "zh": "這塊郵區算不算",
-      "en": "Does this postcode count?"
+      "zh": "顏色說明",
+      "en": "Colour key"
     },
     "cat_work": {
       "zh": "一般{ind}工作就算",

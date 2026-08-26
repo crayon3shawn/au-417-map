@@ -71,6 +71,12 @@ const sandbox = {
     removeItem(k) { delete this._v[k]; },
   },
   requestAnimationFrame: (f) => f(0),
+  // 捲動位置與視窗尺寸：頁面載入時會讀它們決定標頭要不要收合、
+  // 城市名要不要縮短。少了就是 ReferenceError，整支腳本停在那裡。
+  scrollY: 0, scrollX: 0,
+  innerWidth: 1280, innerHeight: 800,
+  setTimeout: (f) => { f(); return 0; },
+  clearTimeout: () => {},
   addEventListener: () => {},
   matchMedia: () => ({ matches: false, addEventListener: () => {} }),
   MouseEvent: function () {}, Event: function () {},
