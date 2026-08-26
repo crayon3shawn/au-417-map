@@ -30,8 +30,8 @@
       "en": "Postcode or place"
     },
     "search_ph": {
-      "zh": "4870 或 Cairns",
-      "en": "4870 or Cairns"
+      "zh": "4000 或 Gold Coast",
+      "en": "4000 or Gold Coast"
     },
     "hits_found": {
       "zh": "找到 {n} 筆",
@@ -202,8 +202,8 @@
       "en": "Australia 417 Visa Map"
     },
     "p_lede": {
-      "zh": "<strong>417</strong> 打工度假簽證的集簽合格郵遞區號。選你的行業、輸入郵遞區號或地名，馬上知道算不算，或直接進各州地圖看整體分布。",
-      "en": "Eligible postcodes for the <strong>417</strong> Working Holiday specified-work requirement — the same areas count for both the second and the third visa. Pick your industry, type a postcode or place name to see whether it counts, or open a state map for the whole picture."
+      "zh": "<strong>417</strong> 打工度假簽證的集簽合格郵遞區號。",
+      "en": "Eligible postcodes for the <strong>417</strong> Working Holiday specified-work requirement — the same areas count for both the second and the third visa."
     },
     "p_lede_note": {
       "zh": "（462 的產業規則不同，不適用。）",

@@ -17,25 +17,24 @@ __CSS__</style>
     <h1 data-t="p_title"></h1>
     <p class="lede"><span data-t="p_lede"></span>
       <span class="lede-note" data-t="p_lede_note"></span></p>
-    <p class="disclaim" id="disclaim"></p>
   </header>
 
   <section class="finder">
-    <div class="indrow">
-      <label for="ind" data-t="industry_label"></label>
-      <select id="ind" data-t-aria="p_ind_aria"></select>
-      <span id="indnote"></span>
+    <div class="askrow">
+      <label class="askind" for="ind"><span class="eyebrow" data-t="industry_label"></span>
+        <select id="ind" data-t-aria="p_ind_aria"></select></label>
+      <label class="askq" for="q"><span class="eyebrow" data-t="search_label"></span>
+        <input id="q" maxlength="30" autocomplete="off"
+               data-t-ph="search_ph" data-t-aria="p_q_aria"></label>
     </div>
-    <span class="eyebrow" data-t="search_label"></span>
-    <div class="qrow">
-      <input id="q" maxlength="30" autocomplete="off"
-             data-t-ph="search_ph" data-t-aria="p_q_aria">
-    </div>
+    <span id="indnote"></span>
     <div class="result" id="result" role="status" aria-live="polite">
       <p class="hint" id="hint"></p>
     </div>
     <div class="hits" id="hits" role="listbox" data-t-aria="p_hits_aria"></div>
   </section>
+
+  <p class="disclaim" id="disclaim"></p>
 
   <div class="cols">
     <section class="panel mapbox">
