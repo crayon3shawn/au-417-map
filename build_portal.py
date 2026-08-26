@@ -11,7 +11,7 @@ TARGET=artifact 時用 data/artifacts.json 的絕對網址。
 import sys, json, pathlib, collections
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from lib import expand, load, STATES
-from build import (LABELS, VISA, AREA_BITS, REBUILD_MASK, DEFAULT_INDUSTRY,
+from build import (LABELS, VISA, AREA_BITS, REBUILD_MASK, DEFAULT_INDUSTRY, tokens_css,
                    work_mask, site_links, robots_meta, CHANNEL, SITE_URL)
 
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -34,9 +34,6 @@ def part(name):
     return (ROOT / "src" / name).read_text(encoding="utf-8")
 
 
-def tokens_css():
-    """共用的設計 token。兩個樣板都注入同一份，避免改配色時漏掉一邊。"""
-    return (ROOT / "src" / "tokens.css").read_text(encoding="utf-8")
 
 
 def area_coverage(pcdata, real):

@@ -100,3 +100,66 @@ class TestBuiltPages(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class TestSharedComponents(unittest.TestCase):
+    """外殼與元件的 CSS 只能有一份。
+
+    這條規則是被咬過才立的：兩個頁面原本各自維護一份 CSS，27 個同名選擇器裡
+    有 13 個內容已經漂走（內距 22 vs 26、圓角 3 vs 4、卡片背景色不同），而且
+    有三個是同名不同物（.card／.verdict／.bar 在兩頁指不同元件）。漂走不會有
+    任何錯誤訊息，只會變成「兩頁長得不一樣」，要有人看到才會發現。
+    """
+
+    @staticmethod
+    def selectors(name):
+        """只看最外層的選擇器。@media 裡面的是「這個尺寸下的覆寫」，兩邊各自
+        有一份是合理的——州頁的標頭在手機上會黏頂並收合，入口頁沒有那個行為。"""
+        import re
+        t = (ROOT / "src" / name).read_text(encoding="utf-8")
+        t = re.sub(r"/\*.*?\*/", "", t, flags=re.S)
+        t = re.sub(r"@media[^{]*\{(?:[^{}]|\{[^{}]*\})*\}", "", t, flags=re.S)
+        return {re.sub(r"\s+", "", m.group(1))
+                for m in re.finditer(r"([^{}]+)\{", t)
+                if not m.group(1).strip().startswith("@")}
+
+    def test_共用檔存在(self):
+        self.assertTrue((ROOT / "src" / "base.css").exists())
+
+    def test_兩個頁面的CSS不能有同名選擇器(self):
+        a, b = self.selectors("map.css"), self.selectors("portal.css")
+        self.assertEqual(set(), a & b,
+                         "同名選擇器要嘛抽到 base.css，要嘛其中一邊改名")
+
+    def test_共用檔的選擇器不能在頁面檔重複宣告(self):
+        base = self.selectors("base.css")
+        for name in ("map.css", "portal.css"):
+            dup = base & self.selectors(name)
+            self.assertEqual(set(), dup, f"{name} 重複宣告了 base.css 已有的 {dup}")
+
+
+class TestNoDeadCSS(unittest.TestCase):
+    """CSS 裡不該有沒人用的 class。
+
+    改版面時最容易留下這種東西：把一組併排的控制項改成堆疊之後，原本那組
+    規則就沒人用了，但不會有任何錯誤訊息。實際上一次改版就留下 14 條。
+    """
+
+    def test_沒有沒人用的class(self):
+        import re
+        # 樣板、JS、以及 strings.json——介面字串裡也會帶 class（例如 .mono）
+        corpus = "".join(
+            (ROOT / f).read_text(encoding="utf-8")
+            for f in ("src/template.html", "src/portal.html",
+                      "src/map.js", "src/portal.js", "data/strings.json"))
+        dead = set()
+        for name in ("base.css", "map.css", "portal.css"):
+            t = (ROOT / "src" / name).read_text(encoding="utf-8")
+            t = re.sub(r"/\*.*?\*/", "", t, flags=re.S)
+            for sel in re.findall(r"([^{}]+)\{", t):
+                if sel.strip().startswith("@"):
+                    continue
+                for cls in re.findall(r"\.([a-z][a-z0-9-]*)", sel):
+                    if cls not in corpus:
+                        dead.add(f"{name}: .{cls}")
+        self.assertEqual(set(), dead, "CSS 有沒人用的 class")

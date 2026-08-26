@@ -1,48 +1,14 @@
-*{box-sizing:border-box}
-body{
-  margin:0; background:var(--paper); color:var(--ink);
-  font-family:"Noto Sans TC","Hiragino Sans TC","Microsoft JhengHei",system-ui,sans-serif;
-  font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased;
-}
-.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
-.eyebrow{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:12px;
-  letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+
 
 .shell{display:grid;grid-template-rows:auto auto 1fr;height:100vh}
-.bar{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;
-  padding:14px 22px;border-bottom:1px solid var(--line);background:var(--surface)}
-.bar h1{margin:0;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
-  font-size:26px;letter-spacing:.02em;text-wrap:balance}
-.bar .sub{color:var(--ink-2);font-size:13px}
-.bar .spacer{flex:1 1 40px}
 /* 手機上往下捲時，標頭收成只剩換州按鈕並黏在頂端。理由是標題與副標只在剛
    進頁面時有用，但它們吃掉 812px 螢幕的前 240px；換州按鈕則是隨時都可能
    要用的。桌機不套用——那裡標頭不佔什麼比例，黏著反而礙事。 */
 @media (max-width:900px){
-  .bar{position:sticky;top:0;z-index:30;transition:padding .15s}
-  .bar.compact{padding-top:7px;padding-bottom:7px}
-  .bar.compact h1,.bar.compact .sub{display:none}
+  .topbar{position:sticky;top:0;z-index:30;transition:padding .15s}
+  .topbar.compact{padding-top:7px;padding-bottom:7px}
+  .topbar.compact h1,.topbar.compact .sub{display:none}
 }
-.nav{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
-.nav a,.nav span{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
-  font-size:12.5px;letter-spacing:.04em;padding:4px 9px;border-radius:3px;
-  border:1px solid var(--line);text-decoration:none;color:var(--ink-2);white-space:nowrap}
-.nav a:hover{background:var(--sunk);color:var(--ink);border-color:var(--line-2)}
-.nav a:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
-.nav .home{border-color:var(--line-2);color:var(--ink)}
-.nav .here{background:var(--ink);color:var(--surface);border-color:var(--ink)}
-.lang{appearance:none;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
-  font-size:12.5px;letter-spacing:.06em;padding:4px 10px;border-radius:3px;
-  border:1px solid var(--line-2);background:var(--paper);color:var(--ink-2);cursor:pointer}
-.lang:hover{background:var(--sunk);color:var(--ink)}
-.lang:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
-/* 出處與建置日期是溯源資訊，不是要操作的東西，所以放在最下面的出處段落裡。
-   字串很長，nowrap 會在手機上把整個頁面推寬造成橫向捲動。 */
-.stamp{display:block;margin-top:8px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
-  color:var(--ink-3);white-space:normal;overflow-wrap:anywhere}
-/* 公開網址看起來比私人連結「官方」，免責要在看得到的地方，不能只放頁尾 */
-.disclaim{margin:0;padding:7px 22px;font-size:11.5px;line-height:1.5;color:var(--ink-3);
-  background:var(--sunk);border-bottom:1px solid var(--line)}
 .hdrspacer{display:contents}
 /* 側欄拆成兩段：上段（產業、查詢、詳情）是「問問題與看答案」，下段是背景資料。
    分兩段只是為了手機能把上段排在地圖之前——桌機上兩段裝在同一個容器裡，
@@ -69,9 +35,6 @@ body{
   .mapwrap{order:2}
   .rail-b{order:3;border-top:1px solid var(--line);padding-top:20px}
 }
-.blk{display:flex;flex-direction:column;gap:10px}
-
-.layers{display:flex;flex-direction:column;gap:2px}
 .lay{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;
   padding:9px 10px;border-radius:3px;cursor:pointer;transition:background .12s}
 .lay:hover{background:var(--sunk)}
@@ -92,56 +55,14 @@ body{
 .seg button + button{border-left:1px solid var(--line-2)}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
 .seg button:focus-visible{outline:2px solid var(--ink);outline-offset:-3px}
-
-/* 產業決定整張圖的意思，所以放在搜尋上面 */
-.ind{width:100%;font-family:"Noto Sans TC",system-ui,sans-serif;font-size:14px;
-  padding:8px 10px;border:1px solid var(--line-2);border-radius:3px;
-  background-color:var(--paper);color:var(--ink);cursor:pointer;
-/* 原生 select 會沿用作業系統外觀（箭頭、內距、深色模式配色都不受控），
-   所以關掉 appearance 自己畫，才跟頁面其他輸入元件一致。
-   展開後的選項清單由作業系統繪製，那部分無法設定樣式。 */
-  appearance:none;-webkit-appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23767676' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 11px center;background-size:11px;
-  padding-right:30px;}
-.ind:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px;border-color:var(--c-work)}
-/* 官方對每個產業的範圍有明確定義，搞錯會被拒——所以直接寫在選單下面。
-   用跟郵區詳情同一種卡片：兩塊資訊的份量差不多，之前一個是卡片一個是引言
-   樣式，看起來像不同層級。標題列比郵區的小一號——那邊的主角是郵遞區號，
-   這邊只是一句話。 */
-.indcard .hd{font-size:12.5px;line-height:1.5;color:var(--ink-2);display:block}
-.indcard .hd b{color:var(--ink);font-weight:600}
-.indcard .bd{font-size:11.5px;line-height:1.55;color:var(--ink-3);gap:0}
-.indcard .bd a{color:var(--ink-2);white-space:nowrap}
-.indcard .bd a:hover{color:var(--c-work)}
-.srch{display:flex}
-.srch input{flex:1;min-width:0;font-family:"IBM Plex Mono",monospace;font-size:14px;
-  padding:8px 10px;border:1px solid var(--line-2);border-radius:3px;background:var(--paper);color:var(--ink)}
-.srch input:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px;border-color:var(--c-work)}
-.qhint{margin:0;font-size:11.5px;line-height:1.45;color:var(--ink-3)}
 .qhint:empty{display:none}
-.hits{display:flex;flex-direction:column;gap:2px;max-height:210px;overflow-y:auto}
-.hits:empty{display:none}
-.hits button{appearance:none;text-align:left;border:1px solid var(--line);background:var(--paper);
-  color:var(--ink);border-radius:3px;padding:7px 10px;cursor:pointer;font:inherit;font-size:12.5px;
-  display:flex;align-items:baseline;gap:8px}
-.hits button:hover{background:var(--sunk);border-color:var(--line-2)}
-.hits button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
-.hits b{font-family:"IBM Plex Mono",monospace;font-weight:600}
-.hits i{font-style:normal;color:var(--ink-3);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hits em{font-style:normal;width:9px;height:9px;border-radius:2px;flex:none;background:var(--hc)}
 .btn{appearance:none;border:1px solid var(--line-2);background:var(--paper);color:var(--ink);
   font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:13px;
   letter-spacing:.06em;padding:8px 12px;border-radius:3px;cursor:pointer}
 .btn:hover{background:var(--sunk)}
 .btn:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
-
-.card{border:1px solid var(--line);border-radius:4px;background:var(--paper);overflow:hidden}
-.card .hd{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;
-  align-items:baseline;gap:10px;background:var(--sunk)}
 .card .pcn{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:22px}
 .card .loc{font-size:12px;color:var(--ink-2);line-height:1.45;flex:1}
-.card .bd{padding:12px 14px;display:flex;flex-direction:column;gap:11px}
 .verdict{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.5}
 .verdict .dot{width:9px;height:9px;border-radius:2px;margin-top:6px;flex:none;background:var(--vc)}
 .verdict b{font-weight:700}
@@ -149,7 +70,6 @@ body{
 .verdict.no .dot{background:var(--line-2)}
 .note{font-size:12px;line-height:1.55;color:var(--ink-2);background:var(--warn-bg);
   border:1px solid var(--warn-line);border-radius:3px;padding:9px 11px}
-.empty{padding:16px 14px;font-size:13px;color:var(--ink-2);line-height:1.6}
 .facts{display:flex;flex-direction:column;gap:9px;font-size:12.5px;line-height:1.55;color:var(--ink-2)}
 .facts p{margin:0}
 .facts b{color:var(--ink)}
@@ -257,11 +177,3 @@ svg.map.drag{cursor:grabbing}
   border-radius:4px;padding:7px 11px;box-shadow:var(--shadow);font-size:11.5px;color:var(--ink-2)}
 .count b{font-family:"IBM Plex Mono",monospace;color:var(--ink);font-weight:600;font-size:14px}
 @media (max-width:560px){ .count{display:none} }
-@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
-
-/* 開發版橫幅：細細一條，夠明顯但不佔版面 */
-.devbar{position:sticky;top:0;z-index:20;padding:3px 12px;text-align:center;
-  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
-  font-size:11.5px;letter-spacing:.06em;line-height:1.5;
-  background:var(--c-rebuild);color:#1a1205}
-.devbar a{color:#1a1205;text-decoration:underline}

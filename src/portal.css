@@ -1,85 +1,17 @@
-*{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);
-  font-family:"Noto Sans TC","Hiragino Sans TC","Microsoft JhengHei",system-ui,sans-serif;
-  font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
-.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
-.eyebrow{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:12px;
-  letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
 
-.wrap{max-width:1080px;margin:0 auto;padding:0 22px 56px}
-header{padding:38px 0 26px;position:relative}
-/* 語言鈕跟各州地圖頁同一個外觀。放在標題右上——標題本身會換行（text-wrap
-   balance），所以用絕對定位釘在角落，不跟著行高跑。 */
-.lang{position:absolute;top:38px;right:0;appearance:none;
-  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
-  font-size:12.5px;letter-spacing:.06em;padding:4px 10px;border-radius:3px;
-  border:1px solid var(--line-2);background:var(--paper);color:var(--ink-2);cursor:pointer}
-.lang:hover{background:var(--sunk);color:var(--ink)}
-.lang:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
-h1{margin:0 0 6px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
-  font-size:clamp(30px,5vw,44px);letter-spacing:.02em;line-height:1.05;text-wrap:balance}
-.lede{margin:0;color:var(--ink-2);font-size:15px;max-width:62ch}
-/* 公開網址看起來比私人連結「官方」，免責要在看得到的地方 */
-.disclaim{margin:14px 0 0;padding:8px 12px;font-size:12px;line-height:1.55;color:var(--ink-3);
-  background:var(--sunk);border-left:3px solid var(--line-2);border-radius:0 3px 3px 0;max-width:70ch}
-.disclaim a{color:var(--ink-2)}
-.lede-note{color:var(--ink-3);font-size:13px}
-/* 出處與建置日期是溯源資訊，不是要操作的東西，所以放在最下面的出處段落裡 */
-.stamp{margin:8px 0 0;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
-  color:var(--ink-3);overflow-wrap:anywhere}
 
-/* ---- 查詢 ---- */
-.finder{background:var(--surface);border:1px solid var(--line);border-radius:6px;
-  padding:20px;box-shadow:var(--shadow)}
-.finder .eyebrow{display:block;margin-bottom:10px}
-/* 產業與地點併成一列。兩者合起來才是一個完整的問題——「我做[建築]，[某地]
-   算不算」——分兩列各佔一段高度沒有道理，而且會把搜尋框往下推。 */
-.askrow{display:flex;flex-wrap:wrap;gap:12px 14px;align-items:flex-end}
-.askind,.askq{display:flex;flex-direction:column;gap:7px;min-width:0}
-/* 下拉給它成長的空間：英文最長的產業名有 40 個字元，固定寬度一定截斷。
-   查詢框的成長權重是兩倍，所以在寬螢幕上仍然是主角。 */
-.askind{flex:1 1 220px}
-.askq{flex:2 1 300px}
-/* 兩個控制項等高。原本下拉是 14px 字加 7px 內距（約 33px），查詢框是 26px 字
-   加 10px 內距（約 53px），並排時高度差一截。
-   兩個控制項現在等高也等字級：並排的控制項字級差 10px 會顯得沒整理過，而且
-   16px 是 iOS Safari 的下限（更小會自動放大整個頁面），20px 兩者都滿足。
-   內距歸零、指定高度，讓瀏覽器自己垂直置中。 */
-.askrow select,.askq input{height:54px;box-sizing:border-box;font-size:20px;
-  border:1px solid var(--line-2);border-radius:4px;
-  background-color:var(--paper);color:var(--ink)}
-.askrow select{width:100%;font-family:"Noto Sans TC",system-ui,sans-serif;
-  cursor:pointer;text-overflow:ellipsis;padding:0 34px 0 12px;
-/* 原生 select 會沿用作業系統外觀（箭頭、內距、深色模式配色都不受控），
-   所以關掉 appearance 自己畫，才跟頁面其他輸入元件一致。
-   展開後的選項清單由作業系統繪製，那部分無法設定樣式。 */
-  appearance:none;-webkit-appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23767676' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 13px center;background-size:12px}
+/* .wrap 只包說明文件那一段——長文需要限制行寬。工具區與標題是整寬的，
+   跟州頁一樣，這樣兩個頁面的骨架才是同一套。 */
+.wrap{max-width:1080px;margin:0 auto;padding:0 26px 56px}
+.lede-note{color:var(--ink-3)}
 #indnote{display:block;margin-top:11px;padding-top:11px;border-top:1px solid var(--line);
   font-size:11.5px;color:var(--ink-3);line-height:1.5}
 #indnote .dim{color:var(--ink-3);opacity:.75}
 #indnote a{color:var(--ink-2);white-space:nowrap}
-.askrow select:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px}
-.askq input{width:100%;font-family:"IBM Plex Mono",monospace;
-  letter-spacing:.04em;padding:0 14px;border:1px solid var(--line-2);border-radius:4px;
-  background:var(--paper);color:var(--ink)}
-.askq input:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px;border-color:var(--c-work)}
 
-.result{margin-top:16px}
-.hits{display:flex;flex-direction:column;gap:3px;margin-top:12px;max-height:280px;overflow-y:auto}
-.hits:empty{display:none}
-.hits button{appearance:none;text-align:left;border:1px solid var(--line);background:var(--paper);
-  color:var(--ink);border-radius:4px;padding:9px 12px;cursor:pointer;font:inherit;font-size:13px;
-  display:flex;align-items:baseline;gap:10px}
-.hits button:hover{background:var(--sunk);border-color:var(--line-2)}
-.hits button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
-.hits em{font-style:normal;width:10px;height:10px;border-radius:2px;flex:none;background:var(--hc)}
-.hits b{font-family:"IBM Plex Mono",monospace;font-weight:600;flex:none}
-.hits i{font-style:normal;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* 州代號緊跟在號碼後面，讀起來是一組識別資訊（4870 QLD），所以放在 <b> 裡面，
    靠自己的 margin 控制間距，不吃 flex 的 gap。 */
-.hits u,.verdict .pc u{text-decoration:none;color:var(--ink-3);font-weight:600;
+.hits u,.answer .pc u{text-decoration:none;color:var(--ink-3);font-weight:600;
   font-family:"Barlow Condensed","Noto Sans TC",sans-serif;letter-spacing:.04em;
   margin-left:5px;font-size:11.5px}
 /* 行政區列。排在地名之前，外觀要一眼看得出「這是一整個區域，不是一個郵區」：
@@ -93,20 +25,21 @@ h1{margin:0 0 6px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-
 .hits .rbar{display:flex;height:6px;border-radius:2px;overflow:hidden;
   background:var(--paper);flex:none;width:64px;align-self:center}
 .hits .rbar i{display:block}
-.verdict.region .chip{height:auto;align-self:stretch}
-.verdict .rname{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
+.answer.region .chip{height:auto;align-self:stretch}
+.answer .rname{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
   font-weight:700;font-size:19px;letter-spacing:.01em}
-.verdict .legend2{margin-top:10px}
+.answer .legend2{margin-top:10px}
 .hint{color:var(--ink-3);font-size:12.5px}
-.verdict{display:flex;gap:14px;align-items:flex-start;padding:15px;border-radius:5px;
-  border:1px solid var(--line);background:var(--paper)}
-.verdict .chip{width:14px;height:38px;border-radius:3px;flex:none;background:var(--vc)}
-.verdict .body{flex:1;min-width:0}
-.verdict .pc{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:20px}
-.verdict .pc u{font-size:13px;margin-left:6px}
-.verdict .where{color:var(--ink-2);font-size:13px}
-.verdict .say{margin-top:5px;font-size:15px;font-weight:700;color:var(--vc)}
-.verdict .sub{margin-top:3px;font-size:12.5px;color:var(--ink-2);line-height:1.5}
+/* 判定面板住在共用的 .card 裡（跟州頁的郵區詳情同一個容器），所以不再自己
+   畫外框，只負責內部排版。 */
+.answer{display:flex;gap:14px;align-items:flex-start;padding:14px}
+.answer .chip{width:14px;height:38px;border-radius:3px;flex:none;background:var(--vc)}
+.answer .body{flex:1;min-width:0}
+.answer .pc{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:20px}
+.answer .pc u{font-size:13px;margin-left:6px}
+.answer .where{color:var(--ink-2);font-size:13px}
+.answer .say{margin-top:5px;font-size:15px;font-weight:700;color:var(--vc)}
+.answer .sub{margin-top:3px;font-size:12.5px;color:var(--ink-2);line-height:1.5}
 .golink{display:inline-flex;align-items:center;gap:6px;margin-top:11px;
   font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:14px;
   letter-spacing:.06em;color:var(--ink);text-decoration:none;
@@ -117,12 +50,37 @@ h1{margin:0 0 6px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-
 /* ---- 版面 ---- */
 /* 地圖與卡片原本並排，但兩者高度差很多（地圖 526px、卡片 944px），
    左欄下半整片空著。改成上下堆疊，地圖有空間、卡片變成清楚的次要清單。 */
-.cols{display:flex;flex-direction:column;gap:26px;margin-top:34px}
-.mapbox{max-width:640px;margin:0 auto;width:100%}
+/* 上半是「工具」，跟州頁同一套語言：左欄問問題與看答案，右邊整塊給地圖。
+   下半是「文件」，整寬但限制行寬——長文需要 65 字元左右才好讀。
+   分成兩種區塊而不是拆成兩個頁面：說明只有 1.4 屏、1600 字，撐不起獨立頁面，
+   而且那段內容正是這個站的信用來源，藏起來等於把最有說服力的東西收掉。 */
+.app{display:grid;grid-template-columns:minmax(360px,32%) 1fr;
+  gap:0;margin-top:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  height:calc(100vh - 210px);min-height:520px}
+/* min-height:0 是必要的：grid 項目預設 min-height:auto，內容比列高長時會把
+   整列頂開，overflow-y:auto 就永遠不會生效——左欄會一路長下去蓋掉下面的文件。 */
+.app-rail{min-width:0;min-height:0;overflow-y:auto;padding:22px 26px 26px;
+  border-right:1px solid var(--line);display:flex;flex-direction:column;gap:22px}
+.app-map{min-width:0;min-height:0;background:var(--paper-2);display:flex}
+.app .disclaim{margin:0}
+.doc{padding-top:8px}
+@media (max-width:900px){
+  /* 手機不分欄。左欄用 display:contents 退出版面，它底下三個區塊就直接成為
+     .app 的子項——DOM 順序（產業 → 查詢 → 詳情 → 地圖）本身就是要的順序，
+     不需要任何 order。 */
+  .app{display:flex;flex-direction:column;height:auto;min-height:0;
+    border:0;margin-top:20px;gap:24px;padding:0 26px}
+  .app-rail{display:contents}
+  /* 高度跟著澳洲的長寬比走（--au-aspect 由 portal.js 依 viewBox 設定），
+     不用固定的 52vh——橫向的澳洲塞進直式窗格會上下各留一大條空白。 */
+  .app-map{aspect-ratio:var(--au-aspect, 1.35);height:auto;
+    max-height:52vh;min-height:240px;border-radius:6px;border:1px solid var(--line)}
+  .dist{margin-bottom:30px}
+  .doc{padding-left:0;padding-right:0}
+}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:9px}
 .panel > .eyebrow{display:block;margin-bottom:12px}
-svg.au{display:block;width:100%;height:auto;background:var(--paper-2);
-  border:1px solid var(--line);border-radius:6px}
+svg.au{display:block;width:100%;height:100%;flex:1;min-width:0}
 .st{cursor:pointer;stroke:var(--edge);stroke-width:1;stroke-linejoin:round;fill-opacity:var(--fill-a)}
 /* 「沒有地圖」用虛線邊框表示，不用透明度——降透明度會被讀成「比較不合格」，
    而 SA、TAS、NT 全境都算，那樣講就反了。 */
@@ -135,27 +93,27 @@ svg.au{display:block;width:100%;height:auto;background:var(--paper-2);
   pointer-events:none;text-anchor:middle}
 .stlbl.dim{fill:var(--ink-3)}
 
-.card{display:block;text-decoration:none;color:inherit;background:var(--surface);
+.statecard{display:block;text-decoration:none;color:inherit;background:var(--surface);
   border:1px solid var(--line);border-radius:5px;padding:13px 15px}
 a.card:hover{border-color:var(--ink-3);background:var(--sunk)}
-.card .top{display:flex;align-items:baseline;gap:9px}
-.card .nm{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;font-size:19px}
-.card .en{font-size:11px;color:var(--ink-3);flex:1}
-.card .go{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:13px;
+.statecard .top{display:flex;align-items:baseline;gap:9px}
+.statecard .nm{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;font-size:19px}
+.statecard .en{font-size:11px;color:var(--ink-3);flex:1}
+.statecard .go{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:13px;
   letter-spacing:.06em;color:var(--ink-2)}
-.card.off{opacity:.62}
-.bar{display:flex;height:7px;border-radius:2px;overflow:hidden;margin-top:9px;background:var(--sunk)}
-.bar i{display:block}
+.statecard.off{opacity:.62}
+.mix{display:flex;height:7px;border-radius:2px;overflow:hidden;margin-top:9px;background:var(--sunk)}
+.mix i{display:block}
 .legend2{display:flex;flex-wrap:wrap;gap:5px 14px;margin-top:7px;font-size:11px;color:var(--ink-2)}
 .legend2 span{display:flex;align-items:center;gap:5px}
 .legend2 i{width:9px;height:9px;border-radius:2px;background:var(--sw)}
 .legend2 b{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--ink)}
 .allwork{margin-top:8px;font-size:11.5px;line-height:1.5;color:var(--ink-2)}
 .allwork b{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--ink)}
-.card.off{opacity:1}
-.card.off .go{font-weight:700}
-.card.nomap{opacity:.62}
-.card.nomap .go{color:var(--ink-3)}
+.statecard.off{opacity:1}
+.statecard.off .go{font-weight:700}
+.statecard.nomap{opacity:.62}
+.statecard.nomap .go{color:var(--ink-3)}
 
 .basis{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}
 .basis h2{margin:0 0 8px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
@@ -181,7 +139,6 @@ table.imap th[scope="row"]{font-weight:700;white-space:nowrap}
 table.imap td.sc{color:var(--ink-3);font-size:11.5px;min-width:260px}
 table.imap th[scope="row"] em{display:block;font-style:normal;font-weight:400;
   font-size:10.5px;color:var(--ink-3);letter-spacing:0}
-table.imap .diff{color:var(--c-rebuild);font-weight:700}
 .basis-note2{margin:0 0 10px;font-size:12px;line-height:1.6;color:var(--ink-3)}
 .basis-note2 a{color:var(--ink-2)}
 .basis-note{margin:14px 0 0;font-size:12.5px;line-height:1.6;color:var(--ink-2);
@@ -199,11 +156,3 @@ table.imap .diff{color:var(--c-rebuild);font-weight:700}
 .notes p{margin:0;font-size:12.5px;line-height:1.6;color:var(--ink-2)}
 .notes a{color:var(--ink-2)}
 .notes a:hover{color:var(--c-work)}
-@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
-
-/* 開發版橫幅：細細一條，夠明顯但不佔版面 */
-.devbar{position:sticky;top:0;z-index:20;padding:3px 12px;text-align:center;
-  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
-  font-size:11.5px;letter-spacing:.06em;line-height:1.5;
-  background:var(--c-rebuild);color:#1a1205}
-.devbar a{color:#1a1205;text-decoration:underline}

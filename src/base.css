@@ -1,0 +1,102 @@
+/* 兩個頁面共用的外殼與元件。
+
+   為什麼要有這一份：state 頁與入口頁原本各自維護一份 CSS，27 個同名選擇器
+   裡有 13 個內容已經漂走（內距 22 vs 26、圓角 3 vs 4、卡片背景色不同…），
+   而且有三個是同名不同物（.card／.verdict／.bar 在兩頁指不同元件），撞名
+   讓它們根本沒辦法共用。撞名的已經在入口頁改成 .statecard／.answer／.mix。
+
+   跟 tokens.css 一樣由 build 注入到 <style> 開頭，兩個樣板都不要再宣告一次。 */
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"Noto Sans TC","Hiragino Sans TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:14px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.eyebrow{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:12px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.topbar{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;
+  padding:14px 22px;border-bottom:1px solid var(--line);background:var(--surface)}
+.topbar h1{margin:0;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
+  font-size:26px;letter-spacing:.02em;text-wrap:balance}
+.topbar .sub{color:var(--ink-2);font-size:13px}
+.topbar .spacer{flex:1 1 40px}
+.nav{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.nav a,.nav span{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
+  font-size:12.5px;letter-spacing:.04em;padding:4px 9px;border-radius:3px;
+  border:1px solid var(--line);text-decoration:none;color:var(--ink-2);white-space:nowrap}
+.nav a:hover{background:var(--sunk);color:var(--ink);border-color:var(--line-2)}
+.nav a:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+.nav .home{border-color:var(--line-2);color:var(--ink)}
+.nav .here{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.lang{appearance:none;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
+  font-size:12.5px;letter-spacing:.06em;padding:4px 10px;border-radius:3px;
+  border:1px solid var(--line-2);background:var(--paper);color:var(--ink-2);cursor:pointer}
+.lang:hover{background:var(--sunk);color:var(--ink)}
+.lang:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+/* 出處與建置日期是溯源資訊，不是要操作的東西，所以放在最下面的出處段落裡。
+   字串很長，nowrap 會在手機上把整個頁面推寬造成橫向捲動。 */
+.stamp{display:block;margin-top:8px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  color:var(--ink-3);white-space:normal;overflow-wrap:anywhere}
+/* 公開網址看起來比私人連結「官方」，免責要在看得到的地方，不能只放頁尾 */
+.disclaim{margin:0;padding:7px 22px;font-size:11.5px;line-height:1.5;color:var(--ink-3);
+  background:var(--sunk);border-bottom:1px solid var(--line)}
+.blk{display:flex;flex-direction:column;gap:10px}
+
+/* 產業決定整張圖的意思，所以放在搜尋上面 */
+/* 下拉與查詢框等高等字級。兩件事都不是純美觀：
+   1. 並排或上下相鄰的控制項尺寸不一致，看起來像沒整理過。
+   2. 16px 是 iOS Safari 的下限——表單控制項小於 16px，點下去 Safari 會把
+      整個頁面放大，使用者得自己縮回來。原本兩邊都是 14px。
+   44px 是 Apple 建議的最小觸控目標。 */
+.ind,.srch input{height:44px;box-sizing:border-box;font-size:16px;
+  border:1px solid var(--line-2);border-radius:3px;
+  background-color:var(--paper);color:var(--ink)}
+.ind{width:100%;font-family:"Noto Sans TC",system-ui,sans-serif;cursor:pointer;
+  padding:0 32px 0 12px;text-overflow:ellipsis;
+/* 原生 select 會沿用作業系統外觀（箭頭、內距、深色模式配色都不受控），
+   所以關掉 appearance 自己畫，才跟頁面其他輸入元件一致。
+   展開後的選項清單由作業系統繪製，那部分無法設定樣式。 */
+  appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23767676' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 13px center;background-size:12px}
+.ind:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px;border-color:var(--c-work)}
+/* 官方對每個產業的範圍有明確定義，搞錯會被拒——所以直接寫在選單下面。
+   用跟郵區詳情同一種卡片：兩塊資訊的份量差不多，之前一個是卡片一個是引言
+   樣式，看起來像不同層級。標題列比郵區的小一號——那邊的主角是郵遞區號，
+   這邊只是一句話。 */
+.indcard .hd{font-size:12.5px;line-height:1.5;color:var(--ink-2);display:block}
+.indcard .hd b{color:var(--ink);font-weight:600}
+.indcard .bd{font-size:11.5px;line-height:1.55;color:var(--ink-3);gap:0}
+.indcard .bd a{color:var(--ink-2);white-space:nowrap}
+.indcard .bd a:hover{color:var(--c-work)}
+.srch{display:flex}
+.srch input{flex:1;min-width:0;font-family:"IBM Plex Mono",monospace;
+  letter-spacing:.03em;padding:0 12px}
+.srch input:focus-visible{outline:2px solid var(--c-work);outline-offset:-1px;border-color:var(--c-work)}
+.qhint{margin:0;font-size:11.5px;line-height:1.45;color:var(--ink-3)}
+.hits{display:flex;flex-direction:column;gap:2px;max-height:210px;overflow-y:auto}
+.hits:empty{display:none}
+.hits button{appearance:none;text-align:left;border:1px solid var(--line);background:var(--paper);
+  color:var(--ink);border-radius:3px;padding:7px 10px;cursor:pointer;font:inherit;font-size:12.5px;
+  display:flex;align-items:baseline;gap:8px}
+.hits button:hover{background:var(--sunk);border-color:var(--line-2)}
+.hits button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+.hits b{font-family:"IBM Plex Mono",monospace;font-weight:600}
+.hits i{font-style:normal;color:var(--ink-3);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hits em{font-style:normal;width:9px;height:9px;border-radius:2px;flex:none;background:var(--hc)}
+
+.card{border:1px solid var(--line);border-radius:4px;background:var(--paper);overflow:hidden}
+.card .hd{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;
+  align-items:baseline;gap:10px;background:var(--sunk)}
+.card .bd{padding:12px 14px;display:flex;flex-direction:column;gap:11px}
+.empty{padding:16px 14px;font-size:13px;color:var(--ink-2);line-height:1.6}
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+
+/* 開發版橫幅：細細一條，夠明顯但不佔版面 */
+.devbar{position:sticky;top:0;z-index:20;padding:3px 12px;text-align:center;
+  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
+  font-size:11.5px;letter-spacing:.06em;line-height:1.5;
+  background:var(--c-rebuild);color:#1a1205}
+.devbar a{color:#1a1205;text-decoration:underline}

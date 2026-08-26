@@ -177,8 +177,14 @@ def part(name):
 
 
 def tokens_css():
-    """共用的設計 token。兩個樣板都注入同一份，避免改配色時漏掉一邊。"""
-    return (ROOT / "src" / "tokens.css").read_text(encoding="utf-8")
+    """共用的設計 token 與外殼元件。兩個樣板都注入同一份。
+
+    tokens.css 是顏色與字級，base.css 是外殼與元件（標頭、側欄區塊、卡片、
+    搜尋結果列…）。兩份都共用的理由一樣：各自維護一份的話，改了一邊不會有
+    任何錯誤訊息，只會變成「入口頁跟州頁長得不一樣」，要有人看到才會發現。
+    """
+    return "\n".join((ROOT / "src" / f).read_text(encoding="utf-8")
+                     for f in ("tokens.css", "base.css"))
 
 def ring_centroid(rings):
     """取最大環的平均點當代表座標。搜尋定位用，不需要精確的幾何重心。"""

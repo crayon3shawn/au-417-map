@@ -237,10 +237,6 @@
       "zh": "切換行業會改變下面的判定與各州統計。",
       "en": "Changing industry changes the verdicts and the per-state counts below."
     },
-    "p_eyebrow_maps": {
-      "zh": "各州地圖",
-      "en": "State maps"
-    },
     "p_eyebrow_dist": {
       "zh": "郵區分布",
       "en": "Postcode breakdown"

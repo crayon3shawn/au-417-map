@@ -171,6 +171,28 @@ postcodes」。它不是 Australia Post 的官方郵區界線——後者並未�
 在 900 公里外，會讓 Caboolture 被歸到 Charters Towers）。用面積取樣加比例
 門檻兩個問題一起解決。`tests/test_regions.py` 拿這些踩過的坑當樣本釘住。
 
+## CSS 分三層
+
+```
+src/tokens.css   顏色與尺寸的變數（三個主題區塊）
+src/base.css     兩頁共用的外殼與元件（標頭、側欄區塊、卡片、搜尋結果列…）
+src/map.css      州頁專屬（地圖、圖例、縮放、判定列）
+src/portal.css   入口頁專屬（兩欄工具、各州卡片、產業對應表）
+```
+
+前兩份由 build 注入到兩個樣板的 `<style>` 開頭，樣板不要再宣告一次。
+
+**為什麼要拆 `base.css`**：兩頁原本各自維護一份 CSS，27 個同名選擇器裡有 13 個
+內容已經漂走（內距 22 vs 26、圓角 3 vs 4、`.stamp` 一個 `display:block` 一個
+`margin`），而且有三個是**同名不同物**——`.card`／`.verdict`／`.bar` 在兩頁指
+完全不同的元件，撞名讓它們根本沒辦法共用。入口頁那三個已改名成 `.statecard`／
+`.answer`／`.mix`，標頭統一叫 `.topbar`。
+
+`tests/test_tokens.py` 釘住三條規則：兩份頁面 CSS 不准有同名選擇器、不准重複
+宣告 `base.css` 已有的、CSS 裡不准有沒人用的 class（改版面時最容易留下這種
+東西，上一次改版就留了 14 條）。`@media` 裡的覆寫放行——州頁標頭在手機上會
+黏頂收合，入口頁沒那個行為，那是合理的差異。
+
 ## 語言
 
 介面有中英文，右上角切換，偏好記在 `localStorage` 的 `lang` 鍵。**預設中文**，

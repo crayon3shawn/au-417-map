@@ -60,9 +60,13 @@ function fillIndustries(){
   }
 }
 function applyIndustry(){
-  document.getElementById('indnote').innerHTML = esc(indScope() || '')
-    + ` ${HA}${esc(T('official_def', {tables: (industry.areas || []).map(covName).join(T('p_area_join'))}))}</a>`
-    + `<br><span class="dim">${T('p_indnote_switch')}</span>`;
+  // 跟各州頁同一種卡片：標題列說這張卡在講什麼，內容區放範圍與官方連結。
+  const tables = (industry.areas || []).map(covName).join(T('p_area_join'));
+  document.getElementById('indnote').innerHTML =
+    `<div class="hd">${esc(T('industry_table'))}</div>`
+    + `<div class="bd">${esc(indScope() || '')} `
+    + `${HA}${esc(T('official_def', {tables}))}</a>`
+    + `<span class="dim">${esc(T('p_indnote_switch'))}</span></div>`;
   drawStates();
   drawCards();
   drawSameList();
@@ -72,6 +76,7 @@ function applyIndustry(){
   if(shownRegion) showRegion(shownRegion);
   else if(shownPc) render(shownPc, shownName);
   else if(q.value.trim()) lookup();
+  else clearShown();          // 初次載入也要把空狀態畫出來
 }
 indSel.addEventListener('change', () => {
   industry = DATA.industry_masks.find(i => i.key === indSel.value) || industry;
@@ -93,6 +98,23 @@ function regionStats(r){
   return n;
 }
 
+// ---- 州別導覽 ----
+// 跟各州頁的標頭同一套。有了它，各州卡片就不再是唯一的導覽路徑，
+// 可以下放到說明區當「分布概況」看。
+function drawNav(){
+  const nav = document.getElementById('nav');
+  if(!nav) return;
+  nav.innerHTML = '';
+  for(const s of STATES){
+    if(!s.url) continue;
+    const a = document.createElement('a');
+    a.href = s.url;
+    a.textContent = s.abbr;
+    if(/^https?:/.test(s.url)){ a.target = '_blank'; a.rel = 'noopener'; }
+    nav.appendChild(a);
+  }
+}
+
 // ---- 全澳概觀圖 ----
 const svg = document.getElementById('au');
 const COS = Math.cos(27 * Math.PI / 180);
@@ -103,8 +125,12 @@ for(const k in DATA.outlines) for(const r of DATA.outlines[k]) for(const [lo,la]
   if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y;
 }
 const pad=(x1-x0)*0.02;
-svg.setAttribute('viewBox', `${x0-pad} ${y0-pad} ${(x1-x0)+pad*2} ${(y1-y0)+pad*2}`);
+const vbW = (x1-x0)+pad*2, vbH = (y1-y0)+pad*2;
+svg.setAttribute('viewBox', `${x0-pad} ${y0-pad} ${vbW} ${vbH}`);
 svg.setAttribute('preserveAspectRatio','xMidYMid meet');
+// 手機上讓地圖窗格的高度跟著澳洲的形狀走。固定高度（例如 52vh）配上橫向的
+// 澳洲，上下會各留一大條空白。CSS 只吃得到這個比例，算不出來，所以由這裡給。
+document.documentElement.style.setProperty('--au-aspect', (vbW / vbH).toFixed(3));
 const at = el('title',{id:'autitle'});
 svg.appendChild(at);
 
@@ -201,13 +227,13 @@ for(const s of STATES){
       <span class="en">${names}</span>
       <span class="go">${esc(status)}</span>
     </div>
-    <div class="bar">${seg(s.work,'var(--c-work)')}${seg(s.rebuild,'var(--c-rebuild)')}${seg(s.none,'var(--c-none)')}</div>
+    <div class="mix">${seg(s.work,'var(--c-work)')}${seg(s.rebuild,'var(--c-rebuild)')}${seg(s.none,'var(--c-none)')}</div>
     ${detail}`;
   let node;
-  if(s.url){ node = document.createElement('a'); node.href = s.url; node.className = 'card';
+  if(s.url){ node = document.createElement('a'); node.href = s.url; node.className = 'statecard';
              if(/^https?:/.test(s.url)){ node.target = '_blank'; node.rel = 'noopener'; } }
   else { node = document.createElement('div');
-         node.className = 'card ' + (note ? 'off' : 'nomap'); }
+         node.className = 'statecard ' + (note ? 'off' : 'nomap'); }
   node.innerHTML = inner;
   cards.appendChild(node);
 }
@@ -290,6 +316,7 @@ function regionRow(r){
 
 function showRegion(r){
   shownRegion = r; shownPc = null; shownName = null;
+  setHint('');
   const n = regionStats(r);
   const ind = indLabel();
   const only = n.rebuild === 0 && n.none === 0 ? T('p_reg_all_work', {ind})
@@ -308,7 +335,7 @@ function showRegion(r){
     : '';
   // 判定不一致時沒有代表色可用。用 --line-2 會讓標題比內文還淡、主次顛倒，
   // 所以退回一般文字色，而不是更淡的線條色。
-  show(`<div class="verdict region" style="--vc:${cat ? CAT_COLOR[cat] : 'var(--ink)'}">
+  show(`<div class="answer region" style="--vc:${cat ? CAT_COLOR[cat] : 'var(--ink)'}">
       <span class="chip"></span>
       <div class="body">
         <div><span class="rname">${esc(r.name)}</span>
@@ -339,7 +366,10 @@ function showRegion(r){
 
 function showHits(list, term, regs){
   clearHits();
-  shownRegion = null;
+  // 出現候選清單時要把上一筆答案收掉。不清的話，查「gosford」會看到候選是
+  // Gosford 的五筆、但右邊還停在上一次查「gold coast」的區域卡片。
+  shownPc = null; shownName = null; shownRegion = null;
+  show(`<div class="empty">${esc(T('detail_empty'))}</div>`);
   for(const r of (regs || []).slice(0, 8)) hitsEl.appendChild(regionRow(r));
   for(const [pc, nm, st] of list.slice(0, 40)){
     const f = IDX[pc][2], s = stateOf(st);
@@ -359,17 +389,23 @@ function showHits(list, term, regs){
   if(list.length) parts.push(T('hits_found', {n:list.length})
                              + (extra > 0 ? T('hits_more', {n:40}) : '')
                              + T('p_hits_tail'));
-  show(`<p class="hint">${esc(parts.length ? parts.join(' ') : T('hits_none', {q:term}))}</p>`);
+  setHint(parts.length ? parts.join(' ') : T('hits_none', {q:term}));
 }
 
 // 清掉目前顯示的東西。輸入框空了就該回到初始狀態，否則換語言／換產業時
 // 那些函式會照著 shownPc 把舊結果又畫回來。
+// 提示列在搜尋框下面，只在「還沒查」或「查詢有話要說」時出現。
+// 有結果時讓位給結果本身，跟州頁的 qhint 一樣。
+function setHint(s){
+  const h = document.getElementById('hint');
+  if(h) h.textContent = s;
+}
+
 function clearShown(){
   shownPc = null; shownName = null; shownRegion = null;
   clearHits();
-  show(`<p class="hint" id="hint"></p>`);
-  const h = document.getElementById('hint');
-  if(h) h.textContent = T('p_hint', {n: META.n_postcodes, m: META.n_maps});
+  show(`<div class="empty">${esc(T('detail_empty'))}</div>`);
+  setHint(T('p_hint', {n: META.n_postcodes, m: META.n_maps}));
 }
 
 function lookup(){
@@ -407,10 +443,11 @@ function render(key, pick){
   const hit = IDX[key];
   if(!hit){
     shownPc = null; shownName = null;
-    show(`<p class="hint">${T('p_nf_pc', {pc:esc(key)})}</p>`);
+    show(`<div class="empty">${T('p_nf_pc', {pc:esc(key)})}</div>`);
     return;
   }
   shownPc = key; shownName = pick || null;
+  setHint('');
   const v = key;
   const [stKey, mainName, f] = hit;
   const name = pick || mainName;
@@ -422,7 +459,7 @@ function render(key, pick){
   const link = s.url
     ? `<a class="golink" href="${s.url}#pc=${parseInt(v,10)}"${/^https?:/.test(s.url) ? ' target="_blank" rel="noopener"' : ''}>${esc(T('p_golink', {state:stLabel(s)}))}</a>`
     : `<p class="nomap">${esc(T('p_nomap_line', {state:stLabel(s)}))}</p>`;
-  show(`<div class="verdict" style="--vc:${cat.c}">
+  show(`<div class="answer" style="--vc:${cat.c}">
       <span class="chip"></span>
       <div class="body">
         <div><span class="pc">${pad4(v)}<u>${esc(s.abbr)}</u></span> <span class="where">${esc(name)}</span></div>
@@ -486,6 +523,7 @@ function applyLang(){
   langBtn.textContent = lang === 'zh' ? 'EN' : '中文';
   langBtn.setAttribute('aria-label', lang === 'zh' ? 'Switch to English' : '切換為中文');
 
+  drawNav();
   fillIndustries();
   drawCov();
   drawTable();

@@ -11,41 +11,53 @@ __CSS__</style>
      data-t 是內容，data-t-ph／data-t-aria 是屬性。這裡不寫死任何一種語言的
      字，否則改字要改兩個地方，遲早會漂掉。 -->
 <div class="devbar" id="devbar" hidden></div>
-<div class="wrap">
-  <header>
-    <button class="lang" id="lang" type="button"></button>
+  <header class="topbar">
     <h1 data-t="p_title"></h1>
-    <p class="lede"><span data-t="p_lede"></span>
-      <span class="lede-note" data-t="p_lede_note"></span></p>
+    <span class="sub"><span data-t="p_lede"></span>
+      <span class="lede-note" data-t="p_lede_note"></span></span>
+    <span class="spacer"></span>
+    <nav class="nav" id="nav" data-t-aria="nav_aria"></nav>
+    <button class="lang" id="lang" type="button"></button>
   </header>
-
-  <section class="finder">
-    <div class="askrow">
-      <label class="askind" for="ind"><span class="eyebrow" data-t="industry_label"></span>
-        <select id="ind" data-t-aria="p_ind_aria"></select></label>
-      <label class="askq" for="q"><span class="eyebrow" data-t="search_label"></span>
-        <input id="q" maxlength="30" autocomplete="off"
-               data-t-ph="search_ph" data-t-aria="p_q_aria"></label>
-    </div>
-    <span id="indnote"></span>
-    <div class="result" id="result" role="status" aria-live="polite">
-      <p class="hint" id="hint"></p>
-    </div>
-    <div class="hits" id="hits" role="listbox" data-t-aria="p_hits_aria"></div>
-  </section>
-
   <p class="disclaim" id="disclaim"></p>
 
-  <div class="cols">
-    <section class="panel mapbox">
-      <span class="eyebrow" data-t="p_eyebrow_maps"></span>
+  <div class="app">
+    <div class="app-rail">
+      <!-- 結構跟各州頁的側欄一致：每一段都是「標籤 + 控制項 + 卡片」。
+           兩個頁面的側欄長得一樣，使用者不必重新認一次。 -->
+      <section class="blk">
+        <span class="eyebrow" data-t="industry_label"></span>
+        <select id="ind" class="ind" data-t-aria="p_ind_aria"></select>
+        <div class="card indcard" id="indnote"></div>
+      </section>
+
+      <section class="blk">
+        <span class="eyebrow" data-t="search_label"></span>
+        <div class="srch">
+          <input id="q" maxlength="30" autocomplete="off"
+                 data-t-ph="search_ph" data-t-aria="p_q_aria">
+        </div>
+        <p class="qhint" id="hint"></p>
+        <div class="hits" id="hits" role="listbox" data-t-aria="p_hits_aria"></div>
+      </section>
+
+      <section class="blk">
+        <span class="eyebrow" data-t="detail_label"></span>
+        <div class="card" id="result" role="status" aria-live="polite"></div>
+      </section>
+
+    </div>
+
+    <div class="app-map">
       <svg class="au" id="au" aria-labelledby="autitle"></svg>
-    </section>
-    <section class="panel">
-      <span class="eyebrow" data-t="p_eyebrow_dist"></span>
-      <div class="cards" id="cards"></div>
-    </section>
+    </div>
   </div>
+
+  <div class="wrap doc">
+  <section class="panel dist">
+    <span class="eyebrow" data-t="p_eyebrow_dist"></span>
+    <div class="cards" id="cards"></div>
+  </section>
 
   <section class="basis">
     <h2 data-t="p_basis_h2"></h2>
