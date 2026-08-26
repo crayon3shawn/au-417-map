@@ -57,6 +57,9 @@ const [minLon, minLat, maxLon, maxLat] = META.bbox;
 const x0=px(minLon), x1=px(maxLon), y0=py(maxLat), y1=py(minLat);
 const padX=(x1-x0)*0.04, padY=(y1-y0)*0.04, padE=(x1-x0)*0.13;  // 東側多留海面給城市標籤
 const VB={x:x0-padX, y:y0-padY, w:(x1-x0)+padX+padE, h:(y1-y0)+padY*2};
+// 標籤還沒撐開之前的原始視野。fitLabels 只會把 VB 撐大，沒有這份底本就
+// 沒辦法重算——反覆改視窗大小會讓地圖一次比一次小。
+const VB0 = {...VB};
 // 字級與點徑以「目標螢幕像素」定義，再換算成世界單位。
 // 各州的視野比例不同（QLD 貼高度、NSW 貼寬度），寫死世界單位會讓字忽大忽小。
 const PX = {lbl1:11.5, lbl2:9.5, dot1:3.2, dot2:2.3, halo:1.5, gap:5, trop:8.5, stray:2.2,
@@ -223,27 +226,43 @@ apply();
 
 // 標籤寬度要等字型載入才量得準。溢出視野就把視野撐開，
 // 免得像 Byron Bay 這種在最東端的地名被切掉。
+// 標籤的字級是以螢幕像素定義再換算成世界單位的，所以改變視窗大小會改變它們
+// 在世界座標裡的大小——視野必須跟著重算，否則最東邊的地名（Sunshine Coast、
+// Gold Coast）會被切在地圖右緣。
+//
+// 每次都從 VB0 重來，不是在現有的 VB 上繼續加：這個函式只會把視野撐大，
+// 累加下去縮放視窗幾次地圖就縮成一小塊了。
 function fitLabels(){
   if(!cityG.getBBox) return;
+  // 使用者已經平移或縮放時不動 viewBox——改了畫面會整個跳掉，而那個狀態下
+  // 標籤切在邊緣本來就不重要（他正在看局部）。
+  if(k !== 1 || tx !== 0 || ty !== 0) return;
+  Object.assign(VB, VB0);
+  svg.setAttribute('viewBox', `${VB.x} ${VB.y} ${VB.w} ${VB.h}`);
+  sizeToViewport();
+
   const bb = cityG.getBBox();
-  const pad = SZ.gap;
-  let changed = false;
-  if(bb.x + bb.width > VB.x + VB.w){ VB.w = bb.x + bb.width - VB.x + pad; changed = true; }
-  if(bb.x < VB.x){ const d = VB.x - bb.x + pad; VB.x -= d; VB.w += d; changed = true; }
-  if(bb.y < VB.y){ const d = VB.y - bb.y + pad; VB.y -= d; VB.h += d; changed = true; }
-  if(bb.y + bb.height > VB.y + VB.h){ VB.h = bb.y + bb.height - VB.y + pad; changed = true; }
-  if(changed){
-    svg.setAttribute('viewBox', `${VB.x} ${VB.y} ${VB.w} ${VB.h}`);
-    sizeToViewport();
-    apply();
-  }
+  // 邊距留兩倍：只留一倍的話最東邊的地名會貼齊視野邊緣，看起來像被切掉。
+  const pad = SZ.gap * 2;
+  if(bb.x + bb.width > VB.x + VB.w) VB.w = bb.x + bb.width - VB.x + pad;
+  if(bb.x < VB.x){ const d = VB.x - bb.x + pad; VB.x -= d; VB.w += d; }
+  if(bb.y < VB.y){ const d = VB.y - bb.y + pad; VB.y -= d; VB.h += d; }
+  if(bb.y + bb.height > VB.y + VB.h) VB.h = bb.y + bb.height - VB.y + pad;
+
+  svg.setAttribute('viewBox', `${VB.x} ${VB.y} ${VB.w} ${VB.h}`);
+  sizeToViewport();
+  apply();
 }
 if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitLabels);
 else fitLabels();
+// resize 事件會連發，重算視野要量 getBBox，所以壓一下頻率
+let resizeTimer = 0;
 addEventListener('resize', () => {
   sizeToViewport();
   relabelCities();
   apply();
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(fitLabels, 120);
 });
 
 function relabelCities(){
