@@ -451,9 +451,20 @@ make build STATE=vic
 
 ## 免責
 
-本專案不是移民建議。郵區範圍為 ABS 概化邊界，僅供判讀，非法定界線；
+**本站非官方網站。** 郵區範圍為 ABS 概化邊界，僅供判讀，非法定界線；
 個別災害的宣告範圍與日期請對 [Disaster Assist](https://www.disasterassist.gov.au/find-a-disaster) 查證。
 送件前一律以 [Home Affairs 官方頁面](https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work) 為準。
+
+本站不構成移民協助（immigration assistance），個案問題請洽註冊移民代辦（MARA）
+或法律執業者。
+
+> 措辭的由來：原本頁首寫「非移民建議」，有兩個問題。一是會被讀成「非移民」＋
+> 「建議」；二是 migration advice 並不是法規上的說法——Home Affairs 用的詞是
+> **immigration assistance**，定義涵蓋「advising about a visa application or
+> visa matter」，且只有註冊移民代辦、法律執業者或豁免者能提供。
+>
+> 現在拆成兩處：頁首講「這不是政府網站」加一個動作（送件前再上官網確認），
+> 那是使用者最需要知道的；法規那句留在出處段落，那裡有空間講完整。
 
 ## 出處標示
 

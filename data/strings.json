@@ -186,8 +186,8 @@
       "en": "{state} 417 Visa Map"
     },
     "disclaimer": {
-      "zh": "非移民建議。郵區界線為 ABS 概化資料，僅供判讀；送件前務必以 Home Affairs 官方頁面為準。",
-      "en": "Not migration advice. Boundaries are ABS generalised data, for orientation only. Always check the official Home Affairs page before you apply."
+      "zh": "本站非官方網站。郵區界線為 ABS 概化資料，僅供判讀；送件前請再上 Home Affairs 官網確認一次。",
+      "en": "This is not an official government site. Boundaries are generalised ABS data, for orientation only. Check the official Home Affairs page again before you apply."
     },
     "dev_banner": {
       "zh": "開發版 · 資料與判定可能不正確，正式版請看 ",
@@ -210,8 +210,8 @@
       "en": "(462 has different industry rules and is not covered here.)"
     },
     "p_disclaim": {
-      "zh": "非移民建議。郵區界線為 ABS 概化資料，僅供判讀；送件前務必以 {link} 為準。",
-      "en": "Not migration advice. Boundaries are generalised ABS data, for orientation only. Always check {link} before you apply."
+      "zh": "本站非官方網站。郵區界線為 ABS 概化資料，僅供判讀；送件前請再上 {link} 確認一次。",
+      "en": "This is not an official government site. Boundaries are generalised ABS data, for orientation only. Check {link} again before you apply."
     },
     "p_official_page": {
       "zh": "Home Affairs 官方頁面",
@@ -532,6 +532,10 @@
     "map_reg_clear": {
       "zh": "清除框選",
       "en": "Clear outline"
+    },
+    "not_assistance": {
+      "zh": "本站不構成移民協助（immigration assistance），個案問題請洽註冊移民代辦（MARA）或法律執業者。",
+      "en": "This site does not provide immigration assistance. For advice on your own case, consult a registered migration agent (MARA) or a legal practitioner."
     }
   }
 }

@@ -457,10 +457,12 @@ function applyLang(){
     T('p_disclaim', {link: a(META.source_url, T('p_official_page'))});
   document.getElementById('basisnote').innerHTML =
     T('p_basis_note2', {link: a(META.source_url, T('p_official_text'))});
+  // 法規那一句放這裡不放頁首：頁首要短，而且對使用者來說「這不是政府網站」
+  // 比「不構成移民協助」有用得多。這裡有空間講完整。
   document.getElementById('note4').innerHTML = T('p_note4_b', {
     ha: a(META.source_url, T('p_ha_link')),
     da: a('https://www.disasterassist.gov.au/find-a-disaster', T('p_da_link')),
-  });
+  }) + ` <span class="dim">${esc(T('not_assistance'))}</span>`;
   document.getElementById('stamp').textContent =
     T('p_stamp', {d: META.page_date, b: META.built_at});
   // #hint 住在 #result 裡面，顯示查詢結果時整塊會被換掉，這個元素就不在了。

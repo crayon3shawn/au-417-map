@@ -735,7 +735,7 @@ function applyLang(){
     ha: a(META.source_url, T('map_ha_link')),
     da: a('https://www.disasterassist.gov.au/find-a-disaster', T('map_da_link')),
     date: META.page_date, strays: META.n_no_poly,
-  });
+  }) + ' ' + esc(T('not_assistance'));
   document.getElementById('stamp').textContent =
     T('map_stamp', {d: META.page_date, b: META.built_at});
   // 導覽的「全澳入口」也要換
