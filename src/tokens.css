@@ -3,108 +3,138 @@
    兩邊各存一份的話，改配色時漏掉一邊不會有任何錯誤訊息，也不會被測試抓到，
    只會變成「入口頁還是舊配色、點進地圖是新配色」，要有人看到才會發現。
 
-   由 build 注入到 <style> 開頭，樣板裡不要再宣告一次。 */
+   由 build 注入到 <style> 開頭，樣板裡不要再宣告一次。
+
+   --- 配色的兩條規則 ---
+
+   1. 橘色就是「算」。品牌強調色與「一般工作就算」是同一個顏色——亮起來的地方
+      就是你能做的地方。--accent 與 --c-work 目前同值但名字分開：一個是介面用
+      （focus、連結、標籤），一個是判定用，之後要調其中一個才不會誤傷另一個。
+
+   2. 類別色要通過色盲檢查。這不是加分項：使用者主要是年輕男性工人，紅綠色盲
+      盛行率約 8%。舊的藍綠／赭黃／灰在綠色盲眼裡「算」跟「不算」的 ΔE 只有 9.7,
+      等於核心答案讀不出來。現在這組最差的情況也在 28 以上（一般視覺 ΔE 25 以上
+      就算清楚可辨）。改顏色前請重跑色盲模擬。
+*/
 
 :root{
   /* 底色與面板 */
-  --paper:#EDEFEA;
-  --paper-2:#D8E0E1;
-  --surface:#F8F9F6;
-  --sunk:#E0E5DD;
+  --paper:#F7F5F2;
+  --paper-2:#EDEAE5;
+  --surface:#FFFFFF;
+  --sunk:#EFECE7;
   /* 文字 */
-  --ink:#16201C;
-  --ink-2:#4E5B55;
-  --ink-3:#76837C;
+  --ink:#14120F;
+  --ink-2:#55504A;
+  --ink-3:#6F6961;
   /* 線條與描邊光暈 */
-  --line:#C9D0C7;
-  --line-2:#B2BCAF;
-  --halo:#F0F2EC;
+  --line:#DCD7D0;
+  --line-2:#C4BEB5;
+  --halo:#F7F5F2;
+  /* 介面強調色（不是判定色，見檔頭規則 1） */
+  --accent:#C24606;
   /* 三分類的顏色 */
-  --c-work:#0F7A6B;
-  --c-rebuild:#B4741A;
-  --c-none:#8C9691;
-  /* 災害細分（只有州頁用） */
-  --c-fire:#C0451A;
+  --c-work:#D9591A;
+  --c-rebuild:#4F5FBF;
+  --c-none:#B8B2A9;
+  /* 災害細分（只有州頁用）。both 在淺底上改用深紫：淺紫在白底會太虛，深色才拉得開明度 */
+  --c-fire:#9E2B26;
   --c-flood:#2A66A8;
-  --c-both:#7A4B9E;
+  --c-both:#2F1B4D;
   /* 郵區填色 */
-  --fill-a:0.62;
-  --edge:rgba(22,32,28,.38);
+  --fill-a:0.68;
+  --edge:rgba(20,18,15,.30);
+  /* 發光（只有深色成立，淺色設 none） */
+  --glow:none;
+  /* 跟著滑鼠的光源強度（只有入口頁用）。淺色設 0：淺底上的光暈是髒污不是光 */
+  --lamp-a:0;
   /* 經緯格線（只有州頁用） */
-  --grat:#C6CEC8;
+  --grat:#DDD8D1;
   /* 提示框（只有州頁用） */
-  --warn-bg:#F6E9DC;
-  --warn-line:#DCB894;
+  --warn-bg:#FBEFE2;
+  --warn-line:#E4C6A2;
   /* 陰影 */
-  --shadow:0 1px 2px rgba(22,32,28,.08), 0 8px 24px -12px rgba(22,32,28,.22);
+  --shadow:0 1px 2px rgba(20,18,15,.07), 0 8px 24px -12px rgba(20,18,15,.20);
 }
 
 /* 系統偏好深色，且使用者沒有明確選淺色 */
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
   /* 底色與面板 */
-  --paper:#151C19;
-  --paper-2:#1B2523;
-  --surface:#212B26;
-  --sunk:#121814;
+  --paper:#111113;
+  --paper-2:#18181B;
+  --surface:#1C1C20;
+  --sunk:#0B0B0D;
   /* 文字 */
-  --ink:#E8EEE7;
-  --ink-2:#A2B0A7;
-  --ink-3:#7C8A82;
+  --ink:#F5F2ED;
+  --ink-2:#B9B2A8;
+  --ink-3:#9A938A;
   /* 線條與描邊光暈 */
-  --line:#2C3830;
-  --line-2:#3A4840;
-  --halo:#151C18;
+  --line:#34343C;
+  --line-2:#4A4A54;
+  --halo:#111113;
+  /* 介面強調色（不是判定色，見檔頭規則 1） */
+  --accent:#F2600C;
   /* 三分類的顏色 */
-  --c-work:#22A78F;
-  --c-rebuild:#D4922F;
-  --c-none:#6E7C74;
-  /* 災害細分（只有州頁用） */
-  --c-fire:#DE6431;
-  --c-flood:#4E8FD6;
-  --c-both:#9E71CC;
+  --c-work:#F2600C;
+  --c-rebuild:#7B8BE0;
+  --c-none:#4B4B54;
+  /* 災害細分（只有州頁用）。both 刻意用淺紫：色盲下藍與紫的色相會塌成同一個，只剩明度可以分 */
+  --c-fire:#D13B33;
+  --c-flood:#5A9BE0;
+  --c-both:#DCC6F5;
   /* 郵區填色 */
-  --fill-a:0.70;
-  --edge:rgba(233,240,232,.30);
+  --fill-a:0.62;
+  --edge:rgba(11,11,13,.5);
+  /* 發光（只有深色成立，淺色設 none） */
+  --glow:drop-shadow(0 0 7px rgba(242,96,12,.5));
+  /* 跟著滑鼠的光源強度（只有入口頁用）。0.10 是上限，理由寫在 lamp.js 檔頭 */
+  --lamp-a:0.10;
   /* 經緯格線（只有州頁用） */
-  --grat:#242F28;
+  --grat:#2C2C34;
   /* 提示框（只有州頁用） */
-  --warn-bg:#2A2117;
-  --warn-line:#4E3D26;
+  --warn-bg:#241A0E;
+  --warn-line:#4A331A;
   /* 陰影 */
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -12px rgba(0,0,0,.7);
 }}
 
 /* 使用者明確選了深色 */
 :root[data-theme="dark"]{
   /* 底色與面板 */
-  --paper:#151C19;
-  --paper-2:#1B2523;
-  --surface:#212B26;
-  --sunk:#121814;
+  --paper:#111113;
+  --paper-2:#18181B;
+  --surface:#1C1C20;
+  --sunk:#0B0B0D;
   /* 文字 */
-  --ink:#E8EEE7;
-  --ink-2:#A2B0A7;
-  --ink-3:#7C8A82;
+  --ink:#F5F2ED;
+  --ink-2:#B9B2A8;
+  --ink-3:#9A938A;
   /* 線條與描邊光暈 */
-  --line:#2C3830;
-  --line-2:#3A4840;
-  --halo:#151C18;
+  --line:#34343C;
+  --line-2:#4A4A54;
+  --halo:#111113;
+  /* 介面強調色（不是判定色，見檔頭規則 1） */
+  --accent:#F2600C;
   /* 三分類的顏色 */
-  --c-work:#22A78F;
-  --c-rebuild:#D4922F;
-  --c-none:#6E7C74;
-  /* 災害細分（只有州頁用） */
-  --c-fire:#DE6431;
-  --c-flood:#4E8FD6;
-  --c-both:#9E71CC;
+  --c-work:#F2600C;
+  --c-rebuild:#7B8BE0;
+  --c-none:#4B4B54;
+  /* 災害細分（只有州頁用）。both 刻意用淺紫：色盲下藍與紫的色相會塌成同一個，只剩明度可以分 */
+  --c-fire:#D13B33;
+  --c-flood:#5A9BE0;
+  --c-both:#DCC6F5;
   /* 郵區填色 */
-  --fill-a:0.70;
-  --edge:rgba(233,240,232,.30);
+  --fill-a:0.62;
+  --edge:rgba(11,11,13,.5);
+  /* 發光（只有深色成立，淺色設 none） */
+  --glow:drop-shadow(0 0 7px rgba(242,96,12,.5));
+  /* 跟著滑鼠的光源強度（只有入口頁用）。0.10 是上限，理由寫在 lamp.js 檔頭 */
+  --lamp-a:0.10;
   /* 經緯格線（只有州頁用） */
-  --grat:#242F28;
+  --grat:#2C2C34;
   /* 提示框（只有州頁用） */
-  --warn-bg:#2A2117;
-  --warn-line:#4E3D26;
+  --warn-bg:#241A0E;
+  --warn-line:#4A331A;
   /* 陰影 */
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -12px rgba(0,0,0,.7);
 }

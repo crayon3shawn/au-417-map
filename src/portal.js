@@ -78,7 +78,7 @@ function applyIndustry(){
     `<div class="hd">${esc(T('industry_table'))}</div>`
     + `<div class="bd">${esc(indScope() || '')} `
     + `${HA}${esc(T('official_def', {tables}))}</a>`
-    + `<span class="dim">${esc(T('p_indnote_switch'))}</span></div>`;
+    + `<span class="dim">${esc(T('p_indnote_switch'))} ${esc(T('p_lede_note'))}</span></div>`;
   drawStates();
   drawCards();
   drawSameList();
@@ -299,7 +299,14 @@ function drawSameList(){
 // ---- 查詢 ----
 const q = document.getElementById('q'), result = document.getElementById('result');
 const hitsEl = document.getElementById('hits');
-function show(html){ result.innerHTML = html; }
+// 判定色掛在容器上（--vc），不是掛在每一段內容上——左邊那條色帶是 .ans 的
+// 偽元素，色值必須由容器提供。傳 null 代表沒有判定（清空、找不到）。
+function show(html, vc, none){
+  if(vc) result.style.setProperty('--vc', vc);
+  else result.style.removeProperty('--vc');
+  result.classList.toggle('no', !!none);
+  result.innerHTML = html;
+}
 
 // 地名索引：多數人知道自己在哪個鎮，不知道郵區號碼。
 // 要等地名表載進來才建得起來。
@@ -352,12 +359,10 @@ function showRegion(r){
     : '';
   // 判定不一致時沒有代表色可用。用 --line-2 會讓標題比內文還淡、主次顛倒，
   // 所以退回一般文字色，而不是更淡的線條色。
-  show(`<div class="answer region" style="--vc:${cat ? CAT_COLOR[cat] : 'var(--ink)'}">
-      <span class="chip"></span>
-      <div class="body">
-        <div><span class="rname">${esc(r.name)}</span>
-             <span class="where">${esc(T('p_reg_count', {n:r.pcs.length}))}</span></div>
-        <div class="say">${esc(only)}</div>
+  show(`<div class="ans"><span class="rgn">${esc(r.name)}</span>
+        <span class="say">${esc(only)}</span>
+        <span class="loc">${esc(T('p_reg_count', {n:r.pcs.length}))}</span></div>
+      <div class="bd">
         <div class="sub">${esc(T('p_reg_lead'))}</div>
         <div class="legend2">
           <span style="--sw:var(--c-work)"><i></i>${esc(T('p_leg_work', {ind}))} <b>${n.work}</b></span>
@@ -365,8 +370,8 @@ function showRegion(r){
           <span style="--sw:var(--c-none)"><i></i>${esc(T('p_leg_none'))} <b>${n.none}</b></span>
         </div>
         ${mapLink}
-      </div>
-    </div>`);
+      </div>`,
+    cat ? CAT_COLOR[cat] : 'var(--ink)', cat === 'none');
   clearHits();
   for(const pc of r.pcs){
     const key = String(pc);
@@ -478,15 +483,13 @@ function render(key, pick){
   const link = s.url
     ? `<a class="golink" href="${s.url}#pc=${parseInt(v,10)}"${/^https?:/.test(s.url) ? ' target="_blank" rel="noopener"' : ''}>${esc(T('p_golink', {state:stLabel(s)}))}</a>`
     : `<p class="nomap">${esc(T('p_nomap_line', {state:stLabel(s)}))}</p>`;
-  show(`<div class="answer" style="--vc:${cat.c}">
-      <span class="chip"></span>
-      <div class="body">
-        <div><span class="pc">${pad4(v)}<u>${esc(s.abbr)}</u></span> <span class="where">${esc(name)}</span></div>
-        <div class="say">${esc(cat.say)}</div>
-        <div class="sub">${esc(cat.sub)}${extra}</div>
-        ${link}
-      </div>
-    </div>`);
+  // 版面跟州頁的答案面板一模一樣：郵遞區號 38px 等寬，判定色走左邊色帶與判定字。
+  // 兩頁共用同一個 .detail/.ans 結構，使用者從入口頁點進州頁不必重新認一次。
+  show(`<div class="ans"><span class="pcn">${pad4(v)}<u>${esc(s.abbr)}</u></span>
+        <span class="say">${esc(cat.say)}</span>
+        <span class="loc">${esc(name)}</span></div>
+      <div class="bd"><div class="sub">${esc(cat.sub)}${extra}</div>${link}</div>`,
+    cat.c, catOf(f) === 'none');
 }
 // 打字就查，沒有「查」按鈕。條件跟州頁一致——原本入口頁漏掉三位數郵區
 // （北領地的 0800 打完不會自動查，只能按按鈕），那是條件寫得不一致，不是按鈕的價值。

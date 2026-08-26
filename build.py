@@ -221,6 +221,18 @@ def part(name):
     return (ROOT / "src" / name).read_text(encoding="utf-8")
 
 
+def theme_js():
+    """深淺色切換。注入在 <style> 之後、內容之前——它必須在畫面繪製前執行，
+    等到頁尾的主程式才跑會先閃一下系統主題。"""
+    return (ROOT / "src" / "theme.js").read_text(encoding="utf-8")
+
+
+def lamp_js():
+    """跟著滑鼠的光源。只有入口頁注入，州頁刻意不做（理由寫在 lamp.js 檔頭）。
+    放在主程式之後——它要抓 .app-map 裡的節點，而那是主程式建的。"""
+    return (ROOT / "src" / "lamp.js").read_text(encoding="utf-8")
+
+
 def tokens_css():
     """共用的設計 token 與外殼元件。兩個樣板都注入同一份。
 
@@ -360,6 +372,7 @@ def main(state):
     html = (ROOT / "src" / "template.html").read_text(encoding="utf-8")
     for token, value in (("__ROBOTS__", robots_meta()),
                          ("__TOKENS__", tokens_css()),
+                         ("__THEME__", theme_js()),
                          ("__CSS__", part("map.css")),
                          ("__JS__", part("map.js").replace("// @ts-check\n", "", 1)),
                          # JS 一跑就會依語言改寫 document.title，這裡只是後備，

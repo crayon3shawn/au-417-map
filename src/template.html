@@ -6,14 +6,17 @@ __ROBOTS__<title>__TITLE__</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap">
 <style>__TOKENS__
 __CSS__</style>
+<script>__THEME__</script>
 
 <div class="devbar" id="devbar" hidden></div>
 <div class="shell">
   <header class="topbar" id="bar">
+    <a class="mark" href="index.html" data-t-aria="nav_home">417</a>
     <h1 id="h1"></h1>
     <span class="sub"><span data-t="subtitle"></span> · <span id="subind"></span></span>
     <span class="spacer"></span>
     <nav class="nav" id="nav" data-t-aria="nav_aria"></nav>
+    <button class="lang" id="theme" type="button" data-t-aria="theme_toggle"></button>
     <button class="lang" id="lang" type="button"></button>
   </header>
   <p class="disclaim" data-t="disclaimer"></p>
@@ -30,20 +33,25 @@ __CSS__</style>
       </section>
 
       <section class="blk">
+      <!-- 查詢欄與答案是同一個物件。你輸入的郵遞區號、跟你在問的那個，是同一個
+           東西——現在畫面上它出現兩次（欄位裡一次、答案標題再一次）。合成一個
+           之後答案就出現在眼睛本來就在的位置，而那四個數字（澳洲簽證世界的原子
+           單位）變成整頁最大的東西。
+           原本答案上面還有一個「郵區詳情」標籤，併起來之後是多的：它就長在查詢欄
+           下面，不需要有人告訴你這是什麼。
+           .fbox 沒有 gap，欄位與答案共用一個外框；候選清單排在整個盒子之後。 -->
         <span class="eyebrow" data-t="search_label"></span>
-        <div class="srch">
-          <input id="q" maxlength="30" autocomplete="off" aria-describedby="qhint"
-                 data-t-ph="search_ph" data-t-aria="p_q_aria">
+        <div class="fbox">
+          <div class="srch">
+            <input id="q" maxlength="30" autocomplete="off" aria-describedby="qhint"
+                   data-t-ph="search_ph" data-t-aria="p_q_aria">
+          </div>
+          <div class="detail" id="detail" role="status" aria-live="polite">
+            <div class="empty" data-t="detail_empty"></div>
+          </div>
         </div>
         <p class="qhint" id="qhint"></p>
         <div class="hits" id="hits" role="listbox" data-t-aria="p_hits_aria"></div>
-      </section>
-
-      <section class="blk">
-        <span class="eyebrow" data-t="detail_label"></span>
-        <div class="card" id="detail" role="status" aria-live="polite">
-          <div class="empty" data-t="detail_empty"></div>
-        </div>
       </section>
 
     </aside>

@@ -106,6 +106,11 @@ const workMask = () => industry.mask;
 //   rebuild 不在那些表裡，但被宣告為災區，只有災後重建工作算
 //   none    兩者皆非
 const catOf = f => (f & workMask()) ? 'work' : (f & REBUILD) ? 'rebuild' : 'none';
+// 答案面板上那一行判定字。用的是跟圖例、入口頁同一組字串——同一件事在三個
+// 地方要講同一句話，不然使用者得自己對照哪個講法對應哪個。
+const sayOf = f => (f & workMask()) ? T('cat_work', {ind: indLabel()})
+                 : (f & REBUILD)    ? T('cat_rebuild')
+                                    : T('cat_none');
 
 // 細分只作用在 rebuild：災害種類唯有在「重建是唯一路徑」時才影響判斷。
 function colorOf(f, split){
@@ -540,9 +545,18 @@ function select(pc){
          markSelection(d); }
 
   if(!d || !d.rec){
+    // 這個郵區存在但不在本州的合格清單上。還是給它同一個版面——使用者問的
+    // 是「4000 算不算」，答案是「不算」，不該因為它不在清單上就變成一段文字。
     const names = OTHER[pc];
     const where = names ? `（${esc(names.join('、'))}）` : '';
-    detail.innerHTML = `<div class="empty">${esc(T('v_not_listed',{pc, where, state: stateName(), ind: indLabel()}))}</div>`;
+    detail.style.setProperty('--vc', 'var(--c-none)');
+    detail.classList.add('no');
+    detail.innerHTML =
+      `<div class="ans"><span class="pcn">${pc}</span>` +
+      `<span class="say">${esc(T('cat_none'))}</span></div>` +
+      `<div class="bd"><div class="verdict no"><span class="dot"></span><span>` +
+      `${esc(T('v_not_listed',{pc, where, state: stateName(), ind: indLabel()}))}` +
+      `</span></div></div>`;
     return;
   }
 
@@ -558,8 +572,13 @@ function select(pc){
   if(!(f & workMask()) && (f & REBUILD)) rows.push(`<div class="note">${esc(T('v_rebuild_only',{ind}))}</div>`);
   if(d.stray) rows.push(`<div class="note">${esc(T('v_no_polygon'))}</div>`);
 
+  // 判定色走色帶與判定字，不上郵遞區號本身（理由在 base.css 的 .fbox 段）
+  detail.style.setProperty('--vc', colorOf(f, splitBox.checked));
+  detail.classList.toggle('no', catOf(f) === 'none');
   detail.innerHTML =
-    `<div class="hd"><span class="pcn" style="color:${colorOf(f, splitBox.checked)}">${p}</span><span class="loc">${esc(shown.join(lang === 'zh' ? '、' : ', '))}${more}</span></div>` +
+    `<div class="ans"><span class="pcn">${p}</span>` +
+    `<span class="say">${esc(sayOf(f))}</span>` +
+    `<span class="loc">${esc(shown.join(lang === 'zh' ? '、' : ', '))}${more}</span></div>` +
     `<div class="bd">${rows.join('')}</div>`;
 }
 
@@ -608,6 +627,12 @@ function goto(pc){
 
 function showHits(list, term){
   clearHits();
+  // 候選清單排在答案盒子後面。這時候使用者還沒選，留著上一次的答案會讓人
+  // 以為那就是結論——打「gosford」卻看到上一次查的「黃金海岸」就是這樣來的。
+  clearSel(); selPc = null;
+  detail.style.removeProperty('--vc');
+  detail.classList.remove('no');
+  detail.innerHTML = `<div class="empty">${esc(T('detail_empty'))}</div>`;
   for(const [pc, nm] of list.slice(0, 30)){
     const f = (byPc.get(pc) || {}).f || 0;
     const b = document.createElement('button');
@@ -685,15 +710,20 @@ function clearRegion(){
   if(!regPcs) return;
   regPcs = null; regName = '';
   for(const [, d] of byPc) if(d.node) d.node.classList.remove('inreg', 'outreg');
+  detail.style.removeProperty('--vc');
+  detail.classList.remove('no');
   detail.innerHTML = `<div class="empty">${esc(T('detail_empty'))}</div>`;
 }
 
 // 面板內容跟框選本身分開：切語言／換產業要重畫文字，但不該把視野拉回去。
 function renderRegionPanel(){
   if(!regPcs) return;
+  // 行政區不是單一郵區，沒有判定色——色帶留在預設的線色。
+  detail.style.removeProperty('--vc');
   detail.innerHTML =
-    `<div class="hd"><span class="rgn">${esc(regName)}</span></div>`
-    + `<div class="bd"><div class="rgnsub">${esc(T('map_reg_sub', {n: regPcs.size}))}</div>`
+    `<div class="ans"><span class="rgn">${esc(regName)}</span>`
+    + `<span class="loc">${esc(T('map_reg_sub', {n: regPcs.size}))}</span></div>`
+    + `<div class="bd">`
     + `<button type="button" class="rgnclr" id="rgnclr">${esc(T('map_reg_clear'))}</button></div>`;
   const btn = document.getElementById('rgnclr');
   if(btn) btn.addEventListener('click', () => { location.hash = ''; clearRegion(); });

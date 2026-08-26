@@ -6,23 +6,35 @@ __ROBOTS__<title>澳洲 417 集簽地圖 · Australia 417 Visa Map</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap">
 <style>__TOKENS__
 __CSS__</style>
+<script>__THEME__</script>
 
 <!-- 文字一律由 portal.js 從 strings.json 填入，兩種語言共用同一份樣板。
      data-t 是內容，data-t-ph／data-t-aria 是屬性。這裡不寫死任何一種語言的
      字，否則改字要改兩個地方，遲早會漂掉。 -->
 <div class="devbar" id="devbar" hidden></div>
+<div class="viewport">
   <header class="topbar">
-    <h1 data-t="p_title"></h1>
-    <span class="sub"><span data-t="p_lede"></span>
-      <span class="lede-note" data-t="p_lede_note"></span></span>
+    <span class="mark">417</span>
     <span class="spacer"></span>
     <nav class="nav" id="nav" data-t-aria="nav_aria"></nav>
+    <button class="lang" id="theme" type="button" data-t-aria="theme_toggle"></button>
     <button class="lang" id="lang" type="button"></button>
   </header>
-  <p class="disclaim" id="disclaim"></p>
 
   <div class="app">
     <div class="app-rail">
+      <!-- 入口頁是門面：先說這是什麼，再給工具。標題放在左欄頂端而不是標頭裡，
+           一來標頭要留給導覽，二來這樣標題可以大一點、有呼吸感——但搜尋框仍然
+           在第一屏內，不會像放一個裝飾性 hero 那樣把工具推下去。 -->
+      <!-- 開場只有標題。原本上面有一行 eyebrow（「全澳 · 逐個郵區」）、下面有一段
+           lede（「417 打工度假簽證的集簽合格郵遞區號」）——lede 跟標題是同一句話
+           換個講法，eyebrow 則是標題已經講完的範圍。三層裡有兩層是重複的，
+           而它們合起來吃掉側欄頂端 80px，把搜尋往下推。
+           lede 裡唯一的真資訊「462 不適用」移進產業卡，跟其他規則說明放在一起。 -->
+      <section class="hero">
+        <h1 data-t="p_title"></h1>
+      </section>
+
       <!-- 結構跟各州頁的側欄一致：每一段都是「標籤 + 控制項 + 卡片」。
            兩個頁面的側欄長得一樣，使用者不必重新認一次。 -->
       <section class="blk">
@@ -32,18 +44,23 @@ __CSS__</style>
       </section>
 
       <section class="blk">
+      <!-- 查詢欄與答案是同一個物件。你輸入的郵遞區號、跟你在問的那個，是同一個
+           東西——現在畫面上它出現兩次（欄位裡一次、答案標題再一次）。合成一個
+           之後答案就出現在眼睛本來就在的位置，而那四個數字（澳洲簽證世界的原子
+           單位）變成整頁最大的東西。
+           原本答案上面還有一個「郵區詳情」標籤，併起來之後是多的：它就長在查詢欄
+           下面，不需要有人告訴你這是什麼。
+           .fbox 沒有 gap，欄位與答案共用一個外框；候選清單排在整個盒子之後。 -->
         <span class="eyebrow" data-t="search_label"></span>
-        <div class="srch">
-          <input id="q" maxlength="30" autocomplete="off"
-                 data-t-ph="search_ph" data-t-aria="p_q_aria">
+        <div class="fbox">
+          <div class="srch">
+            <input id="q" maxlength="30" autocomplete="off"
+                   data-t-ph="search_ph" data-t-aria="p_q_aria">
+          </div>
+          <div class="detail" id="result" role="status" aria-live="polite"></div>
         </div>
         <p class="qhint" id="hint"></p>
         <div class="hits" id="hits" role="listbox" data-t-aria="p_hits_aria"></div>
-      </section>
-
-      <section class="blk">
-        <span class="eyebrow" data-t="detail_label"></span>
-        <div class="card" id="result" role="status" aria-live="polite"></div>
       </section>
 
     </div>
@@ -52,6 +69,10 @@ __CSS__</style>
       <svg class="au" id="au" aria-labelledby="autitle"></svg>
     </div>
   </div>
+
+  <p class="stamp strip" id="stamp"></p>
+  <p class="disclaim" id="disclaim"></p>
+</div>
 
   <div class="wrap doc">
   <section class="panel dist">
@@ -107,11 +128,15 @@ __CSS__</style>
     <div>
       <h3 data-t="p_note4_h"></h3>
       <p id="note4"></p>
-      <p class="stamp" id="stamp"></p>
+
     </div>
   </div>
 </div>
 
 <script>
 __JS__
+</script>
+<script>
+__LAMP__
+initLamp();
 </script>

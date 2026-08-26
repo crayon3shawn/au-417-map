@@ -45,10 +45,6 @@
       "zh": "找不到「{q}」。試試郵遞區號，或只打地名的前幾個字。",
       "en": "No match for \"{q}\". Try a postcode, or just the first few letters of a place."
     },
-    "detail_label": {
-      "zh": "郵區詳情",
-      "en": "Postcode detail"
-    },
     "detail_empty": {
       "zh": "點地圖上任一塊郵區，或在上面輸入郵遞區號，這裡會顯示這個郵區算不算集簽、哪一種工作算。",
       "en": "Tap any postcode on the map, or search above, to see whether it counts and which kind of work qualifies."
@@ -201,10 +197,6 @@
       "zh": "澳洲 417 集簽地圖",
       "en": "Australia 417 Visa Map"
     },
-    "p_lede": {
-      "zh": "<strong>417</strong> 打工度假簽證的集簽合格郵遞區號。",
-      "en": "Eligible postcodes for the <strong>417</strong> Working Holiday specified-work requirement — the same areas count for both the second and the third visa."
-    },
     "p_lede_note": {
       "zh": "（462 的產業規則不同，不適用。）",
       "en": "(462 has different industry rules and is not covered here.)"
@@ -234,7 +226,7 @@
       "en": "{n} postcodes searchable, covering all of Australia. {m} states have maps so far."
     },
     "p_indnote_switch": {
-      "zh": "切換行業會改變下面的判定與各州統計。",
+      "zh": "切換產業會改變下面的判定與各州統計。",
       "en": "Changing industry changes the verdicts and the per-state counts below."
     },
     "p_eyebrow_dist": {
@@ -474,8 +466,8 @@
       "en": "Disaster Assist — Find a disaster"
     },
     "map_title": {
-      "zh": "{state} 417 集簽合格郵遞區號地圖，共 {n} 個郵區。用左側「查郵遞區號」欄位查詢個別郵區。",
-      "en": "Map of postcodes where 417 specified work counts in {state}. {n} postcodes. Use the postcode search field on the left to look up an individual postcode."
+      "zh": "{state} 417 集簽合格郵遞區號地圖，共 {n} 個郵區。用左側「查郵區或地名」欄位查詢個別郵區。",
+      "en": "Map of postcodes where 417 specified work counts in {state}. {n} postcodes. Use the “Postcode or place” field on the left to look up an individual postcode."
     },
     "p_unit_pc_one": {
       "zh": "個郵區",
@@ -544,6 +536,10 @@
     "hits_other": {
       "zh": "其他州還有 {n} 筆，點下去會跳到那一州的地圖。",
       "en": "{n} more in other states — tap to open that state’s map."
+    },
+    "theme_toggle": {
+      "zh": "切換深淺色",
+      "en": "Switch light/dark"
     }
   }
 }

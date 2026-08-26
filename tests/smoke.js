@@ -10,8 +10,11 @@ const vm = require('vm');
 
 const file = process.argv[2];
 const html = fs.readFileSync(file, 'utf8');
-const m = html.match(/<script>([\s\S]*)<\/script>/);
-if (!m) { console.error('找不到 <script>'); process.exit(1); }
+// 頁面現在有兩段腳本：先是主題切換（要在繪製前跑），最後才是主程式。
+// 兩段都要驗，而且要照順序——貪婪比對會把中間整段 HTML 也吃進來。
+const blocks = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(x => x[1]);
+if (!blocks.length) { console.error('找不到 <script>'); process.exit(1); }
+const m = [null, blocks.join('\n;\n')];
 
 // 任何屬性存取都回傳同一個可呼叫、可當數字、可當陣列用的替身
 function stub(name) {

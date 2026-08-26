@@ -44,38 +44,36 @@
 .lay input:checked{background:var(--sw);border-color:var(--sw)}
 .lay input:checked::after{content:"";position:absolute;left:4px;top:1px;width:4px;height:8px;
   border:solid var(--surface);border-width:0 2px 2px 0;transform:rotate(42deg)}
-.lay .nm{font-weight:500;font-size:13.5px;line-height:1.35}
-.lay .nm small{display:block;font-weight:400;font-size:11.5px;color:var(--ink-3)}
-.lay .ct{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.lay .nm{font-weight:500;font-size:14px;line-height:1.35}
+.lay .nm small{display:block;font-weight:400;font-size:12.5px;color:var(--ink-3)}
+.lay .ct{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
 
 .seg{display:flex;border:1px solid var(--line-2);border-radius:3px;overflow:hidden}
 .seg button{flex:1;appearance:none;border:0;background:var(--paper);color:var(--ink-2);
-  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:13px;
+  font-family:inherit;font-weight:600;font-size:14px;
   letter-spacing:.06em;padding:7px 4px;cursor:pointer}
 .seg button + button{border-left:1px solid var(--line-2)}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
 .seg button:focus-visible{outline:2px solid var(--ink);outline-offset:-3px}
 .qhint:empty{display:none}
 .btn{appearance:none;border:1px solid var(--line-2);background:var(--paper);color:var(--ink);
-  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;font-size:13px;
+  font-family:inherit;font-weight:600;font-size:14px;
   letter-spacing:.06em;padding:8px 12px;border-radius:3px;cursor:pointer}
 .btn:hover{background:var(--sunk)}
 .btn:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
-.card .pcn{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:22px}
-.card .loc{font-size:12px;color:var(--ink-2);line-height:1.45;flex:1}
-.verdict{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.5}
+.verdict{display:flex;gap:9px;align-items:flex-start;font-size:14px;line-height:1.5}
 .verdict .dot{width:9px;height:9px;border-radius:2px;margin-top:6px;flex:none;background:var(--vc)}
 .verdict b{font-weight:700}
 .verdict .no{color:var(--ink-3)}
 .verdict.no .dot{background:var(--line-2)}
-.note{font-size:12px;line-height:1.55;color:var(--ink-2);background:var(--warn-bg);
+.note{font-size:12.5px;line-height:1.55;color:var(--ink-2);background:var(--warn-bg);
   border:1px solid var(--warn-line);border-radius:3px;padding:9px 11px}
 .facts{display:flex;flex-direction:column;gap:9px;font-size:12.5px;line-height:1.55;color:var(--ink-2)}
 .facts p{margin:0}
 .facts b{color:var(--ink)}
-.src{font-size:11.5px;line-height:1.6;color:var(--ink-3)}
+.src{font-size:12.5px;line-height:1.6;color:var(--ink-3)}
 .src a{color:var(--ink-2)}
-.src a:hover{color:var(--c-work)}
+.src a:hover{color:var(--accent)}
 
 .mapwrap{position:relative;background:var(--paper-2);min-height:0;overflow:hidden}
 /* 高度由 sizeMapPane() 依州的形狀算出來覆蓋。這裡的值是 JS 還沒跑之前的預設。 */
@@ -93,16 +91,15 @@ svg.map.drag{cursor:grabbing}
   stroke-linejoin:round;cursor:pointer}
 .poa.none{fill-opacity:calc(var(--fill-a) * .55)}
 .poa:hover{fill-opacity:.92;stroke:var(--ink-3);stroke-width:1.4}
-.poa.sel{stroke:var(--ink);stroke-width:2.2;fill-opacity:.95}
+/* 發光只加在「選取」這一個元素上，不是 600 個郵區——filter 很貴。
+   淺色主題的 --glow 是 none。 */
+.poa.sel{stroke:var(--ink);stroke-width:2.2;fill-opacity:.95;filter:var(--glow)}
 /* 框選行政區：淡化非成員比替成員加外框更能讀成「一個區域」——外框會跟郵區
    本身的邊界混在一起。成員之間的分界留著，那是有意義的（同一個行政區內的
    郵區判定可以不一樣）。 */
 .poa.outreg{fill-opacity:.1;stroke-opacity:.25}
 .poa.inreg{fill-opacity:.9;stroke:var(--ink);stroke-width:1.2}
-.card .rgn{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
-  font-weight:700;font-size:17px;letter-spacing:.01em}
-.rgnsub{font-size:12.5px;line-height:1.55;color:var(--ink-2)}
-.rgnclr{align-self:flex-start;appearance:none;cursor:pointer;font:inherit;font-size:12px;
+.rgnclr{align-self:flex-start;appearance:none;cursor:pointer;font:inherit;font-size:12.5px;
   padding:5px 11px;border:1px solid var(--line-2);border-radius:3px;
   background:var(--surface);color:var(--ink-2)}
 .rgnclr:hover{background:var(--sunk);color:var(--ink)}
@@ -112,7 +109,7 @@ svg.map.drag{cursor:grabbing}
    pointer-events:none 才不會擋住底下郵區的點擊。 */
 .ring{pointer-events:none}
 .ringhalo{fill:none;stroke:var(--halo);opacity:.75}
-.ringline{fill:none;stroke:var(--ink);stroke-width:2.2;vector-effect:non-scaling-stroke}
+.ringline{fill:none;stroke:var(--ink);stroke-width:2.2;vector-effect:non-scaling-stroke;filter:var(--glow)}
 .city circle{fill:var(--ink);stroke:var(--halo);stroke-linejoin:round}
 .city text{fill:var(--ink);font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:600;
   paint-order:stroke;stroke:var(--halo);stroke-linejoin:round}
@@ -122,11 +119,16 @@ svg.map.drag{cursor:grabbing}
 /* 縮放鈕。桌機放右上角——原本在右下角，iOS Safari 的底部工具列會蓋住它，
    那條工具列是浮在畫面上的、不是 safe-area inset，靠內距躲不掉。
    手機另外處理：地圖是跟著頁面捲的，貼在任何一角都只有那一角進畫面時才看得到，
-   所以改成靠右垂直置中——那是捲動過程中可見時間最長的位置。 */
+   所以改成靠右垂直置中——那是捲動過程中可見時間最長的位置。
+   但純置中還不夠：上面還有一個捲動後會收合並黏頂的標頭，它會正好蓋住最上面
+   的「＋」。所以往下再偏移一段，讓整排落在「標頭以下、Safari 工具列以上」
+   那條帶子裡。以 iPhone 直立（812 高、收合標頭 118、工具列約 90）與一張
+   394px 高的地圖推算，偏移量落在 35–51px 之間都成立：太小會被標頭切掉上緣，
+   太大會在地圖捲到底時撞到工具列。取中間值 40。 */
 .zoom{position:absolute;right:14px;top:14px;display:flex;flex-direction:column;gap:5px}
-@media (max-width:900px){ .zoom{top:50%;transform:translateY(-50%)} }
+@media (max-width:900px){ .zoom{top:calc(50% + 40px);transform:translateY(-50%)} }
 .zoom button{width:34px;height:34px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);
-  border-radius:3px;cursor:pointer;font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:17px;
+  border-radius:3px;cursor:pointer;font-family:inherit;font-weight:600;font-size:16px;
   box-shadow:var(--shadow);line-height:1}
 .zoom button:hover{background:var(--sunk)}
 .zoom button:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
@@ -135,10 +137,10 @@ svg.map.drag{cursor:grabbing}
    左下是地圖圖例的慣例位置。用 bottom 定位，展開時往上長，不會掉出畫面。 */
 .legend{position:absolute;left:14px;bottom:14px;background:var(--surface);border:1px solid var(--line);
   border-radius:4px;padding:11px 13px;box-shadow:var(--shadow);max-width:248px}
-.legend > summary{font-size:10.5px;cursor:pointer;list-style:none;display:flex;
+.legend > summary{font-size:11px;cursor:pointer;list-style:none;display:flex;
   align-items:center;justify-content:space-between;gap:8px}
 .legend > summary::-webkit-details-marker{display:none}
-.legend > summary::after{content:"−";font-size:13px;line-height:1;color:var(--ink-3)}
+.legend > summary::after{content:"−";font-size:14px;line-height:1;color:var(--ink-3)}
 .legend:not([open]) > summary::after{content:"+"}
 .legend[open] > summary{margin-bottom:7px}
 /* 收合時仍看得到三個顏色——三分類就是這張圖的全部內容，
@@ -148,7 +150,7 @@ svg.map.drag{cursor:grabbing}
 .mini i{width:10px;height:10px;border-radius:2px;background:var(--sw);
   opacity:var(--fill-a);border:.5px solid var(--edge)}
 .legend > summary:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-.lg{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ink-2);line-height:1.35;padding:2.5px 0}
+.lg{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-2);line-height:1.35;padding:2.5px 0}
 .lg span{flex:1}
 .lg b{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
   font-weight:600;font-size:11px;color:var(--ink)}
@@ -166,14 +168,14 @@ svg.map.drag{cursor:grabbing}
 .lg i{width:13px;height:11px;border-radius:2px;flex:none;background:var(--sw);
   opacity:var(--fill-a);border:.5px solid var(--edge)}
 .lgnote{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);
-  font-size:11px;line-height:1.45;color:var(--ink-3)}
-@media (max-width:560px){ .legend{max-width:190px;padding:8px 10px} .lg{font-size:10.5px} }
+  font-size:12.5px;line-height:1.45;color:var(--ink-3)}
+@media (max-width:560px){ .legend{max-width:190px;padding:8px 10px} .lg{font-size:11px} }
 
 .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);
-  padding:5px 8px;border-radius:3px;font-size:11.5px;white-space:nowrap;opacity:0;
+  padding:5px 8px;border-radius:3px;font-size:12.5px;white-space:nowrap;opacity:0;
   transition:opacity .1s;font-family:"IBM Plex Mono",monospace;z-index:5}
 .tip.on{opacity:1}
 .count{position:absolute;right:14px;top:14px;background:var(--surface);border:1px solid var(--line);
-  border-radius:4px;padding:7px 11px;box-shadow:var(--shadow);font-size:11.5px;color:var(--ink-2)}
+  border-radius:4px;padding:7px 11px;box-shadow:var(--shadow);font-size:12.5px;color:var(--ink-2)}
 .count b{font-family:"IBM Plex Mono",monospace;color:var(--ink);font-weight:600;font-size:14px}
 @media (max-width:560px){ .count{display:none} }
