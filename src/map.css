@@ -159,7 +159,8 @@ body{
 .src a:hover{color:var(--c-work)}
 
 .mapwrap{position:relative;background:var(--paper-2);min-height:0;overflow:hidden}
-@media (max-width:900px){ .mapwrap{height:62vh;min-height:380px} }
+/* 高度由 sizeMapPane() 依州的形狀算出來覆蓋。這裡的值是 JS 還沒跑之前的預設。 */
+@media (max-width:900px){ .mapwrap{height:62vh;min-height:320px} }
 svg.map{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
 svg.map.drag{cursor:grabbing}
 .grat{stroke:var(--grat);stroke-width:.6;fill:none}

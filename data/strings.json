@@ -466,8 +466,8 @@
       "en": "Postcode lists: Home Affairs {d} · Boundaries: ABS POA 2021 · Built {b}"
     },
     "map_src": {
-      "zh": "本圖只處理 <b>417</b>（Working Holiday）；462 的產業規則不同，不適用。郵遞區號清單逐字取自 {ha}（頁面標示更新於 {date}）。郵區範圍為 ABS Postal Areas 2021 概化邊界，僅供判讀，非法定界線；個別災害的宣告範圍與日期請對 {da} 查證。有 {strays} 個合格郵區在 ABS 沒有對應面（多為信箱型郵區），以小點標示。送件前務必以官方頁面為準。",
-      "en": "This map covers <b>417</b> (Working Holiday) only; 462 has different industry rules and is not represented. The postcode lists are taken verbatim from {ha} (the page states it was last updated {date}). Boundaries are ABS Postal Areas 2021 generalised outlines — for orientation only, not legal boundaries. Check the extent and dates of individual disaster declarations against {da}. {strays} eligible postcodes have no ABS boundary (mostly PO Box ranges) and are shown as dots. Always go by the official page before you apply."
+      "zh": "本圖只處理 <b>417</b>（Working Holiday）；462 的產業規則不同，不適用。郵遞區號清單逐字取自 {ha}（頁面標示更新於 {date}）。郵區範圍為 ABS Postal Areas 2021 概化邊界，僅供判讀，非法定界線；個別災害的宣告範圍與日期請對 {da} 查證。送件前務必以官方頁面為準。",
+      "en": "This map covers <b>417</b> (Working Holiday) only; 462 has different industry rules and is not represented. The postcode lists are taken verbatim from {ha} (the page states it was last updated {date}). Boundaries are ABS Postal Areas 2021 generalised outlines — for orientation only, not legal boundaries. Check the extent and dates of individual disaster declarations against {da}. Always go by the official page before you apply."
     },
     "map_ha_link": {
       "zh": "Home Affairs — Specified work (subclass 417)",
@@ -536,6 +536,10 @@
     "not_assistance": {
       "zh": "本站不構成移民協助（immigration assistance），個案問題請洽註冊移民代辦（MARA）或法律執業者。",
       "en": "This site does not provide immigration assistance. For advice on your own case, consult a registered migration agent (MARA) or a legal practitioner."
+    },
+    "map_strays": {
+      "zh": "有 {n} 個合格郵區在 ABS 沒有對應面（多為信箱型郵區），以小點標示。",
+      "en": "{n} eligible postcodes have no ABS boundary (mostly PO Box ranges) and are shown as dots."
     }
   }
 }

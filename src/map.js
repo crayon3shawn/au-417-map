@@ -253,8 +253,9 @@ function fitLabels(){
   sizeToViewport();
   apply();
 }
-if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitLabels);
-else fitLabels();
+function settleView(){ sizeMapPane(); fitLabels(); initialView(); }
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(settleView);
+else settleView();
 // resize 事件會連發，重算視野要量 getBBox，所以壓一下頻率
 let resizeTimer = 0;
 addEventListener('resize', () => {
@@ -262,7 +263,7 @@ addEventListener('resize', () => {
   relabelCities();
   apply();
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(fitLabels, 120);
+  resizeTimer = setTimeout(settleView, 120);
 });
 
 function relabelCities(){
@@ -694,6 +695,53 @@ function applyMapA11y(){
   mt.textContent = T('map_title', {state: stateName(), n: META.counts.boundaries});
 }
 
+// ---- 初始視野 ----
+// 窗格比州本身「寬」的時候（桌機常見：1048x797 是 1.31，而南北狹長的州
+// viewBox 只有 0.91），完整放進去會讓左右各留一大條空白——實測各 162px，
+// 等於窗格寬度的三成。而且沒有東西可以回收：內距只有 4%，州本體已經佔了
+// viewBox 寬 87%、高 93%，高度是綁定條件。要變大就只能放大裁切。
+//
+// 裁掉的部分往上下分，所以垂直方向對到首府（種子檔第一筆）而不是幾何中心。
+// 首府那一帶是人口與「都會區不算」的交界，最該先看到；對到幾何中心的話，
+// 南端那條會被裁掉，而幾個最大的都會區正好都在南端。
+//
+// 想看完整的州仍然可以按「回到全州視野」。手機不套用——那裡窗格比內容窄，
+// 完整放進去本來就填滿寬度。
+// 手機上地圖窗格的高度跟著州的形狀走，不用固定的 62vh。東西狹長的州（viewBox
+// 比例 2.79）塞進直式窗格，固定高度會上下各留一大條空白；南北狹長的州則相反。
+// 下限 320px 是「還看得出形狀」的底線——真照 2.79 算下去只有 134px。
+// 上限 62vh 是不要一進來整張畫面都是地圖，搜尋與答案還在上面。
+function sizeMapPane(){
+  // 這裡就地取元素，不用外面的 wrap——settleView 在模組很早就會跑，
+  // 那個常數還沒宣告。
+  const pane = document.getElementById('mapwrap');
+  if(!pane) return;
+  if(innerWidth > 900){ pane.style.height = ''; return; }
+  const w = pane.getBoundingClientRect().width;
+  if(!w) return;
+  const want = w * VB.h / VB.w;
+  pane.style.height = Math.round(Math.min(Math.max(want, 320), innerHeight * 0.62)) + 'px';
+}
+
+function initialView(){
+  const box = svg.getBoundingClientRect();
+  if(!box.width || !box.height) return;
+  const paneA = box.width / box.height, vbA = VB.w / VB.h;
+  // 兩個方向都可能留白：南北狹長的州（viewBox 比例 0.83）在寬窗格裡左右留白，
+  // 東西狹長的州（2.79）則是上下留白，而且更嚴重。取兩者的較大者就是「填滿
+  // 窗格」需要的倍率。
+  // 上限 1.8：東西狹長的州放進手機的直式窗格要放大近四倍才填得滿，那時只剩
+  // 首府周邊，「這個州哪裡算」整個看不到了。填滿是為了不要空，不是目的本身。
+  const nk = Math.min(1.8, Math.max(paneA / vbA, vbA / paneA));
+  if(nk < 1.08) return;                    // 本來就接近填滿就別動
+  const cap = CITIES[0];
+  const halfW = VB.w / nk / 2, halfH = VB.h / nk / 2;
+  const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+  const cx = clamp(cap ? px(cap[1]) : VB.x + VB.w / 2, VB.x + halfW, VB.x + VB.w - halfW);
+  const cy = clamp(cap ? py(cap[2]) : VB.y + VB.h / 2, VB.y + halfH, VB.y + VB.h - halfH);
+  centreOn(cx, cy, nk);
+}
+
 // ---- 手機上收合標頭 ----
 // 捲過標題的高度就把標題與副標收起來，只留換州按鈕黏在頂端。門檻用標頭
 // 自己的高度而不是固定值——中英文與不同州名的標題高度不一樣。
@@ -750,8 +798,12 @@ function applyLang(){
   document.getElementById('srctext').innerHTML = T('map_src', {
     ha: a(META.source_url, T('map_ha_link')),
     da: a('https://www.disasterassist.gov.au/find-a-disaster', T('map_da_link')),
-    date: META.page_date, strays: META.n_no_poly,
-  }) + ' ' + esc(T('not_assistance'));
+    date: META.page_date,
+  })
+    // 數量為 0 時整句不要出現——「有 0 個郵區沒有對應面」是句不通的話。
+    // 邊界改成分級抓取之後，有些州確實一個都不缺了。
+    + (META.n_no_poly ? ' ' + esc(T('map_strays', {n: META.n_no_poly})) : '')
+    + ' ' + esc(T('not_assistance'));
   document.getElementById('stamp').textContent =
     T('map_stamp', {d: META.page_date, b: META.built_at});
   // 導覽的「全澳入口」也要換
