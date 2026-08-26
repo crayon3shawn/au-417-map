@@ -18,12 +18,12 @@
       "en": "Your industry"
     },
     "industry_table": {
-      "zh": "看的是 {tables} 這張表。",
-      "en": "Uses the {tables} list."
+      "zh": "職業定義",
+      "en": "What this work covers"
     },
     "official_def": {
-      "zh": "官方定義 →",
-      "en": "Official definition →"
+      "zh": "請參考官方 {tables} →",
+      "en": "See the official {tables} list →"
     },
     "search_label": {
       "zh": "查郵區或地名",

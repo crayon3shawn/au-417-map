@@ -141,8 +141,11 @@ def main():
         "industries": industries,
         "regions": regions,
         "industry_masks": [
+            # areas 是給前端組「請參考官方 ○○」那句用的。兩頁的連結文字要一樣，
+            # 同一個動作在流程裡不該有兩個講法。
             {"key": key, "label": v["label"], "label_en": v.get("label_en", v["en"]),
              "scope": v.get("scope", ""), "scope_en": v.get("scope_en", ""),
+             "areas": list(v["areas"][VISA]),
              "mask": work_mask(v["areas"][VISA])}
             for key, v in inds.items() if v["areas"][VISA]
         ],

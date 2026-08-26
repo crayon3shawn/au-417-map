@@ -61,7 +61,7 @@ function fillIndustries(){
 }
 function applyIndustry(){
   document.getElementById('indnote').innerHTML = esc(indScope() || '')
-    + ` ${HA}${T('official_def')}</a>`
+    + ` ${HA}${esc(T('official_def', {tables: (industry.areas || []).map(covName).join(T('p_area_join'))}))}</a>`
     + `<br><span class="dim">${T('p_indnote_switch')}</span>`;
   drawStates();
   drawCards();

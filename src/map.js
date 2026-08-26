@@ -66,10 +66,15 @@ const PX = {lbl1:11.5, lbl2:9.5, dot1:3.2, dot2:2.3, halo:1.5, gap:5, trop:8.5, 
             ring:21, ringhalo:5};
 const SZ = {};
 let perUnit = 1;                  // k=1 時，一個世界單位有幾個螢幕像素
+// 回傳有沒有量到真的尺寸。量到 0 時**不要**把 perUnit 定成 fallback——
+// 城市標籤的世界單位大小是 PX/perUnit，perUnit 卡在 1 的話字會變成整片畫面
+// 那麼大。載入初期、分頁在背景時都可能量到 0，交給 ResizeObserver 重試。
 function sizeToViewport(){
   const r = svg.getBoundingClientRect();
-  perUnit = Math.min(r.width / VB.w, r.height / VB.h) || 1;   // preserveAspectRatio meet
+  if(!r.width || !r.height) return false;
+  perUnit = Math.min(r.width / VB.w, r.height / VB.h);   // preserveAspectRatio meet
   for(const key in PX) SZ[key] = PX[key] / perUnit;
+  return true;
 }
 svg.setAttribute('viewBox', `${VB.x} ${VB.y} ${VB.w} ${VB.h}`);
 svg.setAttribute('preserveAspectRatio','xMidYMid meet');
@@ -239,7 +244,7 @@ function fitLabels(){
   if(k !== 1 || tx !== 0 || ty !== 0) return;
   Object.assign(VB, VB0);
   svg.setAttribute('viewBox', `${VB.x} ${VB.y} ${VB.w} ${VB.h}`);
-  sizeToViewport();
+  if(!sizeToViewport()) return;            // 還沒排版好，等 ResizeObserver 再來
 
   const bb = cityG.getBBox();
   // 邊距留兩倍：只留一倍的話最東邊的地名會貼齊視野邊緣，看起來像被切掉。
@@ -253,18 +258,52 @@ function fitLabels(){
   sizeToViewport();
   apply();
 }
-function settleView(){ sizeMapPane(); fitLabels(); initialView(); }
-if(document.fonts && document.fonts.ready) document.fonts.ready.then(settleView);
-else settleView();
+// settleView 自己上次設定的視野。用來分辨「畫面還是我們擺的」跟「使用者已經
+// 平移縮放過」——後者不能把視野搶回去。
+let autoView = null;
+// withZoom=false 時只做「完整放進窗格」。填滿窗格的放大要等版面尺寸定下來才能
+// 算——在還沒定型的尺寸上算出來的平移量會把整張圖推到畫面外，看起來像沒載入。
+// 完整放進去的視野則是由 viewBox 決定的，任何尺寸下都畫得對。
+function settleView(withZoom){
+  sizeMapPane();
+  const untouched = !autoView || (k === autoView.k && tx === autoView.tx && ty === autoView.ty);
+  // fitLabels 只在未縮放時運作（縮放中改 viewBox 畫面會跳），所以先歸零
+  if(untouched){ k = 1; tx = 0; ty = 0; apply(); }
+  fitLabels();
+  if(untouched && withZoom) initialView();
+  autoView = {k, tx, ty};
+}
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(() => settleView(false));
+else settleView(false);
 // resize 事件會連發，重算視野要量 getBBox，所以壓一下頻率
 let resizeTimer = 0;
-addEventListener('resize', () => {
+function onResize(){
   sizeToViewport();
   relabelCities();
   apply();
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(settleView, 120);
-});
+  resizeTimer = setTimeout(() => settleView(true), 120);
+}
+addEventListener('resize', onResize);
+
+// 只靠 window resize 不夠：元素從「沒有尺寸」變成「有尺寸」不會發 resize 事件
+// （載入初期、分頁在背景、手機改窗格高度都是）。那一刻沒有重算的話，perUnit
+// 會一直是載入時量到的值，整張圖的字級與點大小全部錯掉。
+if(typeof ResizeObserver === 'function'){
+  const pane = document.getElementById('mapwrap');
+  let lastW = 0, lastH = 0, roTimer = 0;
+  if(pane) new ResizeObserver(() => {
+    if(!sizeToViewport()) return;          // 還是 0，等下一次
+    relabelCities();
+    apply();
+    const r = pane.getBoundingClientRect();
+    // 尺寸沒真的變就別重算——settleView 會動窗格高度，不擋的話會自己觸發自己。
+    if(Math.abs(r.width - lastW) < 2 && Math.abs(r.height - lastH) < 2) return;
+    lastW = r.width; lastH = r.height;
+    clearTimeout(roTimer);
+    roTimer = setTimeout(() => settleView(true), 80);
+  }).observe(pane);
+}
 
 function relabelCities(){
   for(const g of cityNodes) g.__c.t.textContent = cityLabel(g.__c.name);
@@ -438,14 +477,14 @@ function applyIndustry(){
   document.getElementById('r-none').style.display = c.none ? '' : 'none';
   const tables = areasOf(industry.mask).join(' + ');
   document.getElementById('n-work-label').textContent = T('cat_work', {ind: indLabel()});
-  // 範圍是官方定義的中文摘要，不是官方文字，所以一定要附原文連結讓人核對
-  // 跟郵區詳情用同一種卡片：上面一條標題列說看的是哪張表，下面是範圍。
-  // 兩塊資訊的份量差不多，之前一個是卡片一個是引言樣式，看起來像不同層級。
+  // 範圍是官方定義的中文摘要，不是官方文字，所以一定要附原文連結讓人核對。
+  // 標題列只標「這張卡在講什麼」，適用的郵區表放在連結上——連結本來就是要
+  // 帶人去看那張表，表名放在那裡比放在標題更貼近它的用途。
   indNote.innerHTML =
-    `<div class="hd">${esc(T('industry_table', {tables})).replace(esc(tables), `<b>${esc(tables)}</b>`)}</div>`
+    `<div class="hd">${esc(T('industry_table'))}</div>`
     + (indScope()
         ? `<div class="bd">${esc(indScope())} `
-          + `<a href="${META.source_url}" target="_blank" rel="noopener">${esc(T('official_def'))}</a></div>`
+          + `<a href="${META.source_url}" target="_blank" rel="noopener">${esc(T('official_def', {tables}))}</a></div>`
         : '');
   document.getElementById('subind').textContent = `${T('showing')}: ${indLabel()}`;
   document.getElementById('fact1').textContent = T('fact1_body', {ind: indLabel(), tables});
