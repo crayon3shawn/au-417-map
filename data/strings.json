@@ -93,9 +93,21 @@
       "en": "What this work covers",
       "zh": "產業定義"
     },
+    "leg_in_fire": {
+      "en": "Bushfire declared area",
+      "zh": "叢林大火宣告區"
+    },
+    "leg_in_flood": {
+      "en": "Natural disaster declared area",
+      "zh": "天災宣告區"
+    },
+    "leg_out": {
+      "en": "Not on this list",
+      "zh": "不在這張表上"
+    },
     "legend_note": {
-      "en": "Bushfire and Natural disaster are two separate tables on the official site, with different start dates. Looking up a single postcode always lists all of them, whatever this is set to.",
-      "zh": "Bushfire 與 Natural disaster 在官網是兩張獨立的表，起算日也不同。查單一郵區時一定全部列出來，不受這個切換影響。"
+      "en": "One list at a time. Looking up a single postcode still shows every route in full, regardless of this setting.",
+      "zh": "一次只看一張表。查單一郵區時三條路徑都會完整列出，不受這裡影響。"
     },
     "legend_title": {
       "en": "Colour key",
@@ -473,6 +485,10 @@
       "en": "Official table: Natural disaster declared areas",
       "zh": "官方表：Natural disaster declared areas"
     },
+    "tbl_work": {
+      "en": "Official list: {tables}",
+      "zh": "官方表：{tables}"
+    },
     "theme_toggle": {
       "en": "Switch light/dark",
       "zh": "切換深淺色"
@@ -529,17 +545,21 @@
       "en": "This postcode is on the area list that applies to {ind}.",
       "zh": "這個郵區在{ind}適用的地區名單上。"
     },
+    "view_fire": {
+      "en": "Bushfire",
+      "zh": "叢林大火"
+    },
+    "view_flood": {
+      "en": "Natural disaster",
+      "zh": "天災"
+    },
     "view_group": {
       "en": "Map view",
       "zh": "地圖檢視"
     },
-    "view_plain": {
-      "en": "Counts or not",
-      "zh": "算不算"
-    },
-    "view_split": {
-      "en": "By disaster type",
-      "zh": "分災害類型"
+    "view_work": {
+      "en": "General work",
+      "zh": "一般工作"
     },
     "zoom_in": {
       "en": "Zoom in",

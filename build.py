@@ -93,10 +93,21 @@ def categorise(rings, flags, mask):
     琥珀再細分成大火／天災／兩者——災害種類只有在「重建是唯一路徑」時才
     影響決定（日期門檻不同、ImmiAccount 的 Employment type 也不同）。
     在綠色郵區，一般工作本來就算，災害種類是次要資訊，留在詳情面板。
+
+    地圖改成「一次檢視一種」之後還要三個總數：某一張表上有幾個郵區。
+    fire_all／flood_all 跟 fire_only／flood_only 不一樣——後者只數「重建是
+    唯一路徑」的那些，前者連同時也在工作名單上的一起數。圖層檢視問的是
+    「這個郵區在不在這張表上」，跟它有沒有別條路可走無關。
     """
-    c = dict(work=0, rebuild=0, none=0, fire_only=0, flood_only=0, fire_and_flood=0)
+    c = dict(work=0, rebuild=0, none=0, fire_only=0, flood_only=0, fire_and_flood=0,
+             fire_all=0, flood_all=0, total=0)
     for k in rings:
         f = flags.get(int(k), 0)
+        c["total"] += 1
+        if f & BIT_FIRE:
+            c["fire_all"] += 1
+        if f & BIT_DISASTER:
+            c["flood_all"] += 1
         if f & mask:
             c["work"] += 1
         elif f & REBUILD_MASK:

@@ -98,6 +98,15 @@ over.appendChild(grat);
 // 判定取決於選了哪個產業，所以切換產業只要換一組遮罩重新上色。
 const BIT_FIRE = 8, BIT_DISASTER = 16, REBUILD = BIT_FIRE | BIT_DISASTER;
 
+// 目前的地圖檢視：work（跟著產業走）／fire／flood。宣告要在 colorOf 之前——
+// let 有 TDZ，而初始化時就會走到上色。
+// 記在 localStorage：看過災害表的人多半下次還想從那裡看。
+let view = 'work';
+try {
+  const v = localStorage.getItem('mapview');
+  if(v === 'fire' || v === 'flood' || v === 'work') view = v;
+} catch (_) {}
+
 let industry = META.industries.find(i => i.key === META.industry) || META.industries[0];
 const workMask = () => industry.mask;
 
@@ -118,11 +127,18 @@ const sayOf = f =>
   : (f & BIT_DISASTER)                  ? T('cat_flood_only')
                                         : T('cat_none');
 
-// 細分只作用在 rebuild：災害種類唯有在「重建是唯一路徑」時才影響判斷。
-function colorOf(f, split){
+// 地圖一次只畫一張表，所以只有兩色：在這張表上、不在。
+// 三張表各有自己的「在」色，檢視之間才分得出來——但同一個畫面上永遠只有兩種。
+const VIEW_BIT   = {work:0, fire:BIT_FIRE, flood:BIT_DISASTER};   // work 用產業遮罩
+const VIEW_COLOR = {work:'var(--c-work)', fire:'var(--c-fire)', flood:'var(--c-flood)'};
+const inView = f => !!(f & (view === 'work' ? workMask() : VIEW_BIT[view]));
+function colorOf(f){ return inView(f) ? VIEW_COLOR[view] : 'var(--c-none)'; }
+
+// 詳情面板與搜尋結果的色點走的是**判定**，不是目前的檢視：那裡問的是
+// 「這個郵區算不算」，跟你正在看哪一張表無關。切換檢視不該讓答案變色。
+function verdictColor(f){
   if(f & workMask()) return 'var(--c-work)';
   if(!(f & REBUILD)) return 'var(--c-none)';
-  if(!split) return 'var(--c-rebuild)';
   return ((f & BIT_FIRE) && (f & BIT_DISASTER)) ? 'var(--c-both)'
        : (f & BIT_FIRE) ? 'var(--c-fire)' : 'var(--c-flood)';
 }
@@ -155,7 +171,7 @@ const flagOf = new Map(Object.entries(FLAGS).map(([pc, f]) => [+pc, f]));
 for(const pc of Object.keys(POA).map(Number).sort((a,b)=>a-b)){
   const f = flagOf.get(pc) || 0;
   const cat = catOf(f);
-  const node = el('path',{class:'poa ' + cat, d:POA[pc], fill:colorOf(f, false),
+  const node = el('path',{class:'poa ' + cat, d:POA[pc], fill:colorOf(f),
     'vector-effect':'non-scaling-stroke', 'pointer-events':'all'});
   node.__pc = pc;
   node.__f = f;
@@ -453,15 +469,9 @@ function focusOnNode(node, fallback){
 // ---- 圖例：數量與細分開關 ----
 let selNode = null, selPc = null;
 
-const legend = document.getElementById('legend');
-// 地圖檢視。官網把 Bushfire 與 Natural disaster 分成兩張獨立的表（起算日差
-// 兩年半），所以這不是一個「進階選項」，是官方本來就有的區別——只是地圖上
-// 預設先給比較好讀的三色，要看細分隨時可以切。
-// 記在 localStorage：會關心災害細分的人多半每次都想看。
-let split = false;
-try { split = localStorage.getItem('mapview') === 'split'; } catch (_) {}
-const vPlain = document.getElementById('v-plain');
-const vSplit = document.getElementById('v-split');
+const vBtn = {work:  document.getElementById('v-work'),
+              fire:  document.getElementById('v-fire'),
+              flood: document.getElementById('v-flood')};
 const indSel = document.getElementById('ind');
 const indNote = document.getElementById('indnote');
 
@@ -481,26 +491,32 @@ for(const i of META.industries){
 // 選取（sel）與行政區框選（inreg／outreg）會一起被洗掉——換產業時框選消失，
 // 而且載入時只要 applyLang 排在讀網址之後，框選根本畫不出來。
 const CAT_CLASS = ['work', 'rebuild', 'none'];
-function recolour(s, f, on){
+function recolour(s, f){
   s.classList.remove(...CAT_CLASS);
-  s.classList.add(catOf(f));
-  s.setAttribute('fill', colorOf(f, on));
+  s.classList.add(catOf(f));            // class 仍是判定，樣式（hover／選取）靠它
+  s.setAttribute('fill', colorOf(f));
 }
 
 function applyIndustry(){
-  const on = split;
-  for(const s of areasG.children) recolour(s, byPc.get(s.__pc).f, on);
-  for(const s of strayG.children){
-    const f = byPc.get(s.__pc).f;
-    s.setAttribute('fill', colorOf(f, on));
-  }
+  for(const s of areasG.children) recolour(s, byPc.get(s.__pc).f);
+  for(const s of strayG.children) s.setAttribute('fill', colorOf(byPc.get(s.__pc).f));
   const c = industry.counts;
-  for(const [id, n] of [['n-work', c.work], ['n-rebuild', c.rebuild], ['n-none', c.none],
-                        ['n-fire', c.fire_only], ['n-flood', c.flood_only], ['n-both', c.fire_and_flood]])
-    document.getElementById(id).textContent = n;
-  document.getElementById('r-none').style.display = c.none ? '' : 'none';
   const tables = areasOf(industry.mask).join(' + ');
-  document.getElementById('n-work-label').textContent = T('cat_work', {ind: indLabel()});
+  // 圖例跟著檢視走：在這張表上幾個、不在幾個，加上這張表的官方名稱。
+  // 官方名稱一定要出現——選項用「一般工作／叢林大火／天災」這種白話命名，
+  // 使用者不必先懂術語就能選，但要去核對官網時得知道那張表叫什麼。
+  const inN  = view === 'work' ? c.work : view === 'fire' ? c.fire_all : c.flood_all;
+  const label = view === 'work' ? T('cat_work', {ind: indLabel()})
+              : view === 'fire' ? T('leg_in_fire') : T('leg_in_flood');
+  const src   = view === 'work' ? T('tbl_work', {tables})
+              : view === 'fire' ? T('tbl_bushfire') : T('tbl_disaster');
+  const rIn = document.getElementById('r-in');
+  rIn.style.setProperty('--sw', VIEW_COLOR[view]);
+  document.getElementById('mini-in').style.setProperty('--sw', VIEW_COLOR[view]);
+  document.getElementById('n-in-label').textContent = label;
+  document.getElementById('n-in').textContent  = inN;
+  document.getElementById('n-out').textContent = c.total - inN;
+  document.getElementById('lgsrc').textContent = src;
   // 範圍是官方定義的中文摘要，不是官方文字，所以一定要附原文連結讓人核對。
   // 標題列只標「這張卡在講什麼」，適用的郵區表放在連結上——連結本來就是要
   // 帶人去看那張表，表名放在那裡比放在標題更貼近它的用途。
@@ -512,8 +528,6 @@ function applyIndustry(){
         : '');
   document.getElementById('subind').textContent = `${T('showing')}: ${indLabel()}`;
   document.getElementById('fact1').textContent = T('fact1_body', {ind: indLabel(), tables});
-  // 沒有任何「只有重建算」的郵區時，切換鈕沒有意義
-  document.querySelector('.legend .seg').style.display = c.rebuild ? '' : 'none';
   if(selPc !== null) select(selPc);
   else renderRegionPanel();
 }
@@ -528,18 +542,15 @@ indSel.addEventListener('change', () => {
 // ——它會走到 renderRegionPanel()，而 regPcs 要到檔案後面才宣告，在這裡碰它
 // 就是 TDZ 錯誤。上色由後面既有的初始化流程負責。
 function paintView(){
-  legend.classList.toggle('split', split);
-  vPlain.setAttribute('aria-pressed', String(!split));
-  vSplit.setAttribute('aria-pressed', String(split));
+  for(const k in vBtn) vBtn[k].setAttribute('aria-pressed', String(k === view));
 }
-function setView(on){
-  split = on;
+function setView(v){
+  view = v;
   paintView();
-  try { localStorage.setItem('mapview', on ? 'split' : 'plain'); } catch (_) {}
+  try { localStorage.setItem('mapview', v); } catch (_) {}
   applyIndustry();
 }
-vPlain.addEventListener('click', () => setView(false));
-vSplit.addEventListener('click', () => setView(true));
+for(const k in vBtn) vBtn[k].addEventListener('click', () => setView(k));
 paintView();
 
 // ---- 詳情 ----
@@ -610,7 +621,7 @@ function select(pc){
   if(d.stray) rows.push(`<div class="note">${esc(T('v_no_polygon'))}</div>`);
 
   // 判定色走色帶與判定字，不上郵遞區號本身（理由在 base.css 的 .fbox 段）
-  detail.style.setProperty('--vc', colorOf(f, split));
+  detail.style.setProperty('--vc', verdictColor(f));
   detail.classList.toggle('no', catOf(f) === 'none');
   detail.innerHTML =
     `<div class="ans"><span class="pcn">${p}</span>` +

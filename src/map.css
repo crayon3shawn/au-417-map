@@ -156,8 +156,6 @@ svg.map.drag{cursor:grabbing}
 .lg span{flex:1}
 .lg b{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
   font-weight:600;font-size:11px;color:var(--ink)}
-.lg.split{display:none}
-.legend.split .lg.split{display:flex}
 .legend.split #r-rebuild{display:none}
 .lg i{width:13px;height:11px;border-radius:2px;flex:none;background:var(--sw);
   opacity:var(--fill-a);border:.5px solid var(--edge)}
