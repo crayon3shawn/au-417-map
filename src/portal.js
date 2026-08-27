@@ -88,8 +88,10 @@ function applyIndustry(){
   document.getElementById('indnote').innerHTML =
     `<div class="hd">${esc(T('industry_table'))}</div>`
     + `<div class="bd">${esc(indScope() || '')} `
-    + `${HA}${esc(T('official_def', {tables}))}</a>`
-    + `<span class="dim">${esc(T('p_indnote_switch'))} ${esc(T('p_lede_note'))}</span></div>`;
+    + `${HA}${esc(T('official_def', {tables}))}</a></div>`;
+  // 原本這裡還有一句「切換產業會改變下面的判定與各州統計」加上「462 不適用」。
+  // 前者是在解釋一個一看就懂的下拉選單；後者在頁面上另外還有三處（下方的
+  // 說明段落、溯源細帶、地圖出處），不會因為這裡拿掉就沒人看得到。
   drawStates();
   drawCards();
   drawSameList();

@@ -1,561 +1,553 @@
 {
   "note": "介面文字。每個 key 一組 zh／en。頁面同時載入兩種語言，靠切換鈕換——分成兩份產出的話 Artifact 數量會加倍，每份都要單獨設分享權限。",
   "s": {
-    "subtitle": {
-      "zh": "郵遞區號合格性與災區宣告",
-      "en": "Postcode eligibility and disaster declarations"
-    },
-    "showing": {
-      "zh": "目前顯示",
-      "en": "Showing"
-    },
-    "nav_home": {
-      "zh": "全澳入口",
-      "en": "All of Australia"
-    },
-    "industry_label": {
-      "zh": "你做哪一行",
-      "en": "Your industry"
-    },
-    "industry_table": {
-      "zh": "產業定義",
-      "en": "What this work covers"
-    },
-    "official_def": {
-      "zh": "請參考官方 {tables} →",
-      "en": "See the official {tables} list →"
-    },
-    "search_label": {
-      "zh": "查郵區或地名",
-      "en": "Postcode or place"
-    },
-    "search_ph": {
-      "zh": "4000 或 Gold Coast",
-      "en": "4000 or Gold Coast"
-    },
-    "hits_found": {
-      "zh": "找到 {n} 筆",
-      "en": "{n} matches"
-    },
-    "hits_more": {
-      "zh": "，只列出前 {n} 筆，再打幾個字縮小範圍",
-      "en": " — showing the first {n}; type more to narrow it down"
-    },
-    "hits_none": {
-      "zh": "找不到「{q}」。試試郵遞區號，或只打地名的前幾個字。",
-      "en": "No match for \"{q}\". Try a postcode, or just the first few letters of a place."
-    },
-    "detail_empty": {
-      "zh": "點地圖上任一塊郵區，或在上面輸入郵遞區號，這裡會顯示這個郵區算不算集簽、哪一種工作算。",
-      "en": "Tap any postcode on the map, or search above, to see whether it counts and which kind of work qualifies."
-    },
-    "legend_title": {
-      "zh": "顏色說明",
-      "en": "Colour key"
-    },
-    "cat_work": {
-      "zh": "一般{ind}工作就算",
-      "en": "Ordinary {ind} work counts"
-    },
-    "cat_rebuild": {
-      "zh": "只有災後重建工作算",
-      "en": "Only disaster recovery work counts"
-    },
-    "cat_none": {
-      "zh": "完全不算",
-      "en": "Does not count at all"
-    },
-    "view_group": {
-      "zh": "地圖檢視",
-      "en": "Map view"
-    },
-    "view_plain": {
-      "zh": "算不算",
-      "en": "Counts or not"
-    },
-    "view_split": {
-      "zh": "分災害類型",
-      "en": "By disaster type"
-    },
-    "tbl_bushfire": {
-      "zh": "官方表：Bushfire declared areas",
-      "en": "Official table: Bushfire declared areas"
-    },
-    "tbl_disaster": {
-      "zh": "官方表：Natural disaster declared areas",
-      "en": "Official table: Natural disaster declared areas"
+    "cat_both": {
+      "en": "Both bushfire and disaster recovery count",
+      "zh": "大火與天災重建都算"
     },
     "cat_fire_only": {
-      "zh": "只有大火重建算",
-      "en": "Only bushfire recovery counts"
+      "en": "Only bushfire recovery counts",
+      "zh": "只有大火重建算"
     },
     "cat_flood_only": {
-      "zh": "只有天災重建算",
-      "en": "Only flood/cyclone recovery counts"
+      "en": "Only flood/cyclone recovery counts",
+      "zh": "只有天災重建算"
     },
-    "cat_both": {
-      "zh": "大火與天災重建都算",
-      "en": "Both bushfire and disaster recovery count"
+    "cat_none": {
+      "en": "Does not count at all",
+      "zh": "完全不算"
     },
-    "legend_note": {
-      "zh": "Bushfire 與 Natural disaster 在官網是兩張獨立的表，起算日也不同。查單一郵區時一定全部列出來，不受這個切換影響。",
-      "en": "Bushfire and Natural disaster are two separate tables on the official site, with different start dates. Looking up a single postcode always lists all of them, whatever this is set to."
+    "cat_rebuild": {
+      "en": "Only disaster recovery work counts",
+      "zh": "只有災後重建工作算"
     },
-    "v_work_yes": {
-      "zh": "一般{ind}工作 → 算",
-      "en": "Ordinary {ind} work → counts"
+    "cat_work": {
+      "en": "Ordinary {ind} work counts",
+      "zh": "一般{ind}工作就算"
     },
-    "v_work_yes_sub": {
-      "zh": "這個郵區在{ind}適用的地區名單上。",
-      "en": "This postcode is on the area list that applies to {ind}."
-    },
-    "v_work_no": {
-      "zh": "一般{ind}工作 → 不算",
-      "en": "Ordinary {ind} work → does not count"
-    },
-    "v_work_no_sub": {
-      "zh": "這個郵區不在{ind}適用的地區名單上。",
-      "en": "This postcode is not on the area list that applies to {ind}."
-    },
-    "v_fire": {
-      "zh": "叢林大火重建工作 → 算",
-      "en": "Bushfire recovery work → counts"
-    },
-    "v_fire_sub": {
-      "zh": "2019 年 7 月 31 日之後執行的重建、拆除、整地、修繕，有給薪或志工都算。",
-      "en": "Rebuilding, demolition, land clearing and repairs carried out after 31 July 2019. Paid or volunteer."
-    },
-    "v_flood": {
-      "zh": "洪水／氣旋等天災重建工作 → 算",
-      "en": "Flood, cyclone and severe weather recovery → counts"
-    },
-    "v_flood_sub": {
-      "zh": "2021 年 12 月 31 日之後執行；申請時「Employment type」要選 flood recovery。",
-      "en": "Carried out after 31 December 2021. Select \"flood recovery\" as Employment type when you apply."
-    },
-    "v_rebuild_only": {
-      "zh": "注意：這個郵區只走災後重建這條路。一般{ind}工作、跟災後復原無關的，不能算。留好能證明工程屬於災後修復的紀錄。",
-      "en": "Note: recovery work is the only route here. Ordinary {ind} work unrelated to disaster recovery does not count. Keep records showing the work was disaster repair."
-    },
-    "v_no_polygon": {
-      "zh": "ABS 沒有這個郵區的對應面，地圖上以小點標示概略位置。",
-      "en": "The ABS has no boundary for this postcode; it is shown as a dot at an approximate location."
-    },
-    "v_not_listed": {
-      "zh": "郵遞區號 {pc}{where} 不在{state}的合格清單上。一般{ind}工作與災後重建工作都不能用它集簽。",
-      "en": "Postcode {pc}{where} is not on any eligible list for {state}. Neither ordinary {ind} work nor recovery work counts here."
-    },
-    "facts_title": {
-      "zh": "三個重點",
-      "en": "Three things that matter"
-    },
-    "fact1_head": {
-      "zh": "地區名單看產業。",
-      "en": "The area list depends on your industry."
-    },
-    "fact1_body": {
-      "zh": "{ind}在 {tables} 郵區內的工作才算集簽。",
-      "en": "Only {ind} work inside {tables} postcodes counts."
-    },
-    "fact2_head": {
-      "zh": "災區是另一條路。",
-      "en": "Disaster areas are a separate route."
-    },
-    "fact2_body": {
-      "zh": "被宣告為災區的郵區，就算不在上面那些名單裡，做災後重建的土建、拆除、修繕、道路橋樑一樣算，志工也算。但同一個郵區的一般工作不算。",
-      "en": "In a declared disaster area, recovery work — earthworks, demolition, repairs, roads and bridges — counts even if the postcode is not on the lists above. Volunteering counts too. Ordinary work in the same postcode does not."
-    },
-    "fact3_head": {
-      "zh": "二簽 88 天、三簽 179 天。",
-      "en": "88 days for a second visa, 179 for a third."
-    },
-    "fact3_body": {
-      "zh": "算的是等同全職的工作天數，不能壓縮在比 3 個月／6 個月更短的期間內完成。",
-      "en": "Counted as full-time equivalent days. You cannot compress them into less than 3 or 6 calendar months."
-    },
-    "source_title": {
-      "zh": "出處與查證",
-      "en": "Sources"
-    },
-    "reset_view": {
-      "zh": "回到全州視野",
-      "en": "Reset view"
-    },
-    "zoom_in": {
-      "zh": "放大",
-      "en": "Zoom in"
-    },
-    "zoom_out": {
-      "zh": "縮小",
-      "en": "Zoom out"
-    },
-    "more_areas": {
-      "zh": " 等 {n} 個地區",
-      "en": " and {n} localities in total"
-    },
-    "title_state": {
-      "zh": "{state} 417 集簽地圖",
-      "en": "{state} 417 Visa Map"
-    },
-    "disclaimer": {
-      "zh": "本站非官方網站。郵區界線為 ABS 概化資料，僅供判讀；送件前請再上 Home Affairs 官網確認一次。",
-      "en": "This is not an official government site. Boundaries are generalised ABS data, for orientation only. Check the official Home Affairs page again before you apply."
+    "detail_empty": {
+      "en": "Tap any postcode on the map, or search above, to see whether it counts and which kind of work qualifies.",
+      "zh": "點地圖上任一塊郵區，或在上面輸入郵遞區號，這裡會顯示這個郵區算不算集簽、哪一種工作算。"
     },
     "dev_banner": {
-      "zh": "開發版 · 資料與判定可能不正確，正式版請看 ",
-      "en": "Development build — data and verdicts may be wrong. Stable version: "
+      "en": "Development build — data and verdicts may be wrong. Stable version: ",
+      "zh": "開發版 · 資料與判定可能不正確，正式版請看 "
     },
     "dev_stable_link": {
-      "zh": "穩定版",
-      "en": "stable site"
-    },
-    "p_title": {
-      "zh": "澳洲 417 集簽地圖",
-      "en": "Australia 417 Visa Map"
-    },
-    "p_lede_note": {
-      "zh": "（462 的產業規則不同，不適用。）",
-      "en": "(462 has different industry rules and is not covered here.)"
-    },
-    "p_disclaim": {
-      "zh": "本站非官方網站。郵區界線為 ABS 概化資料，僅供判讀；送件前請再上 {link} 確認一次。",
-      "en": "This is not an official government site. Boundaries are generalised ABS data, for orientation only. Check {link} again before you apply."
-    },
-    "p_official_page": {
-      "zh": "Home Affairs 官方頁面",
-      "en": "the official Home Affairs page"
-    },
-    "p_ind_aria": {
-      "zh": "選擇產業",
-      "en": "Choose your industry"
-    },
-    "p_q_aria": {
-      "zh": "輸入郵遞區號或地名",
-      "en": "Enter a postcode or place name"
-    },
-    "p_hits_aria": {
-      "zh": "搜尋結果",
-      "en": "Search results"
-    },
-    "p_hint": {
-      "zh": "可查 {n} 個郵遞區號，涵蓋全澳。目前有 {m} 個州做了地圖。",
-      "en": "{n} postcodes searchable, covering all of Australia. {m} states have maps so far."
-    },
-    "p_indnote_switch": {
-      "zh": "切換產業會改變下面的判定與各州統計。",
-      "en": "Changing industry changes the verdicts and the per-state counts below."
-    },
-    "p_eyebrow_dist": {
-      "zh": "郵區分布",
-      "en": "Postcode breakdown"
-    },
-    "p_au_title": {
-      "zh": "澳洲各州地圖導覽。有做地圖的州可以點進去，其餘僅供參考。",
-      "en": "Map of Australian states and territories. States with a map are clickable; the rest are shown for reference."
-    },
-    "p_state_all": {
-      "zh": "{abbr} {name}：全境都算，{w} 個郵區",
-      "en": "{abbr} {name}: all eligible, {w} postcodes"
-    },
-    "p_state_mix": {
-      "zh": "{abbr} {name}：一般{ind} {w}、只有重建 {r}、不算 {n}",
-      "en": "{abbr} {name}: ordinary {ind} {w}, recovery only {r}, not eligible {n}"
-    },
-    "p_card_go": {
-      "zh": "看地圖 →",
-      "en": "Open map →"
-    },
-    "p_card_all": {
-      "zh": "全境都算",
-      "en": "All eligible"
-    },
-    "p_card_nowork": {
-      "zh": "一般工作不算",
-      "en": "Ordinary work excluded"
-    },
-    "p_card_few": {
-      "zh": "幾乎都不算",
-      "en": "Almost none eligible"
-    },
-    "p_card_nomap": {
-      "zh": "尚無地圖",
-      "en": "No map yet"
-    },
-    "p_card_note_all": {
-      "zh": "整個州都在{ind}適用的地區名單上，在哪裡工作都算，所以不需要地圖。共 {w} 個郵區。",
-      "en": "The whole state is on the area list that applies to {ind}, so work anywhere counts and no map is needed. {w} postcodes."
-    },
-    "p_card_note_none": {
-      "zh": "一般{ind}工作在這裡都不算。但全境被宣告為災區，災後重建工作在哪裡都算。",
-      "en": "Ordinary {ind} work never counts here. But the whole territory is a declared disaster area, so recovery work counts anywhere in it."
-    },
-    "p_card_note_few": {
-      "zh": "一般{ind}工作只有 {w} {unit}算，其餘只有災後重建工作算。",
-      "en": "Ordinary {ind} work counts in only {w} {unit}; everywhere else, only disaster recovery work counts."
-    },
-    "p_leg_work": {
-      "zh": "一般{ind}",
-      "en": "Ordinary {ind}"
-    },
-    "p_leg_rebuild": {
-      "zh": "只有重建",
-      "en": "Recovery only"
-    },
-    "p_leg_none": {
-      "zh": "不算",
-      "en": "Not eligible"
-    },
-    "p_basis_h2": {
-      "zh": "這些區域是怎麼來的",
-      "en": "Where these areas come from"
-    },
-    "p_basis_lede": {
-      "zh": "Home Affairs 的頁面上有<strong>五張各自獨立的郵區表</strong>。每個產業各自對應到其中一張或幾張——所以「哪裡算集簽」完全取決於你做什麼行業。",
-      "en": "The Home Affairs page carries <strong>five separate postcode lists</strong>. Each industry maps to one or more of them — so which places count depends entirely on the work you do."
-    },
-    "p_basis_note2": {
-      "zh": "下表的「範圍」是官方定義與例示的中文摘要，不是官方文字。判斷不確定時請以 {link} 為準。",
-      "en": "The \"Scope\" column below summarises the official definitions and examples. When in doubt, go by {link}."
-    },
-    "p_official_text": {
-      "zh": "Home Affairs 原文",
-      "en": "the Home Affairs wording"
-    },
-    "p_th_industry": {
-      "zh": "產業",
-      "en": "Industry"
-    },
-    "p_th_table": {
-      "zh": "看哪張郵區表",
-      "en": "Which postcode list"
-    },
-    "p_th_scope": {
-      "zh": "範圍",
-      "en": "Scope"
-    },
-    "p_area_bushfire": {
-      "zh": "大火宣告區",
-      "en": "Declared bushfire areas"
-    },
-    "p_area_disaster": {
-      "zh": "天災宣告區",
-      "en": "Declared disaster areas"
-    },
-    "p_cov_unit": {
-      "zh": "個 · {pct}%",
-      "en": "postcodes · {pct}%"
-    },
-    "p_samelist": {
-      "zh": "<b>{same}跟建築吃同一張 Regional Australia 表</b>，判斷完全相同——所以這張地圖對做農場、肉廠、礦區的人一樣有效。觀光餐旅差最多：它看的是 Remote 與 Northern，可用郵區只有 {tour} 個，不到 Regional（{reg} 個）的 {ratio} 分之一。",
-      "en": "<b>{same} use the same Regional Australia list as construction</b>, so the verdicts are identical — this map works just as well for farm, meatworks and mine workers. Tourism and hospitality differs most: it uses Remote and Northern, leaving just {tour} usable postcodes against Regional’s {reg} — roughly {ratio} times fewer."
-    },
-    "p_prov_h3": {
-      "zh": "資料出處",
-      "en": "Data sources"
-    },
-    "p_prov1": {
-      "zh": "<b>五張郵區表</b>——從 Home Affairs 頁面逐字解析，不是人工轉錄。頁面上標的日期就是官網自己的更新日期。",
-      "en": "<b>The five postcode lists</b> — parsed verbatim from the Home Affairs page, not retyped by hand. The date shown is the date the official page itself carries."
-    },
-    "p_prov2": {
-      "zh": "<b>郵區邊界</b>——ABS（澳洲統計局）官方 ASGS 2021 Postal Areas 概化圖層。",
-      "en": "<b>Postcode boundaries</b> — the Australian Bureau of Statistics’ official ASGS 2021 Postal Areas generalised layer."
-    },
-    "p_prov3": {
-      "zh": "<b>產業對應表</b>——<strong>這是唯一人工整理的部分</strong>。官網把它寫成散文（「construction in regional Australia」這種句子），沒有做成表，所以是我讀了逐條整理的。",
-      "en": "<b>The industry mapping</b> — <strong>the one part compiled by hand</strong>. The official page states it in prose (\"construction in regional Australia\"), never as a table, so it was read and transcribed item by item."
-    },
-    "p_prov4": {
-      "zh": "<b>三分類</b>（就算／只有重建算／不算）——由上面兩者算出來的，不是另一份資料。",
-      "en": "<b>The three verdicts</b> (counts / recovery only / does not count) are computed from the two sources above. They are not a separate dataset."
-    },
-    "p_note1_h": {
-      "zh": "一般工地只認 regional",
-      "en": "Ordinary sites: regional only"
-    },
-    "p_note1_b": {
-      "zh": "建築業在 Regional Australia 郵區內的工作才算集簽。雪梨、墨爾本、布里斯本、黃金海岸這些都會區的郵區不在名單上。",
-      "en": "Construction counts only inside Regional Australia postcodes. Sydney, Melbourne, Brisbane and the Gold Coast are not on the list."
-    },
-    "p_note2_h": {
-      "zh": "災區是另一條路",
-      "en": "Disaster areas are a separate route"
-    },
-    "p_note2_b": {
-      "zh": "被宣告為災區的郵區，就算不在 regional 名單裡，做<strong>災後重建</strong>的土建、拆除、修繕、道路橋樑一樣算，志工也算。但同一個郵區的一般新建案不算。",
-      "en": "In a declared disaster area, <strong>recovery work</strong> — earthworks, demolition, repairs, roads and bridges — counts even if the postcode is not on the regional list. Volunteering counts too. Ordinary new-build work in the same postcode does not."
-    },
-    "p_note3_h": {
-      "zh": "只看 417",
-      "en": "417 only"
-    },
-    "p_note3_b": {
-      "zh": "本站處理的是 417（Working Holiday）。462（Work and Holiday）的地區表雖然目前跟 417 相同，但產業規則不同——462 沒有礦業這一項，漁業與林業只限 Northern Australia。拿 462 的人不要照這裡判斷。",
-      "en": "This site covers 417 (Working Holiday). The area lists for 462 (Work and Holiday) are currently identical, but the industry rules are not — 462 has no mining category, and fishing and forestry are limited to Northern Australia. If you hold a 462, do not rely on the verdicts here."
-    },
-    "p_note4_h": {
-      "zh": "出處與查證",
-      "en": "Sources and verification"
-    },
-    "p_note4_b": {
-      "zh": "本站只處理 <b>417</b>（Working Holiday）。郵區清單逐字取自 {ha}。個別災害的宣告範圍與日期請對 {da} 查證。送件前務必以官方頁面為準。",
-      "en": "This site covers <b>417</b> (Working Holiday) only. The postcode lists are taken verbatim from {ha}. Check the extent and dates of individual disaster declarations against {da}. Always go by the official page before you apply."
-    },
-    "p_ha_link": {
-      "zh": "Home Affairs — Specified work",
-      "en": "Home Affairs — Specified work"
-    },
-    "p_da_link": {
-      "zh": "Disaster Assist",
-      "en": "Disaster Assist"
-    },
-    "p_hits_tail": {
-      "zh": "，點一筆看結果。",
-      "en": " Tap one to see the verdict."
-    },
-    "p_nf_pc": {
-      "zh": "找不到郵遞區號 <b class=\"mono\">{pc}</b>。可能是信箱型號碼，或這個號碼澳洲郵政沒有發行。",
-      "en": "No postcode <b class=\"mono\">{pc}</b>. It may be a PO Box range, or a number Australia Post has never issued."
-    },
-    "p_route_fire": {
-      "zh": "叢林大火重建（2019/7/31 之後）",
-      "en": "bushfire recovery (after 31 July 2019)"
-    },
-    "p_route_flood": {
-      "zh": "洪水／氣旋等天災重建（2021/12/31 之後）",
-      "en": "flood and cyclone recovery (after 31 December 2021)"
-    },
-    "p_also_declared": {
-      "zh": "這裡也被宣告為災區：{list}。",
-      "en": "This postcode is also a declared disaster area: {list}."
-    },
-    "p_golink": {
-      "zh": "在{state}地圖上看 →",
-      "en": "Open the {state} map →"
-    },
-    "p_nomap_line": {
-      "zh": "{state}還沒做地圖。上面的判斷仍然有效。",
-      "en": "There is no map for {state} yet. The verdict above still applies."
-    },
-    "p_list_sep": {
-      "zh": "、",
-      "en": ", "
-    },
-    "p_rebuild_sub": {
-      "zh": "一般{ind}工作不算。重建的土建、拆除、修繕、道路橋樑才算，志工也算，記得留下能證明工程屬於災後修復的紀錄。",
-      "en": "Ordinary {ind} work does not count. Recovery earthworks, demolition, repairs, roads and bridges do, and volunteering counts too. Keep records showing the work was disaster repair."
-    },
-    "p_none_sub": {
-      "zh": "這個郵區不在任何一張合格清單上。",
-      "en": "This postcode is not on any of the eligible lists."
-    },
-    "p_stamp": {
-      "zh": "郵區清單 Home Affairs {d} · 州界 ABS/公開資料 · 建置 {b}",
-      "en": "Postcode lists: Home Affairs {d} · Boundaries: ABS/open data · Built {b}"
-    },
-    "map_role": {
-      "zh": "地圖",
-      "en": "map"
-    },
-    "tropic": {
-      "zh": "TROPIC OF CAPRICORN 南回歸線",
-      "en": "TROPIC OF CAPRICORN"
-    },
-    "nav_aria": {
-      "zh": "切換地圖",
-      "en": "Switch map"
-    },
-    "map_stamp": {
-      "zh": "郵區清單 Home Affairs {d} · 邊界 ABS POA 2021 · 建置 {b}",
-      "en": "Postcode lists: Home Affairs {d} · Boundaries: ABS POA 2021 · Built {b}"
-    },
-    "map_src": {
-      "zh": "本圖只處理 <b>417</b>（Working Holiday）；462 的產業規則不同，不適用。郵遞區號清單逐字取自 {ha}（頁面標示更新於 {date}）。郵區範圍為 ABS Postal Areas 2021 概化邊界，僅供判讀，非法定界線；個別災害的宣告範圍與日期請對 {da} 查證。送件前務必以官方頁面為準。",
-      "en": "This map covers <b>417</b> (Working Holiday) only; 462 has different industry rules and is not represented. The postcode lists are taken verbatim from {ha} (the page states it was last updated {date}). Boundaries are ABS Postal Areas 2021 generalised outlines — for orientation only, not legal boundaries. Check the extent and dates of individual disaster declarations against {da}. Always go by the official page before you apply."
-    },
-    "map_ha_link": {
-      "zh": "Home Affairs — Specified work (subclass 417)",
-      "en": "Home Affairs — Specified work (subclass 417)"
-    },
-    "map_da_link": {
-      "zh": "Disaster Assist — Find a disaster",
-      "en": "Disaster Assist — Find a disaster"
-    },
-    "map_title": {
-      "zh": "{state} 417 集簽合格郵遞區號地圖，共 {n} 個郵區。用左側「查郵區或地名」欄位查詢個別郵區。",
-      "en": "Map of postcodes where 417 specified work counts in {state}. {n} postcodes. Use the “Postcode or place” field on the left to look up an individual postcode."
-    },
-    "p_unit_pc_one": {
-      "zh": "個郵區",
-      "en": "postcode"
-    },
-    "p_unit_pc_many": {
-      "zh": "個郵區",
-      "en": "postcodes"
-    },
-    "p_area_join": {
-      "zh": "　＋　",
-      "en": " + "
-    },
-    "p_reg_count": {
-      "zh": "{n} 個郵區",
-      "en": "{n} postcodes"
-    },
-    "p_reg_found": {
-      "zh": "「{q}」對到 {n} 個行政區。點一個看它涵蓋哪些郵區。",
-      "en": "\"{q}\" matches {n} local government areas. Pick one to see the postcodes it covers."
-    },
-    "p_reg_lead": {
-      "zh": "這是行政區名，不是郵區。合格與否是一個郵區一個郵區認定的，所以下面列出它涵蓋的每一個。",
-      "en": "This is a local government area, not a postcode. Eligibility is decided postcode by postcode, so every postcode it covers is listed below."
-    },
-    "p_reg_all_work": {
-      "zh": "整個區域的一般{ind}工作都算。",
-      "en": "Ordinary {ind} work counts everywhere in this area."
-    },
-    "p_reg_all_rebuild": {
-      "zh": "整個區域都只有災後重建工作算，一般{ind}工作不算。",
-      "en": "Only disaster recovery work counts anywhere in this area — ordinary {ind} work does not."
-    },
-    "p_reg_all_none": {
-      "zh": "整個區域都不算。",
-      "en": "Nothing in this area counts."
-    },
-    "p_reg_mixed": {
-      "zh": "這個區域內的判定不一致，要看是哪一個郵區。",
-      "en": "Verdicts differ within this area — it depends which postcode."
-    },
-    "p_reg_open_map": {
-      "zh": "在{state}地圖上框出來 →",
-      "en": "Outline it on the {state} map →"
-    },
-    "map_reg_sub": {
-      "zh": "這個行政區涵蓋 {n} 個郵區，其餘郵區已淡化。點任一塊看它的判定。",
-      "en": "This area covers {n} postcodes; everything else is dimmed. Tap any one for its verdict."
-    },
-    "map_reg_clear": {
-      "zh": "清除框選",
-      "en": "Clear outline"
-    },
-    "not_assistance": {
-      "zh": "本站不構成移民協助（immigration assistance），個案問題請洽註冊移民代辦（MARA）或法律執業者。",
-      "en": "This site does not provide immigration assistance. For advice on your own case, consult a registered migration agent (MARA) or a legal practitioner."
-    },
-    "map_strays": {
-      "zh": "有 {n} 個合格郵區在 ABS 沒有對應面（多為信箱型郵區），以小點標示。",
-      "en": "{n} eligible postcodes have no ABS boundary (mostly PO Box ranges) and are shown as dots."
-    },
-    "loading_index": {
-      "zh": "地名索引載入中…",
-      "en": "Loading place names…"
+      "en": "stable site",
+      "zh": "穩定版"
+    },
+    "disclaimer": {
+      "en": "This is not an official government site. Boundaries are generalised ABS data, for orientation only. Check the official Home Affairs page again before you apply.",
+      "zh": "本站非官方網站。郵區界線為 ABS 概化資料，僅供判讀；送件前請再上 Home Affairs 官網確認一次。"
+    },
+    "fact1_body": {
+      "en": "Only {ind} work inside {tables} postcodes counts.",
+      "zh": "{ind}在 {tables} 郵區內的工作才算集簽。"
+    },
+    "fact1_head": {
+      "en": "The area list depends on your industry.",
+      "zh": "地區名單看產業。"
+    },
+    "fact2_body": {
+      "en": "In a declared disaster area, recovery work — earthworks, demolition, repairs, roads and bridges — counts even if the postcode is not on the lists above. Volunteering counts too. Ordinary work in the same postcode does not.",
+      "zh": "被宣告為災區的郵區，就算不在上面那些名單裡，做災後重建的土建、拆除、修繕、道路橋樑一樣算，志工也算。但同一個郵區的一般工作不算。"
+    },
+    "fact2_head": {
+      "en": "Disaster areas are a separate route.",
+      "zh": "災區是另一條路。"
+    },
+    "fact3_body": {
+      "en": "Counted as full-time equivalent days. You cannot compress them into less than 3 or 6 calendar months.",
+      "zh": "算的是等同全職的工作天數，不能壓縮在比 3 個月／6 個月更短的期間內完成。"
+    },
+    "fact3_head": {
+      "en": "88 days for a second visa, 179 for a third.",
+      "zh": "二簽 88 天、三簽 179 天。"
+    },
+    "facts_title": {
+      "en": "Three things that matter",
+      "zh": "三個重點"
+    },
+    "hits_found": {
+      "en": "{n} matches",
+      "zh": "找到 {n} 筆"
+    },
+    "hits_more": {
+      "en": " — showing the first {n}; type more to narrow it down",
+      "zh": "，只列出前 {n} 筆，再打幾個字縮小範圍"
+    },
+    "hits_none": {
+      "en": "No match for \"{q}\". Try a postcode, or just the first few letters of a place.",
+      "zh": "找不到「{q}」。試試郵遞區號，或只打地名的前幾個字。"
     },
     "hits_other": {
-      "zh": "其他州還有 {n} 筆，點下去會跳到那一州的地圖。",
-      "en": "{n} more in other states — tap to open that state’s map."
+      "en": "{n} more in other states — tap to open that state’s map.",
+      "zh": "其他州還有 {n} 筆，點下去會跳到那一州的地圖。"
+    },
+    "industry_label": {
+      "en": "Your industry",
+      "zh": "你做哪一行"
+    },
+    "industry_table": {
+      "en": "What this work covers",
+      "zh": "產業定義"
+    },
+    "legend_note": {
+      "en": "Bushfire and Natural disaster are two separate tables on the official site, with different start dates. Looking up a single postcode always lists all of them, whatever this is set to.",
+      "zh": "Bushfire 與 Natural disaster 在官網是兩張獨立的表，起算日也不同。查單一郵區時一定全部列出來，不受這個切換影響。"
+    },
+    "legend_title": {
+      "en": "Colour key",
+      "zh": "顏色說明"
+    },
+    "loading_index": {
+      "en": "Loading place names…",
+      "zh": "地名索引載入中…"
+    },
+    "map_da_link": {
+      "en": "Disaster Assist — Find a disaster",
+      "zh": "Disaster Assist — Find a disaster"
+    },
+    "map_ha_link": {
+      "en": "Home Affairs — Specified work (subclass 417)",
+      "zh": "Home Affairs — Specified work (subclass 417)"
+    },
+    "map_reg_clear": {
+      "en": "Clear outline",
+      "zh": "清除框選"
+    },
+    "map_reg_sub": {
+      "en": "This area covers {n} postcodes; everything else is dimmed. Tap any one for its verdict.",
+      "zh": "這個行政區涵蓋 {n} 個郵區，其餘郵區已淡化。點任一塊看它的判定。"
+    },
+    "map_role": {
+      "en": "map",
+      "zh": "地圖"
+    },
+    "map_src": {
+      "en": "This map covers <b>417</b> (Working Holiday) only; 462 has different industry rules and is not represented. The postcode lists are taken verbatim from {ha} (the page states it was last updated {date}). Boundaries are ABS Postal Areas 2021 generalised outlines — for orientation only, not legal boundaries. Check the extent and dates of individual disaster declarations against {da}. Always go by the official page before you apply.",
+      "zh": "本圖只處理 <b>417</b>（Working Holiday）；462 的產業規則不同，不適用。郵遞區號清單逐字取自 {ha}（頁面標示更新於 {date}）。郵區範圍為 ABS Postal Areas 2021 概化邊界，僅供判讀，非法定界線；個別災害的宣告範圍與日期請對 {da} 查證。送件前務必以官方頁面為準。"
+    },
+    "map_stamp": {
+      "en": "Postcode lists: Home Affairs {d} · Boundaries: ABS POA 2021 · Built {b}",
+      "zh": "郵區清單 Home Affairs {d} · 邊界 ABS POA 2021 · 建置 {b}"
+    },
+    "map_strays": {
+      "en": "{n} eligible postcodes have no ABS boundary (mostly PO Box ranges) and are shown as dots.",
+      "zh": "有 {n} 個合格郵區在 ABS 沒有對應面（多為信箱型郵區），以小點標示。"
+    },
+    "map_title": {
+      "en": "Map of postcodes where 417 specified work counts in {state}. {n} postcodes. Use the “Postcode or place” field on the left to look up an individual postcode.",
+      "zh": "{state} 417 集簽合格郵遞區號地圖，共 {n} 個郵區。用左側「查郵區或地名」欄位查詢個別郵區。"
+    },
+    "more_areas": {
+      "en": " and {n} localities in total",
+      "zh": " 等 {n} 個地區"
+    },
+    "nav_aria": {
+      "en": "Switch map",
+      "zh": "切換地圖"
+    },
+    "nav_home": {
+      "en": "All of Australia",
+      "zh": "全澳入口"
+    },
+    "not_assistance": {
+      "en": "This site does not provide immigration assistance. For advice on your own case, consult a registered migration agent (MARA) or a legal practitioner.",
+      "zh": "本站不構成移民協助（immigration assistance），個案問題請洽註冊移民代辦（MARA）或法律執業者。"
+    },
+    "official_def": {
+      "en": "See the official {tables} list →",
+      "zh": "請參考官方 {tables} →"
+    },
+    "p_also_declared": {
+      "en": "This postcode is also a declared disaster area: {list}.",
+      "zh": "這裡也被宣告為災區：{list}。"
+    },
+    "p_area_bushfire": {
+      "en": "Declared bushfire areas",
+      "zh": "大火宣告區"
+    },
+    "p_area_disaster": {
+      "en": "Declared disaster areas",
+      "zh": "天災宣告區"
+    },
+    "p_area_join": {
+      "en": " + ",
+      "zh": "　＋　"
+    },
+    "p_au_title": {
+      "en": "Map of Australian states and territories. States with a map are clickable; the rest are shown for reference.",
+      "zh": "澳洲各州地圖導覽。有做地圖的州可以點進去，其餘僅供參考。"
+    },
+    "p_basis_h2": {
+      "en": "Where these areas come from",
+      "zh": "這些區域是怎麼來的"
+    },
+    "p_basis_lede": {
+      "en": "The Home Affairs page carries <strong>five separate postcode lists</strong>. Each industry maps to one or more of them — so which places count depends entirely on the work you do.",
+      "zh": "Home Affairs 的頁面上有<strong>五張各自獨立的郵區表</strong>。每個產業各自對應到其中一張或幾張——所以「哪裡算集簽」完全取決於你做什麼行業。"
+    },
+    "p_basis_note2": {
+      "en": "The \"Scope\" column below summarises the official definitions and examples. When in doubt, go by {link}.",
+      "zh": "下表的「範圍」是官方定義與例示的中文摘要，不是官方文字。判斷不確定時請以 {link} 為準。"
+    },
+    "p_card_all": {
+      "en": "All eligible",
+      "zh": "全境都算"
+    },
+    "p_card_few": {
+      "en": "Almost none eligible",
+      "zh": "幾乎都不算"
+    },
+    "p_card_go": {
+      "en": "Open map →",
+      "zh": "看地圖 →"
+    },
+    "p_card_nomap": {
+      "en": "No map yet",
+      "zh": "尚無地圖"
+    },
+    "p_card_note_all": {
+      "en": "The whole state is on the area list that applies to {ind}, so work anywhere counts and no map is needed. {w} postcodes.",
+      "zh": "整個州都在{ind}適用的地區名單上，在哪裡工作都算，所以不需要地圖。共 {w} 個郵區。"
+    },
+    "p_card_note_few": {
+      "en": "Ordinary {ind} work counts in only {w} {unit}; everywhere else, only disaster recovery work counts.",
+      "zh": "一般{ind}工作只有 {w} {unit}算，其餘只有災後重建工作算。"
+    },
+    "p_card_note_none": {
+      "en": "Ordinary {ind} work never counts here. But the whole territory is a declared disaster area, so recovery work counts anywhere in it.",
+      "zh": "一般{ind}工作在這裡都不算。但全境被宣告為災區，災後重建工作在哪裡都算。"
+    },
+    "p_card_nowork": {
+      "en": "Ordinary work excluded",
+      "zh": "一般工作不算"
+    },
+    "p_cov_unit": {
+      "en": "postcodes · {pct}%",
+      "zh": "個 · {pct}%"
+    },
+    "p_da_link": {
+      "en": "Disaster Assist",
+      "zh": "Disaster Assist"
+    },
+    "p_disclaim": {
+      "en": "This is not an official government site. Boundaries are generalised ABS data, for orientation only. Check {link} again before you apply.",
+      "zh": "本站非官方網站。郵區界線為 ABS 概化資料，僅供判讀；送件前請再上 {link} 確認一次。"
+    },
+    "p_eyebrow_dist": {
+      "en": "Postcode breakdown",
+      "zh": "郵區分布"
+    },
+    "p_golink": {
+      "en": "Open the {state} map →",
+      "zh": "在{state}地圖上看 →"
+    },
+    "p_ha_link": {
+      "en": "Home Affairs — Specified work",
+      "zh": "Home Affairs — Specified work"
+    },
+    "p_hint": {
+      "en": "{n} postcodes searchable, covering all of Australia. {m} states have maps so far.",
+      "zh": "可查 {n} 個郵遞區號，涵蓋全澳。目前有 {m} 個州做了地圖。"
+    },
+    "p_hits_aria": {
+      "en": "Search results",
+      "zh": "搜尋結果"
+    },
+    "p_hits_tail": {
+      "en": " Tap one to see the verdict.",
+      "zh": "，點一筆看結果。"
+    },
+    "p_ind_aria": {
+      "en": "Choose your industry",
+      "zh": "選擇產業"
+    },
+    "p_leg_none": {
+      "en": "Not eligible",
+      "zh": "不算"
+    },
+    "p_leg_rebuild": {
+      "en": "Recovery only",
+      "zh": "只有重建"
+    },
+    "p_leg_work": {
+      "en": "Ordinary {ind}",
+      "zh": "一般{ind}"
+    },
+    "p_list_sep": {
+      "en": ", ",
+      "zh": "、"
+    },
+    "p_nf_pc": {
+      "en": "No postcode <b class=\"mono\">{pc}</b>. It may be a PO Box range, or a number Australia Post has never issued.",
+      "zh": "找不到郵遞區號 <b class=\"mono\">{pc}</b>。可能是信箱型號碼，或這個號碼澳洲郵政沒有發行。"
+    },
+    "p_nomap_line": {
+      "en": "There is no map for {state} yet. The verdict above still applies.",
+      "zh": "{state}還沒做地圖。上面的判斷仍然有效。"
+    },
+    "p_none_sub": {
+      "en": "This postcode is not on any of the eligible lists.",
+      "zh": "這個郵區不在任何一張合格清單上。"
+    },
+    "p_note1_b": {
+      "en": "Construction counts only inside Regional Australia postcodes. Sydney, Melbourne, Brisbane and the Gold Coast are not on the list.",
+      "zh": "建築業在 Regional Australia 郵區內的工作才算集簽。雪梨、墨爾本、布里斯本、黃金海岸這些都會區的郵區不在名單上。"
+    },
+    "p_note1_h": {
+      "en": "Ordinary sites: regional only",
+      "zh": "一般工地只認 regional"
+    },
+    "p_note2_b": {
+      "en": "In a declared disaster area, <strong>recovery work</strong> — earthworks, demolition, repairs, roads and bridges — counts even if the postcode is not on the regional list. Volunteering counts too. Ordinary new-build work in the same postcode does not.",
+      "zh": "被宣告為災區的郵區，就算不在 regional 名單裡，做<strong>災後重建</strong>的土建、拆除、修繕、道路橋樑一樣算，志工也算。但同一個郵區的一般新建案不算。"
+    },
+    "p_note2_h": {
+      "en": "Disaster areas are a separate route",
+      "zh": "災區是另一條路"
+    },
+    "p_note3_b": {
+      "en": "This site covers 417 (Working Holiday). The area lists for 462 (Work and Holiday) are currently identical, but the industry rules are not — 462 has no mining category, and fishing and forestry are limited to Northern Australia. If you hold a 462, do not rely on the verdicts here.",
+      "zh": "本站處理的是 417（Working Holiday）。462（Work and Holiday）的地區表雖然目前跟 417 相同，但產業規則不同——462 沒有礦業這一項，漁業與林業只限 Northern Australia。拿 462 的人不要照這裡判斷。"
+    },
+    "p_note3_h": {
+      "en": "417 only",
+      "zh": "只看 417"
+    },
+    "p_note4_b": {
+      "en": "This site covers <b>417</b> (Working Holiday) only. The postcode lists are taken verbatim from {ha}. Check the extent and dates of individual disaster declarations against {da}. Always go by the official page before you apply.",
+      "zh": "本站只處理 <b>417</b>（Working Holiday）。郵區清單逐字取自 {ha}。個別災害的宣告範圍與日期請對 {da} 查證。送件前務必以官方頁面為準。"
+    },
+    "p_note4_h": {
+      "en": "Sources and verification",
+      "zh": "出處與查證"
+    },
+    "p_official_page": {
+      "en": "the official Home Affairs page",
+      "zh": "Home Affairs 官方頁面"
+    },
+    "p_official_text": {
+      "en": "the Home Affairs wording",
+      "zh": "Home Affairs 原文"
+    },
+    "p_prov1": {
+      "en": "<b>The five postcode lists</b> — parsed verbatim from the Home Affairs page, not retyped by hand. The date shown is the date the official page itself carries.",
+      "zh": "<b>五張郵區表</b>——從 Home Affairs 頁面逐字解析，不是人工轉錄。頁面上標的日期就是官網自己的更新日期。"
+    },
+    "p_prov2": {
+      "en": "<b>Postcode boundaries</b> — the Australian Bureau of Statistics’ official ASGS 2021 Postal Areas generalised layer.",
+      "zh": "<b>郵區邊界</b>——ABS（澳洲統計局）官方 ASGS 2021 Postal Areas 概化圖層。"
+    },
+    "p_prov3": {
+      "en": "<b>The industry mapping</b> — <strong>the one part compiled by hand</strong>. The official page states it in prose (\"construction in regional Australia\"), never as a table, so it was read and transcribed item by item.",
+      "zh": "<b>產業對應表</b>——<strong>這是唯一人工整理的部分</strong>。官網把它寫成散文（「construction in regional Australia」這種句子），沒有做成表，所以是我讀了逐條整理的。"
+    },
+    "p_prov4": {
+      "en": "<b>The three verdicts</b> (counts / recovery only / does not count) are computed from the two sources above. They are not a separate dataset.",
+      "zh": "<b>三分類</b>（就算／只有重建算／不算）——由上面兩者算出來的，不是另一份資料。"
+    },
+    "p_prov_h3": {
+      "en": "Data sources",
+      "zh": "資料出處"
+    },
+    "p_q_aria": {
+      "en": "Enter a postcode or place name",
+      "zh": "輸入郵遞區號或地名"
+    },
+    "p_rebuild_sub": {
+      "en": "Ordinary {ind} work does not count. Recovery earthworks, demolition, repairs, roads and bridges do, and volunteering counts too. Keep records showing the work was disaster repair.",
+      "zh": "一般{ind}工作不算。重建的土建、拆除、修繕、道路橋樑才算，志工也算，記得留下能證明工程屬於災後修復的紀錄。"
+    },
+    "p_reg_all_none": {
+      "en": "Nothing in this area counts.",
+      "zh": "整個區域都不算。"
+    },
+    "p_reg_all_rebuild": {
+      "en": "Only disaster recovery work counts anywhere in this area — ordinary {ind} work does not.",
+      "zh": "整個區域都只有災後重建工作算，一般{ind}工作不算。"
+    },
+    "p_reg_all_work": {
+      "en": "Ordinary {ind} work counts everywhere in this area.",
+      "zh": "整個區域的一般{ind}工作都算。"
+    },
+    "p_reg_count": {
+      "en": "{n} postcodes",
+      "zh": "{n} 個郵區"
+    },
+    "p_reg_found": {
+      "en": "\"{q}\" matches {n} local government areas. Pick one to see the postcodes it covers.",
+      "zh": "「{q}」對到 {n} 個行政區。點一個看它涵蓋哪些郵區。"
+    },
+    "p_reg_lead": {
+      "en": "This is a local government area, not a postcode. Eligibility is decided postcode by postcode, so every postcode it covers is listed below.",
+      "zh": "這是行政區名，不是郵區。合格與否是一個郵區一個郵區認定的，所以下面列出它涵蓋的每一個。"
+    },
+    "p_reg_mixed": {
+      "en": "Verdicts differ within this area — it depends which postcode.",
+      "zh": "這個區域內的判定不一致，要看是哪一個郵區。"
+    },
+    "p_reg_open_map": {
+      "en": "Outline it on the {state} map →",
+      "zh": "在{state}地圖上框出來 →"
+    },
+    "p_route_fire": {
+      "en": "bushfire recovery (after 31 July 2019)",
+      "zh": "叢林大火重建（2019/7/31 之後）"
+    },
+    "p_route_flood": {
+      "en": "flood and cyclone recovery (after 31 December 2021)",
+      "zh": "洪水／氣旋等天災重建（2021/12/31 之後）"
+    },
+    "p_samelist": {
+      "en": "<b>{same} use the same Regional Australia list as construction</b>, so the verdicts are identical — this map works just as well for farm, meatworks and mine workers. Tourism and hospitality differs most: it uses Remote and Northern, leaving just {tour} usable postcodes against Regional’s {reg} — roughly {ratio} times fewer.",
+      "zh": "<b>{same}跟建築吃同一張 Regional Australia 表</b>，判斷完全相同——所以這張地圖對做農場、肉廠、礦區的人一樣有效。觀光餐旅差最多：它看的是 Remote 與 Northern，可用郵區只有 {tour} 個，不到 Regional（{reg} 個）的 {ratio} 分之一。"
+    },
+    "p_stamp": {
+      "en": "Postcode lists: Home Affairs {d} · Boundaries: ABS/open data · Built {b}",
+      "zh": "郵區清單 Home Affairs {d} · 州界 ABS/公開資料 · 建置 {b}"
+    },
+    "p_state_all": {
+      "en": "{abbr} {name}: all eligible, {w} postcodes",
+      "zh": "{abbr} {name}：全境都算，{w} 個郵區"
+    },
+    "p_state_mix": {
+      "en": "{abbr} {name}: ordinary {ind} {w}, recovery only {r}, not eligible {n}",
+      "zh": "{abbr} {name}：一般{ind} {w}、只有重建 {r}、不算 {n}"
+    },
+    "p_th_industry": {
+      "en": "Industry",
+      "zh": "產業"
+    },
+    "p_th_scope": {
+      "en": "Scope",
+      "zh": "範圍"
+    },
+    "p_th_table": {
+      "en": "Which postcode list",
+      "zh": "看哪張郵區表"
+    },
+    "p_title": {
+      "en": "Australia 417 Visa Map",
+      "zh": "澳洲 417 集簽地圖"
+    },
+    "p_unit_pc_many": {
+      "en": "postcodes",
+      "zh": "個郵區"
+    },
+    "p_unit_pc_one": {
+      "en": "postcode",
+      "zh": "個郵區"
+    },
+    "reset_view": {
+      "en": "Reset view",
+      "zh": "回到全州視野"
+    },
+    "search_label": {
+      "en": "Postcode or place",
+      "zh": "查郵區或地名"
+    },
+    "search_ph": {
+      "en": "4000 or Gold Coast",
+      "zh": "4000 或 Gold Coast"
+    },
+    "showing": {
+      "en": "Showing",
+      "zh": "目前顯示"
+    },
+    "source_title": {
+      "en": "Sources",
+      "zh": "出處與查證"
+    },
+    "subtitle": {
+      "en": "Postcode eligibility and disaster declarations",
+      "zh": "郵遞區號合格性與災區宣告"
+    },
+    "tbl_bushfire": {
+      "en": "Official table: Bushfire declared areas",
+      "zh": "官方表：Bushfire declared areas"
+    },
+    "tbl_disaster": {
+      "en": "Official table: Natural disaster declared areas",
+      "zh": "官方表：Natural disaster declared areas"
     },
     "theme_toggle": {
-      "zh": "切換深淺色",
-      "en": "Switch light/dark"
+      "en": "Switch light/dark",
+      "zh": "切換深淺色"
+    },
+    "title_state": {
+      "en": "{state} 417 Visa Map",
+      "zh": "{state} 417 集簽地圖"
+    },
+    "tropic": {
+      "en": "TROPIC OF CAPRICORN",
+      "zh": "TROPIC OF CAPRICORN 南回歸線"
+    },
+    "v_fire": {
+      "en": "Bushfire recovery work → counts",
+      "zh": "叢林大火重建工作 → 算"
+    },
+    "v_fire_sub": {
+      "en": "Rebuilding, demolition, land clearing and repairs carried out after 31 July 2019. Paid or volunteer.",
+      "zh": "2019 年 7 月 31 日之後執行的重建、拆除、整地、修繕，有給薪或志工都算。"
+    },
+    "v_flood": {
+      "en": "Flood, cyclone and severe weather recovery → counts",
+      "zh": "洪水／氣旋等天災重建工作 → 算"
+    },
+    "v_flood_sub": {
+      "en": "Carried out after 31 December 2021. Select \"flood recovery\" as Employment type when you apply.",
+      "zh": "2021 年 12 月 31 日之後執行；申請時「Employment type」要選 flood recovery。"
+    },
+    "v_no_polygon": {
+      "en": "The ABS has no boundary for this postcode; it is shown as a dot at an approximate location.",
+      "zh": "ABS 沒有這個郵區的對應面，地圖上以小點標示概略位置。"
+    },
+    "v_not_listed": {
+      "en": "Postcode {pc}{where} is not on any eligible list for {state}. Neither ordinary {ind} work nor recovery work counts here.",
+      "zh": "郵遞區號 {pc}{where} 不在{state}的合格清單上。一般{ind}工作與災後重建工作都不能用它集簽。"
+    },
+    "v_rebuild_only": {
+      "en": "Note: recovery work is the only route here. Ordinary {ind} work unrelated to disaster recovery does not count. Keep records showing the work was disaster repair.",
+      "zh": "注意：這個郵區只走災後重建這條路。一般{ind}工作、跟災後復原無關的，不能算。留好能證明工程屬於災後修復的紀錄。"
+    },
+    "v_work_no": {
+      "en": "Ordinary {ind} work → does not count",
+      "zh": "一般{ind}工作 → 不算"
+    },
+    "v_work_no_sub": {
+      "en": "This postcode is not on the area list that applies to {ind}.",
+      "zh": "這個郵區不在{ind}適用的地區名單上。"
+    },
+    "v_work_yes": {
+      "en": "Ordinary {ind} work → counts",
+      "zh": "一般{ind}工作 → 算"
+    },
+    "v_work_yes_sub": {
+      "en": "This postcode is on the area list that applies to {ind}.",
+      "zh": "這個郵區在{ind}適用的地區名單上。"
+    },
+    "view_group": {
+      "en": "Map view",
+      "zh": "地圖檢視"
+    },
+    "view_plain": {
+      "en": "Counts or not",
+      "zh": "算不算"
+    },
+    "view_split": {
+      "en": "By disaster type",
+      "zh": "分災害類型"
+    },
+    "zoom_in": {
+      "en": "Zoom in",
+      "zh": "放大"
+    },
+    "zoom_out": {
+      "en": "Zoom out",
+      "zh": "縮小"
     }
   }
 }
