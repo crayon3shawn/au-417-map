@@ -128,6 +128,42 @@ type 也不同）。在綠色郵區一般工作本來就算，那是次要資訊
 | 城市標註 | 人工維護清單，座標自動解析 | — | 改 `data/cities-<state>.seed.json` |
 | 災害宣告查證 | [Disaster Assist — Find a disaster](https://www.disasterassist.gov.au/find-a-disaster) | — | 未自動抓取，供人工核對 |
 
+### 官網改了怎麼辦——每週自動健檢
+
+郵區清單是這個站台唯一的事實來源。官網改了而我們不知道，頁面就會**安靜地**
+給出過期的答案：沒有錯誤訊息，沒有徵兆，使用者照著做才發現。
+
+`.github/workflows/data-check.yml` 每週一 09:00（台北）跑一次：
+
+```
+抓官網 → 健檢 → 比對 → 沒變就什麼都不做
+                    └→ 變了就開 PR，內文列出哪些郵區進出了哪張表
+```
+
+**沒變動時完全安靜**——不 commit、不開 PR、不發通知。這一點是刻意的：
+誤報一次就會讓人開始忽略通知，之後真的改了也不會有人看。
+
+判斷「有沒有變」不能用 `git diff`，因為 `fetch/postcodes.py` 每次都會重寫
+`fetched_at`。`diff_postcodes.py` 比的是**展開後的郵區集合**，所以官網把
+`4307, 4308` 改寫成 `4307 to 4308`、或逗號換成分號時不會觸發 PR——
+郵區沒變的事不值得吵醒任何人。
+
+本機要看同樣的比對用 `make diff`。
+
+三種結果分別代表什麼：
+
+| workflow 結果 | 意思 | 你要做什麼 |
+|---|---|---|
+| ✅ 綠燈、沒有 PR | 官網沒改 | 什麼都不用做 |
+| ✅ 綠燈、開了 PR | 官網改了，且改動後建得起來 | 人工核對 PR 內文列的改動，沒問題就合併 |
+| ❌ 紅燈 | 健檢沒過（少一張表／某州郵區數變動超過 10%／範圍字串解析不出來），或改動後建不起來 | 一定要人看。失敗時原始 HTML 會存成 artifact，保留 30 天 |
+
+健檢沒過時**不會寫入 `data/postcodes.json`**，寧可壞掉也不要默默給出錯的郵區。
+官網改版型（表格搬家、hidden field 換名字）就屬於這一類。
+
+> GitHub 會在 repo 連續 60 天沒有活動後停掉排程 workflow，久沒動的話記得
+> 去 Actions 頁面重新啟用。
+
 ### ABS POA 是近似值，不是法定郵區界線
 
 ABS 自己的描述：POA 是「an ABS Mesh Block approximation of a general definition of
