@@ -55,6 +55,8 @@
 .seg button + button{border-left:1px solid var(--line-2)}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface)}
 .seg button:focus-visible{outline:2px solid var(--ink);outline-offset:-3px}
+.legend .seg{margin-bottom:9px}
+.legend .seg button{font-size:12.5px;padding:5px 4px}
 .qhint:empty{display:none}
 .btn{appearance:none;border:1px solid var(--line-2);background:var(--paper);color:var(--ink);
   font-family:inherit;font-weight:600;font-size:14px;
@@ -157,14 +159,6 @@ svg.map.drag{cursor:grabbing}
 .lg.split{display:none}
 .legend.split .lg.split{display:flex}
 .legend.split #r-rebuild{display:none}
-.lgtoggle{display:flex;align-items:center;gap:7px;margin-top:8px;padding-top:8px;
-  border-top:1px solid var(--line);font-size:11px;color:var(--ink-2);cursor:pointer}
-.lgtoggle input{appearance:none;width:13px;height:13px;margin:0;flex:none;cursor:pointer;
-  border:1.5px solid var(--line-2);border-radius:2px;background:var(--paper);position:relative}
-.lgtoggle input:checked{background:var(--ink);border-color:var(--ink)}
-.lgtoggle input:checked::after{content:"";position:absolute;left:3.5px;top:.5px;width:3.5px;height:7px;
-  border:solid var(--surface);border-width:0 2px 2px 0;transform:rotate(42deg)}
-.lgtoggle:has(input:focus-visible){outline:2px solid var(--ink);outline-offset:2px}
 .lg i{width:13px;height:11px;border-radius:2px;flex:none;background:var(--sw);
   opacity:var(--fill-a);border:.5px solid var(--edge)}
 .lgnote{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);

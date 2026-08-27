@@ -227,6 +227,12 @@ def theme_js():
     return (ROOT / "src" / "theme.js").read_text(encoding="utf-8")
 
 
+def url_js():
+    """可分享的網址（?ind=&pc=）。兩頁共用同一份格式——各寫一份的話，改了一邊
+    只會變成入口頁貼出來的連結在州頁打不開，不會有錯誤訊息。"""
+    return (ROOT / "src" / "url.js").read_text(encoding="utf-8")
+
+
 def lamp_js():
     """跟著滑鼠的光源。只有入口頁注入，州頁刻意不做（理由寫在 lamp.js 檔頭）。
     放在主程式之後——它要抓 .app-map 裡的節點，而那是主程式建的。"""
@@ -373,6 +379,7 @@ def main(state):
     for token, value in (("__ROBOTS__", robots_meta()),
                          ("__TOKENS__", tokens_css()),
                          ("__THEME__", theme_js()),
+                         ("__URL__", url_js()),
                          ("__CSS__", part("map.css")),
                          ("__JS__", part("map.js").replace("// @ts-check\n", "", 1)),
                          # JS 一跑就會依語言改寫 document.title，這裡只是後備，

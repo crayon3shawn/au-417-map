@@ -55,6 +55,17 @@ function cats(){
     none:    {c:CAT_COLOR.none,    say:T('cat_none'),            sub:T('p_none_sub')},
   };
 }
+// 查單一郵區時，判定字永遠講到底是哪一張表。Bushfire 與 Natural disaster 在
+// 官網是兩張獨立的表，起算日差兩年半（2019-07-31 vs 2021-12-31）——建築的
+// 638 個「只有重建算」郵區裡有 348 個只落在其中一張上，併起來講等於把該走
+// 哪條路、用哪個日期都藏起來。州頁的 sayOf() 是同一套邏輯。
+function sayOf(f){
+  if(f & industry.mask) return T('cat_work', {ind: indLabel()});
+  if((f & BIT_FIRE) && (f & BIT_DISASTER)) return T('cat_both');
+  if(f & BIT_FIRE) return T('cat_fire_only');
+  if(f & BIT_DISASTER) return T('cat_flood_only');
+  return T('cat_none');
+}
 // 位元記的是地區表成員資格，判定取決於選了哪個產業
 const BIT_FIRE = 8, BIT_DISASTER = 16, REBUILD = BIT_FIRE | BIT_DISASTER;
 let industry = DATA.industry_masks.find(i => i.key === DATA.industry) || DATA.industry_masks[0];
@@ -92,6 +103,8 @@ function applyIndustry(){
 }
 indSel.addEventListener('change', () => {
   industry = DATA.industry_masks.find(i => i.key === indSel.value) || industry;
+  // 產業要一起帶進網址：判定取決於它，只帶 pc 貼給別人會看到不同的答案
+  writeUrlState(industry.key, shownPc);
   applyIndustry();
 });
 const stateOf = k => STATES.find(s => s.key === k);
@@ -425,6 +438,7 @@ function setHint(s){
 
 function clearShown(){
   shownPc = null; shownName = null; shownRegion = null;
+  writeUrlState(industry.key, null);
   clearHits();
   show(`<div class="empty">${esc(T('detail_empty'))}</div>`);
   setHint(T('p_hint', {n: META.n_postcodes, m: META.n_maps}));
@@ -471,22 +485,27 @@ function render(key, pick){
     return;
   }
   shownPc = key; shownName = pick || null;
+  writeUrlState(industry.key, key);
   setHint('');
   const v = key;
   const stKey = hit[0], f = hit[1];
   const name = pick || mainName(key);
   const s = stateOf(stKey), cat = cats()[catOf(f)];
+  // 表名要寫出來：送件時官方問的就是這個，而兩張表的起算日不一樣
   const routes = [];
   if(f & BIT_FIRE) routes.push(T('p_route_fire'));
   if(f & BIT_DISASTER) routes.push(T('p_route_flood'));
-  const extra = routes.length ? '<br>' + esc(T('p_also_declared', {list:joinList(routes)})) : '';
+  const extra = routes.length ? '<br>' + esc(T('p_also_declared', {list:joinList(routes)}))
+    + [(f & BIT_FIRE) ? T('tbl_bushfire') : '', (f & BIT_DISASTER) ? T('tbl_disaster') : '']
+        .filter(Boolean).map(s => `<br><em class="tbl">${esc(s)}</em>`).join('')
+    : '';
   const link = s.url
     ? `<a class="golink" href="${s.url}#pc=${parseInt(v,10)}"${/^https?:/.test(s.url) ? ' target="_blank" rel="noopener"' : ''}>${esc(T('p_golink', {state:stLabel(s)}))}</a>`
     : `<p class="nomap">${esc(T('p_nomap_line', {state:stLabel(s)}))}</p>`;
   // 版面跟州頁的答案面板一模一樣：郵遞區號 38px 等寬，判定色走左邊色帶與判定字。
   // 兩頁共用同一個 .detail/.ans 結構，使用者從入口頁點進州頁不必重新認一次。
   show(`<div class="ans"><span class="pcn">${pad4(v)}<u>${esc(s.abbr)}</u></span>
-        <span class="say">${esc(cat.say)}</span>
+        <span class="say">${esc(sayOf(f))}</span>
         <span class="loc">${esc(name)}</span></div>
       <div class="bd"><div class="sub">${esc(cat.sub)}${extra}</div>${link}</div>`,
     cat.c, catOf(f) === 'none');
@@ -573,6 +592,15 @@ function loadNames(){
     })
     .catch(() => {});
 }
+
+// 網址帶進來的狀態。產業要在郵區之前套用——判定取決於產業，順序反了會先
+// 算出一個錯的答案再改掉。
+const urlState = readUrlState();
+if(urlState.ind){
+  const found = DATA.industry_masks.find(i => i.key === urlState.ind);
+  if(found){ industry = found; indSel.value = found.key; }
+}
+if(urlState.pc) q.value = urlState.pc;
 
 applyLang();   // 初次繪製。放最後是因為它會用到上面宣告的每一樣東西。
 loadNames();

@@ -84,13 +84,19 @@ __CSS__</style>
             <i style="--sw:var(--c-work)"></i><i style="--sw:var(--c-rebuild)"></i><i style="--sw:var(--c-none)"></i>
           </span>
         </summary>
+        <!-- 檢視切換放在色塊上面：它決定下面那幾列是什麼，不是一個附加選項。
+             官網把 Bushfire 與 Natural disaster 分成兩張獨立的表，起算日差兩年半，
+             所以「分災害類型」不是進階功能，是官方本來就有的區別。 -->
+        <div class="seg" role="group" data-t-aria="view_group">
+          <button type="button" id="v-plain" data-t="view_plain" aria-pressed="true"></button>
+          <button type="button" id="v-split" data-t="view_split" aria-pressed="false"></button>
+        </div>
         <div class="lg" style="--sw:var(--c-work)"><i></i><span id="n-work-label"></span><b id="n-work"></b></div>
         <div class="lg" id="r-rebuild" style="--sw:var(--c-rebuild)"><i></i><span data-t="cat_rebuild"></span><b id="n-rebuild"></b></div>
         <div class="lg split" style="--sw:var(--c-fire)"><i></i><span data-t="cat_fire_only"></span><b id="n-fire"></b></div>
         <div class="lg split" style="--sw:var(--c-flood)"><i></i><span data-t="cat_flood_only"></span><b id="n-flood"></b></div>
         <div class="lg split" style="--sw:var(--c-both)"><i></i><span data-t="cat_both"></span><b id="n-both"></b></div>
         <div class="lg" id="r-none" style="--sw:var(--c-none)"><i></i><span data-t="cat_none"></span><b id="n-none"></b></div>
-        <label class="lgtoggle"><input type="checkbox" id="split"><span data-t="split_toggle"></span></label>
         <div class="lgnote" data-t="legend_note"></div>
       </details>
       <div class="tip" id="tip"></div>
@@ -103,6 +109,9 @@ __CSS__</style>
   </div>
 </div>
 
+<script>
+__URL__
+</script>
 <script>
 __JS__
 </script>

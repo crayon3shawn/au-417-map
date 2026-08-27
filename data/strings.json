@@ -65,9 +65,25 @@
       "zh": "完全不算",
       "en": "Does not count at all"
     },
-    "split_toggle": {
-      "zh": "區分大火與天災",
-      "en": "Split bushfire vs other disasters"
+    "view_group": {
+      "zh": "地圖檢視",
+      "en": "Map view"
+    },
+    "view_plain": {
+      "zh": "算不算",
+      "en": "Counts or not"
+    },
+    "view_split": {
+      "zh": "分災害類型",
+      "en": "By disaster type"
+    },
+    "tbl_bushfire": {
+      "zh": "官方表：Bushfire declared areas",
+      "en": "Official table: Bushfire declared areas"
+    },
+    "tbl_disaster": {
+      "zh": "官方表：Natural disaster declared areas",
+      "en": "Official table: Natural disaster declared areas"
     },
     "cat_fire_only": {
       "zh": "只有大火重建算",
@@ -82,8 +98,8 @@
       "en": "Both bushfire and disaster recovery count"
     },
     "legend_note": {
-      "zh": "災害種類只有在「重建是唯一路徑」時才影響你的判斷。在綠色郵區一般工作本來就算，災害資訊點進去看。",
-      "en": "Disaster type only matters where recovery work is the only route. In green postcodes ordinary work already counts — tap for the disaster details."
+      "zh": "Bushfire 與 Natural disaster 在官網是兩張獨立的表，起算日也不同。查單一郵區時一定全部列出來，不受這個切換影響。",
+      "en": "Bushfire and Natural disaster are two separate tables on the official site, with different start dates. Looking up a single postcode always lists all of them, whatever this is set to."
     },
     "v_work_yes": {
       "zh": "一般{ind}工作 → 算",

@@ -65,7 +65,9 @@ const sandbox = {
   }),
   window: stub('window'),
   performance: { now: () => 0, getEntriesByType: () => [{}] },
-  location: { hash: '#pc=4870', href: 'about:blank', search: '' },
+  location: { hash: '#pc=4870', href: 'about:blank', search: '', pathname: '/qld.html' },
+  history: { replaceState() {}, pushState() {} },
+  URLSearchParams,
   navigator: { language: 'zh-TW' },
   localStorage: {
     _v: {},

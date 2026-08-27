@@ -134,6 +134,9 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
    一般的次要文字色。 */
 .detail.no .say{color:var(--ink-2)}
 .detail .loc{font-size:12.5px;line-height:1.45;color:var(--ink-2)}
+/* 官方表名。是要照抄去官網對照的東西，所以用等寬、不斜體。兩頁都用。 */
+.tbl{font-family:"IBM Plex Mono",monospace;font-style:normal;
+  font-size:11px;letter-spacing:.02em;color:var(--ink-3)}
 .detail .bd{padding:13px 16px 14px 22px;border-top:1px solid var(--line);
   display:flex;flex-direction:column;gap:11px}
 .qhint{margin:0;font-size:12.5px;line-height:1.45;color:var(--ink-3)}

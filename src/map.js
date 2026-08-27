@@ -106,11 +106,17 @@ const workMask = () => industry.mask;
 //   rebuild 不在那些表裡，但被宣告為災區，只有災後重建工作算
 //   none    兩者皆非
 const catOf = f => (f & workMask()) ? 'work' : (f & REBUILD) ? 'rebuild' : 'none';
-// 答案面板上那一行判定字。用的是跟圖例、入口頁同一組字串——同一件事在三個
-// 地方要講同一句話，不然使用者得自己對照哪個講法對應哪個。
-const sayOf = f => (f & workMask()) ? T('cat_work', {ind: indLabel()})
-                 : (f & REBUILD)    ? T('cat_rebuild')
-                                    : T('cat_none');
+// 答案面板上那一行判定字。**永遠講到底是哪一張表**，不跟著地圖的檢視切換走。
+// 地圖可以只給三色（概覽），但查單一郵區時「只有災後重建工作算」是不夠的：
+// 建築的 638 個「只有重建算」郵區裡有 348 個（55%）只落在其中一張表上，而
+// 兩張表的起算日差兩年半（2019-07-31 vs 2021-12-31）。併起來講等於把該走
+// 哪條路、用哪個日期都藏起來。
+const sayOf = f =>
+    (f & workMask())                    ? T('cat_work', {ind: indLabel()})
+  : (f & BIT_FIRE) && (f & BIT_DISASTER) ? T('cat_both')
+  : (f & BIT_FIRE)                      ? T('cat_fire_only')
+  : (f & BIT_DISASTER)                  ? T('cat_flood_only')
+                                        : T('cat_none');
 
 // 細分只作用在 rebuild：災害種類唯有在「重建是唯一路徑」時才影響判斷。
 function colorOf(f, split){
@@ -442,7 +448,14 @@ function focusOnNode(node, fallback){
 let selNode = null, selPc = null;
 
 const legend = document.getElementById('legend');
-const splitBox = document.getElementById('split');
+// 地圖檢視。官網把 Bushfire 與 Natural disaster 分成兩張獨立的表（起算日差
+// 兩年半），所以這不是一個「進階選項」，是官方本來就有的區別——只是地圖上
+// 預設先給比較好讀的三色，要看細分隨時可以切。
+// 記在 localStorage：會關心災害細分的人多半每次都想看。
+let split = false;
+try { split = localStorage.getItem('mapview') === 'split'; } catch (_) {}
+const vPlain = document.getElementById('v-plain');
+const vSplit = document.getElementById('v-split');
 const indSel = document.getElementById('ind');
 const indNote = document.getElementById('indnote');
 
@@ -469,7 +482,7 @@ function recolour(s, f, on){
 }
 
 function applyIndustry(){
-  const on = splitBox.checked;
+  const on = split;
   for(const s of areasG.children) recolour(s, byPc.get(s.__pc).f, on);
   for(const s of strayG.children){
     const f = byPc.get(s.__pc).f;
@@ -493,19 +506,35 @@ function applyIndustry(){
         : '');
   document.getElementById('subind').textContent = `${T('showing')}: ${indLabel()}`;
   document.getElementById('fact1').textContent = T('fact1_body', {ind: indLabel(), tables});
-  splitBox.closest('.lgtoggle').style.display = c.rebuild ? '' : 'none';
+  // 沒有任何「只有重建算」的郵區時，切換鈕沒有意義
+  document.querySelector('.legend .seg').style.display = c.rebuild ? '' : 'none';
   if(selPc !== null) select(selPc);
   else renderRegionPanel();
 }
 
 indSel.addEventListener('change', () => {
   industry = META.industries.find(i => i.key === indSel.value) || industry;
+  // 產業要一起帶進網址：判定取決於它，只帶 pc 貼給別人會看到不同的答案
+  writeUrlState(industry.key, selPc);
   applyIndustry();
 });
-splitBox.addEventListener('change', () => {
-  legend.classList.toggle('split', splitBox.checked);
+// 畫面狀態與重新上色分開：初始化時只能畫狀態，不能順手呼叫 applyIndustry()
+// ——它會走到 renderRegionPanel()，而 regPcs 要到檔案後面才宣告，在這裡碰它
+// 就是 TDZ 錯誤。上色由後面既有的初始化流程負責。
+function paintView(){
+  legend.classList.toggle('split', split);
+  vPlain.setAttribute('aria-pressed', String(!split));
+  vSplit.setAttribute('aria-pressed', String(split));
+}
+function setView(on){
+  split = on;
+  paintView();
+  try { localStorage.setItem('mapview', on ? 'split' : 'plain'); } catch (_) {}
   applyIndustry();
-});
+}
+vPlain.addEventListener('click', () => setView(false));
+vSplit.addEventListener('click', () => setView(true));
+paintView();
 
 // ---- 詳情 ----
 const detail = document.getElementById('detail');
@@ -539,6 +568,7 @@ function markSelection(d){
 
 function select(pc){
   selPc = pc;
+  writeUrlState(industry.key, pc);
   clearSel();
   const d = byPc.get(pc);
   if(d){ d.node.classList.add('sel'); selNode = d.node; d.node.parentNode.appendChild(d.node);
@@ -567,13 +597,14 @@ function select(pc){
   const ind = indLabel();
   if(f & workMask()) rows.push(`<div class="verdict" style="--vc:var(--c-work)"><span class="dot"></span><span><b>${esc(T('v_work_yes',{ind}))}</b><br>${esc(T('v_work_yes_sub',{ind}))}</span></div>`);
   else rows.push(`<div class="verdict no"><span class="dot"></span><span><b>${esc(T('v_work_no',{ind}))}</b><br>${esc(T('v_work_no_sub',{ind}))}</span></div>`);
-  if(f & BIT_FIRE) rows.push(`<div class="verdict" style="--vc:var(--c-fire)"><span class="dot"></span><span><b>${esc(T('v_fire'))}</b><br>${esc(T('v_fire_sub'))}</span></div>`);
-  if(f & BIT_DISASTER) rows.push(`<div class="verdict" style="--vc:var(--c-flood)"><span class="dot"></span><span><b>${esc(T('v_flood'))}</b><br>${esc(T('v_flood_sub'))}</span></div>`);
+  // 表名要寫出來：送件時官方問的就是這個，而兩張表的起算日不一樣。
+  if(f & BIT_FIRE) rows.push(`<div class="verdict" style="--vc:var(--c-fire)"><span class="dot"></span><span><b>${esc(T('v_fire'))}</b><br><em class="tbl">${esc(T('tbl_bushfire'))}</em><br>${esc(T('v_fire_sub'))}</span></div>`);
+  if(f & BIT_DISASTER) rows.push(`<div class="verdict" style="--vc:var(--c-flood)"><span class="dot"></span><span><b>${esc(T('v_flood'))}</b><br><em class="tbl">${esc(T('tbl_disaster'))}</em><br>${esc(T('v_flood_sub'))}</span></div>`);
   if(!(f & workMask()) && (f & REBUILD)) rows.push(`<div class="note">${esc(T('v_rebuild_only',{ind}))}</div>`);
   if(d.stray) rows.push(`<div class="note">${esc(T('v_no_polygon'))}</div>`);
 
   // 判定色走色帶與判定字，不上郵遞區號本身（理由在 base.css 的 .fbox 段）
-  detail.style.setProperty('--vc', colorOf(f, splitBox.checked));
+  detail.style.setProperty('--vc', colorOf(f, split));
   detail.classList.toggle('no', catOf(f) === 'none');
   detail.innerHTML =
     `<div class="ans"><span class="pcn">${p}</span>` +
@@ -760,10 +791,17 @@ function fromHash(){
     if(pcs.length){ showLga(name, pcs); return; }
   }
   clearRegion();
-  const m = /pc=(\d{3,4})/.exec(h);
-  if(!m) return;
+  // 郵區可以走 ?pc=（可分享的網址）或 #pc=（入口頁交棒用的舊格式）
+  const m = /pc=(\d{3,4})/.exec(h) || [null, readUrlState().pc];
+  if(!m[1]) return;
   q.value = m[1];
   doSearch();
+}
+// 產業要在讀郵區之前套用：判定取決於產業，順序反了會先算出一個錯的答案。
+const urlInd = readUrlState().ind;
+if(urlInd){
+  const found = META.industries.find(i => i.key === urlInd);
+  if(found){ industry = found; indSel.value = found.key; applyIndustry(); }
 }
 addEventListener('hashchange', fromHash);
 fromHash();
