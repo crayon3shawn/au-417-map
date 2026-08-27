@@ -41,6 +41,26 @@
       "en": "This is not an official government site. Boundaries are generalised ABS data, for orientation only. Check the official Home Affairs page again before you apply.",
       "zh": "本站非官方網站。郵區界線為 ABS 概化資料，僅供判讀；送件前請再上 Home Affairs 官網確認一次。"
     },
+    "enc_act_body": {
+      "en": "General work counts nowhere in the ACT — Regional Australia does not list it. The one exception is 2618 Hall, which falls inside NSW's regional range 2618–2739.",
+      "zh": "一般工作全境都不算——Regional Australia 的名單上沒有 ACT。唯一例外是 2618 Hall，它落在 NSW 的 regional 區間 2618–2739 裡。"
+    },
+    "enc_act_fire": {
+      "en": "The whole territory is a bushfire declared area, so disaster recovery work counts anywhere in Canberra (on or after 31 July 2019).",
+      "zh": "但全境都是叢林大火宣告區，所以災後重建工作在坎培拉任何地方都算（2019/7/31 之後）。"
+    },
+    "enc_act_mark": {
+      "en": "ACT",
+      "zh": "ACT"
+    },
+    "enc_act_say": {
+      "en": "Capital Territory",
+      "zh": "首都領地"
+    },
+    "enc_act_why": {
+      "en": "No postcode boundaries are drawn here: the polygons are fetched per state and this map covers NSW only.",
+      "zh": "這裡沒有畫郵區界線：郵區面是逐州抓的，這張圖只涵蓋 NSW。"
+    },
     "fact1_body": {
       "en": "Only {ind} work inside {tables} postcodes counts.",
       "zh": "{ind}在 {tables} 郵區內的工作才算集簽。"
@@ -92,6 +112,14 @@
     "industry_table": {
       "en": "What this work covers",
       "zh": "產業定義"
+    },
+    "leg_also_fire": {
+      "en": "{n} of those are in a bushfire declared area",
+      "zh": "其中 {n} 個是叢林大火宣告區"
+    },
+    "leg_also_flood": {
+      "en": "{n} of those are in a natural disaster declared area",
+      "zh": "其中 {n} 個是天災宣告區"
     },
     "leg_in_fire": {
       "en": "Bushfire declared area",

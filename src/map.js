@@ -224,6 +224,31 @@ for(const [name, lon, lat, tier, side] of CITIES){
   cityG.appendChild(g);
   cityNodes.push(g);
 }
+// ---- 飛地標記 ----
+// ACT 整個被 NSW 包住，而郵區面逐州抓，所以那裡是一塊空白。空白用的是背景色
+// 不是「不算」的灰，讀起來像資料壞掉。放一個標記把它變成「有標示、有解釋的
+// 區域」——但**不畫界線**，理由寫在 build.py 的 ENCLAVES。
+// 虛線底線跟入口頁「沒有地圖」的州用同一套語彙（stroke-dasharray）。
+// 文案查表用字面鍵，不要拼字串：i18n 測試掃的是字面上的 T('…')，
+// 拼出來的鍵會繞過「鍵存不存在」與「有沒有孤兒鍵」兩道檢查。
+// 多一個飛地就多一筆，明寫比動態組合安全。
+const ENC_TEXT = {
+  act: () => ({mark: T('enc_act_mark'), say:  T('enc_act_say'), body: T('enc_act_body'),
+               fire: T('enc_act_fire'), why:  T('enc_act_why')}),
+};
+
+const encG = el('g',{class:'enclaves'}); over.appendChild(encG);
+const encNodes = [];
+for(const e of (META.enclaves || [])){
+  const g = el('g',{class:'enc'});
+  const t = el('text',{x:px(e.lon), y:py(e.lat), 'text-anchor':'middle'});
+  t.textContent = ENC_TEXT[e.key]().mark;
+  g.appendChild(t);
+  g.__e = {t, key:e.key};
+  encG.appendChild(g);
+  encNodes.push(g);
+}
+
 // 選取環要蓋在城市標記上面——市區郵區的環幾乎一定會跟城市點重疊，
 // 被蓋住就失去意義。over 的子節點按加入順序疊，所以搬到最後。
 over.appendChild(ringG);
@@ -242,6 +267,11 @@ function apply(){
     c.t.setAttribute('x', c.cx + SZ.gap*c.side/k);
     c.t.setAttribute('y', c.cy + SZ.lbl1*0.26/k);
     if(c.tier===2) g.classList.toggle('on', k >= 2);
+  }
+  // 飛地標記的字級也是螢幕像素定義的，跟城市一樣要除以 k
+  for(const g of encNodes){
+    g.__e.t.setAttribute('font-size', SZ.lbl1 / k);
+    g.__e.t.setAttribute('stroke-width', SZ.halo * 1.6 / k);
   }
   for(const s of strayG.children) s.setAttribute('r', SZ.stray/k);
   ringHalo.setAttribute('r', SZ.ring/k);
@@ -517,6 +547,23 @@ function applyIndustry(){
   document.getElementById('n-in').textContent  = inN;
   document.getElementById('n-out').textContent = c.total - inN;
   document.getElementById('lgsrc').textContent = src;
+  // 只在「一般工作」檢視出現：那裡才有「我是不是漏了另一條路」這個疑問。
+  // 數的是**不在工作名單上**的那些郵區裡，有多少在災害表上——所以要用
+  // fire_only + fire_and_flood，不是 fire_all（後者含本來就算的）。
+  const hint = document.getElementById('lghint');
+  hint.textContent = '';
+  if(view === 'work'){
+    const also = [['fire',  c.fire_only  + c.fire_and_flood, 'leg_also_fire'],
+                  ['flood', c.flood_only + c.fire_and_flood, 'leg_also_flood']];
+    for(const [v, n, key] of also){
+      if(!n) continue;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = T(key, {n}) + ' →';
+      btn.addEventListener('click', () => setView(v));
+      hint.appendChild(btn);
+    }
+  }
   // 範圍是官方定義的中文摘要，不是官方文字，所以一定要附原文連結讓人核對。
   // 標題列只標「這張卡在講什麼」，適用的郵區表放在連結上——連結本來就是要
   // 帶人去看那張表，表名放在那裡比放在標題更貼近它的用途。
@@ -583,6 +630,23 @@ function markSelection(d){
   updateRing();
 }
 
+// 飛地的說明。它不是郵區，所以不走 select()——沒有旗標、沒有選取環、
+// 也不進網址（網址的 pc 參數只認郵遞區號）。
+function showEnclave(key){
+  selPc = null;
+  clearSel();
+  markSelection(null);
+  detail.style.setProperty('--vc', 'var(--c-none)');
+  detail.classList.add('no');
+  const x = ENC_TEXT[key]();
+  detail.innerHTML =
+    `<div class="ans"><span class="pcn">${esc(x.mark)}</span>`
+    + `<span class="say">${esc(x.say)}</span></div>`
+    + `<div class="bd"><div class="sub">${esc(x.body)}</div>`
+    + `<div class="note">${esc(x.fire)}</div>`
+    + `<div class="note">${esc(x.why)}</div></div>`;
+}
+
 function select(pc){
   selPc = pc;
   writeUrlState(industry.key, pc);
@@ -631,8 +695,20 @@ function select(pc){
 }
 
 const tip = document.getElementById('tip'), wrap = document.getElementById('mapwrap');
-const hit = e => e.target.closest('.poa, .stray');
-svg.addEventListener('click', e => { if(drag && drag.moved) return; const t = hit(e); if(t) select(t.__pc); });
+// e.target 在這裡永遠是 svg 本身，不是被點到的那塊郵區——平移與捏合縮放用了
+// svg.setPointerCapture()，而指標捕捉會把後續的 click 重新導向到捕捉元素。
+// 所以要用座標反查。這是既有的 bug：在地圖上點郵區一直沒有反應（滑鼠移過去
+// 的提示框沒事，因為 pointerover 發生在 pointerdown 之前，那時還沒有捕捉）。
+const at = e => document.elementFromPoint(e.clientX, e.clientY);
+const hit = e => { const el = at(e); return (el && el.closest) ? el.closest('.poa, .stray') : null; };
+svg.addEventListener('click', e => {
+  if(drag && drag.moved) return;
+  const el = at(e);
+  // 飛地標記要先於郵區判斷：它畫在郵區上層，點到它就是要看它的說明
+  const enc = (el && el.closest) ? el.closest('.enc') : null;
+  if(enc && enc.__e){ showEnclave(enc.__e.key); return; }
+  const t = hit(e); if(t) select(t.__pc);
+});
 svg.addEventListener('pointerover', e => {
   const t = hit(e); if(!t) return;
   const d = byPc.get(t.__pc);
