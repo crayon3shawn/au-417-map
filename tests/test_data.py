@@ -13,12 +13,13 @@ DATA = load(ROOT / "data" / "postcodes.json")
 
 class TestPostcodeData(unittest.TestCase):
 
-    def test_兩種簽證都在(self):
-        self.assertEqual(set(DATA["areas"]), {"417", "462"})
+    def test_只收417(self):
+        # 站台不處理 462，所以連抓都不抓——抓了只會在 462 頁面改版時
+        # 製造對 417-only 站台無意義的紅燈。
+        self.assertEqual(set(DATA["areas"]), {"417"})
 
     def test_五張指定地區表都在(self):
-        for visa in ("417", "462"):
-            self.assertEqual(set(DATA["areas"][visa]), set(AREA_SECTIONS), visa)
+        self.assertEqual(set(DATA["areas"]["417"]), set(AREA_SECTIONS))
 
     def test_每一筆原文都解析得動(self):
         for visa, areas in DATA["areas"].items():
@@ -30,19 +31,9 @@ class TestPostcodeData(unittest.TestCase):
                         self.assertTrue(expand(raw, st), "展開後是空的")
 
     def test_有記錄來源與頁面更新日期(self):
-        for visa in ("417", "462"):
-            src = DATA["sources"][visa]
-            self.assertTrue(src["url"].startswith("https://immi.homeaffairs.gov.au/"))
-            self.assertRegex(src["page_last_updated"], r"^\d{4}-\d{2}-\d{2}$")
-
-    def test_417與462的地區表目前完全相同(self):
-        # 這是頁面上那句「兩種簽證都適用」的依據。哪天官網讓它們分家，
-        # 這個測試會先失敗，提醒我們去改頁面文案而不是繼續講錯話。
-        for area in AREA_SECTIONS:
-            for st in STATES:
-                a = expand(DATA["areas"]["417"][area].get(st), st)
-                b = expand(DATA["areas"]["462"][area].get(st), st)
-                self.assertEqual(a, b, f"{area}/{st} 已經不同了，請更新頁面說明")
+        src = DATA["sources"]["417"]
+        self.assertTrue(src["url"].startswith("https://immi.homeaffairs.gov.au/"))
+        self.assertRegex(src["page_last_updated"], r"^\d{4}-\d{2}-\d{2}$")
 
 
 class TestKnownFacts(unittest.TestCase):

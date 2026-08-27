@@ -1,6 +1,6 @@
 # 澳洲 417 集簽地圖
 
-澳洲打工度假簽證（417 / 462）集簽合格郵遞區號的互動地圖，以**建築工地**為取向。
+澳洲打工度假簽證 **417**（Working Holiday）集簽合格郵遞區號的互動地圖，以**建築工地**為取向。462 的產業規則不同，不適用（理由見〈只做 417〉）。
 郵區以整片色塊渲染，可切換 regional、叢林大火宣告區、天災宣告區三個圖層。
 
 產出是**單一自包含 HTML**（無外部請求，字型除外），可直接發佈為 Artifact。
@@ -120,7 +120,7 @@ type 也不同）。在綠色郵區一般工作本來就算，那是次要資訊
 
 | 資料 | 來源 | 授權 | 抓取腳本 |
 |---|---|---|---|
-| 五張指定地區郵區表 | [Home Affairs — Specified work (417)](https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work) · [462 版](https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-462/specified-462-work) | [Copyright and disclaimer](https://www.homeaffairs.gov.au/access-and-accountability/using-our-website/copyright-and-disclaimer)（未逐條確認）| `fetch/postcodes.py` |
+| 五張指定地區郵區表 | [Home Affairs — Specified work (417)](https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work) | [Copyright and disclaimer](https://www.homeaffairs.gov.au/access-and-accountability/using-our-website/copyright-and-disclaimer)（未逐條確認）| `fetch/postcodes.py` |
 | 郵區邊界（Postal Areas 2021） | [ABS ArcGIS — ASGS2021/POA](https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/POA/MapServer) | **CC BY 4.0**（服務中繼資料載明）| `fetch/boundaries.py` |
 | 郵區地名與座標 | [matthewproctor/australianpostcodes](https://github.com/matthewproctor/australianpostcodes) | ⚠️ **未宣告授權** | `fetch/localities.py`、`fetch/cities.py`、`fetch/portal.py` |
 | 州界輪廓（入口頁用） | [ABS ArcGIS — ASGS2021/STE](https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/STE/MapServer) | **CC BY 4.0** | `fetch/portal.py` |
@@ -377,8 +377,7 @@ make test
 | `tests/test_smoke.py` | **把產出頁面的腳本在 node 裡真的跑一遍** |
 
 刻意不釘死郵區數量——官網本來就會改，釘數字只會在正常更新時假警報。
-釘的是結構，以及「417 與 462 目前完全相同」這件事：哪天官網讓它們分家，
-測試會先失敗，提醒去改頁面文案而不是繼續講錯話。
+釘的是結構完整性，加上幾個短期內不該變的定錨事實。
 
 ### 為什麼要有 node 煙霧測試
 
@@ -487,13 +486,28 @@ make build STATE=vic
 
 ## 只做 417
 
-頁面只處理 417（Working Holiday）。462 的地區表目前跟 417 逐字相同，
-但**產業規則不同**——462 沒有礦業這一項，漁業與林業只限 Northern Australia，
-所以不能拿這裡的判斷給 462 用。
+頁面只處理 417（Working Holiday），`data/postcodes.json` 也**只抓 417**。
 
-`data/postcodes.json` 仍然兩種簽證都抓、都存：成本是零，而且測試裡有一條
-盯著「兩者的地區表是否仍然相同」，哪天官網讓它們分家會先失敗，提醒我們去
-看發生了什麼事。只是不顯示而已。
+⚠️ **不要拿這裡的判斷給 462 用。** 兩者的郵區表在 2026-08-18 那版是逐字相同的，
+但**產業規則不同**：
+
+* 462 **沒有礦業**這一項產業
+* 462 的**漁業與林業只限 Northern Australia**（350 個郵區），417 是整個
+  Regional（4519 個）——差 4169 個郵區
+
+也就是說，一個 462 持有者照著這張圖去做漁業或林業，很可能做完才發現不算。
+所以頁面在產業卡上直接寫「462 不適用」，而不是含糊帶過。
+
+**為什麼連抓都不抓**：既然不呈現 462，抓它唯一的效果是 462 頁面改版型時
+`fetch/postcodes.py` 的健檢會紅燈——而那對一個 417-only 的站台不是壞消息，
+是假警報。假警報會讓人開始忽略通知，之後真的出事也不會有人看。要加回來
+的話，`fetch/postcodes.py` 的 `PAGES` 補一行就行。
+
+代價是失去了哨兵：官網哪天讓兩份分家，我們不會自動知道。這是知情的取捨——
+反正頁面本來就不該給 462 用，分不分家都不改變那句警語。
+
+`data/industries.json` 仍然保留兩種簽證的產業對應。那是人工整理的規則知識，
+不是抓來的資料，「462 的漁業只限 northern」這件事不會因為我們不抓它就不成立。
 
 ## 授權與開源
 
