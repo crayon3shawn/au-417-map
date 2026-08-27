@@ -287,11 +287,17 @@ function settleView(withZoom){
 if(document.fonts && document.fonts.ready) document.fonts.ready.then(() => settleView(false));
 else settleView(false);
 // resize 事件會連發，重算視野要量 getBBox，所以壓一下頻率
-let resizeTimer = 0;
+let resizeTimer = 0, lastVW = innerWidth;
 function onResize(){
   sizeToViewport();
   relabelCities();
   apply();
+  // 手機上「只有高度變、寬度沒變」幾乎一定是鍵盤或網址列，不是版面真的變了。
+  // 那時重算視野會讓地圖在使用者眼前縮一下——正是查詢打字時最不該發生的事。
+  // 轉向會同時改寬度，所以真的需要重算的情況不會被這一行擋掉。
+  const widthChanged = innerWidth !== lastVW;
+  lastVW = innerWidth;
+  if(!widthChanged && innerWidth <= 900) return;
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => settleView(true), 120);
 }
@@ -833,6 +839,20 @@ function applyMapA11y(){
 // 比例 2.79）塞進直式窗格，固定高度會上下各留一大條空白；南北狹長的州則相反。
 // 下限 320px 是「還看得出形狀」的底線——真照 2.79 算下去只有 134px。
 // 上限 62vh 是不要一進來整張畫面都是地圖，搜尋與答案還在上面。
+// 手機的 innerHeight 是會動的：叫出鍵盤、網址列收合都會改它，而且就發生在
+// 使用者查詢或捲動的當下。直接拿它算高度的話，鍵盤一彈出地圖就當場縮一截——
+// 實測 iPhone 14 從 381px 掉到 320px（-16%），而且收起鍵盤只回到 364px，
+// 因為中間 fitLabels 把 viewBox 撐大了一點點，回不去。
+//
+// 62vh 這個上限的用意是「一進來不要整張畫面都是地圖」，那是**進場時的版面意圖**，
+// 不是需要跟著鍵盤即時追蹤的東西。所以基準只在寬度改變時更新——鍵盤與網址列
+// 不會改寬度，轉向會。
+let baseVW = innerWidth, baseVH = innerHeight;
+function stableViewportHeight(){
+  if(innerWidth !== baseVW){ baseVW = innerWidth; baseVH = innerHeight; }
+  return baseVH;
+}
+
 function sizeMapPane(){
   // 這裡就地取元素，不用外面的 wrap——settleView 在模組很早就會跑，
   // 那個常數還沒宣告。
@@ -841,8 +861,12 @@ function sizeMapPane(){
   if(innerWidth > 900){ pane.style.height = ''; return; }
   const w = pane.getBoundingClientRect().width;
   if(!w) return;
+  // 用 VB 而不是 VB0：SVG 是以 preserveAspectRatio:meet 把 VB 等比放進窗格的，
+  // 窗格比例對齊 VB 才不會上下留黑邊。VB 含 fitLabels 為地名撐開的部分，那些
+  // 空間也真的畫著東西。代價是轉向來回後高度會漂 1% 左右（VB 的撐開量跟窗格
+  // 大小有關），肉眼看不出來，不值得為它改成會多留白的 VB0。
   const want = w * VB.h / VB.w;
-  pane.style.height = Math.round(Math.min(Math.max(want, 320), innerHeight * 0.62)) + 'px';
+  pane.style.height = Math.round(Math.min(Math.max(want, 320), stableViewportHeight() * 0.62)) + 'px';
 }
 
 function initialView(){
