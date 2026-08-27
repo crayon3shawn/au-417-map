@@ -1,0 +1,137 @@
+# 在 GitHub 的 runner 上抓 ABS 郵區邊界，開 PR 把資料帶回來。
+#
+# 為什麼要有這個：抓邊界要連 geo.abs.gov.au，而開發環境不一定連得到那裡
+# （Claude Code 的沙箱就被 egress 政策擋住）。GitHub 的 runner 網路是通的，
+# 所以把「需要連外的那一步」外包給它，本機只要 review PR。
+#
+# 手動觸發，不排程：邊界資料一年才動一次（ABS 出新版 ASGS 才會變），
+# 定期跑只是浪費。要更新郵區清單請看 data-check.yml，那個才是每週跑的。
+#
+# 典型用途：`act` —— NSW 地圖中間那塊空白就是 ACT，要畫出來得先有它的邊界。
+name: 抓郵區邊界
+
+on:
+  workflow_dispatch:
+    inputs:
+      state:
+        description: '州別（qld / nsw / vic / wa / sa / tas / nt / act）'
+        required: true
+        default: 'act'
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: fetch-boundaries
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+
+      - name: 檢查州別
+        id: st
+        run: |
+          st=$(echo "${{ inputs.state }}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
+          case "$st" in
+            qld|nsw|vic|wa|sa|tas|nt|act) ;;
+            *) echo "未知的州別：$st"; exit 1 ;;
+          esac
+          echo "state=$st" >> "$GITHUB_OUTPUT"
+
+      # 邊界腳本自己會分級概化並丟掉太小的離島；抓不到或格式不對會非零離開，
+      # 這一步就直接失敗，不會寫出半份資料。
+      - name: 抓邊界
+        run: python3 fetch/boundaries.py "${{ steps.st.outputs.state }}"
+
+      # 地名來源是 GitHub 上的 CSV，多數環境都連得到，但一起抓比較省事——
+      # 少了地名，郵區在地圖上有面卻搜不到、也沒有標籤。
+      - name: 抓地名
+        run: python3 fetch/localities.py "${{ steps.st.outputs.state }}"
+
+      - name: 看有沒有變動
+        id: diff
+        run: |
+          if git diff --quiet -- data/ && [ -z "$(git status --porcelain data/)" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "資料跟版控裡的一樣，沒有變動。"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git status --short data/
+          fi
+
+      # 抓回來的資料要能建得起來才有意義。這一步失敗代表 build 需要跟著改
+      # （例如新的州還沒有 cities-<state>.json），那要人來處理，不是自動合併。
+      - name: 試建與測試
+        id: build
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          if make all > /tmp/build.log 2>&1 && make test >> /tmp/build.log 2>&1; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          fi
+          tail -40 /tmp/build.log
+
+      - name: 開 PR
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          ST="${{ steps.st.outputs.state }}"
+          BRANCH="data/boundaries-$ST-$(date -u +%Y%m%d)"
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$BRANCH" || true
+          git checkout -B "$BRANCH"
+          git add data/
+          git commit -m "抓 $ST 的郵區邊界與地名（$(date -u +%Y-%m-%d) 於 GitHub runner）"
+          git push -u origin "$BRANCH" --force-with-lease
+
+          if [ "${{ steps.build.outputs.ok }}" = "true" ]; then
+            BUILD="✅ \`make all\` 與 \`make test\` 都通過。"
+          else
+            BUILD="⚠️ **\`make all\` 或 \`make test\` 沒過。** 多半是建置那邊還要跟著改（例如缺 \`data/cities-$ST.json\`），不是資料抓錯。log 在這次 workflow run 裡。"
+          fi
+
+          {
+            echo "在 GitHub runner 上抓了 **$ST** 的 ABS 郵區邊界與地名。"
+            echo
+            echo "本機抓不到 \`geo.abs.gov.au\` 時走這條路；runner 的網路是通的。"
+            echo
+            echo "## 檔案"
+            echo
+            git show --stat --oneline HEAD | tail -n +2
+            echo
+            echo "## 建置結果"
+            echo
+            echo "$BUILD"
+            echo
+            echo "## 合併前請確認"
+            echo
+            echo "- [ ] \`make serve\` 看一下該州的形狀對不對，別州的邊界有沒有被動到"
+            echo "- [ ] 郵區數量合理（ACT 約 25、其他州數百）"
+          } > /tmp/body.md
+
+          open_prs=$(gh pr list --head "$BRANCH" --state open --json number --jq 'length')
+          if [ "$open_prs" != "0" ]; then
+            echo "同名分支已有開著的 PR（$open_prs 個），只更新分支內容。"
+          else
+            gh pr create --base main --head "$BRANCH" \
+              --title "資料：$ST 的郵區邊界與地名" \
+              --body-file /tmp/body.md \
+            || {
+              echo "::warning::PR 開不出來（多半是 repo 設定沒開放 Actions 建立 PR）。"
+              echo "分支 $BRANCH 已推上去，手動開 PR："
+              echo "https://github.com/${{ github.repository }}/compare/main...$BRANCH?expand=1"
+            }
+          fi
+          cat /tmp/body.md >> "$GITHUB_STEP_SUMMARY"

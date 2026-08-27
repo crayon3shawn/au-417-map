@@ -15,6 +15,12 @@ SRC = ("https://raw.githubusercontent.com/matthewproctor/australianpostcodes"
        "/master/australian_postcodes.csv")
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
+# 「數量異常過少 = 來源格式變了」的下限。各州都有好幾百個郵區，所以 100 是
+# 很寬鬆的哨兵；但 ACT 全境只有二十幾個，用同一個數字它永遠過不了關。
+# 逐州設下限，不要為了遷就最小的那個把所有州的哨兵一起拆掉。
+MIN_PC_DEFAULT = 100
+MIN_PC = {"act": 20}
+
 # 州境外的座標視為髒資料濾掉
 BOUNDS = {"qld": (-30, -9, 137, 155), "nsw": (-38, -28, 140, 154), "vic": (-40, -33, 140, 150),
           "sa": (-39, -25, 128, 142), "wa": (-36, -13, 112, 130), "tas": (-44, -39, 143, 149),
@@ -61,7 +67,7 @@ def main(state):
             # 搜「Manunda」這種郊區會落空（4870 有 32 個地區）。
             "names": names,
         }
-    if len(out) < 100:
+    if len(out) < MIN_PC.get(state, MIN_PC_DEFAULT):
         raise SystemExit(f"只取得 {len(out)} 個郵區，明顯過少——來源格式可能變了，已中止")
 
     path = ROOT / "data" / f"localities-{state}.json"
