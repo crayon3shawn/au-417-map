@@ -194,10 +194,10 @@ for(const s of STATES){
 
   // 標註位置由資料指定（重心會讓 ACT 疊在 NSW 上）。沒給就不標。
   if(s.label_at){
-    const fs = (x1-x0)*0.030;
-    const lbl = el('text',{class:'stlbl' + (s.url ? '' : ' dim'),
+    const fs = (x1-x0)*0.034;
+    const lbl = el('text',{class:'stlbl',
       x:px(s.label_at[0]).toFixed(2), y:py(s.label_at[1]).toFixed(2),
-      'font-size':fs, 'stroke-width':fs*0.16});
+      'font-size':fs, 'stroke-width':fs*0.07});
     lbl.textContent = s.abbr;   // 地圖上用縮寫，短又是當地慣用
     svg.appendChild(lbl);
   }

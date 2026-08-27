@@ -108,11 +108,18 @@ svg.au{position:relative;z-index:1;display:block;width:100%;height:100%;flex:1;m
 .st.nomap{cursor:default;stroke-dasharray:4 3}
 .st:not(.nomap):hover{fill-opacity:.92;filter:var(--glow)}
 /* 描邊寬度必須跟 font-size 一起用 user unit 換算：viewBox 只有 37 度寬，
-   寫死 stroke-width:3 等於 3 度，會變成蓋住標籤的一大團色塊。 */
+   寫死 stroke-width:3 等於 3 度，會變成蓋住標籤的一大團色塊。
+
+   描邊本來是字級的 16%（螢幕上 2.4px），置中的話每邊往外長 1.2px。窄體 700
+   字重在 15px 下字間距只有 1–2px，兩個字母各長 1.2px 就黏成一片——看起來是
+   一塊深色貼紙，不是描邊。降到 7% 並補上字距，讓它回到「只是把字跟底分開」。
+
+   全部用同一個亮色。原本沒有地圖的州（SA、TAS、NT）的標籤是淡的，但那三個州
+   剛好是「全境都算」——把最好的答案標成灰色是反過來的。而且灰字對州的填色只有
+   2.0–3.9 的對比，本來就讀不清楚。能不能點由虛線邊框表示，不靠標籤的明度。 */
 .stlbl{fill:var(--ink);font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
-  paint-order:stroke;stroke:var(--halo);stroke-linejoin:round;
+  letter-spacing:.09em;paint-order:stroke;stroke:var(--halo);stroke-linejoin:round;
   pointer-events:none;text-anchor:middle}
-.stlbl.dim{fill:var(--ink-3)}
 
 .statecard{display:block;text-decoration:none;color:inherit;background:var(--surface);
   border:1px solid var(--line);border-radius:5px;padding:13px 15px}
