@@ -14,7 +14,7 @@ __CSS__</style>
 <div class="devbar" id="devbar" hidden></div>
 <div class="viewport">
   <header class="topbar">
-    <span class="brand" data-t="p_title"></span>
+    <h1 class="brand" data-t="p_title"></h1>
     <span class="spacer"></span>
     <nav class="nav" id="nav" data-t-aria="nav_aria"></nav>
     <button class="lang" id="theme" type="button" data-t-aria="theme_toggle"></button>
@@ -23,17 +23,10 @@ __CSS__</style>
 
   <div class="app">
     <div class="app-rail">
-      <!-- 入口頁是門面：先說這是什麼，再給工具。標題放在左欄頂端而不是標頭裡，
-           一來標頭要留給導覽，二來這樣標題可以大一點、有呼吸感——但搜尋框仍然
-           在第一屏內，不會像放一個裝飾性 hero 那樣把工具推下去。 -->
-      <!-- 開場只有標題。原本上面有一行 eyebrow（「全澳 · 逐個郵區」）、下面有一段
-           lede（「417 打工度假簽證的集簽合格郵遞區號」）——lede 跟標題是同一句話
-           換個講法，eyebrow 則是標題已經講完的範圍。三層裡有兩層是重複的，
-           而它們合起來吃掉側欄頂端 80px，把搜尋往下推。
-           lede 裡唯一的真資訊「462 不適用」移進產業卡，跟其他規則說明放在一起。 -->
-      <section class="hero">
-        <h1 data-t="p_title"></h1>
-      </section>
+      <!-- 這裡原本有一個大標題（跟標頭是同一句 p_title）。站名移到標頭之後
+           它就成了同一句話上下講兩次，手機上尤其明顯——標頭一次、免責一段、
+           大標題又一次。左欄直接從工具開始，搜尋更快到眼前。
+           更早以前這裡還有 eyebrow 與 lede，那兩層先前就因為重複而拿掉了。 -->
 
       <!-- 結構跟各州頁的側欄一致：每一段都是「標籤 + 控制項 + 卡片」。
            兩個頁面的側欄長得一樣，使用者不必重新認一次。 -->

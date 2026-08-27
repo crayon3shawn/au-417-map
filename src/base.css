@@ -27,8 +27,10 @@ body{
   border:1.5px solid var(--accent);border-radius:3px;padding:1px 7px 0;line-height:1.25;
   flex:none;align-self:center}
 /* 入口頁左上不放「417」色塊而是完整站名：那個代號對第一次來的人沒有意義。
-   不加外框——右邊已經有一排有框的按鈕，再加一個框會被讀成第四種按鈕。 */
-.topbar .brand{font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
+   不加外框——右邊已經有一排有框的按鈕，再加一個框會被讀成第四種按鈕。
+   它是 h1（頁面上唯一的一級標題，左欄那個大標題已經因為重複而移除），
+   所以要蓋掉 .topbar h1 的 24px。用 class 選擇器，權重自然比元素選擇器高。 */
+.topbar .brand{margin:0;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
   font-size:19px;letter-spacing:.02em;line-height:20px;color:var(--ink);
   flex:none;align-self:center;white-space:nowrap}
 a.mark:hover{background:var(--accent);color:var(--paper)}

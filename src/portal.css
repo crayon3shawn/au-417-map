@@ -61,11 +61,6 @@
 .app-rail{min-width:0;min-height:0;overflow-y:auto;padding:30px 30px 34px;
   border-right:1px solid var(--line);display:flex;flex-direction:column;gap:28px}
 
-/* 標題區。比標頭裡的版本大一號、行距收緊——這是門面，要拿到份量；
-   但它跟工具在同一個捲動容器裡，所以搜尋框仍然在第一屏。 */
-.hero{display:flex;flex-direction:column;gap:9px}
-.hero h1{margin:0;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
-  font-size:clamp(30px,3.4vw,40px);letter-spacing:.01em;line-height:1.02;text-wrap:balance}
 /* 地圖直接鋪在畫布上，沒有容器。參考圖的地圖是浮在深色底上的，加一個邊框
    圓角的盒子會把它降級成「頁面上的一個元件」。 */
 .app-map{position:relative;min-width:0;min-height:0;background:var(--paper-2);display:flex}
@@ -89,7 +84,6 @@
   .app{display:flex;flex-direction:column;height:auto;min-height:0;
     border:0;margin-top:20px;gap:24px;padding:0 26px}
   .app-rail{display:contents}
-  .hero{order:0}
   /* 高度跟著澳洲的長寬比走（--au-aspect 由 portal.js 依 viewBox 設定），
      不用固定的 52vh——橫向的澳洲塞進直式窗格會上下各留一大條空白。 */
   .app-map{aspect-ratio:var(--au-aspect, 1.35);height:auto;
