@@ -84,6 +84,14 @@
   .app{display:flex;flex-direction:column;height:auto;min-height:0;
     border:0;margin-top:20px;gap:24px;padding:0 26px}
   .app-rail{display:contents}
+  /* 手機上的順序：產業選擇 → 查詢 → 地圖 → 產業定義。
+     實測（390x844）搜尋框從 466px 提到 296px，而且整張澳洲地圖進得了第一屏
+     （488–796）。桌機不套用——那裡左欄整條都在第一屏，卡片留在選擇器下面
+     才符合「標籤＋控制項＋卡片」的分組。 */
+  .blk-ind{order:0}
+  .blk-search{order:1}
+  .app-map{order:2}
+  #indnote{order:3}
   /* 高度跟著澳洲的長寬比走（--au-aspect 由 portal.js 依 viewBox 設定），
      不用固定的 52vh——橫向的澳洲塞進直式窗格會上下各留一大條空白。 */
   .app-map{aspect-ratio:var(--au-aspect, 1.35);height:auto;

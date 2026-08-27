@@ -30,13 +30,18 @@ __CSS__</style>
 
       <!-- 結構跟各州頁的側欄一致：每一段都是「標籤 + 控制項 + 卡片」。
            兩個頁面的側欄長得一樣，使用者不必重新認一次。 -->
-      <section class="blk">
+      <section class="blk blk-ind">
         <span class="eyebrow" data-t="industry_label"></span>
         <select id="ind" class="ind" data-t-aria="p_ind_aria"></select>
-        <div class="card indcard" id="indnote"></div>
       </section>
 
-      <section class="blk">
+      <!-- 產業定義卡是**參考資料**，不是控制項。桌機留在選擇器下面（「標籤＋
+           控制項＋卡片」的分組，跟州頁側欄一致）；手機上排到地圖之後——
+           它 150px 高，夾在產業選擇與搜尋框中間會把主要動作推到 466px，
+           而使用者是「讀到判定之後」才會想查定義，不是打字之前。 -->
+      <div class="card indcard" id="indnote"></div>
+
+      <section class="blk blk-search">
       <!-- 查詢欄與答案是同一個物件。你輸入的郵遞區號、跟你在問的那個，是同一個
            東西——現在畫面上它出現兩次（欄位裡一次、答案標題再一次）。合成一個
            之後答案就出現在眼睛本來就在的位置，而那四個數字（澳洲簽證世界的原子
