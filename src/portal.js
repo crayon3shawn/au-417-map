@@ -185,7 +185,7 @@ for(const s of STATES){
   // SA、TAS、NT 全境都算，塗成灰色（＝完全不算）會誤導。
   const dominant = s.none > s.work && s.none > s.rebuild ? 'none'
                  : s.work >= s.rebuild ? 'work' : 'rebuild';
-  const node = el('path',{class:'st' + (s.url ? '' : ' nomap'), d,
+  const node = el('path',{class:'st' + (s.mapped ? '' : ' nomap'), d,
     fill: CAT_COLOR[dominant], 'vector-effect':'non-scaling-stroke'});
   const t = el('title',{});
   t.textContent = s.all_work
@@ -224,7 +224,10 @@ cards.innerHTML = '';
 for(const s of STATES){
   const total = s.total || 1;
   const seg = (n, v) => n ? `<i style="width:${(n/total*100).toFixed(1)}%;background:${v}"></i>` : '';
+  // 有網址就請人去看；沒網址但這個州其實有地圖（局部預覽）就什麼都不說——
+  // 「尚無地圖」是假的，「看地圖 →」又點不動，留白才是誠實的。
   const status = s.url ? T('p_card_go')
+               : s.mapped ? ''
                : s.all_work ? T('p_card_all')
                : s.work === 0 ? T('p_card_nowork')
                : s.work <= 5 ? T('p_card_few') : T('p_card_nomap');
@@ -257,7 +260,7 @@ for(const s of STATES){
   if(s.url){ node = document.createElement('a'); node.href = s.url; node.className = 'statecard';
              if(/^https?:/.test(s.url)){ node.target = '_blank'; node.rel = 'noopener'; } }
   else { node = document.createElement('div');
-         node.className = 'statecard ' + (note ? 'off' : 'nomap'); }
+         node.className = 'statecard ' + ((note || s.mapped) ? 'off' : 'nomap'); }
   node.innerHTML = inner;
   cards.appendChild(node);
 }
@@ -499,8 +502,12 @@ function render(key, pick){
     + [(f & BIT_FIRE) ? T('tbl_bushfire') : '', (f & BIT_DISASTER) ? T('tbl_disaster') : '']
         .filter(Boolean).map(s => `<br><em class="tbl">${esc(s)}</em>`).join('')
     : '';
+  // s.mapped 而不是 s.url：這句話是在陳述「這個州有沒有地圖」，
+  // 而不是「這次建置有沒有它的網址」。局部的 Artifact 預覽只發了部分州頁時，
+  // 用 url 判斷會對 NSW 說「還沒做地圖」——那是假的，而且使用者看得到。
   const link = s.url
     ? `<a class="golink" href="${s.url}#pc=${parseInt(v,10)}"${/^https?:/.test(s.url) ? ' target="_blank" rel="noopener"' : ''}>${esc(T('p_golink', {state:stLabel(s)}))}</a>`
+    : s.mapped ? ''
     : `<p class="nomap">${esc(T('p_nomap_line', {state:stLabel(s)}))}</p>`;
   // 版面跟州頁的答案面板一模一樣：郵遞區號 38px 等寬，判定色走左邊色帶與判定字。
   // 兩頁共用同一個 .detail/.ans 結構，使用者從入口頁點進州頁不必重新認一次。
