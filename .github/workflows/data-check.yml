@@ -94,6 +94,10 @@ jobs:
           BRANCH="data/postcodes-$(date -u +%Y%m%d)"
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # 同一天跑第二次時遠端已有同名分支。actions/checkout 預設只抓一個 ref，
+          # 沒先 fetch 的話 --force-with-lease 會因為 stale info 失敗，
+          # 連帶把整個 job 弄紅——那是假警報，不是官網出事。
+          git fetch origin "$BRANCH" || true
           git checkout -B "$BRANCH"
           git add data/postcodes.json
           git commit -m "郵區資料：官網有變動（$(date -u +%Y-%m-%d) 自動抓取）"
