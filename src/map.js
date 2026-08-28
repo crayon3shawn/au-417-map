@@ -1070,17 +1070,13 @@ function applyLang(){
   // 出處整段與落款。日期與無邊界郵區數一律取自 META——樣板裡再寫一份的話，
   // 官網更新後那份會安靜地開始說謊。
   const a = (url, text) => `<a href="${url}" target="_blank" rel="noopener">${esc(text)}</a>`;
-  document.getElementById('srctext').innerHTML = T('map_src', {
-    ha: a(META.source_url, T('map_ha_link')),
-    da: a('https://www.disasterassist.gov.au/find-a-disaster', T('map_da_link')),
-    date: META.page_date,
-  })
-    // 數量為 0 時整句不要出現——「有 0 個郵區沒有對應面」是句不通的話。
-    // 邊界改成分級抓取之後，有些州確實一個都不缺了。
-    + (META.n_no_poly ? ' ' + esc(T('map_strays', {n: META.n_no_poly})) : '')
-    + ' ' + esc(T('not_assistance'));
-  document.getElementById('stamp').textContent =
-    T('map_stamp', {d: META.page_date, b: META.built_at});
+  // 頁尾由共用的 renderFoot 產生。map_strays 是這一頁特有的資料品質註記
+  // （有幾個郵區沒有對應的多邊形，以小點顯示），接在免責後面。
+  renderFoot(document.getElementById('foot'), {
+    T, esc, sourceUrl: META.source_url,
+    pageDate: META.page_date, builtAt: META.built_at,
+    extra: META.n_no_poly ? [esc(T('map_strays', {n: META.n_no_poly}))] : [],
+  });
   // 導覽的「全澳入口」也要換
   const home = document.querySelector('#nav a.home');
   if(home) home.textContent = '← ' + T('nav_home');

@@ -12,7 +12,7 @@ import sys, json, pathlib, collections
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from lib import expand, load, STATES
 from build import (LABELS, VISA, AREA_BITS, REBUILD_MASK, DEFAULT_INDUSTRY, STATE_ORDER, tokens_css,
-                   national_flags, national_names, write_search_index, TARGET, theme_js, lamp_js, url_js,
+                   national_flags, national_names, write_search_index, TARGET, theme_js, lamp_js, url_js, foot_js,
                    work_mask, site_links, robots_meta, CHANNEL, SITE_URL)
 
 ROOT = pathlib.Path(__file__).resolve().parent
@@ -178,6 +178,7 @@ def main():
                          ("__TOKENS__", tokens_css()),
                          ("__THEME__", theme_js()),
                          ("__URL__", url_js()),
+        ("__FOOT__", foot_js()),
                          ("__LAMP__", lamp_js()),
                          ("__CSS__", part("portal.css")),
                          ("__JS__", part("portal.js").replace("// @ts-check\n", "", 1)),

@@ -12,7 +12,9 @@ SRC = ROOT / "src"
 STRINGS = json.loads((ROOT / "data" / "strings.json").read_text(encoding="utf-8"))["s"]
 
 HTML = ["template.html", "portal.html"]
-JS = ["map.js", "portal.js"]
+# foot.js 是兩頁共用的頁尾，也帶介面文字——漏掉它的話，頁尾的字可以
+# 寫死中文而不被抓到，而那正是這整組測試要防的事。
+JS = ["map.js", "portal.js", "foot.js"]
 
 CJK = re.compile(r"[一-鿿]")
 

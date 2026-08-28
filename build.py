@@ -254,6 +254,12 @@ def theme_js():
     return (ROOT / "src" / "theme.js").read_text(encoding="utf-8")
 
 
+def foot_js():
+    """頁尾（免責／出處／戳記）。兩頁共用——各寫一份的話，改了一邊不會有任何
+    錯誤訊息，只會變成兩頁的免責聲明說不一樣的話。"""
+    return (ROOT / "src" / "foot.js").read_text(encoding="utf-8")
+
+
 def url_js():
     """可分享的網址（?ind=&pc=）。兩頁共用同一份格式——各寫一份的話，改了一邊
     只會變成入口頁貼出來的連結在州頁打不開，不會有錯誤訊息。"""
@@ -408,6 +414,7 @@ def main(state):
                          ("__TOKENS__", tokens_css()),
                          ("__THEME__", theme_js()),
                          ("__URL__", url_js()),
+                         ("__FOOT__", foot_js()),
                          ("__CSS__", part("map.css")),
                          ("__JS__", part("map.js").replace("// @ts-check\n", "", 1)),
                          # JS 一跑就會依語言改寫 document.title，這裡只是後備，

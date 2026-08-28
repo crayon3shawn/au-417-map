@@ -186,3 +186,29 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   font-size:12.5px;letter-spacing:.06em;line-height:1.5;
   background:var(--c-rebuild);color:#1a1205}
 .devbar a{color:#1a1205;text-decoration:underline}
+
+/* ---- 頁尾 ---- */
+/* 免責、資料出處、日期戳記。兩頁共用，內容由 src/foot.js 產生。
+   這裡原本是五個散落的區塊（標頭下的細帶與免責、側欄的「出處」、文件段的
+   「出處與查證」與「資料出處」四點），彼此重複——同一個 Home Affairs 網址
+   在入口頁出現過四次，用四個不同的名字。合成一塊之後只講一次。
+
+   出處是清單不是散文：使用者要的是「哪來的、點得到嗎」，不是抓取過程。 */
+.foot{border-top:1px solid var(--line);background:var(--surface);
+  padding:26px 24px 32px;display:flex;flex-direction:column;gap:16px}
+.foot-note{margin:0;max-width:78ch;font-size:12.5px;line-height:1.7;color:var(--ink-2)}
+.foot-src{display:flex;flex-direction:column;gap:7px}
+.foot-src ul{margin:0;padding:0;list-style:none;
+  display:flex;flex-wrap:wrap;gap:7px 22px}
+.foot-src li{font-size:12.5px;line-height:1.4}
+/* 連結顏色跟站上其他地方一致（.disclaim a／.indcard .bd a 同一套）——
+   不寫的話會吃到瀏覽器預設的藍紫色，在這個配色裡特別突兀。 */
+.foot-src a{color:var(--ink-2);text-decoration:underline;
+  text-decoration-color:var(--line-2);text-underline-offset:3px}
+.foot-src a:hover{color:var(--accent);text-decoration-color:var(--accent)}
+.foot-src a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* 溯源戳記：等寬、寬字距的細行。它是「這份資料哪來的、什麼時候的」，
+   不是要操作的東西，所以壓到最小但仍然看得到。 */
+.foot-stamp{margin:0;font-family:"IBM Plex Mono",monospace;font-size:11px;
+  letter-spacing:.06em;color:var(--ink-3)}
+@media (max-width:900px){ .foot{padding:22px 26px 28px} }

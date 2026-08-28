@@ -38,8 +38,8 @@
       "zh": "穩定版"
     },
     "disclaimer": {
-      "en": "This is not an official government site. Boundaries are generalised ABS data, for orientation only. Check the official Home Affairs page again before you apply.",
-      "zh": "本站非官方網站。郵區界線為 ABS 概化資料，僅供判讀；送件前請再上 Home Affairs 官網確認一次。"
+      "en": "Not an official website; boundaries are for orientation only. Go by the official Home Affairs page before you apply.",
+      "zh": "本站非官方網站，郵區界線僅供判讀。送件前請以 Home Affairs 官網為準。"
     },
     "enc_act_body": {
       "en": "General work counts nowhere in the ACT — Regional Australia does not list it. The one exception is 2618 Hall, which falls inside NSW's regional range 2618–2739.",
@@ -88,6 +88,34 @@
     "facts_title": {
       "en": "Three things that matter",
       "zh": "三個重點"
+    },
+    "foot_disclaim": {
+      "en": "This is not an official website and does not constitute immigration assistance — for an individual case, consult a registered migration agent (MARA) or a legal practitioner. Postcode boundaries are ABS generalised outlines, for orientation only, not legal boundaries. The industry-to-area mapping is compiled by hand: the official page states it as prose, not as a table. Always go by the official page before you apply.",
+      "zh": "本站非官方網站，也不構成移民協助（immigration assistance）——個案問題請洽註冊移民代辦（MARA）或法律執業者。郵區界線是 ABS 的概化資料，僅供判讀，不是法定界線。產業與地區表的對應是人工整理的：官網把它寫成散文，沒有做成表。送件前務必以官方頁面為準。"
+    },
+    "foot_src_abs": {
+      "en": "ABS — ASGS 2021 Postal Areas",
+      "zh": "ABS — ASGS 2021 Postal Areas"
+    },
+    "foot_src_da": {
+      "en": "Disaster Assist — disaster declarations",
+      "zh": "Disaster Assist — 災害宣告查詢"
+    },
+    "foot_src_h": {
+      "en": "Sources",
+      "zh": "資料出處"
+    },
+    "foot_src_ha": {
+      "en": "Home Affairs — Specified work (417)",
+      "zh": "Home Affairs — Specified work (417)"
+    },
+    "foot_src_pc": {
+      "en": "Australian Postcodes — localities and coordinates",
+      "zh": "Australian Postcodes — 郵區地名與座標"
+    },
+    "foot_stamp": {
+      "en": "Home Affairs {d} · built {b}",
+      "zh": "Home Affairs {d} · 建置 {b}"
     },
     "hits_found": {
       "en": "{n} matches",
@@ -145,14 +173,6 @@
       "en": "Loading place names…",
       "zh": "地名索引載入中…"
     },
-    "map_da_link": {
-      "en": "Disaster Assist — Find a disaster",
-      "zh": "Disaster Assist — Find a disaster"
-    },
-    "map_ha_link": {
-      "en": "Home Affairs — Specified work (subclass 417)",
-      "zh": "Home Affairs — Specified work (subclass 417)"
-    },
     "map_reg_clear": {
       "en": "Clear outline",
       "zh": "清除框選"
@@ -164,14 +184,6 @@
     "map_role": {
       "en": "map",
       "zh": "地圖"
-    },
-    "map_src": {
-      "en": "This map covers <b>417</b> (Working Holiday) only; 462 has different industry rules and is not represented. The postcode lists are taken verbatim from {ha} (the page states it was last updated {date}). Boundaries are ABS Postal Areas 2021 generalised outlines — for orientation only, not legal boundaries. Check the extent and dates of individual disaster declarations against {da}. Always go by the official page before you apply.",
-      "zh": "本圖只處理 <b>417</b>（Working Holiday）；462 的產業規則不同，不適用。郵遞區號清單逐字取自 {ha}（頁面標示更新於 {date}）。郵區範圍為 ABS Postal Areas 2021 概化邊界，僅供判讀，非法定界線；個別災害的宣告範圍與日期請對 {da} 查證。送件前務必以官方頁面為準。"
-    },
-    "map_stamp": {
-      "en": "Postcode lists: Home Affairs {d} · Boundaries: ABS POA 2021 · Built {b}",
-      "zh": "郵區清單 Home Affairs {d} · 邊界 ABS POA 2021 · 建置 {b}"
     },
     "map_strays": {
       "en": "{n} eligible postcodes have no ABS boundary (mostly PO Box ranges) and are shown as dots.",
@@ -192,10 +204,6 @@
     "nav_home": {
       "en": "All of Australia",
       "zh": "全澳入口"
-    },
-    "not_assistance": {
-      "en": "This site does not provide immigration assistance. For advice on your own case, consult a registered migration agent (MARA) or a legal practitioner.",
-      "zh": "本站不構成移民協助（immigration assistance），個案問題請洽註冊移民代辦（MARA）或法律執業者。"
     },
     "official_def": {
       "en": "See the official {tables} list →",
@@ -269,13 +277,9 @@
       "en": "postcodes · {pct}%",
       "zh": "個 · {pct}%"
     },
-    "p_da_link": {
-      "en": "Disaster Assist",
-      "zh": "Disaster Assist"
-    },
     "p_disclaim": {
-      "en": "This is not an official government site. Boundaries are generalised ABS data, for orientation only. Check {link} again before you apply.",
-      "zh": "本站非官方網站。郵區界線為 ABS 概化資料，僅供判讀；送件前請再上 {link} 確認一次。"
+      "en": "Not an official website; boundaries are for orientation only. Go by {link} before you apply.",
+      "zh": "本站非官方網站，郵區界線僅供判讀。送件前請以 {link} 為準。"
     },
     "p_eyebrow_dist": {
       "en": "Postcode breakdown",
@@ -284,10 +288,6 @@
     "p_golink": {
       "en": "Open the {state} map →",
       "zh": "在{state}地圖上看 →"
-    },
-    "p_ha_link": {
-      "en": "Home Affairs — Specified work",
-      "zh": "Home Affairs — Specified work"
     },
     "p_hint": {
       "en": "{n} postcodes searchable, covering all of Australia. {m} states have maps so far.",
@@ -357,14 +357,6 @@
       "en": "417 only",
       "zh": "只看 417"
     },
-    "p_note4_b": {
-      "en": "This site covers <b>417</b> (Working Holiday) only. The postcode lists are taken verbatim from {ha}. Check the extent and dates of individual disaster declarations against {da}. Always go by the official page before you apply.",
-      "zh": "本站只處理 <b>417</b>（Working Holiday）。郵區清單逐字取自 {ha}。個別災害的宣告範圍與日期請對 {da} 查證。送件前務必以官方頁面為準。"
-    },
-    "p_note4_h": {
-      "en": "Sources and verification",
-      "zh": "出處與查證"
-    },
     "p_official_page": {
       "en": "the official Home Affairs page",
       "zh": "Home Affairs 官方頁面"
@@ -372,26 +364,6 @@
     "p_official_text": {
       "en": "the Home Affairs wording",
       "zh": "Home Affairs 原文"
-    },
-    "p_prov1": {
-      "en": "<b>The five postcode lists</b> — parsed verbatim from the Home Affairs page, not retyped by hand. The date shown is the date the official page itself carries.",
-      "zh": "<b>五張郵區表</b>——從 Home Affairs 頁面逐字解析，不是人工轉錄。頁面上標的日期就是官網自己的更新日期。"
-    },
-    "p_prov2": {
-      "en": "<b>Postcode boundaries</b> — the Australian Bureau of Statistics’ official ASGS 2021 Postal Areas generalised layer.",
-      "zh": "<b>郵區邊界</b>——ABS（澳洲統計局）官方 ASGS 2021 Postal Areas 概化圖層。"
-    },
-    "p_prov3": {
-      "en": "<b>The industry mapping</b> — <strong>the one part compiled by hand</strong>. The official page states it in prose (\"construction in regional Australia\"), never as a table, so it was read and transcribed item by item.",
-      "zh": "<b>產業對應表</b>——<strong>這是唯一人工整理的部分</strong>。官網把它寫成散文（「construction in regional Australia」這種句子），沒有做成表，所以是我讀了逐條整理的。"
-    },
-    "p_prov4": {
-      "en": "<b>The three verdicts</b> (counts / recovery only / does not count) are computed from the two sources above. They are not a separate dataset.",
-      "zh": "<b>三分類</b>（就算／只有重建算／不算）——由上面兩者算出來的，不是另一份資料。"
-    },
-    "p_prov_h3": {
-      "en": "Data sources",
-      "zh": "資料出處"
     },
     "p_q_aria": {
       "en": "Enter a postcode or place name",
@@ -445,10 +417,6 @@
       "en": "<b>{same} use the same Regional Australia list as construction</b>, so the verdicts are identical — this map works just as well for farm, meatworks and mine workers. Tourism and hospitality differs most: it uses Remote and Northern, leaving just {tour} usable postcodes against Regional’s {reg} — roughly {ratio} times fewer.",
       "zh": "<b>{same}跟建築吃同一張 Regional Australia 表</b>，判斷完全相同——所以這張地圖對做農場、肉廠、礦區的人一樣有效。觀光餐旅差最多：它看的是 Remote 與 Northern，可用郵區只有 {tour} 個，不到 Regional（{reg} 個）的 {ratio} 分之一。"
     },
-    "p_stamp": {
-      "en": "Postcode lists: Home Affairs {d} · Boundaries: ABS/open data · Built {b}",
-      "zh": "郵區清單 Home Affairs {d} · 州界 ABS/公開資料 · 建置 {b}"
-    },
     "p_state_all": {
       "en": "{abbr} {name}: all eligible, {w} postcodes",
       "zh": "{abbr} {name}：全境都算，{w} 個郵區"
@@ -496,10 +464,6 @@
     "showing": {
       "en": "Showing",
       "zh": "目前顯示"
-    },
-    "source_title": {
-      "en": "Sources",
-      "zh": "出處與查證"
     },
     "subtitle": {
       "en": "Postcode eligibility and disaster declarations",
