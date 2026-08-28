@@ -18,6 +18,8 @@
 */
 
 :root{
+  /* 入口頁地圖的州填色。單色——見 portal.js drawStates 的註解 */
+  --au-fill:#D6D0C6;
   /* 底色與面板 */
   --paper:#F7F5F2;
   --paper-2:#EDEAE5;
@@ -59,6 +61,8 @@
 
 /* 系統偏好深色，且使用者沒有明確選淺色 */
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  /* 入口頁地圖的州填色。單色——見 portal.js drawStates 的註解 */
+  --au-fill:#31313A;
   /* 底色與面板 */
   --paper:#111113;
   --paper-2:#18181B;
@@ -100,6 +104,8 @@
 
 /* 使用者明確選了深色 */
 :root[data-theme="dark"]{
+  /* 入口頁地圖的州填色。單色——見 portal.js drawStates 的註解 */
+  --au-fill:#31313A;
   /* 底色與面板 */
   --paper:#111113;
   --paper-2:#18181B;

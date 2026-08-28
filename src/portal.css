@@ -104,11 +104,14 @@
 /* position+z-index 不是裝飾：.lamp 是絕對定位的，沒有這一行的話光源會依照
    繪製順序蓋在這張靜態排版的 svg 上面，變成整張圖被一團橘光糊住。 */
 svg.au{position:relative;z-index:1;display:block;width:100%;height:100%;flex:1;min-width:0}
-.st{cursor:pointer;stroke:var(--edge);stroke-width:1;stroke-linejoin:round;fill-opacity:var(--fill-a)}
+.st{cursor:pointer;fill:var(--au-fill);stroke:var(--edge);stroke-width:1;
+  stroke-linejoin:round;fill-opacity:var(--fill-a)}
 /* 「沒有地圖」用虛線邊框表示，不用透明度——降透明度會被讀成「比較不合格」，
    而 SA、TAS、NT 全境都算，那樣講就反了。 */
 .st.nomap{cursor:default;stroke-dasharray:4 3}
-.st:not(.nomap):hover{fill-opacity:.92;filter:var(--glow)}
+/* hover 換成強調色而不是加深同一個顏色：單色之後「這一塊可以點」是這張圖
+   唯一要傳達的互動訊息，加深不夠明顯。 */
+.st:not(.nomap):hover{fill:var(--accent);fill-opacity:.92;filter:var(--glow)}
 /* 描邊寬度必須跟 font-size 一起用 user unit 換算：viewBox 只有 37 度寬，
    寫死 stroke-width:3 等於 3 度，會變成蓋住標籤的一大團色塊。
 

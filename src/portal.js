@@ -183,12 +183,17 @@ for(const s of STATES){
   const rings = DATA.outlines[s.key];
   if(!rings || !rings.length) continue;   // 空陣列是 truthy，要另外擋
   const d = rings.map(r => r.map(([lo,la],i)=>(i?'L':'M')+px(lo).toFixed(2)+' '+py(la).toFixed(2)).join('')+'Z').join('');
-  // 顏色一律反映該州的實際身分。有沒有地圖只影響能不能點，不能拿顏色表示——
-  // SA、TAS、NT 全境都算，塗成灰色（＝完全不算）會誤導。
-  const dominant = s.none > s.work && s.none > s.rebuild ? 'none'
-                 : s.work >= s.rebuild ? 'work' : 'rebuild';
+  // 全部同一個顏色。這張圖的工作是**導覽**——點哪一州進哪一張地圖，
+  // 以及哪幾州沒有地圖（虛線邊框）。
+  //
+  // 原本按「優勢類別」上色（該州最多的是 work 還是 rebuild），但整州取一個
+  // 代表色沒有可用的資訊：一個州內部本來就混雜，塗成綠的不代表你那塊算，
+  // 塗成琥珀也不代表不算——真正的答案要點進去看那一州的地圖，或直接查郵區。
+  // 拿顏色講一個使用者不能據以行動的統計量，只會讓人誤以為那是判定。
+  //
+  // 填色交給 CSS（.st），不寫在屬性上——CSS 才能處理 hover 與深淺色主題。
   const node = el('path',{class:'st' + (s.mapped ? '' : ' nomap'), d,
-    fill: CAT_COLOR[dominant], 'vector-effect':'non-scaling-stroke'});
+    'vector-effect':'non-scaling-stroke'});
   const t = el('title',{});
   t.textContent = s.all_work
     ? T('p_state_all', {abbr:s.abbr, name:stLabel(s), w:s.work})
