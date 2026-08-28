@@ -64,7 +64,6 @@
 /* 地圖直接鋪在畫布上，沒有容器。參考圖的地圖是浮在深色底上的，加一個邊框
    圓角的盒子會把它降級成「頁面上的一個元件」。 */
 .app-map{position:relative;min-width:0;min-height:0;background:var(--paper-2);display:flex}
-.app .disclaim{margin:0}
 .doc{padding-top:26px}
 @media (max-width:900px){
   /* 手機不鎖一屏——內容要能自然往下排 */
@@ -73,7 +72,6 @@
      大概往下一千五百像素——那就等於沒放了。 */
   .viewport{height:auto;min-height:0;display:flex;flex-direction:column}
   .viewport .topbar{order:0}
-  .viewport .disclaim{order:1}
   .viewport .app{order:2}
   /* 左欄用 display:contents 退出版面，它底下三個區塊就直接成為
      .app 的子項——DOM 順序（產業 → 查詢 → 詳情 → 地圖）本身就是要的順序，

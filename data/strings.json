@@ -37,10 +37,6 @@
       "en": "stable site",
       "zh": "穩定版"
     },
-    "disclaimer": {
-      "en": "Not an official website; boundaries are for orientation only. Go by the official Home Affairs page before you apply.",
-      "zh": "本站非官方網站，郵區界線僅供判讀。送件前請以 Home Affairs 官網為準。"
-    },
     "enc_act_body": {
       "en": "General work counts nowhere in the ACT — Regional Australia does not list it. The one exception is 2618 Hall, which falls inside NSW's regional range 2618–2739.",
       "zh": "一般工作全境都不算——Regional Australia 的名單上沒有 ACT。唯一例外是 2618 Hall，它落在 NSW 的 regional 區間 2618–2739 裡。"
@@ -90,8 +86,8 @@
       "zh": "三個重點"
     },
     "foot_disclaim": {
-      "en": "This is not an official website and does not constitute immigration assistance — for an individual case, consult a registered migration agent (MARA) or a legal practitioner. Postcode boundaries are ABS generalised outlines, for orientation only, not legal boundaries. The industry-to-area mapping is compiled by hand: the official page states it as prose, not as a table. Always go by the official page before you apply.",
-      "zh": "本站非官方網站，也不構成移民協助（immigration assistance）——個案問題請洽註冊移民代辦（MARA）或法律執業者。郵區界線是 ABS 的概化資料，僅供判讀，不是法定界線。產業與地區表的對應是人工整理的：官網把它寫成散文，沒有做成表。送件前務必以官方頁面為準。"
+      "en": "This is not an official website and does not constitute immigration assistance — for an individual case, consult a registered migration agent (MARA) or a legal practitioner. Postcode boundaries are for orientation only, not legal boundaries. Go by the official Home Affairs page before you apply.",
+      "zh": "本站非官方網站，也不構成移民協助（immigration assistance）——個案問題請洽註冊移民代辦（MARA）或法律執業者。郵區界線僅供判讀，不是法定界線。送件前請以 Home Affairs 官方頁面為準。"
     },
     "foot_src_abs": {
       "en": "ABS — ASGS 2021 Postal Areas",
@@ -277,10 +273,6 @@
       "en": "postcodes · {pct}%",
       "zh": "個 · {pct}%"
     },
-    "p_disclaim": {
-      "en": "Not an official website; boundaries are for orientation only. Go by {link} before you apply.",
-      "zh": "本站非官方網站，郵區界線僅供判讀。送件前請以 {link} 為準。"
-    },
     "p_eyebrow_dist": {
       "en": "Postcode breakdown",
       "zh": "郵區分布"
@@ -356,10 +348,6 @@
     "p_note3_h": {
       "en": "417 only",
       "zh": "只看 417"
-    },
-    "p_official_page": {
-      "en": "the official Home Affairs page",
-      "zh": "Home Affairs 官方頁面"
     },
     "p_official_text": {
       "en": "the Home Affairs wording",

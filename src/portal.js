@@ -545,8 +545,6 @@ function applyLang(){
 
   // 帶連結或變數的句子，佔位符在 strings.json 裡，這裡才組得起來
   const a = (url, text) => `<a href="${url}" target="_blank" rel="noopener">${esc(text)}</a>`;
-  document.getElementById('disclaim').innerHTML =
-    T('p_disclaim', {link: a(META.source_url, T('p_official_page'))});
   document.getElementById('basisnote').innerHTML =
     T('p_basis_note2', {link: a(META.source_url, T('p_official_text'))});
   renderFoot(document.getElementById('foot'), {

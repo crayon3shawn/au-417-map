@@ -80,12 +80,8 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   color:var(--ink-3);white-space:normal;overflow-wrap:anywhere}
 /* 公開網址看起來比私人連結「官方」，免責要在看得到的地方，不能只放頁尾。
    但它不需要一整條反白的底——那個重量會讓它比下面的工具還搶眼。 */
-.disclaim{margin:0;padding:8px 22px;font-size:12.5px;line-height:1.5;color:var(--ink-3);
-  border-bottom:1px solid var(--line)}
 /* 沒有這條的話官方連結會拿到瀏覽器預設的藍——在近黑底上刺眼，
    而且是全站唯一一個不在色票裡的顏色。 */
-.disclaim a{color:var(--ink-2)}
-.disclaim a:hover{color:var(--accent)}
 .blk{display:flex;flex-direction:column;gap:10px}
 
 /* 產業決定整張圖的意思，所以放在搜尋上面 */
@@ -201,7 +197,7 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .foot-src ul{margin:0;padding:0;list-style:none;
   display:flex;flex-wrap:wrap;gap:7px 22px}
 .foot-src li{font-size:12.5px;line-height:1.4}
-/* 連結顏色跟站上其他地方一致（.disclaim a／.indcard .bd a 同一套）——
+/* 連結顏色跟站上其他地方一致（.indcard .bd a 同一套）——
    不寫的話會吃到瀏覽器預設的藍紫色，在這個配色裡特別突兀。 */
 .foot-src a{color:var(--ink-2);text-decoration:underline;
   text-decoration-color:var(--line-2);text-underline-offset:3px}
