@@ -33,7 +33,7 @@ make serve    # 建置並在 http://127.0.0.1:8731/index.html 預覽
 ```bash
 CHANNEL=dev make all      # 建出帶開發版橫幅的一份
 make serve                # http://127.0.0.1:8731/index.html
-make test                 # 73 項，不連網
+make test                 # 103 項，不連網
 git push origin main      # 確認沒問題才推
 ```
 
@@ -66,10 +66,10 @@ SSL/TLS 模式要選 **Full**，選 Flexible 會跟 Pages 的強制 HTTPS 打成
 
 | 頁面 | 內容 | 大小 |
 |---|---|---|
-| `dist/index.html` | **入口頁**：全澳郵區查詢 + 各州導覽 | 0.10 MB |
-| `dist/qld.html` | 昆士蘭地圖 | 1.12 MB |
-| `dist/nsw.html` | 新南威爾斯地圖 | 1.43 MB |
-| `dist/vic.html` | 維多利亞地圖 | 0.89 MB |
+| `dist/index.html` | **入口頁**：全澳郵區查詢 + 各州導覽 | 0.17 MB |
+| `dist/qld.html` | 昆士蘭地圖 | 1.13 MB |
+| `dist/nsw.html` | 新南威爾斯地圖 | 1.48 MB |
+| `dist/vic.html` | 維多利亞地圖 | 1.15 MB |
 | `dist/wa.html` | 西澳地圖 | 0.75 MB |
 
 **SA、TAS、NT 不做地圖。** 官網原文就是「All postcodes are eligible」，
@@ -89,7 +89,8 @@ SSL/TLS 模式要選 **Full**，選 Flexible 會跟 Pages 的強制 HTTPS 打成
   不知道郵區號碼，所以地名搜尋是主要入口。地名有多筆時會列出候選，
   每筆前面的色點就是那個郵區的判定結果。
 * **導覽列**——回入口頁、切到其他州。Artifact 在沙箱 iframe 裡不能改上層網址，
-  所以一律開新分頁；之後放上 GitHub Pages 可改成相對路徑原地跳轉。
+  所以 `TARGET=artifact` 建出來的版本一律開新分頁。GitHub Pages 版用相對路徑
+  （`nsw.html`），同站台原地跳轉。
 * **觸控**——一指平移、**兩指捏合縮放**。CSS 的 `touch-action:none` 關掉了瀏覽器
   原生手勢，所以捏合是自己實作的，否則手機上只能用 ＋／− 按鈕。
 * **滑鼠**——滾輪縮放、拖曳平移。
@@ -411,6 +412,8 @@ make test
 | `tests/test_expand.py` | 郵區範圍字串的解析。解析錯一個範圍，合格郵區就默默變了，這是風險最高的一段 |
 | `tests/test_data.py` | 凍結資料的結構完整性，加上幾個定錨事實（凱恩斯是 regional、雪梨不在任何清單上）|
 | `tests/test_build.py` | 郵件中心郵區的判定、path 產生、bbox |
+| `tests/test_portal.py` | 入口頁索引的已知陷阱（北極、雪梨信箱郵區），以及「有沒有地圖」不准用「有沒有網址」判斷 |
+| `tests/test_diff.py` | 釘住什麼**不該**算官網變動——只有 `fetched_at` 不同、只改寫法而郵區相同、分號換逗號 |
 | `tests/test_smoke.py` | **把產出頁面的腳本在 node 裡真的跑一遍** |
 
 刻意不釘死郵區數量——官網本來就會改，釘數字只會在正常更新時假警報。
