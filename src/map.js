@@ -98,6 +98,15 @@ over.appendChild(grat);
 // 判定取決於選了哪個產業，所以切換產業只要換一組遮罩重新上色。
 const BIT_FIRE = 8, BIT_DISASTER = 16, REBUILD = BIT_FIRE | BIT_DISASTER;
 
+// 目前的地圖檢視：work（跟著產業走）／fire／flood。宣告要在 colorOf 之前——
+// let 有 TDZ，而初始化時就會走到上色。
+// 記在 localStorage：看過災害表的人多半下次還想從那裡看。
+let view = 'work';
+try {
+  const v = localStorage.getItem('mapview');
+  if(v === 'fire' || v === 'flood' || v === 'work') view = v;
+} catch (_) {}
+
 let industry = META.industries.find(i => i.key === META.industry) || META.industries[0];
 const workMask = () => industry.mask;
 
@@ -118,11 +127,18 @@ const sayOf = f =>
   : (f & BIT_DISASTER)                  ? T('cat_flood_only')
                                         : T('cat_none');
 
-// 細分只作用在 rebuild：災害種類唯有在「重建是唯一路徑」時才影響判斷。
-function colorOf(f, split){
+// 地圖一次只畫一張表，所以只有兩色：在這張表上、不在。
+// 三張表各有自己的「在」色，檢視之間才分得出來——但同一個畫面上永遠只有兩種。
+const VIEW_BIT   = {work:0, fire:BIT_FIRE, flood:BIT_DISASTER};   // work 用產業遮罩
+const VIEW_COLOR = {work:'var(--c-work)', fire:'var(--c-fire)', flood:'var(--c-flood)'};
+const inView = f => !!(f & (view === 'work' ? workMask() : VIEW_BIT[view]));
+function colorOf(f){ return inView(f) ? VIEW_COLOR[view] : 'var(--c-none)'; }
+
+// 詳情面板與搜尋結果的色點走的是**判定**，不是目前的檢視：那裡問的是
+// 「這個郵區算不算」，跟你正在看哪一張表無關。切換檢視不該讓答案變色。
+function verdictColor(f){
   if(f & workMask()) return 'var(--c-work)';
   if(!(f & REBUILD)) return 'var(--c-none)';
-  if(!split) return 'var(--c-rebuild)';
   return ((f & BIT_FIRE) && (f & BIT_DISASTER)) ? 'var(--c-both)'
        : (f & BIT_FIRE) ? 'var(--c-fire)' : 'var(--c-flood)';
 }
@@ -155,7 +171,7 @@ const flagOf = new Map(Object.entries(FLAGS).map(([pc, f]) => [+pc, f]));
 for(const pc of Object.keys(POA).map(Number).sort((a,b)=>a-b)){
   const f = flagOf.get(pc) || 0;
   const cat = catOf(f);
-  const node = el('path',{class:'poa ' + cat, d:POA[pc], fill:colorOf(f, false),
+  const node = el('path',{class:'poa ' + cat, d:POA[pc], fill:colorOf(f),
     'vector-effect':'non-scaling-stroke', 'pointer-events':'all'});
   node.__pc = pc;
   node.__f = f;
@@ -208,6 +224,31 @@ for(const [name, lon, lat, tier, side] of CITIES){
   cityG.appendChild(g);
   cityNodes.push(g);
 }
+// ---- 飛地標記 ----
+// ACT 整個被 NSW 包住，而郵區面逐州抓，所以那裡是一塊空白。空白用的是背景色
+// 不是「不算」的灰，讀起來像資料壞掉。放一個標記把它變成「有標示、有解釋的
+// 區域」——但**不畫界線**，理由寫在 build.py 的 ENCLAVES。
+// 虛線底線跟入口頁「沒有地圖」的州用同一套語彙（stroke-dasharray）。
+// 文案查表用字面鍵，不要拼字串：i18n 測試掃的是字面上的 T('…')，
+// 拼出來的鍵會繞過「鍵存不存在」與「有沒有孤兒鍵」兩道檢查。
+// 多一個飛地就多一筆，明寫比動態組合安全。
+const ENC_TEXT = {
+  act: () => ({mark: T('enc_act_mark'), say:  T('enc_act_say'), body: T('enc_act_body'),
+               fire: T('enc_act_fire'), why:  T('enc_act_why')}),
+};
+
+const encG = el('g',{class:'enclaves'}); over.appendChild(encG);
+const encNodes = [];
+for(const e of (META.enclaves || [])){
+  const g = el('g',{class:'enc'});
+  const t = el('text',{x:px(e.lon), y:py(e.lat), 'text-anchor':'middle'});
+  t.textContent = ENC_TEXT[e.key]().mark;
+  g.appendChild(t);
+  g.__e = {t, key:e.key};
+  encG.appendChild(g);
+  encNodes.push(g);
+}
+
 // 選取環要蓋在城市標記上面——市區郵區的環幾乎一定會跟城市點重疊，
 // 被蓋住就失去意義。over 的子節點按加入順序疊，所以搬到最後。
 over.appendChild(ringG);
@@ -226,6 +267,11 @@ function apply(){
     c.t.setAttribute('x', c.cx + SZ.gap*c.side/k);
     c.t.setAttribute('y', c.cy + SZ.lbl1*0.26/k);
     if(c.tier===2) g.classList.toggle('on', k >= 2);
+  }
+  // 飛地標記的字級也是螢幕像素定義的，跟城市一樣要除以 k
+  for(const g of encNodes){
+    g.__e.t.setAttribute('font-size', SZ.lbl1 / k);
+    g.__e.t.setAttribute('stroke-width', SZ.halo * 1.6 / k);
   }
   for(const s of strayG.children) s.setAttribute('r', SZ.stray/k);
   ringHalo.setAttribute('r', SZ.ring/k);
@@ -287,11 +333,17 @@ function settleView(withZoom){
 if(document.fonts && document.fonts.ready) document.fonts.ready.then(() => settleView(false));
 else settleView(false);
 // resize 事件會連發，重算視野要量 getBBox，所以壓一下頻率
-let resizeTimer = 0;
+let resizeTimer = 0, lastVW = innerWidth;
 function onResize(){
   sizeToViewport();
-  relabelCities();
+  relabelMapText();
   apply();
+  // 手機上「只有高度變、寬度沒變」幾乎一定是鍵盤或網址列，不是版面真的變了。
+  // 那時重算視野會讓地圖在使用者眼前縮一下——正是查詢打字時最不該發生的事。
+  // 轉向會同時改寬度，所以真的需要重算的情況不會被這一行擋掉。
+  const widthChanged = innerWidth !== lastVW;
+  lastVW = innerWidth;
+  if(!widthChanged && innerWidth <= 900) return;
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => settleView(true), 120);
 }
@@ -305,7 +357,7 @@ if(typeof ResizeObserver === 'function'){
   let lastW = 0, lastH = 0, roTimer = 0;
   if(pane) new ResizeObserver(() => {
     if(!sizeToViewport()) return;          // 還是 0，等下一次
-    relabelCities();
+    relabelMapText();
     apply();
     const r = pane.getBoundingClientRect();
     // 尺寸沒真的變就別重算——settleView 會動窗格高度，不擋的話會自己觸發自己。
@@ -316,8 +368,14 @@ if(typeof ResizeObserver === 'function'){
   }).observe(pane);
 }
 
-function relabelCities(){
+// 地圖上所有會隨語言變的文字，集中在這裡重寫。
+// 原本只有城市標籤在管，結果南回歸線的標籤在英文版一直掛著中文——它是繪製
+// 時設定一次就沒人再碰的。飛地標記目前剛好兩種語言都是「ACT」才沒露餡。
+// 全部收在同一個函式裡，將來多畫一個帶文字的東西才不會又漏掉一個。
+function relabelMapText(){
   for(const g of cityNodes) g.__c.t.textContent = cityLabel(g.__c.name);
+  if(tlbl) tlbl.textContent = T('tropic');
+  for(const g of encNodes) g.__e.t.textContent = ENC_TEXT[g.__e.key]().mark;
 }
 
 function toBase(e){
@@ -447,15 +505,9 @@ function focusOnNode(node, fallback){
 // ---- 圖例：數量與細分開關 ----
 let selNode = null, selPc = null;
 
-const legend = document.getElementById('legend');
-// 地圖檢視。官網把 Bushfire 與 Natural disaster 分成兩張獨立的表（起算日差
-// 兩年半），所以這不是一個「進階選項」，是官方本來就有的區別——只是地圖上
-// 預設先給比較好讀的三色，要看細分隨時可以切。
-// 記在 localStorage：會關心災害細分的人多半每次都想看。
-let split = false;
-try { split = localStorage.getItem('mapview') === 'split'; } catch (_) {}
-const vPlain = document.getElementById('v-plain');
-const vSplit = document.getElementById('v-split');
+const vBtn = {work:  document.getElementById('v-work'),
+              fire:  document.getElementById('v-fire'),
+              flood: document.getElementById('v-flood')};
 const indSel = document.getElementById('ind');
 const indNote = document.getElementById('indnote');
 
@@ -475,26 +527,49 @@ for(const i of META.industries){
 // 選取（sel）與行政區框選（inreg／outreg）會一起被洗掉——換產業時框選消失，
 // 而且載入時只要 applyLang 排在讀網址之後，框選根本畫不出來。
 const CAT_CLASS = ['work', 'rebuild', 'none'];
-function recolour(s, f, on){
+function recolour(s, f){
   s.classList.remove(...CAT_CLASS);
-  s.classList.add(catOf(f));
-  s.setAttribute('fill', colorOf(f, on));
+  s.classList.add(catOf(f));            // class 仍是判定，樣式（hover／選取）靠它
+  s.setAttribute('fill', colorOf(f));
 }
 
 function applyIndustry(){
-  const on = split;
-  for(const s of areasG.children) recolour(s, byPc.get(s.__pc).f, on);
-  for(const s of strayG.children){
-    const f = byPc.get(s.__pc).f;
-    s.setAttribute('fill', colorOf(f, on));
-  }
+  for(const s of areasG.children) recolour(s, byPc.get(s.__pc).f);
+  for(const s of strayG.children) s.setAttribute('fill', colorOf(byPc.get(s.__pc).f));
   const c = industry.counts;
-  for(const [id, n] of [['n-work', c.work], ['n-rebuild', c.rebuild], ['n-none', c.none],
-                        ['n-fire', c.fire_only], ['n-flood', c.flood_only], ['n-both', c.fire_and_flood]])
-    document.getElementById(id).textContent = n;
-  document.getElementById('r-none').style.display = c.none ? '' : 'none';
   const tables = areasOf(industry.mask).join(' + ');
-  document.getElementById('n-work-label').textContent = T('cat_work', {ind: indLabel()});
+  // 圖例跟著檢視走：在這張表上幾個、不在幾個，加上這張表的官方名稱。
+  // 官方名稱一定要出現——選項用「一般工作／叢林大火／天災」這種白話命名，
+  // 使用者不必先懂術語就能選，但要去核對官網時得知道那張表叫什麼。
+  const inN  = view === 'work' ? c.work : view === 'fire' ? c.fire_all : c.flood_all;
+  const label = view === 'work' ? T('cat_work', {ind: indLabel()})
+              : view === 'fire' ? T('leg_in_fire') : T('leg_in_flood');
+  const src   = view === 'work' ? T('tbl_work', {tables})
+              : view === 'fire' ? T('tbl_bushfire') : T('tbl_disaster');
+  const rIn = document.getElementById('r-in');
+  rIn.style.setProperty('--sw', VIEW_COLOR[view]);
+  document.getElementById('mini-in').style.setProperty('--sw', VIEW_COLOR[view]);
+  document.getElementById('n-in-label').textContent = label;
+  document.getElementById('n-in').textContent  = inN;
+  document.getElementById('n-out').textContent = c.total - inN;
+  document.getElementById('lgsrc').textContent = src;
+  // 只在「一般工作」檢視出現：那裡才有「我是不是漏了另一條路」這個疑問。
+  // 數的是**不在工作名單上**的那些郵區裡，有多少在災害表上——所以要用
+  // fire_only + fire_and_flood，不是 fire_all（後者含本來就算的）。
+  const hint = document.getElementById('lghint');
+  hint.textContent = '';
+  if(view === 'work'){
+    const also = [['fire',  c.fire_only  + c.fire_and_flood, 'leg_also_fire'],
+                  ['flood', c.flood_only + c.fire_and_flood, 'leg_also_flood']];
+    for(const [v, n, key] of also){
+      if(!n) continue;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = T(key, {n}) + ' →';
+      btn.addEventListener('click', () => setView(v));
+      hint.appendChild(btn);
+    }
+  }
   // 範圍是官方定義的中文摘要，不是官方文字，所以一定要附原文連結讓人核對。
   // 標題列只標「這張卡在講什麼」，適用的郵區表放在連結上——連結本來就是要
   // 帶人去看那張表，表名放在那裡比放在標題更貼近它的用途。
@@ -506,8 +581,6 @@ function applyIndustry(){
         : '');
   document.getElementById('subind').textContent = `${T('showing')}: ${indLabel()}`;
   document.getElementById('fact1').textContent = T('fact1_body', {ind: indLabel(), tables});
-  // 沒有任何「只有重建算」的郵區時，切換鈕沒有意義
-  document.querySelector('.legend .seg').style.display = c.rebuild ? '' : 'none';
   if(selPc !== null) select(selPc);
   else renderRegionPanel();
 }
@@ -522,18 +595,15 @@ indSel.addEventListener('change', () => {
 // ——它會走到 renderRegionPanel()，而 regPcs 要到檔案後面才宣告，在這裡碰它
 // 就是 TDZ 錯誤。上色由後面既有的初始化流程負責。
 function paintView(){
-  legend.classList.toggle('split', split);
-  vPlain.setAttribute('aria-pressed', String(!split));
-  vSplit.setAttribute('aria-pressed', String(split));
+  for(const k in vBtn) vBtn[k].setAttribute('aria-pressed', String(k === view));
 }
-function setView(on){
-  split = on;
+function setView(v){
+  view = v;
   paintView();
-  try { localStorage.setItem('mapview', on ? 'split' : 'plain'); } catch (_) {}
+  try { localStorage.setItem('mapview', v); } catch (_) {}
   applyIndustry();
 }
-vPlain.addEventListener('click', () => setView(false));
-vSplit.addEventListener('click', () => setView(true));
+for(const k in vBtn) vBtn[k].addEventListener('click', () => setView(k));
 paintView();
 
 // ---- 詳情 ----
@@ -564,6 +634,23 @@ function markSelection(d){
   }
   for(const c of ringG.children){ c.setAttribute('cx', cx); c.setAttribute('cy', cy); }
   updateRing();
+}
+
+// 飛地的說明。它不是郵區，所以不走 select()——沒有旗標、沒有選取環、
+// 也不進網址（網址的 pc 參數只認郵遞區號）。
+function showEnclave(key){
+  selPc = null;
+  clearSel();
+  markSelection(null);
+  detail.style.setProperty('--vc', 'var(--c-none)');
+  detail.classList.add('no');
+  const x = ENC_TEXT[key]();
+  detail.innerHTML =
+    `<div class="ans"><span class="pcn">${esc(x.mark)}</span>`
+    + `<span class="say">${esc(x.say)}</span></div>`
+    + `<div class="bd"><div class="sub">${esc(x.body)}</div>`
+    + `<div class="note">${esc(x.fire)}</div>`
+    + `<div class="note">${esc(x.why)}</div></div>`;
 }
 
 function select(pc){
@@ -604,7 +691,7 @@ function select(pc){
   if(d.stray) rows.push(`<div class="note">${esc(T('v_no_polygon'))}</div>`);
 
   // 判定色走色帶與判定字，不上郵遞區號本身（理由在 base.css 的 .fbox 段）
-  detail.style.setProperty('--vc', colorOf(f, split));
+  detail.style.setProperty('--vc', verdictColor(f));
   detail.classList.toggle('no', catOf(f) === 'none');
   detail.innerHTML =
     `<div class="ans"><span class="pcn">${p}</span>` +
@@ -614,8 +701,20 @@ function select(pc){
 }
 
 const tip = document.getElementById('tip'), wrap = document.getElementById('mapwrap');
-const hit = e => e.target.closest('.poa, .stray');
-svg.addEventListener('click', e => { if(drag && drag.moved) return; const t = hit(e); if(t) select(t.__pc); });
+// e.target 在這裡永遠是 svg 本身，不是被點到的那塊郵區——平移與捏合縮放用了
+// svg.setPointerCapture()，而指標捕捉會把後續的 click 重新導向到捕捉元素。
+// 所以要用座標反查。這是既有的 bug：在地圖上點郵區一直沒有反應（滑鼠移過去
+// 的提示框沒事，因為 pointerover 發生在 pointerdown 之前，那時還沒有捕捉）。
+const at = e => document.elementFromPoint(e.clientX, e.clientY);
+const hit = e => { const el = at(e); return (el && el.closest) ? el.closest('.poa, .stray') : null; };
+svg.addEventListener('click', e => {
+  if(drag && drag.moved) return;
+  const el = at(e);
+  // 飛地標記要先於郵區判斷：它畫在郵區上層，點到它就是要看它的說明
+  const enc = (el && el.closest) ? el.closest('.enc') : null;
+  if(enc && enc.__e){ showEnclave(enc.__e.key); return; }
+  const t = hit(e); if(t) select(t.__pc);
+});
 svg.addEventListener('pointerover', e => {
   const t = hit(e); if(!t) return;
   const d = byPc.get(t.__pc);
@@ -833,6 +932,20 @@ function applyMapA11y(){
 // 比例 2.79）塞進直式窗格，固定高度會上下各留一大條空白；南北狹長的州則相反。
 // 下限 320px 是「還看得出形狀」的底線——真照 2.79 算下去只有 134px。
 // 上限 62vh 是不要一進來整張畫面都是地圖，搜尋與答案還在上面。
+// 手機的 innerHeight 是會動的：叫出鍵盤、網址列收合都會改它，而且就發生在
+// 使用者查詢或捲動的當下。直接拿它算高度的話，鍵盤一彈出地圖就當場縮一截——
+// 實測 iPhone 14 從 381px 掉到 320px（-16%），而且收起鍵盤只回到 364px，
+// 因為中間 fitLabels 把 viewBox 撐大了一點點，回不去。
+//
+// 62vh 這個上限的用意是「一進來不要整張畫面都是地圖」，那是**進場時的版面意圖**，
+// 不是需要跟著鍵盤即時追蹤的東西。所以基準只在寬度改變時更新——鍵盤與網址列
+// 不會改寬度，轉向會。
+let baseVW = innerWidth, baseVH = innerHeight;
+function stableViewportHeight(){
+  if(innerWidth !== baseVW){ baseVW = innerWidth; baseVH = innerHeight; }
+  return baseVH;
+}
+
 function sizeMapPane(){
   // 這裡就地取元素，不用外面的 wrap——settleView 在模組很早就會跑，
   // 那個常數還沒宣告。
@@ -841,8 +954,12 @@ function sizeMapPane(){
   if(innerWidth > 900){ pane.style.height = ''; return; }
   const w = pane.getBoundingClientRect().width;
   if(!w) return;
+  // 用 VB 而不是 VB0：SVG 是以 preserveAspectRatio:meet 把 VB 等比放進窗格的，
+  // 窗格比例對齊 VB 才不會上下留黑邊。VB 含 fitLabels 為地名撐開的部分，那些
+  // 空間也真的畫著東西。代價是轉向來回後高度會漂 1% 左右（VB 的撐開量跟窗格
+  // 大小有關），肉眼看不出來，不值得為它改成會多留白的 VB0。
   const want = w * VB.h / VB.w;
-  pane.style.height = Math.round(Math.min(Math.max(want, 320), innerHeight * 0.62)) + 'px';
+  pane.style.height = Math.round(Math.min(Math.max(want, 320), stableViewportHeight() * 0.62)) + 'px';
 }
 
 function initialView(){
@@ -947,7 +1064,7 @@ function applyLang(){
   document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
   document.title = h1.textContent = T('title_state', {state: stateName()});
   applyMapA11y();
-  relabelCities();
+  relabelMapText();
   for(const el2 of document.querySelectorAll('[data-t]')){
     const key = el2.getAttribute('data-t');
     if(key) el2.textContent = T(key);
@@ -959,17 +1076,13 @@ function applyLang(){
   // 出處整段與落款。日期與無邊界郵區數一律取自 META——樣板裡再寫一份的話，
   // 官網更新後那份會安靜地開始說謊。
   const a = (url, text) => `<a href="${url}" target="_blank" rel="noopener">${esc(text)}</a>`;
-  document.getElementById('srctext').innerHTML = T('map_src', {
-    ha: a(META.source_url, T('map_ha_link')),
-    da: a('https://www.disasterassist.gov.au/find-a-disaster', T('map_da_link')),
-    date: META.page_date,
-  })
-    // 數量為 0 時整句不要出現——「有 0 個郵區沒有對應面」是句不通的話。
-    // 邊界改成分級抓取之後，有些州確實一個都不缺了。
-    + (META.n_no_poly ? ' ' + esc(T('map_strays', {n: META.n_no_poly})) : '')
-    + ' ' + esc(T('not_assistance'));
-  document.getElementById('stamp').textContent =
-    T('map_stamp', {d: META.page_date, b: META.built_at});
+  // 頁尾由共用的 renderFoot 產生。map_strays 是這一頁特有的資料品質註記
+  // （有幾個郵區沒有對應的多邊形，以小點顯示），接在免責後面。
+  renderFoot(document.getElementById('foot'), {
+    T, esc, sourceUrl: META.source_url,
+    pageDate: META.page_date, builtAt: META.built_at,
+    extra: META.n_no_poly ? [esc(T('map_strays', {n: META.n_no_poly}))] : [],
+  });
   // 導覽的「全澳入口」也要換
   const home = document.querySelector('#nav a.home');
   if(home) home.textContent = '← ' + T('nav_home');

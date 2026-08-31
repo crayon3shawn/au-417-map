@@ -14,7 +14,7 @@ __CSS__</style>
 <div class="devbar" id="devbar" hidden></div>
 <div class="viewport">
   <header class="topbar">
-    <span class="mark">417</span>
+    <h1 class="brand" data-t="p_title"></h1>
     <span class="spacer"></span>
     <nav class="nav" id="nav" data-t-aria="nav_aria"></nav>
     <button class="lang" id="theme" type="button" data-t-aria="theme_toggle"></button>
@@ -23,27 +23,25 @@ __CSS__</style>
 
   <div class="app">
     <div class="app-rail">
-      <!-- 入口頁是門面：先說這是什麼，再給工具。標題放在左欄頂端而不是標頭裡，
-           一來標頭要留給導覽，二來這樣標題可以大一點、有呼吸感——但搜尋框仍然
-           在第一屏內，不會像放一個裝飾性 hero 那樣把工具推下去。 -->
-      <!-- 開場只有標題。原本上面有一行 eyebrow（「全澳 · 逐個郵區」）、下面有一段
-           lede（「417 打工度假簽證的集簽合格郵遞區號」）——lede 跟標題是同一句話
-           換個講法，eyebrow 則是標題已經講完的範圍。三層裡有兩層是重複的，
-           而它們合起來吃掉側欄頂端 80px，把搜尋往下推。
-           lede 裡唯一的真資訊「462 不適用」移進產業卡，跟其他規則說明放在一起。 -->
-      <section class="hero">
-        <h1 data-t="p_title"></h1>
-      </section>
+      <!-- 這裡原本有一個大標題（跟標頭是同一句 p_title）。站名移到標頭之後
+           它就成了同一句話上下講兩次，手機上尤其明顯——標頭一次、免責一段、
+           大標題又一次。左欄直接從工具開始，搜尋更快到眼前。
+           更早以前這裡還有 eyebrow 與 lede，那兩層先前就因為重複而拿掉了。 -->
 
       <!-- 結構跟各州頁的側欄一致：每一段都是「標籤 + 控制項 + 卡片」。
            兩個頁面的側欄長得一樣，使用者不必重新認一次。 -->
-      <section class="blk">
+      <section class="blk blk-ind">
         <span class="eyebrow" data-t="industry_label"></span>
         <select id="ind" class="ind" data-t-aria="p_ind_aria"></select>
-        <div class="card indcard" id="indnote"></div>
       </section>
 
-      <section class="blk">
+      <!-- 產業定義卡是**參考資料**，不是控制項。桌機留在選擇器下面（「標籤＋
+           控制項＋卡片」的分組，跟州頁側欄一致）；手機上排到地圖之後——
+           它 150px 高，夾在產業選擇與搜尋框中間會把主要動作推到 466px，
+           而使用者是「讀到判定之後」才會想查定義，不是打字之前。 -->
+      <div class="card indcard" id="indnote"></div>
+
+      <section class="blk blk-search">
       <!-- 查詢欄與答案是同一個物件。你輸入的郵遞區號、跟你在問的那個，是同一個
            東西——現在畫面上它出現兩次（欄位裡一次、答案標題再一次）。合成一個
            之後答案就出現在眼睛本來就在的位置，而那四個數字（澳洲簽證世界的原子
@@ -70,8 +68,6 @@ __CSS__</style>
     </div>
   </div>
 
-  <p class="stamp strip" id="stamp"></p>
-  <p class="disclaim" id="disclaim"></p>
 </div>
 
   <div class="wrap doc">
@@ -100,16 +96,6 @@ __CSS__</style>
     </div>
 
     <p class="basis-note" id="samelist"></p>
-
-    <div class="prov">
-      <h3 data-t="p_prov_h3"></h3>
-      <ul>
-        <li data-t="p_prov1"></li>
-        <li data-t="p_prov2"></li>
-        <li data-t="p_prov3"></li>
-        <li data-t="p_prov4"></li>
-      </ul>
-    </div>
   </section>
 
   <div class="notes">
@@ -125,16 +111,17 @@ __CSS__</style>
       <h3 data-t="p_note3_h"></h3>
       <p data-t="p_note3_b"></p>
     </div>
-    <div>
-      <h3 data-t="p_note4_h"></h3>
-      <p id="note4"></p>
-
-    </div>
   </div>
 </div>
 
+<!-- 免責、資料出處、日期戳記。兩頁共用 src/foot.js -->
+<footer class="foot" id="foot"></footer>
+
 <script>
 __URL__
+</script>
+<script>
+__FOOT__
 </script>
 <script>
 __JS__

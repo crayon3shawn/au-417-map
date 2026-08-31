@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""從 Home Affairs 抓 417 與 462 兩份「指定地區」郵區清單。
+"""從 Home Affairs 抓 417 的「指定地區」郵區清單。
 
 輸出 data/postcodes.json，保存官網原文的範圍字串（不展開），並記下
 官網頁面自己標示的 Last updated 日期。
@@ -24,9 +24,14 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "postcodes.json"
 THRESHOLD = 0.10          # 單一州郵區數量的可接受變動幅度
 
+# 只抓 417。站台本來就只處理 417（build.py 的 VISA 寫死），而 462 的產業規則
+# 不同（沒有礦業，漁業與林業只限 Northern Australia），本來就不能拿這裡的
+# 判斷給 462 用——那段警語在 README 裡。
+#
+# 既然頁面不呈現 462，抓它只會製造假警報：462 頁面改版型時健檢會紅燈，
+# 但那對一個 417-only 的站台不是壞消息。要加回來的話補一行就行。
 PAGES = {
     "417": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work",
-    "462": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-462/specified-462-work",
 }
 
 # 內容不在 DOM 表格裡，而是這個 hidden input 的 value 屬性（官網自己的內容 payload）

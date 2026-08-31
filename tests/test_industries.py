@@ -2,6 +2,11 @@
 
 這張表是人工整理自官網散文，不是官方資料表，所以特別容易在改動時走鐘。
 釘住的是 417 與 462 之間幾個真實差異——搞錯的話會給出錯誤的集簽建議。
+
+data/postcodes.json 只收 417 的郵區表了，但這張對應表兩種簽證都留著：
+它是人工整理的規則知識，不是抓來的資料，而「462 的漁業只限 northern」
+這種事實不會因為我們不抓它就不成立。下面用到郵區表的地方一律用 417 的，
+測的是「哪個產業對到哪張表」，不是表本身的內容。
 """
 import unittest, sys, pathlib
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -29,7 +34,7 @@ class TestMapping(unittest.TestCase):
                 for a in areas or []:
                     with self.subTest(industry=key, visa=visa, area=a):
                         self.assertIn(a, AREA_SECTIONS)
-                        self.assertIn(a, PC["areas"][visa])
+                        self.assertIn(a, PC["areas"]["417"])
 
     def test_礦業在462是不適用而不是空清單(self):
         # null 代表 462 根本沒有這個產業；空清單會被誤讀成「哪裡都不算」
@@ -53,15 +58,18 @@ class TestMapping(unittest.TestCase):
         必須跨州取聯集，不能逐州比。0872 這種橫跨 NT／WA／SA 的偏遠郵區，
         在 NT 的五張表裡都有，但只出現在 WA 的 northern 而不在 WA 的 regional，
         逐州比會看到假的差異。
+
+        郵區表一律取 417 的（只有這份會抓）。這裡要測的是產業對到哪幾張表，
+        表的內容本身由 test_data.py 負責。
         """
         out = set()
         for st in STATES:
             for k in self.areas(industry, visa) or []:
-                out |= expand(PC["areas"][visa][k].get(st), st)
+                out |= expand(PC["areas"]["417"][k].get(st), st)
         return out
 
     def test_建築在兩種簽證下覆蓋範圍相同(self):
-        # 462 頁面多寫了 northern，但全澳合計的結果一致
+        # 462 多寫了 northern，但 northern 是 regional 的子集，全澳合計結果一致
         self.assertEqual(self.coverage("construction", "417"),
                          self.coverage("construction", "462"))
 

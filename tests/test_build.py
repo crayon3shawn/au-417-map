@@ -31,6 +31,83 @@ class TestNonGeographic(unittest.TestCase):
         self.assertFalse(build.is_non_geographic([]))
 
 
+class TestCategorise(unittest.TestCase):
+    """categorise() 的兩條不變量。
+
+    這兩條破掉的話畫面上不會有任何徵兆——郵區數量對不起來，肉眼看不出來。
+    而 categorise() 正是最容易被改壞的地方：只要有人加一個分支
+    （例如「同時在工作名單又在災區」要不要另外算一類），互斥性就沒了。
+
+      work + rebuild + none            == total
+      fire_only + flood_only + fire_and_flood == rebuild
+
+    第二條說的是「重建是唯一路徑」的那些郵區，一定恰好落在三種災害組合的
+    其中一種。fire_all／flood_all 不在這條裡——它們連「本來就算」的一起數，
+    刻意跟 rebuild 那一組脫鉤（圖層檢視問的是在不在表上，不是有沒有別條路）。
+    """
+
+    W, F, D = 4, build.BIT_FIRE, build.BIT_DISASTER      # 4 = regional
+
+    def run_one(self, flags):
+        rings = {str(pc): [] for pc in flags}
+        return build.categorise(rings, flags, self.W)
+
+    def assert_invariants(self, c):
+        self.assertEqual(c["work"] + c["rebuild"] + c["none"], c["total"],
+                         "三類必須互斥且涵蓋全部")
+        self.assertEqual(c["fire_only"] + c["flood_only"] + c["fire_and_flood"],
+                         c["rebuild"], "災害細分必須剛好切完 rebuild")
+
+    def test_六種組合各一個(self):
+        W, F, D = self.W, self.F, self.D
+        c = self.run_one({1: W, 2: F, 3: D, 4: F | D, 5: W | F, 6: 0})
+        self.assert_invariants(c)
+        self.assertEqual(c["total"], 6)
+        self.assertEqual(c["work"], 2)          # 1 與 5——在工作名單上就算，災害是次要
+        self.assertEqual(c["rebuild"], 3)       # 2、3、4
+        self.assertEqual(c["none"], 1)          # 6
+        self.assertEqual((c["fire_only"], c["flood_only"], c["fire_and_flood"]), (1, 1, 1))
+        # fire_all 連 5 一起數（它同時在工作名單上），所以是 3 不是 2
+        self.assertEqual(c["fire_all"], 3)
+        self.assertEqual(c["flood_all"], 2)
+
+    def test_全空(self):
+        c = self.run_one({})
+        self.assert_invariants(c)
+        self.assertEqual(c["total"], 0)
+
+    def test_全部都在工作名單上(self):
+        c = self.run_one({1: self.W, 2: self.W})
+        self.assert_invariants(c)
+        self.assertEqual((c["work"], c["rebuild"], c["none"]), (2, 0, 0))
+
+    def test_拿真實資料跑過四個州與所有產業(self):
+        """合成資料驗邏輯，真實資料驗它在實際的旗標分布下也成立。"""
+        from lib import expand, load
+        pc = load(ROOT / "data" / "postcodes.json")["areas"][build.VISA]
+        inds = load(ROOT / "data" / "industries.json")["industries"]
+        for st in build.STATE_ORDER:
+            path = ROOT / "data" / f"poa-{st}.json"
+            if not path.exists():
+                continue
+            rings = load(path)["rings"]
+            flags = {}
+            for area, bit in build.AREA_BITS.items():
+                raw = pc.get(area, {}).get(st)
+                if not raw:
+                    continue
+                for n in expand(raw, st):
+                    flags[n] = flags.get(n, 0) | bit
+            for key, v in inds.items():
+                areas = v["areas"][build.VISA]
+                if not areas:
+                    continue
+                with self.subTest(state=st, industry=key):
+                    c = build.categorise(rings, flags, build.work_mask(areas))
+                    self.assert_invariants(c)
+                    self.assertEqual(c["total"], len(rings))
+
+
 class TestPath(unittest.TestCase):
 
     def test_環會閉合成Z(self):

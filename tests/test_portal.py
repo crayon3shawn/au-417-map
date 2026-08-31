@@ -43,6 +43,34 @@ class TestPortalIndex(unittest.TestCase):
         self.assertGreater(len(self.idx), 2000)
 
 
+class TestMappedVsUrl(unittest.TestCase):
+    """「這個州有沒有地圖」不能用「這次建置有沒有它的網址」來判斷。
+
+    入口頁上「還沒做地圖」「尚無地圖」是在陳述專案的事實。拿 url 判斷的話，
+    局部的 Artifact 預覽（只發了部分州頁）會對 NSW 講出那句話——而 NSW
+    明明有地圖。使用者查 2020 Mascot 時就撞到過一次。
+    """
+
+    def test_四個做了地圖的州都標成mapped(self):
+        from build import STATE_ORDER
+        self.assertEqual(set(STATE_ORDER), {"qld", "nsw", "vic", "wa"})
+
+    def test_portal_js_用mapped而不是url宣稱有沒有地圖(self):
+        js = (ROOT / "src" / "portal.js").read_text(encoding="utf-8")
+        # 查詢結果那句
+        self.assertIn("s.mapped ? ''", js, "查詢結果的沒地圖訊息應該看 mapped")
+        self.assertIn("p_nomap_line", js)
+        # 入口地圖的虛線邊框
+        self.assertIn("s.mapped ? '' : ' nomap'", js, "州塊的 nomap 樣式應該看 mapped")
+        # 不該再有用 url 決定 nomap 樣式的寫法
+        self.assertNotIn("s.url ? '' : ' nomap'", js)
+
+    def test_建置有送出mapped欄位(self):
+        import build_portal
+        src = (ROOT / "build_portal.py").read_text(encoding="utf-8")
+        self.assertIn('"mapped": st in STATE_ORDER', src)
+
+
 class TestDeliverable(unittest.TestCase):
 
     def test_排除信箱型別(self):

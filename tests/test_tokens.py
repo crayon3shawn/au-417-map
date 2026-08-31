@@ -147,11 +147,14 @@ class TestNoDeadCSS(unittest.TestCase):
 
     def test_沒有沒人用的class(self):
         import re
-        # 樣板、JS、以及 strings.json——介面字串裡也會帶 class（例如 .mono）
+        # 樣板、JS、以及 strings.json——介面字串裡也會帶 class（例如 .mono）。
+        # foot.js 是兩頁共用的頁尾，它產生的 class 只出現在那個檔裡；漏掉它的話
+        # .foot-note 這種會被誤報成死規則。共用片段一律要進這份清單。
         corpus = "".join(
             (ROOT / f).read_text(encoding="utf-8")
             for f in ("src/template.html", "src/portal.html",
-                      "src/map.js", "src/portal.js", "data/strings.json"))
+                      "src/map.js", "src/portal.js", "src/foot.js",
+                      "data/strings.json"))
         dead = set()
         for name in ("base.css", "map.css", "portal.css"):
             t = (ROOT / "src" / name).read_text(encoding="utf-8")

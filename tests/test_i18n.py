@@ -12,7 +12,9 @@ SRC = ROOT / "src"
 STRINGS = json.loads((ROOT / "data" / "strings.json").read_text(encoding="utf-8"))["s"]
 
 HTML = ["template.html", "portal.html"]
-JS = ["map.js", "portal.js"]
+# foot.js 是兩頁共用的頁尾，也帶介面文字——漏掉它的話，頁尾的字可以
+# 寫死中文而不被抓到，而那正是這整組測試要防的事。
+JS = ["map.js", "portal.js", "foot.js"]
 
 CJK = re.compile(r"[一-鿿]")
 
@@ -32,6 +34,36 @@ def strip_comments(src, kind):
         src = re.sub(r"/\*.*?\*/", "", src, flags=re.S)
         return "\n".join(re.sub(r"//.*$", "", ln) for ln in src.splitlines())
     return re.sub(r"<!--.*?-->", "", src, flags=re.S)
+
+
+class TestMapTextRelabelled(unittest.TestCase):
+    """畫在地圖上的文字，切語言時一定要被重寫。
+
+    這一類 bug 是靜的：字串本身兩種語言都對，但元素的 textContent 在繪製時
+    設定過一次就沒人再碰，切成英文之後它繼續說中文。實際發生過——南回歸線的
+    標籤在英文版一直是「TROPIC OF CAPRICORN 南回歸線」，而 tropic 這個鍵的
+    en 值明明是乾淨的。
+
+    有 data-t 的元素由 applyLang 統一處理，不會有這個問題；會中招的是用
+    JS 畫上去的 SVG 文字（城市、南回歸線、飛地標記）。它們現在集中在
+    relabelMapText() 裡，applyLang 呼叫它一次。
+    """
+
+    def test_applyLang_有呼叫_relabelMapText(self):
+        src = (SRC / "map.js").read_text(encoding="utf-8")
+        i = src.index("function applyLang()")
+        self.assertIn("relabelMapText()", src[i:i + 900],
+                      "applyLang 沒有重寫地圖上的文字，切語言會留下上一個語言的字")
+
+    def test_地圖上帶文字的圖層都在_relabelMapText_裡(self):
+        """畫在地圖上的文字有三處。漏掉任何一處，那一處切語言就不會更新。"""
+        src = (SRC / "map.js").read_text(encoding="utf-8")
+        i = src.index("function relabelMapText()")
+        body = src[i:src.index("\n}\n", i)]
+        for token, what in (("cityNodes", "城市標籤"),
+                            ("tlbl", "南回歸線標籤"),
+                            ("encNodes", "飛地標記")):
+            self.assertIn(token, body, f"relabelMapText() 沒有處理{what}")
 
 
 class TestKeysExist(unittest.TestCase):

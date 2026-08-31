@@ -2,7 +2,7 @@ STATE ?= qld
 STATES ?= qld nsw vic wa
 PORT  ?= 8731
 
-.PHONY: help update build all portal serve check test clean
+.PHONY: help update build all portal serve check diff test clean
 
 help:
 	@echo "make update [STATE=qld]  重新抓所有外部資料到 data/（會連網）"
@@ -11,6 +11,7 @@ help:
 	@echo "make portal              只建入口頁 dist/index.html"
 	@echo "make serve  [STATE=qld]  本機預覽 http://127.0.0.1:$(PORT)/$(STATE).html"
 	@echo "make check               只重抓郵區清單並健檢，不寫入其他資料"
+	@echo "make diff                看郵區清單跟版控裡的版本差在哪（不連網）"
 	@echo "make test                跑測試（不連網）"
 	@echo "make clean               清掉 dist/ 與 data/raw/"
 	@echo ""
@@ -51,6 +52,11 @@ test:
 
 check:
 	python3 fetch/postcodes.py --keep-raw
+
+# 只比對實質內容。fetch 每次都會重寫 fetched_at，git diff 一定有東西，
+# 那不代表官網改了。
+diff:
+	@python3 diff_postcodes.py || true
 
 clean:
 	rm -rf dist/*.html data/raw

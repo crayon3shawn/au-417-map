@@ -1,6 +1,6 @@
 # 澳洲 417 集簽地圖
 
-澳洲打工度假簽證（417 / 462）集簽合格郵遞區號的互動地圖，以**建築工地**為取向。
+澳洲打工度假簽證 **417**（Working Holiday）集簽合格郵遞區號的互動地圖，以**建築工地**為取向。462 的產業規則不同，不適用（理由見〈只做 417〉）。
 郵區以整片色塊渲染，可切換 regional、叢林大火宣告區、天災宣告區三個圖層。
 
 產出是**單一自包含 HTML**（無外部請求，字型除外），可直接發佈為 Artifact。
@@ -33,7 +33,7 @@ make serve    # 建置並在 http://127.0.0.1:8731/index.html 預覽
 ```bash
 CHANNEL=dev make all      # 建出帶開發版橫幅的一份
 make serve                # http://127.0.0.1:8731/index.html
-make test                 # 73 項，不連網
+make test                 # 110 項，不連網
 git push origin main      # 確認沒問題才推
 ```
 
@@ -66,10 +66,10 @@ SSL/TLS 模式要選 **Full**，選 Flexible 會跟 Pages 的強制 HTTPS 打成
 
 | 頁面 | 內容 | 大小 |
 |---|---|---|
-| `dist/index.html` | **入口頁**：全澳郵區查詢 + 各州導覽 | 0.10 MB |
-| `dist/qld.html` | 昆士蘭地圖 | 1.12 MB |
-| `dist/nsw.html` | 新南威爾斯地圖 | 1.43 MB |
-| `dist/vic.html` | 維多利亞地圖 | 0.89 MB |
+| `dist/index.html` | **入口頁**：全澳郵區查詢 + 各州導覽 | 0.17 MB |
+| `dist/qld.html` | 昆士蘭地圖 | 1.13 MB |
+| `dist/nsw.html` | 新南威爾斯地圖 | 1.48 MB |
+| `dist/vic.html` | 維多利亞地圖 | 1.15 MB |
 | `dist/wa.html` | 西澳地圖 | 0.75 MB |
 
 **SA、TAS、NT 不做地圖。** 官網原文就是「All postcodes are eligible」，
@@ -83,36 +83,80 @@ SSL/TLS 模式要選 **Full**，選 Flexible 會跟 Pages 的強制 HTTPS 打成
 入口頁不放郵區多邊形，只放郵區號碼對應的身分與州界輪廓，所以很輕，
 查詢秒回，也不會被各州地圖的體積拖累。
 
+那張全澳圖**全部同一個顏色**。它的工作是導覽——點哪一州進哪一張地圖，以及
+哪幾州沒有地圖（虛線邊框）。原本按「優勢類別」上色（該州最多的是 work 還是
+rebuild），但整州取一個代表色沒有可用的資訊：一個州內部本來就混雜，塗成綠的
+不代表你那塊算，塗成琥珀也不代表不算。拿顏色講一個使用者不能據以行動的
+統計量，只會讓人誤以為那是判定。真正的答案在郵區層級——查郵區，或點進州地圖。
+
 ## 操作
 
 * **查郵區或地名**——輸入 `4870` 或 `Cairns` 都可以。多數人知道自己在哪個鎮，
   不知道郵區號碼，所以地名搜尋是主要入口。地名有多筆時會列出候選，
   每筆前面的色點就是那個郵區的判定結果。
 * **導覽列**——回入口頁、切到其他州。Artifact 在沙箱 iframe 裡不能改上層網址，
-  所以一律開新分頁；之後放上 GitHub Pages 可改成相對路徑原地跳轉。
+  所以 `TARGET=artifact` 建出來的版本一律開新分頁。GitHub Pages 版用相對路徑
+  （`nsw.html`），同站台原地跳轉。
 * **觸控**——一指平移、**兩指捏合縮放**。CSS 的 `touch-action:none` 關掉了瀏覽器
   原生手勢，所以捏合是自己實作的，否則手機上只能用 ＋／− 按鈕。
 * **滑鼠**——滾輪縮放、拖曳平移。
 
 ## 地圖怎麼讀
 
-每個郵區只有三種答案，互斥且涵蓋 100%：
+**一次只看一張表。** 地圖上永遠只有兩色：在這張表上、不在。
 
-| | 意思 |
-|---|---|
-| 🟩 綠 | 一般建築工地就算 |
-| 🟧 琥珀 | 一般工地不算，**只有災後重建工作算** |
-| ⬜ 灰 | 完全不算 |
+| 檢視 | 對應的官方表 | 順序理由 |
+|---|---|---|
+| **一般工作**（預設）| 跟著產業走。建築 → Regional Australia；觀光餐旅 → Remote and Very Remote ＋ Northern Australia | 絕大多數人要看的就是這張 |
+| 叢林大火 | Bushfire declared areas | 一般工作不算時的另一條路 |
+| 天災 | Natural disaster declared areas | 同上 |
 
-沒有篩選器、沒有勾選框。顏色就是答案本身。
+第一個檢視**不需要使用者知道術語**——他選的是產業（建築、農牧、觀光餐旅），
+系統替他換算成該看哪張表，而官方表名印在圖例下方供核對。這是「跟著產業走」
+與「直接列五張表」的差別：後者要求使用者先懂 Regional 和 Remote 差在哪，
+而那正是這個站該替他做掉的事。
 
-早期版本用「勾選圖層 + 顏色表示身分」兩個軸，結果是：勾了 Regional 之後，
-NSW 的 292 塊裡只有 1 塊是綠的、78% 是紫色——圖例花兩行講的東西在畫面上
-等於不存在，而且勾選和顏色共用同一組詞彙，直覺會以為勾了就變色。
+災害兩張排在後面是呈現順序，不代表它們小——天災宣告區覆蓋 QLD 91%、NSW 91%、
+VIC 80%（2021-12-31 起累積且仍然有效）。對一個在雪梨的人，那很可能是唯一的路徑。
 
-災害種類（大火／天災）另給一個開關，只作用在琥珀那一類：唯有「重建是唯一
-路徑」時，災害種類才影響你的判斷（日期門檻不同、ImmiAccount 的 Employment
-type 也不同）。在綠色郵區一般工作本來就算，那是次要資訊，留在詳情面板。
+### NSW 地圖裡的 ACT
+
+ACT 整個被 NSW 包住，而郵區面是逐州抓的，所以 NSW 的郵區到 ACT 邊界就停了，
+畫面上留一塊空白。那塊空白用的是**背景色**不是「不算」的灰，讀起來像資料
+壞掉而不是一個答案，所以放了一個可點的標記說明它是什麼。
+
+**只放標記，不畫界線。** 想省掉抓資料的話，很自然會想到「那個洞的形狀不就是
+ACT 嗎」——把 NSW 所有郵區面聯集起來取內部的洞。實測**那是錯的**：
+
+* 那個洞有 20%（469 km²）落在 ACT 以西的 NSW 境內（Brindabella 一帶）
+* 而且完全沒有涵蓋 ACT 南部（洞最南到 -35.75，ACT 到 -35.92）
+
+面積剛好接近 ACT（2343 vs 2358 km²）純屬巧合，西邊多的補了南邊少的。NSW 的
+郵區面本來就沒有完美鋪滿全州。照這樣畫下去，Brindabella（regional，一般工作
+**算**）會被塗成 ACT（**不算**）——那是會害人做錯決定的錯，不是美觀問題。
+
+`data/outline-au.json` 裡的 ACT 州界輪廓也不能用：它只有 10 個點，是給全澳
+入口頁那個比例尺用的，放大到坎培拉會直接切過旁邊的郵區。
+
+要真的畫出 ACT，得另外抓 `geo.abs.gov.au` 的 ACT 郵區面。在那之前，標記
+只需要一個座標——取「空白」與州界輪廓的交集內一點，保證同時落在看得到的
+空白上與真正的 ACT 境內。
+
+### 為什麼不是三色判定
+
+早期版本把「算不算」和「哪一張表」壓在同一個軸上：綠＝一般工作就算、琥珀＝
+只有重建算、灰＝完全不算，另給一個開關把琥珀細分成大火／天災。三種顏色互斥
+且涵蓋 100%，邏輯上很乾淨，但掃視時資訊量反而低——你看到一片琥珀，不知道
+那是大火還是天災，得再切一次；而切了之後綠色那一大片又跟你要問的事無關。
+
+更早還有一版用「勾選圖層 ＋ 顏色表示身分」兩個軸，那個更糟：勾選和顏色共用
+同一組詞彙，直覺會以為勾了就變色。
+
+現在的模型只有一個軸。代價是**失去一眼看全貌的能力**：某個郵區在「一般工作」
+檢視裡是灰的，你得切到「天災」才知道它其實能走重建。這個代價由詳情面板補償
+——點任一郵區（或用搜尋），三條路徑一定完整列出，包含各自的起算日，
+不受地圖檢視影響。`verdictColor()` 與 `colorOf()` 分開就是為了這件事：
+面板的色帶走判定，地圖走檢視。
 
 `make build` 不連網。要更新資料才需要 `make update`。
 
@@ -120,13 +164,43 @@ type 也不同）。在綠色郵區一般工作本來就算，那是次要資訊
 
 | 資料 | 來源 | 授權 | 抓取腳本 |
 |---|---|---|---|
-| 五張指定地區郵區表 | [Home Affairs — Specified work (417)](https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work) · [462 版](https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-462/specified-462-work) | [Copyright and disclaimer](https://www.homeaffairs.gov.au/access-and-accountability/using-our-website/copyright-and-disclaimer)（未逐條確認）| `fetch/postcodes.py` |
+| 五張指定地區郵區表 | [Home Affairs — Specified work (417)](https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work) | [Copyright and disclaimer](https://www.homeaffairs.gov.au/access-and-accountability/using-our-website/copyright-and-disclaimer)（未逐條確認）| `fetch/postcodes.py` |
 | 郵區邊界（Postal Areas 2021） | [ABS ArcGIS — ASGS2021/POA](https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/POA/MapServer) | **CC BY 4.0**（服務中繼資料載明）| `fetch/boundaries.py` |
 | 郵區地名與座標 | [matthewproctor/australianpostcodes](https://github.com/matthewproctor/australianpostcodes) | ⚠️ **未宣告授權** | `fetch/localities.py`、`fetch/cities.py`、`fetch/portal.py` |
 | 州界輪廓（入口頁用） | [ABS ArcGIS — ASGS2021/STE](https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/STE/MapServer) | **CC BY 4.0** | `fetch/portal.py` |
 | 產業與地區表的對應 | Home Affairs 頁面的散文段落，**人工整理** | — | 直接維護 `data/industries.json` |
 | 城市標註 | 人工維護清單，座標自動解析 | — | 改 `data/cities-<state>.seed.json` |
 | 災害宣告查證 | [Disaster Assist — Find a disaster](https://www.disasterassist.gov.au/find-a-disaster) | — | 未自動抓取，供人工核對 |
+
+### 官網改了怎麼辦
+
+郵區清單是這個站台唯一的事實來源。官網改了而我們不知道，頁面就會**安靜地**
+給出過期的答案：沒有錯誤訊息，沒有徵兆，使用者照著做才發現。
+
+**這件事目前靠人記得。** 流程是：
+
+```bash
+make check      # 重抓郵區清單並健檢，不寫入其他資料
+make diff       # 看跟版控裡的版本差在哪
+make all        # 確認沒問題之後重建
+```
+
+`make diff` 比的是**展開後的郵區集合**，不是字串——官網把 `4307, 4308` 改寫成
+`4307 to 4308`、或逗號換成分號時，它不會報告任何變動。這一點很重要：
+`fetch/postcodes.py` 每次都會重寫 `fetched_at`，所以裸的 `git diff` 永遠有東西，
+拿它當「官網改了沒」的判準會天天狼來了。
+
+健檢沒過時**不會寫入 `data/postcodes.json`**，寧可壞掉也不要默默給出錯的郵區。
+擋下來的情況：少了任何一張指定地區表、某州郵區數量變動超過 10%、範圍字串解析
+不出來。官網改版型（表格搬家、hidden field 換名字）就屬於這一類。
+
+天災宣告區覆蓋 QLD 與 NSW 各 91%，而那張表在每次水災、氣旋之後都可能增列——
+它不是「一年動一次」的東西，值得定期看一眼。
+
+> 曾經有一版把這件事做成每週跑的 GitHub Actions（沒變動就完全安靜，變了才開
+> PR）。後來拿掉了：多一個要維護的 workflow，而這個專案的節奏是「想到就手動
+> 跑一次」，本來就沒有非自動不可的理由。要加回來的話，`diff_postcodes.py` 的
+> 離開碼就是為此設計的——0 代表沒有實質變動，1 代表有。
 
 ### ABS POA 是近似值，不是法定郵區界線
 
@@ -338,11 +412,12 @@ make test
 | `tests/test_expand.py` | 郵區範圍字串的解析。解析錯一個範圍，合格郵區就默默變了，這是風險最高的一段 |
 | `tests/test_data.py` | 凍結資料的結構完整性，加上幾個定錨事實（凱恩斯是 regional、雪梨不在任何清單上）|
 | `tests/test_build.py` | 郵件中心郵區的判定、path 產生、bbox |
+| `tests/test_portal.py` | 入口頁索引的已知陷阱（北極、雪梨信箱郵區），以及「有沒有地圖」不准用「有沒有網址」判斷 |
+| `tests/test_diff.py` | 釘住什麼**不該**算官網變動——只有 `fetched_at` 不同、只改寫法而郵區相同、分號換逗號 |
 | `tests/test_smoke.py` | **把產出頁面的腳本在 node 裡真的跑一遍** |
 
 刻意不釘死郵區數量——官網本來就會改，釘數字只會在正常更新時假警報。
-釘的是結構，以及「417 與 462 目前完全相同」這件事：哪天官網讓它們分家，
-測試會先失敗，提醒去改頁面文案而不是繼續講錯話。
+釘的是結構完整性，加上幾個短期內不該變的定錨事實。
 
 ### 為什麼要有 node 煙霧測試
 
@@ -451,13 +526,28 @@ make build STATE=vic
 
 ## 只做 417
 
-頁面只處理 417（Working Holiday）。462 的地區表目前跟 417 逐字相同，
-但**產業規則不同**——462 沒有礦業這一項，漁業與林業只限 Northern Australia，
-所以不能拿這裡的判斷給 462 用。
+頁面只處理 417（Working Holiday），`data/postcodes.json` 也**只抓 417**。
 
-`data/postcodes.json` 仍然兩種簽證都抓、都存：成本是零，而且測試裡有一條
-盯著「兩者的地區表是否仍然相同」，哪天官網讓它們分家會先失敗，提醒我們去
-看發生了什麼事。只是不顯示而已。
+⚠️ **不要拿這裡的判斷給 462 用。** 兩者的郵區表在 2026-08-18 那版是逐字相同的，
+但**產業規則不同**：
+
+* 462 **沒有礦業**這一項產業
+* 462 的**漁業與林業只限 Northern Australia**（350 個郵區），417 是整個
+  Regional（4519 個）——差 4169 個郵區
+
+也就是說，一個 462 持有者照著這張圖去做漁業或林業，很可能做完才發現不算。
+所以頁面在產業卡上直接寫「462 不適用」，而不是含糊帶過。
+
+**為什麼連抓都不抓**：既然不呈現 462，抓它唯一的效果是 462 頁面改版型時
+`fetch/postcodes.py` 的健檢會紅燈——而那對一個 417-only 的站台不是壞消息，
+是假警報。假警報會讓人開始忽略通知，之後真的出事也不會有人看。要加回來
+的話，`fetch/postcodes.py` 的 `PAGES` 補一行就行。
+
+代價是失去了哨兵：官網哪天讓兩份分家，我們不會自動知道。這是知情的取捨——
+反正頁面本來就不該給 462 用，分不分家都不改變那句警語。
+
+`data/industries.json` 仍然保留兩種簽證的產業對應。那是人工整理的規則知識，
+不是抓來的資料，「462 的漁業只限 northern」這件事不會因為我們不抓它就不成立。
 
 ## 授權與開源
 

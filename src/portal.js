@@ -88,8 +88,10 @@ function applyIndustry(){
   document.getElementById('indnote').innerHTML =
     `<div class="hd">${esc(T('industry_table'))}</div>`
     + `<div class="bd">${esc(indScope() || '')} `
-    + `${HA}${esc(T('official_def', {tables}))}</a>`
-    + `<span class="dim">${esc(T('p_indnote_switch'))} ${esc(T('p_lede_note'))}</span></div>`;
+    + `${HA}${esc(T('official_def', {tables}))}</a></div>`;
+  // 原本這裡還有一句「切換產業會改變下面的判定與各州統計」加上「462 不適用」。
+  // 前者是在解釋一個一看就懂的下拉選單；後者在頁面上另外還有三處（下方的
+  // 說明段落、溯源細帶、地圖出處），不會因為這裡拿掉就沒人看得到。
   drawStates();
   drawCards();
   drawSameList();
@@ -181,12 +183,17 @@ for(const s of STATES){
   const rings = DATA.outlines[s.key];
   if(!rings || !rings.length) continue;   // 空陣列是 truthy，要另外擋
   const d = rings.map(r => r.map(([lo,la],i)=>(i?'L':'M')+px(lo).toFixed(2)+' '+py(la).toFixed(2)).join('')+'Z').join('');
-  // 顏色一律反映該州的實際身分。有沒有地圖只影響能不能點，不能拿顏色表示——
-  // SA、TAS、NT 全境都算，塗成灰色（＝完全不算）會誤導。
-  const dominant = s.none > s.work && s.none > s.rebuild ? 'none'
-                 : s.work >= s.rebuild ? 'work' : 'rebuild';
-  const node = el('path',{class:'st' + (s.url ? '' : ' nomap'), d,
-    fill: CAT_COLOR[dominant], 'vector-effect':'non-scaling-stroke'});
+  // 全部同一個顏色。這張圖的工作是**導覽**——點哪一州進哪一張地圖，
+  // 以及哪幾州沒有地圖（虛線邊框）。
+  //
+  // 原本按「優勢類別」上色（該州最多的是 work 還是 rebuild），但整州取一個
+  // 代表色沒有可用的資訊：一個州內部本來就混雜，塗成綠的不代表你那塊算，
+  // 塗成琥珀也不代表不算——真正的答案要點進去看那一州的地圖，或直接查郵區。
+  // 拿顏色講一個使用者不能據以行動的統計量，只會讓人誤以為那是判定。
+  //
+  // 填色交給 CSS（.st），不寫在屬性上——CSS 才能處理 hover 與深淺色主題。
+  const node = el('path',{class:'st' + (s.mapped ? '' : ' nomap'), d,
+    'vector-effect':'non-scaling-stroke'});
   const t = el('title',{});
   t.textContent = s.all_work
     ? T('p_state_all', {abbr:s.abbr, name:stLabel(s), w:s.work})
@@ -224,7 +231,10 @@ cards.innerHTML = '';
 for(const s of STATES){
   const total = s.total || 1;
   const seg = (n, v) => n ? `<i style="width:${(n/total*100).toFixed(1)}%;background:${v}"></i>` : '';
+  // 有網址就請人去看；沒網址但這個州其實有地圖（局部預覽）就什麼都不說——
+  // 「尚無地圖」是假的，「看地圖 →」又點不動，留白才是誠實的。
   const status = s.url ? T('p_card_go')
+               : s.mapped ? ''
                : s.all_work ? T('p_card_all')
                : s.work === 0 ? T('p_card_nowork')
                : s.work <= 5 ? T('p_card_few') : T('p_card_nomap');
@@ -257,7 +267,7 @@ for(const s of STATES){
   if(s.url){ node = document.createElement('a'); node.href = s.url; node.className = 'statecard';
              if(/^https?:/.test(s.url)){ node.target = '_blank'; node.rel = 'noopener'; } }
   else { node = document.createElement('div');
-         node.className = 'statecard ' + (note ? 'off' : 'nomap'); }
+         node.className = 'statecard ' + ((note || s.mapped) ? 'off' : 'nomap'); }
   node.innerHTML = inner;
   cards.appendChild(node);
 }
@@ -499,8 +509,12 @@ function render(key, pick){
     + [(f & BIT_FIRE) ? T('tbl_bushfire') : '', (f & BIT_DISASTER) ? T('tbl_disaster') : '']
         .filter(Boolean).map(s => `<br><em class="tbl">${esc(s)}</em>`).join('')
     : '';
+  // s.mapped 而不是 s.url：這句話是在陳述「這個州有沒有地圖」，
+  // 而不是「這次建置有沒有它的網址」。局部的 Artifact 預覽只發了部分州頁時，
+  // 用 url 判斷會對 NSW 說「還沒做地圖」——那是假的，而且使用者看得到。
   const link = s.url
     ? `<a class="golink" href="${s.url}#pc=${parseInt(v,10)}"${/^https?:/.test(s.url) ? ' target="_blank" rel="noopener"' : ''}>${esc(T('p_golink', {state:stLabel(s)}))}</a>`
+    : s.mapped ? ''
     : `<p class="nomap">${esc(T('p_nomap_line', {state:stLabel(s)}))}</p>`;
   // 版面跟州頁的答案面板一模一樣：郵遞區號 38px 等寬，判定色走左邊色帶與判定字。
   // 兩頁共用同一個 .detail/.ans 結構，使用者從入口頁點進州頁不必重新認一次。
@@ -531,18 +545,12 @@ function applyLang(){
 
   // 帶連結或變數的句子，佔位符在 strings.json 裡，這裡才組得起來
   const a = (url, text) => `<a href="${url}" target="_blank" rel="noopener">${esc(text)}</a>`;
-  document.getElementById('disclaim').innerHTML =
-    T('p_disclaim', {link: a(META.source_url, T('p_official_page'))});
   document.getElementById('basisnote').innerHTML =
     T('p_basis_note2', {link: a(META.source_url, T('p_official_text'))});
-  // 法規那一句放這裡不放頁首：頁首要短，而且對使用者來說「這不是政府網站」
-  // 比「不構成移民協助」有用得多。這裡有空間講完整。
-  document.getElementById('note4').innerHTML = T('p_note4_b', {
-    ha: a(META.source_url, T('p_ha_link')),
-    da: a('https://www.disasterassist.gov.au/find-a-disaster', T('p_da_link')),
-  }) + ` <span class="dim">${esc(T('not_assistance'))}</span>`;
-  document.getElementById('stamp').textContent =
-    T('p_stamp', {d: META.page_date, b: META.built_at});
+  renderFoot(document.getElementById('foot'), {
+    T, esc, sourceUrl: META.source_url,
+    pageDate: META.page_date, builtAt: META.built_at,
+  });
   // #hint 住在 #result 裡面，顯示查詢結果時整塊會被換掉，這個元素就不在了。
   // 沒有防呆的話這裡會丟例外，applyLang 後面的東西（包括重畫目前的結果）
   // 全部不會跑——切語言看起來像「只換了一半」。

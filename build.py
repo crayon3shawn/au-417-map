@@ -41,6 +41,22 @@ EXCLUDED_EN = {
 COORD_DP = 3          # 約 110 公尺，與邊界抓取的 165 公尺概化容差相稱
 
 
+# 州境內的飛地。地圖上會有一塊空白，但那不是「沒有資料」而是「另一個轄區」。
+# 目前只有 ACT：它整個被 NSW 包住，而郵區面是逐州抓的，NSW 的郵區到 ACT
+# 邊界就停了，畫面上留一塊空白，看起來像資料壞掉。
+#
+# **只放標記，不畫界線。** ACT 的郵區邊界要另外抓（geo.abs.gov.au）；拿 NSW
+# 郵區面的「洞」去反推是錯的——實測那個洞有 20%（469 km²）落在 ACT 以西的
+# NSW 境內（Brindabella 一帶，那裡是 regional、一般工作算），而且完全沒有
+# 涵蓋 ACT 南部。畫成 ACT 會讓人以為那裡不算，那是會害人做錯決定的錯。
+#
+# 座標取「空白」與 ABS 州界輪廓的交集內一點，所以標記一定落在看得到的空白上，
+# 也一定落在真正的 ACT 境內。
+ENCLAVES = {
+    "nsw": [{"key": "act", "lon": 149.083, "lat": -35.387}],
+}
+
+
 def to_path(rings):
     """把環座標烘成 SVG path 字串（維持原始經緯度，投影由前端 group transform 處理）。
 
@@ -93,10 +109,21 @@ def categorise(rings, flags, mask):
     琥珀再細分成大火／天災／兩者——災害種類只有在「重建是唯一路徑」時才
     影響決定（日期門檻不同、ImmiAccount 的 Employment type 也不同）。
     在綠色郵區，一般工作本來就算，災害種類是次要資訊，留在詳情面板。
+
+    地圖改成「一次檢視一種」之後還要三個總數：某一張表上有幾個郵區。
+    fire_all／flood_all 跟 fire_only／flood_only 不一樣——後者只數「重建是
+    唯一路徑」的那些，前者連同時也在工作名單上的一起數。圖層檢視問的是
+    「這個郵區在不在這張表上」，跟它有沒有別條路可走無關。
     """
-    c = dict(work=0, rebuild=0, none=0, fire_only=0, flood_only=0, fire_and_flood=0)
+    c = dict(work=0, rebuild=0, none=0, fire_only=0, flood_only=0, fire_and_flood=0,
+             fire_all=0, flood_all=0, total=0)
     for k in rings:
         f = flags.get(int(k), 0)
+        c["total"] += 1
+        if f & BIT_FIRE:
+            c["fire_all"] += 1
+        if f & BIT_DISASTER:
+            c["flood_all"] += 1
         if f & mask:
             c["work"] += 1
         elif f & REBUILD_MASK:
@@ -227,6 +254,12 @@ def theme_js():
     return (ROOT / "src" / "theme.js").read_text(encoding="utf-8")
 
 
+def foot_js():
+    """頁尾（免責／出處／戳記）。兩頁共用——各寫一份的話，改了一邊不會有任何
+    錯誤訊息，只會變成兩頁的免責聲明說不一樣的話。"""
+    return (ROOT / "src" / "foot.js").read_text(encoding="utf-8")
+
+
 def url_js():
     """可分享的網址（?ind=&pc=）。兩頁共用同一份格式——各寫一份的話，改了一邊
     只會變成入口頁貼出來的連結在州頁打不開，不會有錯誤訊息。"""
@@ -324,6 +357,7 @@ def main(state):
     src = pcdata["sources"]
     meta = {
         "state": state,
+        "enclaves": ENCLAVES.get(state, []),
         "visa": VISA,
         # 落款與出處段落都要用到這些值。不在這裡組成句子——組好的句子只有一種
         # 語言，而且樣板裡若另外寫死一份日期，官網一更新那份就開始說謊。
@@ -380,6 +414,7 @@ def main(state):
                          ("__TOKENS__", tokens_css()),
                          ("__THEME__", theme_js()),
                          ("__URL__", url_js()),
+                         ("__FOOT__", foot_js()),
                          ("__CSS__", part("map.css")),
                          ("__JS__", part("map.js").replace("// @ts-check\n", "", 1)),
                          # JS 一跑就會依語言改寫 document.title，這裡只是後備，

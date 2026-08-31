@@ -1,0 +1,322 @@
+{
+  "postcodes": {
+    "2600": {
+      "lat": -35.3029,
+      "lon": 149.2011,
+      "names": [
+        "Barton",
+        "Canberra",
+        "Capital Hill",
+        "Deakin",
+        "Deakin West",
+        "Duntroon",
+        "Fairbairn Raaf",
+        "Harman",
+        "Hmas Harman",
+        "Parkes",
+        "Parliament House",
+        "Russell",
+        "Russell Hill",
+        "Yarralumla"
+      ]
+    },
+    "2601": {
+      "lat": -35.2759,
+      "lon": 149.1138,
+      "names": [
+        "Acton",
+        "Black Mountain",
+        "Canberra",
+        "City"
+      ]
+    },
+    "2602": {
+      "lat": -35.2481,
+      "lon": 149.1481,
+      "names": [
+        "Ainslie",
+        "Dickson",
+        "Downer",
+        "Hackett",
+        "Lyneham",
+        "O'Connor",
+        "O’Connor",
+        "Watson"
+      ]
+    },
+    "2603": {
+      "lat": -35.3304,
+      "lon": 149.1257,
+      "names": [
+        "Forrest",
+        "Griffith",
+        "Manuka",
+        "Red Hill"
+      ]
+    },
+    "2604": {
+      "lat": -35.3364,
+      "lon": 149.1476,
+      "names": [
+        "Causeway",
+        "Kingston",
+        "Narrabundah"
+      ]
+    },
+    "2605": {
+      "lat": -35.3358,
+      "lon": 149.0935,
+      "names": [
+        "Curtin",
+        "Garran",
+        "Hughes"
+      ]
+    },
+    "2606": {
+      "lat": -35.3517,
+      "lon": 149.0926,
+      "names": [
+        "Chifley",
+        "Lyons",
+        "O'Malley",
+        "O’Malley",
+        "Phillip",
+        "Phillip Dc",
+        "Swinger Hill",
+        "Woden"
+      ]
+    },
+    "2607": {
+      "lat": -35.37,
+      "lon": 149.0948,
+      "names": [
+        "Farrer",
+        "Isaacs",
+        "Mawson",
+        "Pearce",
+        "Torrens"
+      ]
+    },
+    "2609": {
+      "lat": -35.3154,
+      "lon": 149.17,
+      "names": [
+        "Canberra Airport",
+        "Canberra International Airport",
+        "Fyshwick",
+        "Majura",
+        "Pialligo",
+        "Symonston"
+      ]
+    },
+    "2610": {
+      "lat": -35.2809,
+      "lon": 149.13,
+      "names": [
+        "Canberra Bc",
+        "Canberra Mc"
+      ]
+    },
+    "2611": {
+      "lat": -35.3223,
+      "lon": 148.7844,
+      "names": [
+        "Chapman",
+        "Coombs",
+        "Coree",
+        "Denman Prospect",
+        "Duffy",
+        "Fisher",
+        "Holder",
+        "Molonglo",
+        "Mount Stromlo",
+        "Pierces Creek",
+        "Rivett",
+        "Stirling",
+        "Stromlo",
+        "Uriarra Forest",
+        "Uriarra Village",
+        "Waramanga",
+        "Weston",
+        "Weston Creek",
+        "Whitlam",
+        "Wright"
+      ]
+    },
+    "2612": {
+      "lat": -35.2706,
+      "lon": 149.1332,
+      "names": [
+        "Braddon",
+        "Campbell",
+        "Reid",
+        "Turner"
+      ]
+    },
+    "2614": {
+      "lat": -35.2573,
+      "lon": 149.0498,
+      "names": [
+        "Aranda",
+        "Cook",
+        "Hawker",
+        "Jamison Centre",
+        "Macquarie",
+        "Page",
+        "Scullin",
+        "Weetangera"
+      ]
+    },
+    "2615": {
+      "lat": -35.2154,
+      "lon": 149.0293,
+      "names": [
+        "Charnwood",
+        "Dunlop",
+        "Florey",
+        "Flynn",
+        "Fraser",
+        "Higgins",
+        "Holt",
+        "Kippax",
+        "Kippax Centre",
+        "Latham",
+        "Macgregor",
+        "Macnamara",
+        "Melba",
+        "Spence",
+        "Strathnairn"
+      ]
+    },
+    "2617": {
+      "lat": -35.2313,
+      "lon": 149.0867,
+      "names": [
+        "Belconnen",
+        "Belconnen Dc",
+        "Bruce",
+        "Evatt",
+        "Giralang",
+        "Kaleen",
+        "Lawson",
+        "Mckellar",
+        "University Of Canberra"
+      ]
+    },
+    "2618": {
+      "lat": -35.1356,
+      "lon": 149.0433,
+      "names": [
+        "Hall"
+      ]
+    },
+    "2900": {
+      "lat": -35.4189,
+      "lon": 149.0638,
+      "names": [
+        "Greenway",
+        "Tuggeranong"
+      ]
+    },
+    "2901": {
+      "lat": -35.4197,
+      "lon": 149.069,
+      "names": [
+        "Tuggeranong Dc"
+      ]
+    },
+    "2902": {
+      "lat": -35.384,
+      "lon": 149.0544,
+      "names": [
+        "Kambah",
+        "Kambah Village"
+      ]
+    },
+    "2903": {
+      "lat": -35.4027,
+      "lon": 149.0818,
+      "names": [
+        "Erindale Centre",
+        "Oxley",
+        "Wanniassa"
+      ]
+    },
+    "2904": {
+      "lat": -35.4102,
+      "lon": 149.1114,
+      "names": [
+        "Fadden",
+        "Gowrie",
+        "Macarthur",
+        "Monash"
+      ]
+    },
+    "2905": {
+      "lat": -35.431,
+      "lon": 149.11,
+      "names": [
+        "Bonython",
+        "Calwell",
+        "Chisholm",
+        "Gilmore",
+        "Isabella Plains",
+        "Richardson",
+        "Theodore"
+      ]
+    },
+    "2906": {
+      "lat": -35.4568,
+      "lon": 149.0897,
+      "names": [
+        "Banks",
+        "Conder",
+        "Gordon"
+      ]
+    },
+    "2911": {
+      "lat": -35.2187,
+      "lon": 149.1325,
+      "names": [
+        "Crace",
+        "Kenny",
+        "Mitchell"
+      ]
+    },
+    "2912": {
+      "lat": -35.1725,
+      "lon": 149.1236,
+      "names": [
+        "Gungahlin"
+      ]
+    },
+    "2913": {
+      "lat": -35.2018,
+      "lon": 149.1323,
+      "names": [
+        "Casey",
+        "Franklin",
+        "Ginninderra Village",
+        "Ngunnawal",
+        "Nicholls",
+        "Palmerston",
+        "Taylor"
+      ]
+    },
+    "2914": {
+      "lat": -35.1703,
+      "lon": 149.1259,
+      "names": [
+        "Amaroo",
+        "Bonner",
+        "Forde",
+        "Harrison",
+        "Jacka",
+        "Moncrieff",
+        "Throsby"
+      ]
+    }
+  },
+  "source": "https://raw.githubusercontent.com/matthewproctor/australianpostcodes/master/australian_postcodes.csv",
+  "state": "act"
+}
