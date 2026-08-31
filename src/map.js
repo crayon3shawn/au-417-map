@@ -336,7 +336,7 @@ else settleView(false);
 let resizeTimer = 0, lastVW = innerWidth;
 function onResize(){
   sizeToViewport();
-  relabelCities();
+  relabelMapText();
   apply();
   // 手機上「只有高度變、寬度沒變」幾乎一定是鍵盤或網址列，不是版面真的變了。
   // 那時重算視野會讓地圖在使用者眼前縮一下——正是查詢打字時最不該發生的事。
@@ -357,7 +357,7 @@ if(typeof ResizeObserver === 'function'){
   let lastW = 0, lastH = 0, roTimer = 0;
   if(pane) new ResizeObserver(() => {
     if(!sizeToViewport()) return;          // 還是 0，等下一次
-    relabelCities();
+    relabelMapText();
     apply();
     const r = pane.getBoundingClientRect();
     // 尺寸沒真的變就別重算——settleView 會動窗格高度，不擋的話會自己觸發自己。
@@ -368,8 +368,14 @@ if(typeof ResizeObserver === 'function'){
   }).observe(pane);
 }
 
-function relabelCities(){
+// 地圖上所有會隨語言變的文字，集中在這裡重寫。
+// 原本只有城市標籤在管，結果南回歸線的標籤在英文版一直掛著中文——它是繪製
+// 時設定一次就沒人再碰的。飛地標記目前剛好兩種語言都是「ACT」才沒露餡。
+// 全部收在同一個函式裡，將來多畫一個帶文字的東西才不會又漏掉一個。
+function relabelMapText(){
   for(const g of cityNodes) g.__c.t.textContent = cityLabel(g.__c.name);
+  if(tlbl) tlbl.textContent = T('tropic');
+  for(const g of encNodes) g.__e.t.textContent = ENC_TEXT[g.__e.key]().mark;
 }
 
 function toBase(e){
@@ -1058,7 +1064,7 @@ function applyLang(){
   document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
   document.title = h1.textContent = T('title_state', {state: stateName()});
   applyMapA11y();
-  relabelCities();
+  relabelMapText();
   for(const el2 of document.querySelectorAll('[data-t]')){
     const key = el2.getAttribute('data-t');
     if(key) el2.textContent = T(key);
