@@ -493,10 +493,6 @@
       "en": "Flood, cyclone and severe weather recovery → counts",
       "zh": "洪水／氣旋等天災重建工作 → 算"
     },
-    "v_flood_sub": {
-      "en": "Carried out after 31 December 2021. Select \"flood recovery\" as Employment type when you apply.",
-      "zh": "2021 年 12 月 31 日之後執行；申請時「Employment type」要選 flood recovery。"
-    },
     "v_no_polygon": {
       "en": "The ABS has no boundary for this postcode; it is shown as a dot at an approximate location.",
       "zh": "ABS 沒有這個郵區的對應面，地圖上以小點標示概略位置。"
@@ -513,17 +509,9 @@
       "en": "Ordinary {ind} work → does not count",
       "zh": "一般{ind}工作 → 不算"
     },
-    "v_work_no_sub": {
-      "en": "This postcode is not on the area list that applies to {ind}.",
-      "zh": "這個郵區不在{ind}適用的地區名單上。"
-    },
     "v_work_yes": {
       "en": "Ordinary {ind} work → counts",
       "zh": "一般{ind}工作 → 算"
-    },
-    "v_work_yes_sub": {
-      "en": "This postcode is on the area list that applies to {ind}.",
-      "zh": "這個郵區在{ind}適用的地區名單上。"
     },
     "view_fire": {
       "en": "Bushfire",

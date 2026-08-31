@@ -682,11 +682,16 @@ function select(pc){
   const more = names.length > shown.length ? T('more_areas', {n: names.length}) : '';
   const rows = [];
   const ind = indLabel();
-  if(f & workMask()) rows.push(`<div class="verdict" style="--vc:var(--c-work)"><span class="dot"></span><span><b>${esc(T('v_work_yes',{ind}))}</b><br>${esc(T('v_work_yes_sub',{ind}))}</span></div>`);
-  else rows.push(`<div class="verdict no"><span class="dot"></span><span><b>${esc(T('v_work_no',{ind}))}</b><br>${esc(T('v_work_no_sub',{ind}))}</span></div>`);
-  // 表名要寫出來：送件時官方問的就是這個，而兩張表的起算日不一樣。
+  // 一般工作那一列不再接副標——「這個郵區在{ind}適用的地區名單上」
+  // 只是把標題再講一次，沒有新資訊，只有佔位置。
+  if(f & workMask()) rows.push(`<div class="verdict" style="--vc:var(--c-work)"><span class="dot"></span><span><b>${esc(T('v_work_yes',{ind}))}</b></span></div>`);
+  else rows.push(`<div class="verdict no"><span class="dot"></span><span><b>${esc(T('v_work_no',{ind}))}</b></span></div>`);
+  // 表名要寫出來：送件時官方問的就是這個。
   if(f & BIT_FIRE) rows.push(`<div class="verdict" style="--vc:var(--c-fire)"><span class="dot"></span><span><b>${esc(T('v_fire'))}</b><br><em class="tbl">${esc(T('tbl_bushfire'))}</em><br>${esc(T('v_fire_sub'))}</span></div>`);
-  if(f & BIT_DISASTER) rows.push(`<div class="verdict" style="--vc:var(--c-flood)"><span class="dot"></span><span><b>${esc(T('v_flood'))}</b><br><em class="tbl">${esc(T('tbl_disaster'))}</em><br>${esc(T('v_flood_sub'))}</span></div>`);
+  // 天災那一列沒有副標：原本那句只講了一個 2021 年的日期門檻（現在找工作的人
+  // 永遠通過）跟一個 ImmiAccount 表單欄位（送件時才用得到）。官方對「哪些
+  // 工作算天災重建」的範圍定義沒有可引的來源，寧可留白也不編。
+  if(f & BIT_DISASTER) rows.push(`<div class="verdict" style="--vc:var(--c-flood)"><span class="dot"></span><span><b>${esc(T('v_flood'))}</b><br><em class="tbl">${esc(T('tbl_disaster'))}</em></span></div>`);
   if(!(f & workMask()) && (f & REBUILD)) rows.push(`<div class="note">${esc(T('v_rebuild_only',{ind}))}</div>`);
   if(d.stray) rows.push(`<div class="note">${esc(T('v_no_polygon'))}</div>`);
 

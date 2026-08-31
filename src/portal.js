@@ -50,7 +50,9 @@ let shownPc = null, shownName = null, shownRegion = null;
 function cats(){
   const n = indLabel();
   return {
-    work:    {c:CAT_COLOR.work,    say:T('cat_work', {ind:n}),   sub:T('v_work_yes_sub', {ind:n})},
+    // work 沒有副標：原本那句「這個郵區在{ind}適用的地區名單上」只是把
+    // 判定字再講一次。rebuild 與 none 的副標有實質內容，所以留著。
+    work:    {c:CAT_COLOR.work,    say:T('cat_work', {ind:n}),   sub:''},
     rebuild: {c:CAT_COLOR.rebuild, say:T('cat_rebuild'),         sub:T('p_rebuild_sub', {ind:n})},
     none:    {c:CAT_COLOR.none,    say:T('cat_none'),            sub:T('p_none_sub')},
   };
@@ -505,10 +507,12 @@ function render(key, pick){
   const routes = [];
   if(f & BIT_FIRE) routes.push(T('p_route_fire'));
   if(f & BIT_DISASTER) routes.push(T('p_route_flood'));
-  const extra = routes.length ? '<br>' + esc(T('p_also_declared', {list:joinList(routes)}))
+  const extra = routes.length ? esc(T('p_also_declared', {list:joinList(routes)}))
     + [(f & BIT_FIRE) ? T('tbl_bushfire') : '', (f & BIT_DISASTER) ? T('tbl_disaster') : '']
         .filter(Boolean).map(s => `<br><em class="tbl">${esc(s)}</em>`).join('')
     : '';
+  // 副標可以是空的（work 類），所以用組的，不能直接串 '<br>' 開頭。
+  const body = [cat.sub ? esc(cat.sub) : '', extra].filter(Boolean).join('<br>');
   // s.mapped 而不是 s.url：這句話是在陳述「這個州有沒有地圖」，
   // 而不是「這次建置有沒有它的網址」。局部的 Artifact 預覽只發了部分州頁時，
   // 用 url 判斷會對 NSW 說「還沒做地圖」——那是假的，而且使用者看得到。
@@ -521,7 +525,7 @@ function render(key, pick){
   show(`<div class="ans"><span class="pcn">${pad4(v)}<u>${esc(s.abbr)}</u></span>
         <span class="say">${esc(sayOf(f))}</span>
         <span class="loc">${esc(name)}</span></div>
-      <div class="bd"><div class="sub">${esc(cat.sub)}${extra}</div>${link}</div>`,
+      <div class="bd">${body ? `<div class="sub">${body}</div>` : ''}${link}</div>`,
     cat.c, catOf(f) === 'none');
 }
 // 打字就查，沒有「查」按鈕。條件跟州頁一致——原本入口頁漏掉三位數郵區

@@ -152,6 +152,9 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   font-size:11px;letter-spacing:.02em;color:var(--ink-3)}
 .detail .bd{padding:13px 16px 14px 22px;border-top:1px solid var(--line);
   display:flex;flex-direction:column;gap:11px}
+/* 入口頁的 work 類郵區在部分建置下可能兩段都空（沒副標、沒地圖連結），
+   空的 .bd 會留下一條有邊框的空白帶。跟 .hits:empty 同一個處理方式。 */
+.detail .bd:empty{display:none}
 .qhint{margin:0;font-size:12.5px;line-height:1.45;color:var(--ink-3)}
 .hits{display:flex;flex-direction:column;gap:2px;max-height:210px;overflow-y:auto}
 .hits:empty{display:none}
