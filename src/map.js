@@ -118,8 +118,7 @@ const catOf = f => (f & workMask()) ? 'work' : (f & REBUILD) ? 'rebuild' : 'none
 // 答案面板上那一行判定字。**永遠講到底是哪一張表**，不跟著地圖的檢視切換走。
 // 地圖可以只給三色（概覽），但查單一郵區時「只有災後重建工作算」是不夠的：
 // 建築的 638 個「只有重建算」郵區裡有 348 個（55%）只落在其中一張表上，而
-// 兩張表的起算日差兩年半（2019-07-31 vs 2021-12-31）。併起來講等於把該走
-// 哪條路、用哪個日期都藏起來。
+// 兩張表在官網是各自獨立的規則。併起來講等於把該走哪條路藏起來。
 const sayOf = f =>
     (f & workMask())                    ? T('cat_work', {ind: indLabel()})
   : (f & BIT_FIRE) && (f & BIT_DISASTER) ? T('cat_both')
@@ -682,11 +681,16 @@ function select(pc){
   const more = names.length > shown.length ? T('more_areas', {n: names.length}) : '';
   const rows = [];
   const ind = indLabel();
-  if(f & workMask()) rows.push(`<div class="verdict" style="--vc:var(--c-work)"><span class="dot"></span><span><b>${esc(T('v_work_yes',{ind}))}</b><br>${esc(T('v_work_yes_sub',{ind}))}</span></div>`);
-  else rows.push(`<div class="verdict no"><span class="dot"></span><span><b>${esc(T('v_work_no',{ind}))}</b><br>${esc(T('v_work_no_sub',{ind}))}</span></div>`);
-  // 表名要寫出來：送件時官方問的就是這個，而兩張表的起算日不一樣。
+  // 一般工作那一列不再接副標——「這個郵區在{ind}適用的地區名單上」
+  // 只是把標題再講一次，沒有新資訊，只有佔位置。
+  if(f & workMask()) rows.push(`<div class="verdict" style="--vc:var(--c-work)"><span class="dot"></span><span><b>${esc(T('v_work_yes',{ind}))}</b></span></div>`);
+  else rows.push(`<div class="verdict no"><span class="dot"></span><span><b>${esc(T('v_work_no',{ind}))}</b></span></div>`);
+  // 表名要寫出來：送件時官方問的就是這個。
   if(f & BIT_FIRE) rows.push(`<div class="verdict" style="--vc:var(--c-fire)"><span class="dot"></span><span><b>${esc(T('v_fire'))}</b><br><em class="tbl">${esc(T('tbl_bushfire'))}</em><br>${esc(T('v_fire_sub'))}</span></div>`);
-  if(f & BIT_DISASTER) rows.push(`<div class="verdict" style="--vc:var(--c-flood)"><span class="dot"></span><span><b>${esc(T('v_flood'))}</b><br><em class="tbl">${esc(T('tbl_disaster'))}</em><br>${esc(T('v_flood_sub'))}</span></div>`);
+  // 天災那一列沒有副標：原本那句只講了一個 2021 年的日期門檻（現在找工作的人
+  // 永遠通過）跟一個 ImmiAccount 表單欄位（送件時才用得到）。官方對「哪些
+  // 工作算天災重建」的範圍定義沒有可引的來源，寧可留白也不編。
+  if(f & BIT_DISASTER) rows.push(`<div class="verdict" style="--vc:var(--c-flood)"><span class="dot"></span><span><b>${esc(T('v_flood'))}</b><br><em class="tbl">${esc(T('tbl_disaster'))}</em></span></div>`);
   if(!(f & workMask()) && (f & REBUILD)) rows.push(`<div class="note">${esc(T('v_rebuild_only',{ind}))}</div>`);
   if(d.stray) rows.push(`<div class="note">${esc(T('v_no_polygon'))}</div>`);
 

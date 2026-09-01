@@ -109,8 +109,15 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .indcard .hd{font-size:12.5px;line-height:1.5;color:var(--ink-2);display:block}
 .indcard .hd b{color:var(--ink);font-weight:600}
 .indcard .bd{font-size:12.5px;line-height:1.55;color:var(--ink-3);gap:0}
-.indcard .bd a{color:var(--ink-2);white-space:nowrap}
+/* 不能 nowrap：觀光餐旅那句是「請參考官方 Remote and Very Remote ＋ Northern
+   Australia →」，一行排不下，會橫向撐破卡片 35px。表名在英文裡本來就是可以
+   斷在空白處的短語。 */
+.indcard .bd a{color:var(--ink-2)}
 .indcard .bd a:hover{color:var(--accent)}
+/* 「這個選擇器現在管什麼」——是關於控制項的說明，不是產業定義的一部分，
+   所以跟上面隔一條線、字再淡一級。 */
+.indcard .what{margin-top:9px;padding-top:9px;border-top:1px solid var(--line);
+  font-size:12px;line-height:1.5;color:var(--ink-3)}
 .srch{display:flex}
 .srch input{flex:1;min-width:0;font-family:"IBM Plex Mono",monospace;
   letter-spacing:.03em;padding:0 12px}
@@ -152,6 +159,16 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   font-size:11px;letter-spacing:.02em;color:var(--ink-3)}
 .detail .bd{padding:13px 16px 14px 22px;border-top:1px solid var(--line);
   display:flex;flex-direction:column;gap:11px}
+/* 入口頁的 work 類郵區在部分建置下可能兩段都空（沒副標、沒地圖連結），
+   空的 .bd 會留下一條有邊框的空白帶。跟 .hits:empty 同一個處理方式。 */
+.detail .bd:empty{display:none}
+/* 判定列。州頁的答案面板與入口頁的「哪些產業算」共用同一個元件——兩邊
+   都是「一顆判定色點 + 粗體結論 + 一行細節」，本來就該是同一個東西。 */
+.verdict{display:flex;gap:9px;align-items:flex-start;font-size:14px;line-height:1.5}
+.verdict .dot{width:9px;height:9px;border-radius:2px;margin-top:6px;flex:none;background:var(--vc)}
+.verdict b{font-weight:700}
+.verdict .no{color:var(--ink-3)}
+.verdict.no .dot{background:var(--line-2)}
 .qhint{margin:0;font-size:12.5px;line-height:1.45;color:var(--ink-3)}
 .hits{display:flex;flex-direction:column;gap:2px;max-height:210px;overflow-y:auto}
 .hits:empty{display:none}
