@@ -394,12 +394,12 @@
       "zh": "在{state}地圖上框出來 →"
     },
     "p_route_fire": {
-      "en": "bushfire recovery (after 31 July 2019)",
-      "zh": "叢林大火重建（2019/7/31 之後）"
+      "en": "bushfire recovery",
+      "zh": "叢林大火重建"
     },
     "p_route_flood": {
-      "en": "flood and cyclone recovery (after 31 December 2021)",
-      "zh": "洪水／氣旋等天災重建（2021/12/31 之後）"
+      "en": "flood and cyclone recovery",
+      "zh": "洪水／氣旋等天災重建"
     },
     "p_samelist": {
       "en": "<b>{same} use the same Regional Australia list as construction</b>, so the verdicts are identical — this map works just as well for farm, meatworks and mine workers. Tourism and hospitality differs most: it uses Remote and Northern, leaving just {tour} usable postcodes against Regional’s {reg} — roughly {ratio} times fewer.",

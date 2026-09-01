@@ -58,9 +58,9 @@ function cats(){
   };
 }
 // 查單一郵區時，判定字永遠講到底是哪一張表。Bushfire 與 Natural disaster 在
-// 官網是兩張獨立的表，起算日差兩年半（2019-07-31 vs 2021-12-31）——建築的
-// 638 個「只有重建算」郵區裡有 348 個只落在其中一張上，併起來講等於把該走
-// 哪條路、用哪個日期都藏起來。州頁的 sayOf() 是同一套邏輯。
+// 官網是兩張獨立的表，規則也不同——建築的 638 個「只有重建算」郵區裡有 348
+// 個只落在其中一張上，併起來講等於把該走哪條路藏起來。州頁的 sayOf() 是
+// 同一套邏輯。
 function sayOf(f){
   if(f & industry.mask) return T('cat_work', {ind: indLabel()});
   if((f & BIT_FIRE) && (f & BIT_DISASTER)) return T('cat_both');
@@ -503,7 +503,9 @@ function render(key, pick){
   const stKey = hit[0], f = hit[1];
   const name = pick || mainName(key);
   const s = stateOf(stKey), cat = cats()[catOf(f)];
-  // 表名要寫出來：送件時官方問的就是這個，而兩張表的起算日不一樣
+  // 表名要寫出來：送件時官方問的就是這個。頁面上不再印起算日（2019-07-31 與
+  // 2021-12-31 都已經過去好幾年，對「找工作前先確認」的人永遠成立），表名就是
+  // 使用者回官網查細則的入口。
   const routes = [];
   if(f & BIT_FIRE) routes.push(T('p_route_fire'));
   if(f & BIT_DISASTER) routes.push(T('p_route_flood'));
