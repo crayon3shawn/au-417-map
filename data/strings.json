@@ -17,10 +17,6 @@
       "en": "Does not count at all",
       "zh": "完全不算"
     },
-    "cat_rebuild": {
-      "en": "Only disaster recovery work counts",
-      "zh": "只有災後重建工作算"
-    },
     "cat_work": {
       "en": "Ordinary {ind} work counts",
       "zh": "一般{ind}工作就算"
@@ -205,6 +201,18 @@
       "en": "See the official {tables} list →",
       "zh": "請參考官方 {tables} →"
     },
+    "p_all_none": {
+      "en": "Does not count for any industry",
+      "zh": "不分產業，完全不算"
+    },
+    "p_all_rebuild": {
+      "en": "Only disaster recovery work counts, whichever industry",
+      "zh": "不分產業，只有災後重建工作算"
+    },
+    "p_all_work": {
+      "en": "Ordinary work counts, whichever industry",
+      "zh": "不分產業，一般工作就算"
+    },
     "p_also_declared": {
       "en": "This postcode is also a declared disaster area: {list}.",
       "zh": "這裡也被宣告為災區：{list}。"
@@ -273,6 +281,18 @@
       "en": "postcodes · {pct}%",
       "zh": "個 · {pct}%"
     },
+    "p_declared": {
+      "en": "This postcode is a declared disaster area: {list}.",
+      "zh": "這個郵區被宣告為災區：{list}。"
+    },
+    "p_depends": {
+      "en": "Depends on your industry",
+      "zh": "看你做哪一行"
+    },
+    "p_detail_empty": {
+      "en": "Enter a postcode or place name above and the verdict appears here, for every industry at once.",
+      "zh": "在上面輸入郵遞區號或地名，這裡會顯示這個郵區算不算集簽，六種產業一次講完。"
+    },
     "p_eyebrow_dist": {
       "en": "Postcode breakdown",
       "zh": "郵區分布"
@@ -280,6 +300,18 @@
     "p_golink": {
       "en": "Open the {state} map →",
       "zh": "在{state}地圖上看 →"
+    },
+    "p_grp_none": {
+      "en": "Does not count",
+      "zh": "完全不算"
+    },
+    "p_grp_rebuild": {
+      "en": "Only disaster recovery work counts",
+      "zh": "只有災後重建工作算"
+    },
+    "p_grp_work": {
+      "en": "Ordinary work counts",
+      "zh": "一般工作就算"
     },
     "p_hint": {
       "en": "{n} postcodes searchable, covering all of Australia. {m} states have maps so far.",
@@ -296,6 +328,10 @@
     "p_ind_aria": {
       "en": "Choose your industry",
       "zh": "選擇產業"
+    },
+    "p_ind_what": {
+      "en": "Postcode verdicts above already cover every industry. This choice only sets which industry the state figures and district breakdowns are counted for.",
+      "zh": "上面的郵區判定已經把全部產業列出來了。這個選擇只決定下方各州統計與行政區分布要用哪一行來數。"
     },
     "p_leg_none": {
       "en": "Not eligible",
@@ -357,9 +393,9 @@
       "en": "Enter a postcode or place name",
       "zh": "輸入郵遞區號或地名"
     },
-    "p_rebuild_sub": {
-      "en": "Ordinary {ind} work does not count. Recovery earthworks, demolition, repairs, roads and bridges do, and volunteering counts too. Keep records showing the work was disaster repair.",
-      "zh": "一般{ind}工作不算。重建的土建、拆除、修繕、道路橋樑才算，志工也算，記得留下能證明工程屬於災後修復的紀錄。"
+    "p_rebuild_note": {
+      "en": "Recovery work means rebuilding, demolition, repairs, roads and bridges. Volunteer work counts. Keep records showing the work was disaster repair.",
+      "zh": "重建的土建、拆除、修繕、道路橋樑才算，志工也算，記得留下能證明工程屬於災後修復的紀錄。"
     },
     "p_reg_all_none": {
       "en": "Nothing in this area counts.",
@@ -402,8 +438,8 @@
       "zh": "洪水／氣旋等天災重建"
     },
     "p_samelist": {
-      "en": "<b>{same} use the same Regional Australia list as construction</b>, so the verdicts are identical — this map works just as well for farm, meatworks and mine workers. Tourism and hospitality differs most: it uses Remote and Northern, leaving just {tour} usable postcodes against Regional’s {reg} — roughly {ratio} times fewer.",
-      "zh": "<b>{same}跟建築吃同一張 Regional Australia 表</b>，判斷完全相同——所以這張地圖對做農場、肉廠、礦區的人一樣有效。觀光餐旅差最多：它看的是 Remote 與 Northern，可用郵區只有 {tour} 個，不到 Regional（{reg} 個）的 {ratio} 分之一。"
+      "en": "<b>The two lists are not the same size.</b> Regional Australia covers {reg} postcodes. Remote and Northern, which is what tourism and hospitality goes by, covers {tour} — {ratio} times smaller.",
+      "zh": "<b>兩張表的大小差一個數量級。</b>Regional Australia 有 {reg} 個郵區；觀光餐旅看的 Remote 與 Northern 只有 {tour} 個，不到前者的 {ratio} 分之一。"
     },
     "p_state_all": {
       "en": "{abbr} {name}: all eligible, {w} postcodes",

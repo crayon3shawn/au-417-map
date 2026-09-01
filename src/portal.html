@@ -28,19 +28,6 @@ __CSS__</style>
            大標題又一次。左欄直接從工具開始，搜尋更快到眼前。
            更早以前這裡還有 eyebrow 與 lede，那兩層先前就因為重複而拿掉了。 -->
 
-      <!-- 結構跟各州頁的側欄一致：每一段都是「標籤 + 控制項 + 卡片」。
-           兩個頁面的側欄長得一樣，使用者不必重新認一次。 -->
-      <section class="blk blk-ind">
-        <span class="eyebrow" data-t="industry_label"></span>
-        <select id="ind" class="ind" data-t-aria="p_ind_aria"></select>
-      </section>
-
-      <!-- 產業定義卡是**參考資料**，不是控制項。桌機留在選擇器下面（「標籤＋
-           控制項＋卡片」的分組，跟州頁側欄一致）；手機上排到地圖之後——
-           它 150px 高，夾在產業選擇與搜尋框中間會把主要動作推到 466px，
-           而使用者是「讀到判定之後」才會想查定義，不是打字之前。 -->
-      <div class="card indcard" id="indnote"></div>
-
       <section class="blk blk-search">
       <!-- 查詢欄與答案是同一個物件。你輸入的郵遞區號、跟你在問的那個，是同一個
            東西——現在畫面上它出現兩次（欄位裡一次、答案標題再一次）。合成一個
@@ -60,6 +47,19 @@ __CSS__</style>
         <p class="qhint" id="hint"></p>
         <div class="hits" id="hits" role="listbox" data-t-aria="p_hits_aria"></div>
       </section>
+
+      <!-- 產業選擇器在查詢**之後**。郵區判定已經把全部產業一次列出來，不需要
+           先承諾一個行業才問得到答案——這個選擇器現在只決定「下方各州統計」
+           與「查行政區時的分布」要用哪一行來數，是精修不是閘門，所以排在
+           主要動作下面。
+           結構仍是「標籤 + 控制項 + 卡片」，跟各州頁的側欄一致。 -->
+      <section class="blk blk-ind">
+        <span class="eyebrow" data-t="industry_label"></span>
+        <select id="ind" class="ind" data-t-aria="p_ind_aria"></select>
+      </section>
+
+      <!-- 產業定義卡是參考資料，不是控制項，所以跟著選擇器走。 -->
+      <div class="card indcard" id="indnote"></div>
 
     </div>
 

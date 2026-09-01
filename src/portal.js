@@ -47,31 +47,38 @@ const CAT_COLOR = {work:'var(--c-work)', rebuild:'var(--c-rebuild)', none:'var(-
 // 目前顯示的是哪一筆（郵區或行政區）。換產業／換語言時要照原樣重畫，
 // 所以宣告在所有會用到它的函式之前。
 let shownPc = null, shownName = null, shownRegion = null;
-function cats(){
-  const n = indLabel();
-  return {
-    // work 沒有副標：原本那句「這個郵區在{ind}適用的地區名單上」只是把
-    // 判定字再講一次。rebuild 與 none 的副標有實質內容，所以留著。
-    work:    {c:CAT_COLOR.work,    say:T('cat_work', {ind:n}),   sub:''},
-    rebuild: {c:CAT_COLOR.rebuild, say:T('cat_rebuild'),         sub:T('p_rebuild_sub', {ind:n})},
-    none:    {c:CAT_COLOR.none,    say:T('cat_none'),            sub:T('p_none_sub')},
-  };
-}
-// 查單一郵區時，判定字永遠講到底是哪一張表。Bushfire 與 Natural disaster 在
-// 官網是兩張獨立的表，規則也不同——建築的 638 個「只有重建算」郵區裡有 348
-// 個只落在其中一張上，併起來講等於把該走哪條路藏起來。州頁的 sayOf() 是
-// 同一套邏輯。
-function sayOf(f){
-  if(f & industry.mask) return T('cat_work', {ind: indLabel()});
-  if((f & BIT_FIRE) && (f & BIT_DISASTER)) return T('cat_both');
-  if(f & BIT_FIRE) return T('cat_fire_only');
-  if(f & BIT_DISASTER) return T('cat_flood_only');
-  return T('cat_none');
-}
-// 位元記的是地區表成員資格，判定取決於選了哪個產業
+// 位元記的是地區表成員資格，判定取決於問的是哪一組產業
 const BIT_FIRE = 8, BIT_DISASTER = 16, REBUILD = BIT_FIRE | BIT_DISASTER;
+const catFor = (f, mask) => (f & mask) ? 'work' : (f & REBUILD) ? 'rebuild' : 'none';
+
+// 查一個郵區，答案直接把所有產業一次講完，不要求使用者先承諾一個行業。
+//
+// 可以這樣做是因為 417 的六個產業只有兩種地區組合：建築／農牧／礦業／漁業
+// 與採珠／林業伐木走 regional，觀光與餐旅走 remote + northern。所以「六個
+// 選項」實際上只有兩個答案，列出來最多兩列。
+//
+// 而這兩個答案分歧得很厲害——全澳 2715 個郵區裡有 1404 個（51.7%）兩組判定
+// 不同。先選產業的話，超過一半的查詢會因為一個使用者沒意識到自己做過的選擇
+// 而拿到相反的答案。最極端的是 Rottnest Island（6161）與 Norfolk Island
+// （2899）：預設的建築業回答「完全不算」，但那兩座島上實際存在的工作是觀光
+// 餐旅，而觀光餐旅「算」。
+//
+// 分組從 industry_masks 現算，不寫死。哪天官網把某一行移到別張表，這裡會
+// 自己變成三組。
+function indGroups(){
+  const out = [];
+  for(const i of DATA.industry_masks){
+    const nm = lang === 'zh' ? i.label : (i.label_en || i.label);
+    const g = out.find(x => x.mask === i.mask);
+    if(g) g.names.push(nm); else out.push({mask: i.mask, names: [nm]});
+  }
+  return out;
+}
+
 let industry = DATA.industry_masks.find(i => i.key === DATA.industry) || DATA.industry_masks[0];
-const catOf = f => (f & industry.mask) ? 'work' : (f & REBUILD) ? 'rebuild' : 'none';
+// 各州統計、行政區分布、候選清單的色點仍然要挑一個產業來數——那些是分布，
+// 不是判定，一次只能用一把尺。郵區判定已經不走這條路了。
+const catOf = f => catFor(f, industry.mask);
 
 const indSel = document.getElementById('ind');
 function fillIndustries(){
@@ -90,10 +97,10 @@ function applyIndustry(){
   document.getElementById('indnote').innerHTML =
     `<div class="hd">${esc(T('industry_table'))}</div>`
     + `<div class="bd">${esc(indScope() || '')} `
-    + `${HA}${esc(T('official_def', {tables}))}</a></div>`;
-  // 原本這裡還有一句「切換產業會改變下面的判定與各州統計」加上「462 不適用」。
-  // 前者是在解釋一個一看就懂的下拉選單；後者在頁面上另外還有三處（下方的
-  // 說明段落、溯源細帶、地圖出處），不會因為這裡拿掉就沒人看得到。
+    + `${HA}${esc(T('official_def', {tables}))}</a>`
+    + `<div class="what">${esc(T('p_ind_what'))}</div></div>`;
+  // 這個選擇器已經不決定郵區判定了（判定一次列出全部產業），所以要講一句它
+  // 現在管什麼——不然使用者會以為自己選錯了行會看到錯的答案。
   drawStates();
   drawCards();
   drawSameList();
@@ -107,7 +114,8 @@ function applyIndustry(){
 }
 indSel.addEventListener('change', () => {
   industry = DATA.industry_masks.find(i => i.key === indSel.value) || industry;
-  // 產業要一起帶進網址：判定取決於它，只帶 pc 貼給別人會看到不同的答案
+  // 產業仍然帶進網址：郵區判定已經跟它無關，但各州統計與行政區分布還是
+  // 照它來數，貼給別人時那些數字要一樣。
   writeUrlState(industry.key, shownPc);
   applyIndustry();
 });
@@ -296,27 +304,47 @@ function drawCov(){
 const tb = document.querySelector('#imap tbody');
 function drawTable(){
   tb.innerHTML = '';
+  // 「看哪張郵區表」那一欄其實只有兩種值：建築／農牧／礦業／漁業與採珠／
+  // 林業伐木都走 Regional，只有觀光餐旅走 Remote + Northern。逐列各印一次
+  // 會看起來像六條互不相干的規則，用 rowspan 併起來，表格自己就把「只有
+  // 兩類」講出來了。
+  //
+  // 範圍那一欄不能併。每個產業的定義都不一樣，而那一欄存在的理由正是避免
+  // 把不算的工作誤認為算——農牧的二次加工（釀酒、製麵、加工肉品）不算、
+  // 礦業的支援服務算，這種事沒有第二個地方會講。
+  //
+  // 分組的依據是 areas 不是 mask：DATA.industries 這一份沒有 mask 欄位
+  // （那是 DATA.industry_masks 才有的），拿 undefined 去比會把六個產業
+  // 全部併成一組，表格會印出 rowspan=6 加上一個對五種產業都錯的表名。
+  const groups = [];
   for(const ind of INDS){
     if(!ind.areas) continue;
-    const label = lang === 'zh' ? ind.label : (ind.label_en || ind.en);
-    const scope = lang === 'zh' ? ind.scope : (ind.scope_en || ind.scope);
-    // 中文版把英文原名附在下面（官網用語，查得到）；英文版就是原名，不必重複
-    const sub = lang === 'zh' ? `<em>${esc(ind.en)}</em>` : '';
-    const tr = document.createElement('tr');
-    tr.innerHTML = `<th scope="row">${esc(label)}${sub}</th>`
-      + `<td>${ind.areas.map(a => esc(covName(a))).join(T('p_area_join'))}</td>`
-      + `<td class="sc">${esc(scope || '')}</td>`;
-    tb.appendChild(tr);
+    const sig = JSON.stringify(ind.areas);
+    const g = groups.find(x => x.sig === sig);
+    if(g) g.inds.push(ind); else groups.push({sig, areas: ind.areas, inds: [ind]});
+  }
+  for(const g of groups){
+    const areas = g.areas.map(a => esc(covName(a))).join(T('p_area_join'));
+    g.inds.forEach((ind, i) => {
+      const label = lang === 'zh' ? ind.label : (ind.label_en || ind.en);
+      const scope = lang === 'zh' ? ind.scope : (ind.scope_en || ind.scope);
+      // 中文版把英文原名附在下面（官網用語，查得到）；英文版就是原名，不必重複
+      const sub = lang === 'zh' ? `<em>${esc(ind.en)}</em>` : '';
+      const tr = document.createElement('tr');
+      if(i === 0) tr.className = 'grp';
+      tr.innerHTML = `<th scope="row">${esc(label)}${sub}</th>`
+        + (i === 0 ? `<td${g.inds.length > 1 ? ` rowspan="${g.inds.length}"` : ''}>${areas}</td>` : '')
+        + `<td class="sc">${esc(scope || '')}</td>`;
+      tb.appendChild(tr);
+    });
   }
 }
 
-// 哪些產業跟建築吃同一張表——這是最常被問的一句
+// 兩張表差多少。上面的表格已經用 rowspan 把「誰跟誰吃同一張表」畫出來了，
+// 這裡補的是它畫不出來的東西：兩張表的大小差一個數量級。
 function drawSameList(){
-  const base = JSON.stringify(INDS.find(i => i.en === 'Construction').areas);
-  const same = INDS.filter(i => i.en !== 'Construction' && JSON.stringify(i.areas) === base)
-                   .map(i => lang === 'zh' ? i.label : (i.label_en || i.en));
   document.getElementById('samelist').innerHTML = T('p_samelist', {
-    same: esc(joinList(same)), tour: COV._tourism, reg: COV.regional,
+    tour: COV._tourism, reg: COV.regional,
     ratio: Math.round(COV.regional / COV._tourism),
   });
 }
@@ -416,7 +444,7 @@ function showHits(list, term, regs){
   // 出現候選清單時要把上一筆答案收掉。不清的話，查「gosford」會看到候選是
   // Gosford 的五筆、但右邊還停在上一次查「gold coast」的區域卡片。
   shownPc = null; shownName = null; shownRegion = null;
-  show(`<div class="empty">${esc(T('detail_empty'))}</div>`);
+  show(`<div class="empty">${esc(T('p_detail_empty'))}</div>`);
   for(const r of (regs || []).slice(0, 8)) hitsEl.appendChild(regionRow(r));
   for(const [pc, nm, st] of list.slice(0, 40)){
     const f = flagOf(pc), s = stateOf(st);
@@ -452,7 +480,7 @@ function clearShown(){
   shownPc = null; shownName = null; shownRegion = null;
   writeUrlState(industry.key, null);
   clearHits();
-  show(`<div class="empty">${esc(T('detail_empty'))}</div>`);
+  show(`<div class="empty">${esc(T('p_detail_empty'))}</div>`);
   setHint(T('p_hint', {n: META.n_postcodes, m: META.n_maps}));
 }
 
@@ -502,19 +530,46 @@ function render(key, pick){
   const v = key;
   const stKey = hit[0], f = hit[1];
   const name = pick || mainName(key);
-  const s = stateOf(stKey), cat = cats()[catOf(f)];
+  const s = stateOf(stKey);
+  // 每一組產業各給一個判定。兩組相同時（全澳 48.3% 的郵區）收成標題那一句，
+  // 不列出來——「不分產業，一般工作就算」已經把話講完了，再列兩行同樣的結論
+  // 只是把答案變長。
+  const groups = indGroups().map(g => ({names: g.names, cat: catFor(f, g.mask)}));
+  const uniform = groups.every(g => g.cat === groups[0].cat);
+  const anyWork = groups.some(g => g.cat === 'work');
+  // 鍵寫成字面量。測試掃的是原始碼裡的 T('...')，'p_all_' + cat 這種拼法
+  // 「用到的鍵都存在」與「沒有沒人用的鍵」兩個守衛都會漏掉。
+  const SAY_ALL = {work: T('p_all_work'), rebuild: T('p_all_rebuild'), none: T('p_all_none')};
+  const SAY_GRP = {work: T('p_grp_work'), rebuild: T('p_grp_rebuild'), none: T('p_grp_none')};
+  const say = uniform ? SAY_ALL[groups[0].cat] : T('p_depends');
+  // 判定不一致時沒有代表色可用，退回一般文字色——跟 showRegion() 同一個處理。
+  const band = uniform ? CAT_COLOR[groups[0].cat] : 'var(--ink)';
   // 表名要寫出來：送件時官方問的就是這個。頁面上不再印起算日（2019-07-31 與
   // 2021-12-31 都已經過去好幾年，對「找工作前先確認」的人永遠成立），表名就是
   // 使用者回官網查細則的入口。
   const routes = [];
   if(f & BIT_FIRE) routes.push(T('p_route_fire'));
   if(f & BIT_DISASTER) routes.push(T('p_route_flood'));
-  const extra = routes.length ? esc(T('p_also_declared', {list:joinList(routes)}))
-    + [(f & BIT_FIRE) ? T('tbl_bushfire') : '', (f & BIT_DISASTER) ? T('tbl_disaster') : '']
-        .filter(Boolean).map(s => `<br><em class="tbl">${esc(s)}</em>`).join('')
-    : '';
-  // 副標可以是空的（work 類），所以用組的，不能直接串 '<br>' 開頭。
-  const body = [cat.sub ? esc(cat.sub) : '', extra].filter(Boolean).join('<br>');
+  const tbls = [(f & BIT_FIRE) ? T('tbl_bushfire') : '', (f & BIT_DISASTER) ? T('tbl_disaster') : '']
+      .filter(Boolean).map(x => `<em class="tbl">${esc(x)}</em>`).join('<br>');
+  const anyRebuild = groups.some(g => g.cat === 'rebuild');
+  // 表名掛在它解釋的那一列下面（跟州頁的答案面板同一個做法），不另外寫一句
+  // 「這裡也被宣告為災區：…」——那句話跟「只有災後重建工作算」這一列講的是
+  // 同一件事，兩個都印就是同一件事講兩次。
+  const rows = uniform ? '' : groups.map(g =>
+      `<div class="verdict" style="--vc:${CAT_COLOR[g.cat]}"><span class="dot"></span>`
+      + `<span><b>${esc(SAY_GRP[g.cat])}</b><br>${esc(joinList(g.names))}`
+      + (g.cat === 'rebuild' && tbls ? `<br>${tbls}` : '') + `</span></div>`
+    ).join('');
+  const notes = [];
+  // 兩組收成標題那一句時就沒有判定列可以掛表名了，改用一句話帶出來。
+  // 「也」只有在一般工作本來就算的時候才成立——沒有任何一組算的話，災後重建
+  // 是唯一的路，不是額外多一條。
+  if(uniform && tbls)
+    notes.push(esc(T(anyWork ? 'p_also_declared' : 'p_declared', {list:joinList(routes)})) + '<br>' + tbls);
+  if(uniform && groups[0].cat === 'none') notes.push(esc(T('p_none_sub')));
+  if(anyRebuild) notes.push(esc(T('p_rebuild_note')));
+  const body = rows + (notes.length ? `<div class="sub">${notes.join('<br>')}</div>` : '');
   // s.mapped 而不是 s.url：這句話是在陳述「這個州有沒有地圖」，
   // 而不是「這次建置有沒有它的網址」。局部的 Artifact 預覽只發了部分州頁時，
   // 用 url 判斷會對 NSW 說「還沒做地圖」——那是假的，而且使用者看得到。
@@ -525,10 +580,10 @@ function render(key, pick){
   // 版面跟州頁的答案面板一模一樣：郵遞區號 38px 等寬，判定色走左邊色帶與判定字。
   // 兩頁共用同一個 .detail/.ans 結構，使用者從入口頁點進州頁不必重新認一次。
   show(`<div class="ans"><span class="pcn">${pad4(v)}<u>${esc(s.abbr)}</u></span>
-        <span class="say">${esc(sayOf(f))}</span>
+        <span class="say">${esc(say)}</span>
         <span class="loc">${esc(name)}</span></div>
-      <div class="bd">${body ? `<div class="sub">${body}</div>` : ''}${link}</div>`,
-    cat.c, catOf(f) === 'none');
+      <div class="bd">${body}${link}</div>`,
+    band, uniform && groups[0].cat === 'none');
 }
 // 打字就查，沒有「查」按鈕。條件跟州頁一致——原本入口頁漏掉三位數郵區
 // （北領地的 0800 打完不會自動查，只能按按鈕），那是條件寫得不一致，不是按鈕的價值。

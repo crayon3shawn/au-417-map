@@ -6,7 +6,11 @@
 #indnote{display:block;margin-top:11px;padding-top:11px;border-top:1px solid var(--line);
   font-size:12.5px;color:var(--ink-3);line-height:1.5}
 #indnote .dim{color:var(--ink-3);opacity:.75}
-#indnote a{color:var(--ink-2);white-space:nowrap}
+/* 這裡原本還有 #indnote a{color;white-space:nowrap}。顏色 base.css 的
+   .indcard .bd a 已經給了，是重複宣告；nowrap 則是 bug——觀光餐旅那句
+   「請參考官方 Remote and Very Remote ＋ Northern Australia →」一行排不下，
+   會橫向撐破卡片 35px。ID 選擇器的權重比 base.css 那條高，所以改 base.css
+   沒有用，要在這裡拿掉。 */
 
 /* 州代號緊跟在號碼後面，讀起來是一組識別資訊（4870 QLD），所以放在 <b> 裡面，
    靠自己的 margin 控制間距，不吃 flex 的 gap。 */
@@ -73,19 +77,17 @@
   .viewport{height:auto;min-height:0;display:flex;flex-direction:column}
   .viewport .topbar{order:0}
   .viewport .app{order:2}
-  /* 左欄用 display:contents 退出版面，它底下三個區塊就直接成為
-     .app 的子項——DOM 順序（產業 → 查詢 → 詳情 → 地圖）本身就是要的順序，
-     不需要任何 order。 */
+  /* 左欄用 display:contents 退出版面，它底下的區塊就直接成為 .app 的子項。 */
   .app{display:flex;flex-direction:column;height:auto;min-height:0;
     border:0;margin-top:20px;gap:24px;padding:0 26px}
   .app-rail{display:contents}
-  /* 手機上的順序：產業選擇 → 查詢 → 地圖 → 產業定義。
-     實測（390x844）搜尋框從 466px 提到 296px，而且整張澳洲地圖進得了第一屏
-     （488–796）。桌機不套用——那裡左欄整條都在第一屏，卡片留在選擇器下面
-     才符合「標籤＋控制項＋卡片」的分組。 */
-  .blk-ind{order:0}
-  .blk-search{order:1}
-  .app-map{order:2}
+  /* 手機上的順序：查詢 → 地圖 → 產業選擇 → 產業定義。
+     查詢排第一，它是使用者來這一頁的唯一理由，而且答案已經不需要先選產業。
+     產業選擇器沉到地圖之後：它現在只影響各州統計與行政區分布，不影響郵區
+     判定，排在主要動作前面只會把搜尋框往下推。 */
+  .blk-search{order:0}
+  .app-map{order:1}
+  .blk-ind{order:2}
   #indnote{order:3}
   /* 高度跟著澳洲的長寬比走（--au-aspect 由 portal.js 依 viewBox 設定），
      不用固定的 52vh——橫向的澳洲塞進直式窗格會上下各留一大條空白。 */
@@ -164,6 +166,12 @@ table.imap tbody tr:last-child th,table.imap tbody tr:last-child td{border-botto
 table.imap td.na{color:var(--ink-3)}
 table.imap td.na b{color:var(--c-rebuild)}
 table.imap th[scope="row"]{font-weight:700;white-space:nowrap}
+/* 每一組（＝吃同一張郵區表的產業）之間畫一條較重的線。第一組緊接著表頭，
+   表頭底下本來就有線，不必再加一條。 */
+table.imap tbody tr.grp:not(:first-child) th,
+table.imap tbody tr.grp:not(:first-child) td{border-top:1px solid var(--ink-3)}
+/* rowspan 的儲存格在群組裡是垂直置中的，看起來會跟第一列的產業名對不齊。 */
+table.imap td[rowspan]{vertical-align:top}
 table.imap td.sc{color:var(--ink-3);font-size:12.5px;min-width:260px}
 table.imap th[scope="row"] em{display:block;font-style:normal;font-weight:400;
   font-size:11px;color:var(--ink-3);letter-spacing:0}
