@@ -39,12 +39,7 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   padding:16px 24px;border-bottom:1px solid var(--line);background:var(--surface)}
 .topbar h1{margin:0;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;
   font-size:24px;letter-spacing:.02em;text-wrap:balance}
-.topbar .sub{color:var(--ink-2);font-size:14px}
 .topbar .spacer{flex:1 1 40px}
-/* 中等寬度時副標讓位，讓標頭維持一列——換行會把地圖往下推一整列的高度。
-   「目前顯示: 建築」在側欄的下拉裡也看得到，不是唯一的來源。
-   手機是直式堆疊，本來就不擠，所以只鎖這一段區間。 */
-@media (min-width:901px) and (max-width:1180px){ .topbar .sub{display:none} }
 .nav{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
 /* 標頭右邊那排（州導覽、主題、語言）必須是同一個高度。三者原本各自決定行高
    ——導覽繼承 20px、#theme 寫死 1、.lang 沒設所以算出 normal(約 15px)——
@@ -55,22 +50,22 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
    （符號要看得清楚），基線對齊會讓它比別人高 1px。這排的盒子既然一樣高，
    置中對齊就完全齊平，也不受將來誰改字級影響。 */
 .topbar .nav,.topbar .lang{align-self:center}
-.nav a,.nav span{font-family:inherit;font-weight:600;
+/* 州導覽、主題、語言是同一排上的同一種東西，外觀就該完全一樣。原本三者
+   分開宣告，邊框（--line vs --line-2）與底色（透明 vs --paper）都漂走了，
+   在標頭上看起來像兩種按鈕混在一起。合成一條規則，誰都不要自己決定。 */
+.nav a,.nav span,.lang{font-family:inherit;font-weight:600;
   font-size:12.5px;letter-spacing:.04em;padding:4px 9px;border-radius:3px;
-  border:1px solid var(--line);text-decoration:none;color:var(--ink-2);white-space:nowrap}
-.nav a:hover{background:var(--sunk);color:var(--ink);border-color:var(--line-2)}
-.nav a:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+  border:1px solid var(--line);background:transparent;
+  text-decoration:none;color:var(--ink-2);white-space:nowrap}
+.nav a:hover,.lang:hover{background:var(--sunk);color:var(--ink);border-color:var(--line-2)}
+.nav a:focus-visible,.lang:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
 .nav .home{border-color:var(--line-2);color:var(--ink)}
 .nav .here{background:var(--ink);color:var(--surface);border-color:var(--ink)}
-.lang{appearance:none;font-family:inherit;font-weight:600;
-  font-size:12.5px;letter-spacing:.06em;padding:4px 9px;border-radius:3px;
-  border:1px solid var(--line-2);background:var(--paper);color:var(--ink-2);cursor:pointer}
+.lang{appearance:none;letter-spacing:.06em;cursor:pointer}
 /* 主題鈕跟語言鈕同一個外觀，只是內容是符號。用固定寬度，切換時 ☀ 與 ☾
    的字寬不同會讓旁邊的按鈕跳動。字級放大是為了符號看得清楚，但**不要**動
    行高——動了就會比旁邊矮一截，那正是先前的問題。 */
 #theme{min-width:34px;text-align:center;font-size:14px}
-.lang:hover{background:var(--sunk);color:var(--ink)}
-.lang:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
 /* 出處與建置日期是溯源資訊，不是要操作的東西，所以放在最下面的出處段落裡。
    字串很長，nowrap 會在手機上把整個頁面推寬造成橫向捲動。 */
 /* 溯源資訊：等寬、大寫、寬字距的細帶。它是「這份資料哪來的、什麼時候的」，

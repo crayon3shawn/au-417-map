@@ -1,14 +1,23 @@
 
 
 .shell{display:grid;grid-template-rows:auto auto 1fr;height:100vh}
-/* 手機上往下捲時，標頭收成只剩換州按鈕並黏在頂端。理由是標題與副標只在剛
-   進頁面時有用，但它們吃掉 812px 螢幕的前 240px；換州按鈕則是隨時都可能
-   要用的。桌機不套用——那裡標頭不佔什麼比例，黏著反而礙事。 */
+/* 手機上的黏頂標頭（桌機不套用——那裡標頭不佔什麼比例，黏著反而礙事）：
+   1. 捲過標題就收成只剩按鈕（.compact）。
+   2. 繼續往下捲整條移出畫面（.hide），往上捲再回來。捲動邏輯在 map.js。
+   收起來那一版量到 122px，是 844px 螢幕的 14%，而往下捲的人要看的是地圖與
+   說明，不是換州按鈕。
+
+   「417」字標手機上不顯示：它連的是入口頁，而導覽第一顆就是「← 全澳入口」，
+   同一個動作在同一排上出現兩次。拿掉之後標頭從四排變三排。 */
 @media (max-width:900px){
-  .topbar{position:sticky;top:0;z-index:30;transition:padding .15s}
+  .topbar{position:sticky;top:0;z-index:30;
+    transition:padding .15s,transform .2s ease}
   .topbar.compact{padding-top:7px;padding-bottom:7px}
-  .topbar.compact h1,.topbar.compact .sub{display:none}
+  .topbar.compact h1{display:none}
+  .topbar.hide{transform:translateY(-100%)}
+  .topbar .mark{display:none}
 }
+@media (prefers-reduced-motion:reduce){ .topbar{transition:none} }
 .hdrspacer{display:contents}
 /* 側欄拆成兩段：上段（產業、查詢、詳情）是「問問題與看答案」，下段是背景資料。
    分兩段只是為了手機能把上段排在地圖之前——桌機上兩段裝在同一個容器裡，

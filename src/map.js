@@ -586,10 +586,6 @@ function applyIndustry(){
         ? `<div class="bd">${esc(indScope())} `
           + `<a href="${META.source_url}" target="_blank" rel="noopener">${esc(T('official_def', {tables}))}</a></div>`
         : '');
-  // 「目前顯示: 建築」在判定還跟著選擇器走的時候是對的，現在會被讀成
-  // 「這一頁的答案是給建築看的」——而答案已經一次列出全部產業了。
-  // 副標改成講它實際控制的東西：地圖的顏色。
-  document.getElementById('subind').textContent = T('map_by_ind', {ind: indLabel()});
   document.getElementById('fact1').textContent = T('fact1_body', {ind: indLabel(), tables});
   if(selPc !== null) select(selPc);
   else renderRegionPanel();
@@ -1011,16 +1007,33 @@ function initialView(){
 }
 
 // ---- 手機上收合標頭 ----
-// 捲過標題的高度就把標題與副標收起來，只留換州按鈕黏在頂端。門檻用標頭
-// 自己的高度而不是固定值——中英文與不同州名的標題高度不一樣。
-// 有 hysteresis（收起來的門檻比展開高）才不會在臨界點反覆跳。
+// 手機上的黏頂標頭：往下捲整條收起來，往上捲再出現（收起來的那一版沒有
+// 標題，只有換州／主題／語言）。
+//
+// 為什麼不是一路黏著：那條 bar 在 390x844 上佔 122px，是螢幕的 14%，而使用者
+// 往下捲的時候要看的是地圖與說明，不是換州按鈕。為什麼不是捲掉就不回來：
+// 換州是隨時可能要用的，全部藏掉就得一路捲回頂端才找得到。往上捲即回，
+// 兩件事都成立。
+//
+// hysteresis 分兩層：compact 進出的門檻不同（90／40），避免在臨界點反覆跳；
+// 方向判斷要累積超過 DIR_MIN 才算數，手指微抖不該讓標頭閃動。
 const bar = document.getElementById('bar');
 if(bar){
-  let compact = false;
+  const DIR_MIN = 8;      // 方向要連續累積這麼多像素才認定
+  const HIDE_AFTER = 140; // 捲過這裡才允許收起來——頂端附近收起會很跳
+  let compact = false, hidden = false, last = 0, acc = 0;
   const onScroll = () => {
-    const y = scrollY;
+    const y = Math.max(0, scrollY);
     if(!compact && y > 90) { compact = true; bar.classList.add('compact'); }
     else if(compact && y < 40) { compact = false; bar.classList.remove('compact'); }
+
+    const dy = y - last;
+    // 同向才累積；一換方向就歸零重數
+    acc = (dy > 0) === (acc > 0) ? acc + dy : dy;
+    last = y;
+    if(y <= HIDE_AFTER){ if(hidden){ hidden = false; bar.classList.remove('hide'); } }
+    else if(!hidden && acc > DIR_MIN){ hidden = true; bar.classList.add('hide'); }
+    else if(hidden && acc < -DIR_MIN){ hidden = false; bar.classList.remove('hide'); }
   };
   addEventListener('scroll', onScroll, {passive:true});
   onScroll();

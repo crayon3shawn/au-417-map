@@ -165,10 +165,6 @@
       "en": "Loading place names…",
       "zh": "地名索引載入中…"
     },
-    "map_by_ind": {
-      "en": "map coloured for {ind}",
-      "zh": "地圖依{ind}上色"
-    },
     "map_reg_clear": {
       "en": "Clear outline",
       "zh": "清除框選"
@@ -322,8 +318,8 @@
       "zh": "、"
     },
     "p_map_cap": {
-      "en": "Tap a state to open its postcode map. The dashed states have no map yet — the whole state is eligible, so a search above already gives the answer.",
-      "zh": "點一州看那一州的郵區地圖。虛線的三州還沒做地圖——它們全境都算，所以直接在上面查就有答案了。"
+      "en": "Tap a state to open its map",
+      "zh": "點擊進入地圖"
     },
     "p_nf_pc": {
       "en": "No postcode <b class=\"mono\">{pc}</b>. It may be a PO Box range, or a number Australia Post has never issued.",
@@ -476,10 +472,6 @@
     "search_ph": {
       "en": "4000 or Gold Coast",
       "zh": "4000 或 Gold Coast"
-    },
-    "subtitle": {
-      "en": "Postcode eligibility and disaster declarations",
-      "zh": "郵遞區號合格性與災區宣告"
     },
     "tbl_bushfire": {
       "en": "Official table: Bushfire declared areas",
