@@ -172,6 +172,11 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .qhint{margin:0;font-size:12.5px;line-height:1.45;color:var(--ink-3)}
 .hits{display:flex;flex-direction:column;gap:2px;max-height:210px;overflow-y:auto}
 .hits:empty{display:none}
+/* 清單捲得動時，底部漸隱。210px 的窗口裝得下 1556px 的內容，而原本切點會落在
+   字身中央——看起來像畫壞了，而且沒有任何「下面還有」的線索。漸隱兩件事一起
+   解決：切點變成刻意的，捲動也有了提示。
+   .more 由 JS 依 scrollHeight > clientHeight 加上，CSS 自己判斷不了。 */
+.hits.more{mask-image:linear-gradient(to bottom,#000 calc(100% - 26px),transparent)}
 /* 別州的結果是連結不是按鈕（點下去換頁），但要跟本州的結果長一樣。 */
 .hits .xstate{display:flex;text-decoration:none}
 .hits .xstate u{text-decoration:none;color:var(--ink-3);font-weight:600;
@@ -184,7 +189,12 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .hits button:focus-visible,.hits .xstate:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
 .hits b{font-family:"IBM Plex Mono",monospace;font-weight:600}
 .hits i{font-style:normal;color:var(--ink-3);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hits em{font-style:normal;width:9px;height:9px;border-radius:2px;flex:none;background:var(--hc)}
+/* 候選列的色點分成兩半：左邊是走 Regional 那五個產業的判定，右邊是觀光餐旅。
+   原本整顆是單一產業算出來的，而答案面板已經改成一次講全部產業——一顆承諾
+   單一結論的色點，連到一個說「看你做哪一行」的答案，掃過清單的人會以為
+   那 40 筆都算。兩半也順便讓「哪些郵區兩邊不一致」一眼看得出來。 */
+.hits em{font-style:normal;width:9px;height:9px;border-radius:2px;flex:none;
+  background:linear-gradient(to right,var(--hc) 0 50%,var(--hc2,var(--hc)) 50% 100%)}
 
 .card{border:1px solid var(--line);border-radius:4px;background:var(--paper);overflow:hidden}
 .card .hd{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;

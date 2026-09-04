@@ -33,7 +33,7 @@ make serve    # 建置並在 http://127.0.0.1:8731/index.html 預覽
 ```bash
 CHANNEL=dev make all      # 建出帶開發版橫幅的一份
 make serve                # http://127.0.0.1:8731/index.html
-make test                 # 110 項，不連網
+make test                 # 116 項，不連網
 git push origin main      # 確認沒問題才推
 ```
 

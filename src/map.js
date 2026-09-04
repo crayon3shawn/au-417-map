@@ -114,17 +114,33 @@ const workMask = () => industry.mask;
 //   work    這個產業認可的地區表裡，一般工作就算
 //   rebuild 不在那些表裡，但被宣告為災區，只有災後重建工作算
 //   none    兩者皆非
-const catOf = f => (f & workMask()) ? 'work' : (f & REBUILD) ? 'rebuild' : 'none';
-// 答案面板上那一行判定字。**永遠講到底是哪一張表**，不跟著地圖的檢視切換走。
-// 地圖可以只給三色（概覽），但查單一郵區時「只有災後重建工作算」是不夠的：
-// 建築的 638 個「只有重建算」郵區裡有 348 個（55%）只落在其中一張表上，而
-// 兩張表在官網是各自獨立的規則。併起來講等於把該走哪條路藏起來。
-const sayOf = f =>
-    (f & workMask())                    ? T('cat_work', {ind: indLabel()})
-  : (f & BIT_FIRE) && (f & BIT_DISASTER) ? T('cat_both')
-  : (f & BIT_FIRE)                      ? T('cat_fire_only')
-  : (f & BIT_DISASTER)                  ? T('cat_flood_only')
-                                        : T('cat_none');
+const catFor = (f, mask) => (f & mask) ? 'work' : (f & REBUILD) ? 'rebuild' : 'none';
+// 地圖上色、色點、統計都要挑一個產業來數——那些是分布，一次只能用一把尺。
+const catOf = f => catFor(f, workMask());
+
+// 答案面板不走 catOf：查一個郵區時，答案把所有產業一次講完，不要求使用者
+// 先在上面的選擇器裡承諾一個行業。跟入口頁同一套（見 portal.js 的 indGroups）。
+//
+// 這件事在州頁比在入口頁更要緊：使用者多半是從入口頁的「在○○地圖上看 →」
+// 跳過來的，而入口頁剛剛才告訴他「看你做哪一行」。跳過來只剩選擇器預設的
+// 那一行的答案，等於我們自己的按鈕把答案改窄了。
+function indGroups(){
+  const out = [];
+  for(const i of META.industries){
+    const nm = lang === 'zh' ? i.label : (i.label_en || i.label);
+    const g = out.find(x => x.mask === i.mask);
+    if(g) g.names.push(nm); else out.push({mask: i.mask, names: [nm]});
+  }
+  return out;
+}
+
+// 候選列的色點：左半＝走 Regional 的五個產業，右半＝觀光餐旅。跟入口頁同一個
+// 做法與同一個順序（見 base.css 的 .hits em）。
+function paintDot(btn, f){
+  const g = indGroups();
+  btn.style.setProperty('--hc', CAT_COLOR[catFor(f, g[0].mask)]);
+  btn.style.setProperty('--hc2', CAT_COLOR[catFor(f, g[g.length - 1].mask)]);
+}
 
 // 地圖一次只畫一張表，所以只有兩色：在這張表上、不在。
 // 三張表各有自己的「在」色，檢視之間才分得出來——但同一個畫面上永遠只有兩種。
@@ -133,14 +149,6 @@ const VIEW_COLOR = {work:'var(--c-work)', fire:'var(--c-fire)', flood:'var(--c-f
 const inView = f => !!(f & (view === 'work' ? workMask() : VIEW_BIT[view]));
 function colorOf(f){ return inView(f) ? VIEW_COLOR[view] : 'var(--c-none)'; }
 
-// 詳情面板與搜尋結果的色點走的是**判定**，不是目前的檢視：那裡問的是
-// 「這個郵區算不算」，跟你正在看哪一張表無關。切換檢視不該讓答案變色。
-function verdictColor(f){
-  if(f & workMask()) return 'var(--c-work)';
-  if(!(f & REBUILD)) return 'var(--c-none)';
-  return ((f & BIT_FIRE) && (f & BIT_DISASTER)) ? 'var(--c-both)'
-       : (f & BIT_FIRE) ? 'var(--c-fire)' : 'var(--c-flood)';
-}
 
 const areasG = el('g',{}); proj.appendChild(areasG);    // 郵區面（原始經緯度）
 const strayG = el('g',{}); over.appendChild(strayG);    // 沒有邊界面的郵區，以小點代替
@@ -578,7 +586,10 @@ function applyIndustry(){
         ? `<div class="bd">${esc(indScope())} `
           + `<a href="${META.source_url}" target="_blank" rel="noopener">${esc(T('official_def', {tables}))}</a></div>`
         : '');
-  document.getElementById('subind').textContent = `${T('showing')}: ${indLabel()}`;
+  // 「目前顯示: 建築」在判定還跟著選擇器走的時候是對的，現在會被讀成
+  // 「這一頁的答案是給建築看的」——而答案已經一次列出全部產業了。
+  // 副標改成講它實際控制的東西：地圖的顏色。
+  document.getElementById('subind').textContent = T('map_by_ind', {ind: indLabel()});
   document.getElementById('fact1').textContent = T('fact1_body', {ind: indLabel(), tables});
   if(selPc !== null) select(selPc);
   else renderRegionPanel();
@@ -671,7 +682,7 @@ function select(pc){
       `<div class="ans"><span class="pcn">${pc}</span>` +
       `<span class="say">${esc(T('cat_none'))}</span></div>` +
       `<div class="bd"><div class="verdict no"><span class="dot"></span><span>` +
-      `${esc(T('v_not_listed',{pc, where, state: stateName(), ind: indLabel()}))}` +
+      `${esc(T('v_not_listed',{pc, where, state: stateName()}))}` +
       `</span></div></div>`;
     return;
   }
@@ -680,27 +691,35 @@ function select(pc){
   const shown = names.slice(0, 6);
   const more = names.length > shown.length ? T('more_areas', {n: names.length}) : '';
   const rows = [];
-  const ind = indLabel();
-  // 一般工作那一列不再接副標——「這個郵區在{ind}適用的地區名單上」
-  // 只是把標題再講一次，沒有新資訊，只有佔位置。
-  if(f & workMask()) rows.push(`<div class="verdict" style="--vc:var(--c-work)"><span class="dot"></span><span><b>${esc(T('v_work_yes',{ind}))}</b></span></div>`);
-  else rows.push(`<div class="verdict no"><span class="dot"></span><span><b>${esc(T('v_work_no',{ind}))}</b></span></div>`);
-  // 表名要寫出來：送件時官方問的就是這個。
+  const sep = lang === 'zh' ? '、' : ', ';
+  // 每一組產業各給一個判定。兩組相同時收成標題那一句——「不分產業，一般工作
+  // 就算」已經把話講完了，再列兩行一樣的結論只是把答案變長。
+  const groups = indGroups().map(g => ({names: g.names, cat: catFor(f, g.mask)}));
+  const uniform = groups.every(g => g.cat === groups[0].cat);
+  // 鍵寫成字面量：測試掃的是原始碼裡的 T('...')，動態拼出來的鍵兩個守衛都會漏。
+  const SAY_ALL = {work: T('say_all_work'), rebuild: T('say_all_rebuild'), none: T('say_all_none')};
+  const SAY_GRP = {work: T('grp_work'), rebuild: T('grp_rebuild'), none: T('grp_none')};
+  const GRP_COLOR = {work: 'var(--c-work)', rebuild: 'var(--c-rebuild)', none: 'var(--c-none)'};
+  if(!uniform) for(const g of groups)
+    rows.push(`<div class="verdict" style="--vc:${GRP_COLOR[g.cat]}"><span class="dot"></span>`
+      + `<span><b>${esc(SAY_GRP[g.cat])}</b><br>${esc(g.names.join(sep))}</span></div>`);
+  // 災害那兩列是州頁比入口頁多給的深度：把「災後重建」拆成官方的兩張表，並
+  // 講大火那條路認哪些工作。表名要寫出來，送件時官方問的就是這個。
   if(f & BIT_FIRE) rows.push(`<div class="verdict" style="--vc:var(--c-fire)"><span class="dot"></span><span><b>${esc(T('v_fire'))}</b><br><em class="tbl">${esc(T('tbl_bushfire'))}</em><br>${esc(T('v_fire_sub'))}</span></div>`);
   // 天災那一列沒有副標：原本那句只講了一個 2021 年的日期門檻（現在找工作的人
   // 永遠通過）跟一個 ImmiAccount 表單欄位（送件時才用得到）。官方對「哪些
   // 工作算天災重建」的範圍定義沒有可引的來源，寧可留白也不編。
   if(f & BIT_DISASTER) rows.push(`<div class="verdict" style="--vc:var(--c-flood)"><span class="dot"></span><span><b>${esc(T('v_flood'))}</b><br><em class="tbl">${esc(T('tbl_disaster'))}</em></span></div>`);
-  if(!(f & workMask()) && (f & REBUILD)) rows.push(`<div class="note">${esc(T('v_rebuild_only',{ind}))}</div>`);
+  if(groups.some(g => g.cat === 'rebuild')) rows.push(`<div class="note">${esc(T('rebuild_note'))}</div>`);
   if(d.stray) rows.push(`<div class="note">${esc(T('v_no_polygon'))}</div>`);
 
-  // 判定色走色帶與判定字，不上郵遞區號本身（理由在 base.css 的 .fbox 段）
-  detail.style.setProperty('--vc', verdictColor(f));
-  detail.classList.toggle('no', catOf(f) === 'none');
+  // 判定不一致時沒有代表色可用，退回一般文字色。
+  detail.style.setProperty('--vc', uniform ? GRP_COLOR[groups[0].cat] : 'var(--ink)');
+  detail.classList.toggle('no', uniform && groups[0].cat === 'none');
   detail.innerHTML =
     `<div class="ans"><span class="pcn">${p}</span>` +
-    `<span class="say">${esc(sayOf(f))}</span>` +
-    `<span class="loc">${esc(shown.join(lang === 'zh' ? '、' : ', '))}${more}</span></div>` +
+    `<span class="say">${esc(uniform ? SAY_ALL[groups[0].cat] : T('say_depends'))}</span>` +
+    `<span class="loc">${esc(shown.join(sep))}${more}</span></div>` +
     `<div class="bd">${rows.join('')}</div>`;
 }
 
@@ -744,7 +763,9 @@ for(const rec of PC) for(const nm of rec[4]) byName.push([nm.toLowerCase(), rec[
 
 const CAT_COLOR = {work:'var(--c-work)', rebuild:'var(--c-rebuild)', none:'var(--c-none)'};
 
-function clearHits(){ hits.innerHTML = ''; }
+function clearHits(){ hits.innerHTML = ''; hits.classList.remove('more'); }
+// 內容比窗口高時掛 .more，底部才會漸隱（見 base.css）。CSS 沒辦法自己判斷。
+const markScroll = () => hits.classList.toggle('more', hits.scrollHeight > hits.clientHeight);
 
 function goto(pc){
   clearHits();
@@ -771,7 +792,7 @@ function showHits(list, term){
     const f = (byPc.get(pc) || {}).f || 0;
     const b = document.createElement('button');
     b.type = 'button';
-    b.style.setProperty('--hc', CAT_COLOR[catOf(f)]);
+    paintDot(b, f);
     b.innerHTML = `<em></em><b>${pc}</b><i>${esc(nm)}</i>`;
     b.addEventListener('click', () => { q.value = nm; goto(pc); });
     hits.appendChild(b);
@@ -783,15 +804,19 @@ function showHits(list, term){
     a.className = 'xstate';
     a.href = `${stateUrl[st]}#pc=${pc}`;
     if(/^https?:/.test(stateUrl[st])){ a.target = '_blank'; a.rel = 'noopener'; }
-    a.style.setProperty('--hc', CAT_COLOR[catOf(NAT[st][pc] || 0)]);
+    paintDot(a, NAT[st][pc] || 0);
     a.innerHTML = `<em></em><b>${pc}<u>${esc(st.toUpperCase())}</u></b><i>${esc(nm)}</i>`;
     hits.appendChild(a);
   }
+  markScroll();
   const extra = list.length - 30;
   const parts = [];
-  if(list.length) parts.push(T('hits_found', {n: list.length}) + (extra > 0 ? T('hits_more', {n: 30}) : ''));
+  if(list.length) parts.push(extra > 0 ? T('hits_more', {n: list.length, m: 30})
+                                       : T('hits_found', {n: list.length}));
   if(other.length) parts.push(T('hits_other', {n: other.length}));
-  qhint.textContent = parts.length ? parts.join(' ') : T('hits_none', {q: term});
+  // 中文用空字串接：兩句都已經以「。」結尾，join(' ') 會多一個半形空格。
+  qhint.textContent = parts.length ? parts.join(lang === 'zh' ? '' : ' ')
+                                   : T('hits_none', {q: term});
 }
 
 function doSearch(){

@@ -26,12 +26,6 @@ __CSS__</style>
     <div class="railwrap">
     <aside class="rail rail-a">
       <section class="blk">
-        <span class="eyebrow" data-t="industry_label"></span>
-        <select id="ind" class="ind" data-t-aria="p_ind_aria"></select>
-        <div class="card indcard" id="indnote"></div>
-      </section>
-
-      <section class="blk">
       <!-- 查詢欄與答案是同一個物件。你輸入的郵遞區號、跟你在問的那個，是同一個
            東西——現在畫面上它出現兩次（欄位裡一次、答案標題再一次）。合成一個
            之後答案就出現在眼睛本來就在的位置，而那四個數字（澳洲簽證世界的原子
@@ -51,6 +45,17 @@ __CSS__</style>
         </div>
         <p class="qhint" id="qhint"></p>
         <div class="hits" id="hits" role="listbox" data-t-aria="p_hits_aria"></div>
+      </section>
+
+      <!-- 產業選擇器排在查詢之後，跟入口頁一致。郵區判定已經一次列出全部產業，
+           不需要先承諾一個行業；這個選擇器在這一頁決定的是**地圖怎麼上色**與
+           側欄的統計，是精修不是閘門。
+           原本它排在最上面，搜尋框因此掉到 515px（入口頁是 187px）——同一個
+           站、同一個動作，兩頁位置差三百多像素。 -->
+      <section class="blk">
+        <span class="eyebrow" data-t="industry_label"></span>
+        <select id="ind" class="ind" data-t-aria="p_ind_aria"></select>
+        <div class="card indcard" id="indnote"></div>
       </section>
 
     </aside>

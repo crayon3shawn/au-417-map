@@ -1,18 +1,6 @@
 {
   "note": "介面文字。每個 key 一組 zh／en。頁面同時載入兩種語言，靠切換鈕換——分成兩份產出的話 Artifact 數量會加倍，每份都要單獨設分享權限。",
   "s": {
-    "cat_both": {
-      "en": "Both bushfire and disaster recovery count",
-      "zh": "大火與天災重建都算"
-    },
-    "cat_fire_only": {
-      "en": "Only bushfire recovery counts",
-      "zh": "只有大火重建算"
-    },
-    "cat_flood_only": {
-      "en": "Only flood/cyclone recovery counts",
-      "zh": "只有天災重建算"
-    },
     "cat_none": {
       "en": "Does not count at all",
       "zh": "完全不算"
@@ -109,13 +97,25 @@
       "en": "Home Affairs {d} · built {b}",
       "zh": "Home Affairs {d} · 建置 {b}"
     },
+    "grp_none": {
+      "en": "Does not count",
+      "zh": "完全不算"
+    },
+    "grp_rebuild": {
+      "en": "Only disaster recovery work counts",
+      "zh": "只有災後重建工作算"
+    },
+    "grp_work": {
+      "en": "Ordinary work counts",
+      "zh": "一般工作就算"
+    },
     "hits_found": {
-      "en": "{n} matches",
-      "zh": "找到 {n} 筆"
+      "en": "Found {n}.",
+      "zh": "找到 {n} 筆。"
     },
     "hits_more": {
-      "en": " — showing the first {n}; type more to narrow it down",
-      "zh": "，只列出前 {n} 筆，再打幾個字縮小範圍"
+      "en": "Found {n}, showing the first {m}. Type a few more letters to narrow it down.",
+      "zh": "找到 {n} 筆，顯示前 {m} 筆。再打幾個字可以縮小範圍。"
     },
     "hits_none": {
       "en": "No match for \"{q}\". Try a postcode, or just the first few letters of a place.",
@@ -165,6 +165,10 @@
       "en": "Loading place names…",
       "zh": "地名索引載入中…"
     },
+    "map_by_ind": {
+      "en": "map coloured for {ind}",
+      "zh": "地圖依{ind}上色"
+    },
     "map_reg_clear": {
       "en": "Clear outline",
       "zh": "清除框選"
@@ -200,18 +204,6 @@
     "official_def": {
       "en": "See the official {tables} list →",
       "zh": "請參考官方 {tables} →"
-    },
-    "p_all_none": {
-      "en": "Does not count for any industry",
-      "zh": "不分產業，完全不算"
-    },
-    "p_all_rebuild": {
-      "en": "Only disaster recovery work counts, whichever industry",
-      "zh": "不分產業，只有災後重建工作算"
-    },
-    "p_all_work": {
-      "en": "Ordinary work counts, whichever industry",
-      "zh": "不分產業，一般工作就算"
     },
     "p_also_declared": {
       "en": "This postcode is also a declared disaster area: {list}.",
@@ -285,10 +277,6 @@
       "en": "This postcode is a declared disaster area: {list}.",
       "zh": "這個郵區被宣告為災區：{list}。"
     },
-    "p_depends": {
-      "en": "Depends on your industry",
-      "zh": "看你做哪一行"
-    },
     "p_detail_empty": {
       "en": "Enter a postcode or place name above and the verdict appears here, for every industry at once.",
       "zh": "在上面輸入郵遞區號或地名，這裡會顯示這個郵區算不算集簽，六種產業一次講完。"
@@ -301,18 +289,6 @@
       "en": "Open the {state} map →",
       "zh": "在{state}地圖上看 →"
     },
-    "p_grp_none": {
-      "en": "Does not count",
-      "zh": "完全不算"
-    },
-    "p_grp_rebuild": {
-      "en": "Only disaster recovery work counts",
-      "zh": "只有災後重建工作算"
-    },
-    "p_grp_work": {
-      "en": "Ordinary work counts",
-      "zh": "一般工作就算"
-    },
     "p_hint": {
       "en": "{n} postcodes searchable, covering all of Australia. {m} states have maps so far.",
       "zh": "可查 {n} 個郵遞區號，涵蓋全澳。目前有 {m} 個州做了地圖。"
@@ -320,10 +296,6 @@
     "p_hits_aria": {
       "en": "Search results",
       "zh": "搜尋結果"
-    },
-    "p_hits_tail": {
-      "en": " Tap one to see the verdict.",
-      "zh": "，點一筆看結果。"
     },
     "p_ind_aria": {
       "en": "Choose your industry",
@@ -348,6 +320,10 @@
     "p_list_sep": {
       "en": ", ",
       "zh": "、"
+    },
+    "p_map_cap": {
+      "en": "Tap a state to open its postcode map. The dashed states have no map yet — the whole state is eligible, so a search above already gives the answer.",
+      "zh": "點一州看那一州的郵區地圖。虛線的三州還沒做地圖——它們全境都算，所以直接在上面查就有答案了。"
     },
     "p_nf_pc": {
       "en": "No postcode <b class=\"mono\">{pc}</b>. It may be a PO Box range, or a number Australia Post has never issued.",
@@ -393,10 +369,6 @@
       "en": "Enter a postcode or place name",
       "zh": "輸入郵遞區號或地名"
     },
-    "p_rebuild_note": {
-      "en": "Recovery work means rebuilding, demolition, repairs, roads and bridges. Volunteer work counts. Keep records showing the work was disaster repair.",
-      "zh": "重建的土建、拆除、修繕、道路橋樑才算，志工也算，記得留下能證明工程屬於災後修復的紀錄。"
-    },
     "p_reg_all_none": {
       "en": "Nothing in this area counts.",
       "zh": "整個區域都不算。"
@@ -414,8 +386,8 @@
       "zh": "{n} 個郵區"
     },
     "p_reg_found": {
-      "en": "\"{q}\" matches {n} local government areas. Pick one to see the postcodes it covers.",
-      "zh": "「{q}」對到 {n} 個行政區。點一個看它涵蓋哪些郵區。"
+      "en": "\"{q}\" matches {n} district(s).",
+      "zh": "「{q}」對到 {n} 個行政區。"
     },
     "p_reg_lead": {
       "en": "This is a local government area, not a postcode. Eligibility is decided postcode by postcode, so every postcode it covers is listed below.",
@@ -473,9 +445,29 @@
       "en": "postcode",
       "zh": "個郵區"
     },
+    "rebuild_note": {
+      "en": "Recovery work means rebuilding, demolition, repairs, roads and bridges. Volunteer work counts. Keep records showing the work was disaster repair.",
+      "zh": "重建的土建、拆除、修繕、道路橋樑才算，志工也算，記得留下能證明工程屬於災後修復的紀錄。"
+    },
     "reset_view": {
       "en": "Reset view",
       "zh": "回到全州視野"
+    },
+    "say_all_none": {
+      "en": "Does not count for any industry",
+      "zh": "不分產業，完全不算"
+    },
+    "say_all_rebuild": {
+      "en": "Only disaster recovery work counts, whichever industry",
+      "zh": "不分產業，只有災後重建工作算"
+    },
+    "say_all_work": {
+      "en": "Ordinary work counts, whichever industry",
+      "zh": "不分產業，一般工作就算"
+    },
+    "say_depends": {
+      "en": "Depends on your industry",
+      "zh": "看你做哪一行"
     },
     "search_label": {
       "en": "Postcode or place",
@@ -484,10 +476,6 @@
     "search_ph": {
       "en": "4000 or Gold Coast",
       "zh": "4000 或 Gold Coast"
-    },
-    "showing": {
-      "en": "Showing",
-      "zh": "目前顯示"
     },
     "subtitle": {
       "en": "Postcode eligibility and disaster declarations",
@@ -534,20 +522,8 @@
       "zh": "ABS 沒有這個郵區的對應面，地圖上以小點標示概略位置。"
     },
     "v_not_listed": {
-      "en": "Postcode {pc}{where} is not on any eligible list for {state}. Neither ordinary {ind} work nor recovery work counts here.",
-      "zh": "郵遞區號 {pc}{where} 不在{state}的合格清單上。一般{ind}工作與災後重建工作都不能用它集簽。"
-    },
-    "v_rebuild_only": {
-      "en": "Note: recovery work is the only route here. Ordinary {ind} work unrelated to disaster recovery does not count. Keep records showing the work was disaster repair.",
-      "zh": "注意：這個郵區只走災後重建這條路。一般{ind}工作、跟災後復原無關的，不能算。留好能證明工程屬於災後修復的紀錄。"
-    },
-    "v_work_no": {
-      "en": "Ordinary {ind} work → does not count",
-      "zh": "一般{ind}工作 → 不算"
-    },
-    "v_work_yes": {
-      "en": "Ordinary {ind} work → counts",
-      "zh": "一般{ind}工作 → 算"
+      "en": "Postcode {pc}{where} is not on any eligible list for {state}. Neither ordinary work nor recovery work counts here, whichever industry you are in.",
+      "zh": "郵遞區號 {pc}{where} 不在{state}的任何一張合格清單上。不分產業，一般工作與災後重建工作都不能用它集簽。"
     },
     "view_fire": {
       "en": "Bushfire",

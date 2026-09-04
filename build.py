@@ -99,6 +99,24 @@ def work_mask(industry_areas):
     return m
 
 
+def display_names(pc, d, national):
+    """答案面板上列出來的地名，順序與內容跟入口頁一致。
+
+    兩個問題原本讓同一個郵區在兩頁長得不一樣：
+
+      * 州頁沒有濾掉非地理性的郵政名。2480 因此多一個「Lismore Dc」，
+        兩頁的總數變成 75 對 74。
+      * 州頁照字母序列前六個，2480 會列出 Back Creek、Bentley、Bexhill…
+        全是沒人聽過的小村，而這個郵區就是 Lismore。
+
+    代表地名的挑法在 fetch/portal.py 的 main_name()，那裡用投遞中心與地名的
+    包含關係算出本鎮。這裡直接沿用結果，把它排到最前面。
+    """
+    names = [n for n in d["names"] if not is_non_geographic([n])] or d["names"]
+    head = (national.get(str(pc)) or [None, None])[1]
+    return ([head] + [n for n in names if n != head]) if head in names else names
+
+
 def categorise(rings, flags, mask):
     """把每個郵區歸成三個互斥類別，並統計數量。
 
@@ -350,7 +368,7 @@ def main(state):
         if str(pc) not in rings and is_non_geographic(d["names"]):
             non_geo.append(pc)
             continue
-        records.append([pc, d["lon"], d["lat"], flags.get(pc, 0), d["names"]])
+        records.append([pc, d["lon"], d["lat"], flags.get(pc, 0), display_names(pc, d, national)])
     no_poly = sorted(r[0] for r in records if str(r[0]) not in rings)
     other = {k: loc[k]["names"] for k in rings if k in loc}
 
