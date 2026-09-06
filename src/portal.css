@@ -67,7 +67,12 @@
 
 /* 地圖直接鋪在畫布上，沒有容器。參考圖的地圖是浮在深色底上的，加一個邊框
    圓角的盒子會把它降級成「頁面上的一個元件」。 */
-.app-map{position:relative;min-width:0;min-height:0;background:var(--paper-2);display:flex}
+.app-map{position:relative;min-width:0;min-height:0;background:var(--paper-2);
+  display:flex;flex-direction:column}
+/* 圖說。這張圖能做什麼（點一州進那一州的地圖）與虛線是什麼意思，畫面上原本
+   沒有任何地方講。放在圖下面而不是上面——先看到圖，需要時才讀說明。 */
+.mapcap{margin:0;padding:10px 16px 14px;font-size:12px;line-height:1.5;
+  color:var(--ink-3);text-align:center}
 .doc{padding-top:26px}
 @media (max-width:900px){
   /* 手機不鎖一屏——內容要能自然往下排 */
@@ -80,6 +85,13 @@
   /* 左欄用 display:contents 退出版面，它底下的區塊就直接成為 .app 的子項。 */
   .app{display:flex;flex-direction:column;height:auto;min-height:0;
     border:0;margin-top:20px;gap:24px;padding:0 26px}
+  /* 單欄寬度上限。斷點是 900px，所以 iPad 直式（744／834）走的是這個手機
+     版面——量到的：答案面板被拉到 692／782px 寬，但裡面的判定列只有 266px，
+     右半邊整片空的；全澳圖膨脹成 782x621 佔掉大半個螢幕；說明文字一行拉到
+     742px，而字級只有 12.5px。
+     它不是壞掉，是被拉開了。給單欄一個上限並置中就好——手機（≤640px）本來
+     就到不了這個寬度，完全不受影響。 */
+  .app{max-width:640px;margin-left:auto;margin-right:auto;width:100%}
   .app-rail{display:contents}
   /* 手機上的順序：查詢 → 地圖 → 產業選擇 → 產業定義。
      查詢排第一，它是使用者來這一頁的唯一理由，而且答案已經不需要先選產業。
@@ -91,8 +103,11 @@
   #indnote{order:3}
   /* 高度跟著澳洲的長寬比走（--au-aspect 由 portal.js 依 viewBox 設定），
      不用固定的 52vh——橫向的澳洲塞進直式窗格會上下各留一大條空白。 */
-  .app-map{aspect-ratio:var(--au-aspect, 1.35);height:auto;
-    max-height:52vh;min-height:240px;border-radius:6px;border:1px solid var(--line)}
+  /* 長寬比套在 svg 上，不是套在整個格子上——格子現在還裝著圖說，套在格子上
+     會把圖擠扁。 */
+  .app-map{height:auto;border-radius:6px;border:1px solid var(--line)}
+  .app-map > svg.au{aspect-ratio:var(--au-aspect, 1.35);
+    max-height:52vh;min-height:240px;flex:none}
   .dist{margin-bottom:30px}
   .doc{padding-left:0;padding-right:0}
 }
@@ -170,11 +185,41 @@ table.imap th[scope="row"]{font-weight:700;white-space:nowrap}
    表頭底下本來就有線，不必再加一條。 */
 table.imap tbody tr.grp:not(:first-child) th,
 table.imap tbody tr.grp:not(:first-child) td{border-top:1px solid var(--ink-3)}
-/* rowspan 的儲存格在群組裡是垂直置中的，看起來會跟第一列的產業名對不齊。 */
-table.imap td[rowspan]{vertical-align:top}
+/* 表名儲存格在群組裡是垂直置中的，看起來會跟第一列的產業名對不齊。 */
+table.imap td.areas{vertical-align:top}
 table.imap td.sc{color:var(--ink-3);font-size:12.5px;min-width:260px}
 table.imap th[scope="row"] em{display:block;font-style:normal;font-weight:400;
   font-size:11px;color:var(--ink-3);letter-spacing:0}
+
+/* 窄螢幕：表格攤成一疊卡片。
+   量到的：表格 680px 塞在 388px 的框裡，可橫捲但沒有任何提示，而「範圍」那一
+   欄實際寬 362px，畫面上只看得到 71px——那一欄正是這張表存在的理由（農牧的
+   二次加工不算、礦業的支援服務算），在手機上等於沒有。
+   斷點取 700px 而不是版面的 900px：744px 以上（iPad 直式）表格是完整顯示的，
+   不需要改成卡片。 */
+@media (max-width:700px){
+  .tblwrap{overflow-x:visible;border:0;border-radius:0;background:none}
+  table.imap{min-width:0;width:100%;display:block}
+  table.imap thead{display:none}
+  table.imap tbody{display:block}
+  table.imap tr{display:block;border:1px solid var(--line);border-radius:5px;
+    background:var(--surface);padding:11px 13px;margin-bottom:7px}
+  table.imap th,table.imap td{display:block;padding:0;border:0}
+  /* 表名的儲存格在卡片模式只會落在該組第一張卡上，改用每一列都帶著的
+     data-areas 印，五張卡才都說得出自己看哪一張表。
+     選 .areas 不選 [rowspan]：只有一列的組（觀光餐旅）不需要 rowspan 屬性，
+     用 [rowspan] 選的話那一張卡會把表名印兩次。 */
+  table.imap td.areas{display:none}
+  table.imap tr::before{content:attr(data-areas);display:block;order:-1;
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;
+    color:var(--ink-3);margin-bottom:5px}
+  table.imap th[scope="row"]{font-size:14px;margin-bottom:5px}
+  table.imap td.sc{min-width:0;line-height:1.55}
+  /* 分組的線在卡片模式沒有意義（卡片本來就各自獨立），改用組與組之間的間距 */
+  table.imap tbody tr.grp:not(:first-child) th,
+  table.imap tbody tr.grp:not(:first-child) td{border-top:0}
+  table.imap tbody tr.grp:not(:first-child){margin-top:18px}
+}
 .basis-note2{margin:0 0 10px;font-size:12.5px;line-height:1.6;color:var(--ink-3)}
 .basis-note2 a{color:var(--ink-2)}
 .basis-note{margin:14px 0 0;font-size:12.5px;line-height:1.6;color:var(--ink-2);

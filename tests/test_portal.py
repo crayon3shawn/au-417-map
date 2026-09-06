@@ -92,3 +92,55 @@ class TestDeliverable(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class TestMainName(unittest.TestCase):
+    """代表地名要是使用者認得出來的那個鎮。
+
+    答案面板上郵遞區號底下印的就是它。原本取最短的地名，在有主聚落的郵區
+    沒問題（Cairns 而不是 Cairns North），在沒有主聚落的郵區就變成隨機挑一個
+    小村：2480 是 Lismore，74 個地名裡最短的是 Jiggi。
+
+    這幾筆是規則的兩個訊號各自的代表案例，以及兩個「不可以改壞」的反例。
+    """
+
+    def setUp(self):
+        sys.path.insert(0, str(ROOT / "fetch"))
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("fp", ROOT / "fetch" / "portal.py")
+        self.fp = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.fp)
+
+    def test_包含關係的樞紐(self):
+        # Lismore 被四個衍生地名包住
+        real = sorted(["Jiggi", "Lismore", "East Lismore", "North Lismore",
+                       "South Lismore", "Lismore Heights", "Back Creek"])
+        self.assertEqual("Lismore", self.fp.main_name(2480, real, None))
+
+    def test_投遞中心_在包含關係命不中時接手(self):
+        # Byron Bay 沒有任何衍生地名，但每一列的投遞中心都是 BYRON BAY DC
+        real = sorted(["Broken Head", "Byron Bay", "Ewingsdale", "Myocum", "Talofa"])
+        self.assertEqual("Byron Bay",
+                         self.fp.main_name(2481, real, ["BYRON BAY DC"] * 5))
+
+    def test_投遞中心的方位變體不採用(self):
+        # CLOVELLY WEST DC 不可以把 Clovelly 換成 Clovelly West
+        real = sorted(["Clovelly", "Clovelly West", "Waverley"])
+        self.assertEqual("Clovelly",
+                         self.fp.main_name(2031, real, ["CLOVELLY WEST DC"] * 3))
+
+    def test_兩個訊號都命不中就退回最短的(self):
+        real = sorted(["Bilinga", "Greenmount", "Kirra", "Tugun"])
+        self.assertEqual("Kirra", self.fp.main_name(4225, real, None))
+
+    def test_包含關係只有一個不算數(self):
+        # Colo / Colo Vale 這種一個就中的太容易誤判，門檻是兩個
+        real = sorted(["Colo", "Colo Vale", "Bathurst"])
+        self.assertEqual("Colo", self.fp.main_name(9999, real, None))
+
+    def test_產出的索引沒有漏掉地名(self):
+        """換代表名不可以動到地名集合——地名是拿來搜尋的，少一個就查不到。"""
+        idx = load(IDX_PATH)["postcodes"]
+        for pc, v in idx.items():
+            with self.subTest(pc=pc):
+                self.assertNotIn(v[1], v[2] or [], f"{pc} 的代表名同時也在其餘地名裡")

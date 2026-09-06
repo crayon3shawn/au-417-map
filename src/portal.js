@@ -80,6 +80,20 @@ let industry = DATA.industry_masks.find(i => i.key === DATA.industry) || DATA.in
 // 不是判定，一次只能用一把尺。郵區判定已經不走這條路了。
 const catOf = f => catFor(f, industry.mask);
 
+// 候選列的色點：左半＝走 Regional 的五個產業，右半＝觀光餐旅。答案面板已經
+// 一次講全部產業，色點就不能只講一個產業的結論（見 base.css 的 .hits em）。
+// 分組順序跟答案面板一致，所以左右兩半的意思在兩個地方是同一件事。
+function dotColors(f){
+  const g = indGroups();
+  return [CAT_COLOR[catFor(f, g[0].mask)],
+          CAT_COLOR[catFor(f, g[g.length - 1].mask)]];
+}
+function paintDot(btn, f){
+  const [a, c] = dotColors(f);
+  btn.style.setProperty('--hc', a);
+  btn.style.setProperty('--hc2', c);
+}
+
 const indSel = document.getElementById('ind');
 function fillIndustries(){
   indSel.innerHTML = '';
@@ -332,8 +346,12 @@ function drawTable(){
       const sub = lang === 'zh' ? `<em>${esc(ind.en)}</em>` : '';
       const tr = document.createElement('tr');
       if(i === 0) tr.className = 'grp';
+      // 窄螢幕上表格會攤成一疊卡片，那時 rowspan 的儲存格只會出現在該組的
+      // 第一張卡上，其餘四張就不知道自己看哪張表。每一列都帶著表名，卡片
+      // 模式用 ::before 印出來（見 portal.css）。表格模式仍走 rowspan。
+      tr.dataset.areas = g.areas.map(a => covName(a)).join(T('p_area_join'));
       tr.innerHTML = `<th scope="row">${esc(label)}${sub}</th>`
-        + (i === 0 ? `<td${g.inds.length > 1 ? ` rowspan="${g.inds.length}"` : ''}>${areas}</td>` : '')
+        + (i === 0 ? `<td class="areas"${g.inds.length > 1 ? ` rowspan="${g.inds.length}"` : ''}>${areas}</td>` : '')
         + `<td class="sc">${esc(scope || '')}</td>`;
       tb.appendChild(tr);
     });
@@ -373,7 +391,9 @@ function buildNameIndex(){
     for(const nm of NAMES[pc].split('|')) byName.push([nm.toLowerCase(), pc, nm, st]);
   }
 }
-const clearHits = () => { hitsEl.innerHTML = ''; };
+const clearHits = () => { hitsEl.innerHTML = ''; hitsEl.classList.remove('more'); };
+// 內容比窗口高時掛 .more，底部才會漸隱（見 base.css）。CSS 沒辦法自己判斷。
+const markScroll = () => hitsEl.classList.toggle('more', hitsEl.scrollHeight > hitsEl.clientHeight);
 
 // 區域列排在地名之前——打「Cairns」時行政區是比較大的答案，先給它。
 function regionRow(r){
@@ -432,11 +452,12 @@ function showRegion(r){
     const s = stateOf(stOf(key)), nm = mainName(key);
     const b = document.createElement('button');
     b.type = 'button';
-    b.style.setProperty('--hc', CAT_COLOR[catOf(flagOf(key))]);
+    paintDot(b, flagOf(key));
     b.innerHTML = `<em></em><b>${pad4(pc)}<u>${esc(s.abbr)}</u></b><i>${esc(nm)}</i>`;
     b.addEventListener('click', () => { q.value = nm; clearHits(); render(key, nm); });
     hitsEl.appendChild(b);
   }
+  markScroll();
 }
 
 function showHits(list, term, regs){
@@ -444,27 +465,32 @@ function showHits(list, term, regs){
   // 出現候選清單時要把上一筆答案收掉。不清的話，查「gosford」會看到候選是
   // Gosford 的五筆、但右邊還停在上一次查「gold coast」的區域卡片。
   shownPc = null; shownName = null; shownRegion = null;
-  show(`<div class="empty">${esc(T('p_detail_empty'))}</div>`);
+  // 這裡不畫空狀態。「在上面輸入郵遞區號或地名⋯」的存在理由是告訴使用者這塊
+  // 待會會出現什麼，而他已經打完字了——留著只是在輸入框與第一筆候選之間卡
+  // 77px。清空即可，.detail 空的時候本來就不佔位。
+  show('');
   for(const r of (regs || []).slice(0, 8)) hitsEl.appendChild(regionRow(r));
   for(const [pc, nm, st] of list.slice(0, 40)){
     const f = flagOf(pc), s = stateOf(st);
     const b = document.createElement('button');
     b.type = 'button';
-    b.style.setProperty('--hc', CAT_COLOR[catOf(f)]);
+    paintDot(b, f);
     b.innerHTML = `<em></em><b>${pad4(pc)}<u>${esc(s.abbr)}</u></b><i>${esc(nm)}</i>`;
     b.addEventListener('click', () => { q.value = nm; clearHits(); render(pc, nm); });
     hitsEl.appendChild(b);
   }
+  markScroll();
   const extra = list.length - 40;
   const nreg = (regs || []).length;
   // 行政區與地名可能同時命中（打「Cairns」兩種都有），兩邊的筆數都要講，
   // 不然使用者不知道下面那些列是兩種東西混在一起。
   const parts = [];
   if(nreg) parts.push(T('p_reg_found', {q:term, n:nreg}));
-  if(list.length) parts.push(T('hits_found', {n:list.length})
-                             + (extra > 0 ? T('hits_more', {n:40}) : '')
-                             + T('p_hits_tail'));
-  setHint(parts.length ? parts.join(' ') : T('hits_none', {q:term}));
+  if(list.length) parts.push(extra > 0 ? T('hits_more', {n:list.length, m:40})
+                                      : T('hits_found', {n:list.length}));
+  // 中文用空字串接。原本是 join(' ')，而兩句都已經以「。」結尾，接起來中間
+  // 會多一個半形空格。英文才需要那個空格。
+  setHint(parts.length ? parts.join(lang === 'zh' ? '' : ' ') : T('hits_none', {q:term}));
 }
 
 // 清掉目前顯示的東西。輸入框空了就該回到初始狀態，否則換語言／換產業時
@@ -529,7 +555,14 @@ function render(key, pick){
   setHint('');
   const v = key;
   const stKey = hit[0], f = hit[1];
-  const name = pick || mainName(key);
+  // 地名列到六個加總數，跟州頁一樣。原本只印代表地名，2480 會顯示「Jiggi」——
+  // 那個郵區底下有 75 個地名，而為了 Lismore 的職缺查 2480 的人看到 Jiggi
+  // 會以為自己查錯了。使用者點過的那個地名排最前面。
+  const all = namesOf(key);
+  const ordered = pick ? [pick, ...all.filter(n => n !== pick)] : all;
+  const shown = ordered.slice(0, 6);
+  const name = shown.join(lang === 'zh' ? '、' : ', ')
+    + (ordered.length > shown.length ? T('more_areas', {n: ordered.length}) : '');
   const s = stateOf(stKey);
   // 每一組產業各給一個判定。兩組相同時（全澳 48.3% 的郵區）收成標題那一句，
   // 不列出來——「不分產業，一般工作就算」已經把話講完了，再列兩行同樣的結論
@@ -539,9 +572,9 @@ function render(key, pick){
   const anyWork = groups.some(g => g.cat === 'work');
   // 鍵寫成字面量。測試掃的是原始碼裡的 T('...')，'p_all_' + cat 這種拼法
   // 「用到的鍵都存在」與「沒有沒人用的鍵」兩個守衛都會漏掉。
-  const SAY_ALL = {work: T('p_all_work'), rebuild: T('p_all_rebuild'), none: T('p_all_none')};
-  const SAY_GRP = {work: T('p_grp_work'), rebuild: T('p_grp_rebuild'), none: T('p_grp_none')};
-  const say = uniform ? SAY_ALL[groups[0].cat] : T('p_depends');
+  const SAY_ALL = {work: T('say_all_work'), rebuild: T('say_all_rebuild'), none: T('say_all_none')};
+  const SAY_GRP = {work: T('grp_work'), rebuild: T('grp_rebuild'), none: T('grp_none')};
+  const say = uniform ? SAY_ALL[groups[0].cat] : T('say_depends');
   // 判定不一致時沒有代表色可用，退回一般文字色——跟 showRegion() 同一個處理。
   const band = uniform ? CAT_COLOR[groups[0].cat] : 'var(--ink)';
   // 表名要寫出來：送件時官方問的就是這個。頁面上不再印起算日（2019-07-31 與
@@ -568,7 +601,7 @@ function render(key, pick){
   if(uniform && tbls)
     notes.push(esc(T(anyWork ? 'p_also_declared' : 'p_declared', {list:joinList(routes)})) + '<br>' + tbls);
   if(uniform && groups[0].cat === 'none') notes.push(esc(T('p_none_sub')));
-  if(anyRebuild) notes.push(esc(T('p_rebuild_note')));
+  if(anyRebuild) notes.push(esc(T('rebuild_note')));
   const body = rows + (notes.length ? `<div class="sub">${notes.join('<br>')}</div>` : '');
   // s.mapped 而不是 s.url：這句話是在陳述「這個州有沒有地圖」，
   // 而不是「這次建置有沒有它的網址」。局部的 Artifact 預覽只發了部分州頁時，
