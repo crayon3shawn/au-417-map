@@ -97,13 +97,9 @@
       "en": "Home Affairs {d} · built {b}",
       "zh": "Home Affairs {d} · 建置 {b}"
     },
-    "grp_none": {
-      "en": "Does not count",
-      "zh": "完全不算"
-    },
-    "grp_rebuild": {
-      "en": "Only disaster recovery work counts",
-      "zh": "只有災後重建工作算"
+    "grp_nowork": {
+      "en": "Ordinary work does not count",
+      "zh": "一般工作不算"
     },
     "grp_work": {
       "en": "Ordinary work counts",
@@ -201,10 +197,6 @@
       "en": "See the official {tables} list →",
       "zh": "請參考官方 {tables} →"
     },
-    "p_also_declared": {
-      "en": "This postcode is also a declared disaster area: {list}.",
-      "zh": "這裡也被宣告為災區：{list}。"
-    },
     "p_area_bushfire": {
       "en": "Declared bushfire areas",
       "zh": "大火宣告區"
@@ -269,13 +261,13 @@
       "en": "postcodes · {pct}%",
       "zh": "個 · {pct}%"
     },
-    "p_declared": {
-      "en": "This postcode is a declared disaster area: {list}.",
-      "zh": "這個郵區被宣告為災區：{list}。"
-    },
     "p_detail_empty": {
       "en": "Enter a postcode or place name above and the verdict appears here, for every industry at once.",
       "zh": "在上面輸入郵遞區號或地名，這裡會顯示這個郵區算不算集簽，六種產業一次講完。"
+    },
+    "p_dist_by": {
+      "en": "counted for",
+      "zh": "依產業計算"
     },
     "p_eyebrow_dist": {
       "en": "Postcode breakdown",
@@ -296,10 +288,6 @@
     "p_ind_aria": {
       "en": "Choose your industry",
       "zh": "選擇產業"
-    },
-    "p_ind_what": {
-      "en": "Postcode verdicts above already cover every industry. This choice only sets which industry the state figures and district breakdowns are counted for.",
-      "zh": "上面的郵區判定已經把全部產業列出來了。這個選擇只決定下方各州統計與行政區分布要用哪一行來數。"
     },
     "p_leg_none": {
       "en": "Not eligible",
@@ -328,10 +316,6 @@
     "p_nomap_line": {
       "en": "There is no map for {state} yet. The verdict above still applies.",
       "zh": "{state}還沒做地圖。上面的判斷仍然有效。"
-    },
-    "p_none_sub": {
-      "en": "This postcode is not on any of the eligible lists.",
-      "zh": "這個郵區不在任何一張合格清單上。"
     },
     "p_note1_b": {
       "en": "Construction counts only inside Regional Australia postcodes. Sydney, Melbourne, Brisbane and the Gold Coast are not on the list.",
@@ -397,14 +381,6 @@
       "en": "Outline it on the {state} map →",
       "zh": "在{state}地圖上框出來 →"
     },
-    "p_route_fire": {
-      "en": "bushfire recovery",
-      "zh": "叢林大火重建"
-    },
-    "p_route_flood": {
-      "en": "flood and cyclone recovery",
-      "zh": "洪水／氣旋等天災重建"
-    },
     "p_samelist": {
       "en": "<b>The two lists are not the same size.</b> Regional Australia covers {reg} postcodes. Remote and Northern, which is what tourism and hospitality goes by, covers {tour} — {ratio} times smaller.",
       "zh": "<b>兩張表的大小差一個數量級。</b>Regional Australia 有 {reg} 個郵區；觀光餐旅看的 Remote 與 Northern 只有 {tour} 個，不到前者的 {ratio} 分之一。"
@@ -441,9 +417,17 @@
       "en": "postcode",
       "zh": "個郵區"
     },
-    "rebuild_note": {
-      "en": "Recovery work means rebuilding, demolition, repairs, roads and bridges. Volunteer work counts. Keep records showing the work was disaster repair.",
-      "zh": "重建的土建、拆除、修繕、道路橋樑才算，志工也算，記得留下能證明工程屬於災後修復的紀錄。"
+    "recovery_body": {
+      "en": "Open to every industry, and volunteer work counts. What qualifies is the recovery work itself — earthworks, demolition, repairs, roads and bridges. Keep records showing the job was disaster repair.",
+      "zh": "不分產業都可以走，有給薪或志工都算。算的是重建工作本身——土建、拆除、修繕、道路橋樑。留好能證明工程屬於災後修復的紀錄。"
+    },
+    "recovery_h": {
+      "en": "Another route: disaster recovery work",
+      "zh": "另一條路：災後重建工作"
+    },
+    "recovery_only": {
+      "en": "Ordinary work in your own trade does not count in this postcode.",
+      "zh": "你本行的一般工作在這個郵區不算。"
     },
     "reset_view": {
       "en": "Reset view",
@@ -453,10 +437,6 @@
       "en": "Does not count for any industry",
       "zh": "不分產業，完全不算"
     },
-    "say_all_rebuild": {
-      "en": "Only disaster recovery work counts, whichever industry",
-      "zh": "不分產業，只有災後重建工作算"
-    },
     "say_all_work": {
       "en": "Ordinary work counts, whichever industry",
       "zh": "不分產業，一般工作就算"
@@ -464,6 +444,10 @@
     "say_depends": {
       "en": "Depends on your industry",
       "zh": "看你做哪一行"
+    },
+    "say_rebuild_only": {
+      "en": "No ordinary work counts here — disaster recovery is the only route",
+      "zh": "一般工作都不算，只有災後重建這條路"
     },
     "search_label": {
       "en": "Postcode or place",
@@ -496,18 +480,6 @@
     "tropic": {
       "en": "TROPIC OF CAPRICORN",
       "zh": "TROPIC OF CAPRICORN 南回歸線"
-    },
-    "v_fire": {
-      "en": "Bushfire recovery work → counts",
-      "zh": "叢林大火重建工作 → 算"
-    },
-    "v_fire_sub": {
-      "en": "Rebuilding, demolition, land clearing and repairs carried out after 31 July 2019. Paid or volunteer.",
-      "zh": "2019 年 7 月 31 日之後執行的重建、拆除、整地、修繕，有給薪或志工都算。"
-    },
-    "v_flood": {
-      "en": "Flood, cyclone and severe weather recovery → counts",
-      "zh": "洪水／氣旋等天災重建工作 → 算"
     },
     "v_no_polygon": {
       "en": "The ABS has no boundary for this postcode; it is shown as a dot at an approximate location.",

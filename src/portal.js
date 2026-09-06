@@ -94,6 +94,55 @@ function paintDot(btn, f){
   btn.style.setProperty('--hc2', c);
 }
 
+// 答案面板的兩個組成。
+//
+// 這裡的模型換過一次。原本把「災後重建」當成某個產業的判定值之一，畫面上會
+// 出現「觀光與餐旅 → 只有災後重建工作算」——那句話會被讀成「你的餐旅工作在
+// 這裡算，只是限制多一點」。實際上不是：餐旅工作在那個郵區完全不算，能算的
+// 是去做重建工作本身（土建、拆除、修繕、道路橋樑），而那跟你本來做哪一行
+// 無關。data/industries.json 的 recovery.note 本來就寫著「災後重建是獨立於
+// 產業的另一條路，任何產業都適用」，是介面沒有照著呈現。
+//
+// 所以現在拆成兩個獨立的問題：
+//   1. 我這一行的一般工作在這裡算不算？（看地區表，逐產業）
+//   2. 這個郵區有沒有災後重建這條路？（看災害表，不分產業）
+const hasRecovery = f => !!(f & REBUILD);
+
+function answerHead(f){
+  const groups = indGroups().map(g => ({names: g.names, work: !!(f & g.mask)}));
+  const allWork = groups.every(g => g.work);
+  const noneWork = groups.every(g => !g.work);
+  if(!allWork && !noneWork) return {say: T('say_depends'), band: 'var(--ink)', none: false};
+  if(allWork) return {say: T('say_all_work'), band: CAT_COLOR.work, none: false};
+  return hasRecovery(f)
+    ? {say: T('say_rebuild_only'), band: CAT_COLOR.rebuild, none: false}
+    : {say: T('say_all_none'),     band: CAT_COLOR.none,    none: true};
+}
+
+function answerBody(f){
+  const groups = indGroups().map(g => ({names: g.names, work: !!(f & g.mask)}));
+  const uniform = groups.every(g => g.work === groups[0].work);
+  // 兩組結論一樣時標題那一句已經把話講完，不再列兩行同樣的東西。
+  const rows = uniform ? '' : groups.map(g =>
+      `<div class="verdict" style="--vc:${g.work ? CAT_COLOR.work : CAT_COLOR.none}">`
+      + `<span class="dot"></span><span><b>${esc(T(g.work ? 'grp_work' : 'grp_nowork'))}</b>`
+      + `<br>${esc(joinList(g.names))}</span></div>`
+    ).join('');
+  if(!hasRecovery(f)) return rows;
+  // 表名要寫出來：送件時官方問的就是這個。tbl_* 自己就帶著「官方表：」，
+  // 不要再加一層標籤。
+  const tbls = [(f & BIT_FIRE) ? T('tbl_bushfire') : '', (f & BIT_DISASTER) ? T('tbl_disaster') : '']
+      .filter(Boolean).map(x => `<em class="tbl">${esc(x)}</em>`).join('<br>');
+  // 「你本行的一般工作在這裡不算」只有在真的沒有任何產業算的時候才成立。
+  // 4870 是「不分產業，一般工作就算」＋有災區宣告，兩句話一起印會自相矛盾。
+  const onlyRoute = groups.every(g => !g.work)
+    ? `<p>${esc(T('recovery_only'))}</p>` : '';
+  return rows
+    + `<div class="route"><b>${esc(T('recovery_h'))}</b>`
+    + `<p>${esc(T('recovery_body'))}</p>${onlyRoute}`
+    + `<p class="rt">${tbls}</p></div>`;
+}
+
 const indSel = document.getElementById('ind');
 function fillIndustries(){
   indSel.innerHTML = '';
@@ -111,10 +160,9 @@ function applyIndustry(){
   document.getElementById('indnote').innerHTML =
     `<div class="hd">${esc(T('industry_table'))}</div>`
     + `<div class="bd">${esc(indScope() || '')} `
-    + `${HA}${esc(T('official_def', {tables}))}</a>`
-    + `<div class="what">${esc(T('p_ind_what'))}</div></div>`;
-  // 這個選擇器已經不決定郵區判定了（判定一次列出全部產業），所以要講一句它
-  // 現在管什麼——不然使用者會以為自己選錯了行會看到錯的答案。
+    + `${HA}${esc(T('official_def', {tables}))}</a></div>`;
+  // 原本這裡還有一句「這個選擇只決定下方統計」。選擇器搬到統計上面之後，
+  // 那句話變成在解釋一個已經看得出來的關係——控制項就長在它的效果旁邊。
   drawStates();
   drawCards();
   drawSameList();
@@ -564,45 +612,7 @@ function render(key, pick){
   const name = shown.join(lang === 'zh' ? '、' : ', ')
     + (ordered.length > shown.length ? T('more_areas', {n: ordered.length}) : '');
   const s = stateOf(stKey);
-  // 每一組產業各給一個判定。兩組相同時（全澳 48.3% 的郵區）收成標題那一句，
-  // 不列出來——「不分產業，一般工作就算」已經把話講完了，再列兩行同樣的結論
-  // 只是把答案變長。
-  const groups = indGroups().map(g => ({names: g.names, cat: catFor(f, g.mask)}));
-  const uniform = groups.every(g => g.cat === groups[0].cat);
-  const anyWork = groups.some(g => g.cat === 'work');
-  // 鍵寫成字面量。測試掃的是原始碼裡的 T('...')，'p_all_' + cat 這種拼法
-  // 「用到的鍵都存在」與「沒有沒人用的鍵」兩個守衛都會漏掉。
-  const SAY_ALL = {work: T('say_all_work'), rebuild: T('say_all_rebuild'), none: T('say_all_none')};
-  const SAY_GRP = {work: T('grp_work'), rebuild: T('grp_rebuild'), none: T('grp_none')};
-  const say = uniform ? SAY_ALL[groups[0].cat] : T('say_depends');
-  // 判定不一致時沒有代表色可用，退回一般文字色——跟 showRegion() 同一個處理。
-  const band = uniform ? CAT_COLOR[groups[0].cat] : 'var(--ink)';
-  // 表名要寫出來：送件時官方問的就是這個。頁面上不再印起算日（2019-07-31 與
-  // 2021-12-31 都已經過去好幾年，對「找工作前先確認」的人永遠成立），表名就是
-  // 使用者回官網查細則的入口。
-  const routes = [];
-  if(f & BIT_FIRE) routes.push(T('p_route_fire'));
-  if(f & BIT_DISASTER) routes.push(T('p_route_flood'));
-  const tbls = [(f & BIT_FIRE) ? T('tbl_bushfire') : '', (f & BIT_DISASTER) ? T('tbl_disaster') : '']
-      .filter(Boolean).map(x => `<em class="tbl">${esc(x)}</em>`).join('<br>');
-  const anyRebuild = groups.some(g => g.cat === 'rebuild');
-  // 表名掛在它解釋的那一列下面（跟州頁的答案面板同一個做法），不另外寫一句
-  // 「這裡也被宣告為災區：…」——那句話跟「只有災後重建工作算」這一列講的是
-  // 同一件事，兩個都印就是同一件事講兩次。
-  const rows = uniform ? '' : groups.map(g =>
-      `<div class="verdict" style="--vc:${CAT_COLOR[g.cat]}"><span class="dot"></span>`
-      + `<span><b>${esc(SAY_GRP[g.cat])}</b><br>${esc(joinList(g.names))}`
-      + (g.cat === 'rebuild' && tbls ? `<br>${tbls}` : '') + `</span></div>`
-    ).join('');
-  const notes = [];
-  // 兩組收成標題那一句時就沒有判定列可以掛表名了，改用一句話帶出來。
-  // 「也」只有在一般工作本來就算的時候才成立——沒有任何一組算的話，災後重建
-  // 是唯一的路，不是額外多一條。
-  if(uniform && tbls)
-    notes.push(esc(T(anyWork ? 'p_also_declared' : 'p_declared', {list:joinList(routes)})) + '<br>' + tbls);
-  if(uniform && groups[0].cat === 'none') notes.push(esc(T('p_none_sub')));
-  if(anyRebuild) notes.push(esc(T('rebuild_note')));
-  const body = rows + (notes.length ? `<div class="sub">${notes.join('<br>')}</div>` : '');
+  const body = answerBody(f);
   // s.mapped 而不是 s.url：這句話是在陳述「這個州有沒有地圖」，
   // 而不是「這次建置有沒有它的網址」。局部的 Artifact 預覽只發了部分州頁時，
   // 用 url 判斷會對 NSW 說「還沒做地圖」——那是假的，而且使用者看得到。
@@ -612,11 +622,12 @@ function render(key, pick){
     : `<p class="nomap">${esc(T('p_nomap_line', {state:stLabel(s)}))}</p>`;
   // 版面跟州頁的答案面板一模一樣：郵遞區號 38px 等寬，判定色走左邊色帶與判定字。
   // 兩頁共用同一個 .detail/.ans 結構，使用者從入口頁點進州頁不必重新認一次。
+  const a = answerHead(f);
   show(`<div class="ans"><span class="pcn">${pad4(v)}<u>${esc(s.abbr)}</u></span>
-        <span class="say">${esc(say)}</span>
+        <span class="say">${esc(a.say)}</span>
         <span class="loc">${esc(name)}</span></div>
       <div class="bd">${body}${link}</div>`,
-    band, uniform && groups[0].cat === 'none');
+    a.band, a.none);
 }
 // 打字就查，沒有「查」按鈕。條件跟州頁一致——原本入口頁漏掉三位數郵區
 // （北領地的 0800 打完不會自動查，只能按按鈕），那是條件寫得不一致，不是按鈕的價值。
