@@ -1,8 +1,9 @@
 """build.py 裡幾個會影響資料正確性的判斷。"""
-import unittest, sys, pathlib
+import unittest, sys, re, pathlib
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 import build
+from lib import load
 
 
 class TestNonGeographic(unittest.TestCase):
@@ -194,3 +195,56 @@ class TestSearchIndex(unittest.TestCase):
         wf = (ROOT / ".github" / "workflows" / "pages.yml").read_text(encoding="utf-8")
         self.assertIn("dist/*.json", wf,
                       "workflow 只複製 *.html 的話，跨州查詢會靜靜地失效")
+
+
+class TestBuiltPages(unittest.TestCase):
+    """對建置產物做幾項只要解析就能做的檢查。
+
+    這些原本要開瀏覽器才看得到，但其實不必——h1 在靜態 HTML 裡、出處清單在
+    foot.js 的陣列裡。放在這裡的好處是進 CI、一秒跑完、不依賴 Playwright。
+    真的需要渲染才知道的（版面撐破、對比率、面板位置）在另一層。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.pages = sorted((ROOT / "dist").glob("*.html"))
+        if not cls.pages:
+            raise unittest.SkipTest("dist/ 裡沒有頁面，請先 make all")
+
+    def test_每頁恰好一個h1(self):
+        """一頁兩個 h1 是常見的複製貼上後遺症，而且螢幕閱讀器會據此建大綱。"""
+        for p in self.pages:
+            with self.subTest(page=p.name):
+                n = len(re.findall(r"<h1[\s>]", p.read_text(encoding="utf-8")))
+                self.assertEqual(1, n, f"{p.name} 有 {n} 個 h1")
+
+    def test_出處清單是四個且都有對應的字串(self):
+        """出處是這個站的信用來源。少一個不會有任何徵兆——頁尾照樣渲染，
+        只是某一份資料的來源從此沒人標。地名索引（australianpostcodes）就曾經
+        整個沒被標示過，而整個地名搜尋都靠它。
+        """
+        foot = (ROOT / "src" / "foot.js").read_text(encoding="utf-8")
+        block = re.search(r"var SRC = \[(.*?)\];", foot, re.S)
+        self.assertIsNotNone(block, "foot.js 裡找不到 SRC 陣列")
+        keys = re.findall(r"'(foot_src_\w+)'", block.group(1))
+        self.assertEqual(4, len(keys), f"出處剩 {len(keys)} 個：{keys}")
+        strings = load(ROOT / "data" / "strings.json")["s"]
+        for k in keys:
+            self.assertIn(k, strings, f"{k} 沒有對應的字串")
+
+    def test_中英文的變數要一致(self):
+        """同一個鍵的 zh 與 en 要用同一組 {變數}。
+
+        少一個的話那個語言就會漏掉一段資訊（例如英文版忘了 {n}，使用者永遠
+        看不到筆數）；多一個的話 T() 填不上，畫面上會直接印出「{n}」。
+        兩種都不會拋錯，只會靜靜地錯。
+        """
+        strings = load(ROOT / "data" / "strings.json")["s"]
+        for key, v in strings.items():
+            if not isinstance(v, dict):
+                continue
+            with self.subTest(key=key):
+                zh = set(re.findall(r"\{(\w+)\}", v.get("zh", "")))
+                en = set(re.findall(r"\{(\w+)\}", v.get("en", "")))
+                self.assertEqual(zh, en,
+                                 f"{key} 的變數不一致：zh={sorted(zh)} en={sorted(en)}")
