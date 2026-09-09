@@ -137,12 +137,20 @@ function indGroups(){
   return out;
 }
 
-// 候選列的色點：左半＝走 Regional 的五個產業，右半＝觀光餐旅。跟入口頁同一個
-// 做法與同一個順序（見 base.css 的 .hits em）。
+// 這個郵區有沒有災後重建這條路。宣告在這裡而不是用到的地方附近——
+// paintDot 與 answerBody 都要用，放在後面只是靠「那些函式要等互動
+// 才跑」僥倖躲過 TDZ（CAT_COLOR 先前就是這樣）。
+const hasRecovery = f => !!(f & REBUILD);
+
+// 候選列的色點。跟入口頁同一個做法與同一個順序，完整理由在 portal.js 的
+// 同名函式：只有算／不算兩個值，重建走外環——它是郵區的屬性，不屬於任何
+// 一個產業，畫成其中一半就變回這一版要拆掉的誤讀。
 function paintDot(btn, f){
   const g = indGroups();
-  btn.style.setProperty('--hc', CAT_COLOR[catFor(f, g[0].mask)]);
-  btn.style.setProperty('--hc2', CAT_COLOR[catFor(f, g[g.length - 1].mask)]);
+  const c = m => (f & m) ? CAT_COLOR.work : CAT_COLOR.none;
+  btn.style.setProperty('--hc', c(g[0].mask));
+  btn.style.setProperty('--hc2', c(g[g.length - 1].mask));
+  btn.classList.toggle('rt', hasRecovery(f));
 }
 
 // 答案面板的兩個組成，跟入口頁同一套（見 portal.js 的同名函式，那裡有完整
@@ -150,7 +158,6 @@ function paintDot(btn, f){
 // 「觀光與餐旅 → 只有災後重建工作算」會被讀成餐旅工作在這裡算，但實際上算
 // 的是重建工作本身。所以拆成兩個獨立的問題：這一行的一般工作算不算，以及
 // 這個郵區有沒有重建這條路。
-const hasRecovery = f => !!(f & REBUILD);
 
 function answerHead(f){
   const groups = indGroups().map(g => ({work: !!(f & g.mask)}));
@@ -177,13 +184,12 @@ function answerBody(f){
   // 不要再加一層標籤。
   const tbls = [(f & BIT_FIRE) ? T('tbl_bushfire') : '', (f & BIT_DISASTER) ? T('tbl_disaster') : '']
       .filter(Boolean).map(x => `<em class="tbl">${esc(x)}</em>`).join('<br>');
-  // 「你本行的一般工作在這裡不算」只有在真的沒有任何產業算的時候才成立。
-  // 4870 是「不分產業，一般工作就算」＋有災區宣告，兩句話一起印會自相矛盾。
-  const onlyRoute = groups.every(g => !g.work)
-    ? `<p>${esc(T('recovery_only'))}</p>` : '';
+  // 這裡原本還有一句「你本行的一般工作在這個郵區不算」，條件是
+  // groups.every(g => !g.work)——那跟 answerHead 回傳 say_rebuild_only
+  // 的條件完全一樣，所以它永遠只是把標題那句再講一次，從來沒有單獨出現過。
   return rows
     + `<div class="route"><b>${esc(T('recovery_h'))}</b>`
-    + `<p>${esc(T('recovery_body'))}</p>${onlyRoute}`
+    + `<p>${esc(T('recovery_body'))}</p>`
     + `<p class="rt">${tbls}</p></div>`;
 }
 

@@ -425,10 +425,6 @@
       "en": "Another route: disaster recovery work",
       "zh": "另一條路：災後重建工作"
     },
-    "recovery_only": {
-      "en": "Ordinary work in your own trade does not count in this postcode.",
-      "zh": "你本行的一般工作在這個郵區不算。"
-    },
     "reset_view": {
       "en": "Reset view",
       "zh": "回到全州視野"

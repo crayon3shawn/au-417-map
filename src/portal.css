@@ -118,7 +118,6 @@
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:9px}
 /* 產業定義是這個選擇器的參考資料，所以跟著它走，排在卡片後面。 */
 .dist .indcard{margin-top:12px}
-.panel > .eyebrow{display:block;margin-bottom:12px}
 /* position+z-index 不是裝飾：.lamp 是絕對定位的，沒有這一行的話光源會依照
    繪製順序蓋在這張靜態排版的 svg 上面，變成整張圖被一團橘光糊住。 */
 svg.au{position:relative;z-index:1;display:block;width:100%;height:100%;flex:1;min-width:0}

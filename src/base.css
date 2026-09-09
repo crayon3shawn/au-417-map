@@ -190,12 +190,14 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .hits button:focus-visible,.hits .xstate:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
 .hits b{font-family:"IBM Plex Mono",monospace;font-weight:600}
 .hits i{font-style:normal;color:var(--ink-3);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* 候選列的色點分成兩半：左邊是走 Regional 那五個產業的判定，右邊是觀光餐旅。
-   原本整顆是單一產業算出來的，而答案面板已經改成一次講全部產業——一顆承諾
-   單一結論的色點，連到一個說「看你做哪一行」的答案，掃過清單的人會以為
-   那 40 筆都算。兩半也順便讓「哪些郵區兩邊不一致」一眼看得出來。 */
+/* 候選列的色點分成兩半：左邊是走 Regional 那五個產業，右邊是觀光餐旅，
+   順序跟答案面板的產業列一致。只有算／不算兩個值——原本還有第三個
+   「只有重建算」，那是把郵區層級的東西畫成產業層級的判定，色點會跟點進去
+   之後的面板自己打架（2715 個郵區裡有 1073 個右半是藍的，而面板那一列是灰的）。
+   災後重建改用外環：它是郵區的屬性，不屬於任何一個產業。 */
 .hits em{font-style:normal;width:9px;height:9px;border-radius:2px;flex:none;
   background:linear-gradient(to right,var(--hc) 0 50%,var(--hc2,var(--hc)) 50% 100%)}
+.hits .rt em{box-shadow:0 0 0 1.5px var(--paper),0 0 0 3px var(--c-rebuild)}
 
 .card{border:1px solid var(--line);border-radius:4px;background:var(--paper);overflow:hidden}
 .card .hd{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;

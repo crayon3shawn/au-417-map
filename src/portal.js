@@ -80,18 +80,27 @@ let industry = DATA.industry_masks.find(i => i.key === DATA.industry) || DATA.in
 // 不是判定，一次只能用一把尺。郵區判定已經不走這條路了。
 const catOf = f => catFor(f, industry.mask);
 
-// 候選列的色點：左半＝走 Regional 的五個產業，右半＝觀光餐旅。答案面板已經
-// 一次講全部產業，色點就不能只講一個產業的結論（見 base.css 的 .hits em）。
-// 分組順序跟答案面板一致，所以左右兩半的意思在兩個地方是同一件事。
-function dotColors(f){
-  const g = indGroups();
-  return [CAT_COLOR[catFor(f, g[0].mask)],
-          CAT_COLOR[catFor(f, g[g.length - 1].mask)]];
-}
+// 這個郵區有沒有災後重建這條路。宣告在這裡而不是用到的地方附近——
+// paintDot 與 answerBody 都要用，放在後面只是靠「那些函式要等互動
+// 才跑」僥倖躲過 TDZ（CAT_COLOR 先前就是這樣）。
+const hasRecovery = f => !!(f & REBUILD);
+
+// 候選列的色點。左半＝走 Regional 的五個產業，右半＝觀光餐旅，順序跟答案
+// 面板的產業列一致——所以左右兩半在兩個地方是同一件事。
+//
+// 只有兩個值：算／不算。**不可以**再有第三個「只有重建算」的值：那是把
+// 郵區層級的東西（有沒有災後重建這條路）畫成產業層級的判定，正是這一版
+// 要拆掉的誤讀。原本 2715 個郵區裡有 1073 個（39.5%）右半是藍的，而點進去
+// 之後面板那一列是灰的——色點跟答案自己打架。
+//
+// 重建改用外環表示。它是郵區的屬性，不屬於任何一個產業，所以畫成整顆點的
+// 外框而不是其中一半。
 function paintDot(btn, f){
-  const [a, c] = dotColors(f);
-  btn.style.setProperty('--hc', a);
-  btn.style.setProperty('--hc2', c);
+  const g = indGroups();
+  const c = m => (f & m) ? CAT_COLOR.work : CAT_COLOR.none;
+  btn.style.setProperty('--hc', c(g[0].mask));
+  btn.style.setProperty('--hc2', c(g[g.length - 1].mask));
+  btn.classList.toggle('rt', hasRecovery(f));
 }
 
 // 答案面板的兩個組成。
@@ -106,7 +115,6 @@ function paintDot(btn, f){
 // 所以現在拆成兩個獨立的問題：
 //   1. 我這一行的一般工作在這裡算不算？（看地區表，逐產業）
 //   2. 這個郵區有沒有災後重建這條路？（看災害表，不分產業）
-const hasRecovery = f => !!(f & REBUILD);
 
 function answerHead(f){
   const groups = indGroups().map(g => ({names: g.names, work: !!(f & g.mask)}));
@@ -133,13 +141,12 @@ function answerBody(f){
   // 不要再加一層標籤。
   const tbls = [(f & BIT_FIRE) ? T('tbl_bushfire') : '', (f & BIT_DISASTER) ? T('tbl_disaster') : '']
       .filter(Boolean).map(x => `<em class="tbl">${esc(x)}</em>`).join('<br>');
-  // 「你本行的一般工作在這裡不算」只有在真的沒有任何產業算的時候才成立。
-  // 4870 是「不分產業，一般工作就算」＋有災區宣告，兩句話一起印會自相矛盾。
-  const onlyRoute = groups.every(g => !g.work)
-    ? `<p>${esc(T('recovery_only'))}</p>` : '';
+  // 這裡原本還有一句「你本行的一般工作在這個郵區不算」，條件是
+  // groups.every(g => !g.work)——那跟 answerHead 回傳 say_rebuild_only
+  // 的條件完全一樣，所以它永遠只是把標題那句再講一次，從來沒有單獨出現過。
   return rows
     + `<div class="route"><b>${esc(T('recovery_h'))}</b>`
-    + `<p>${esc(T('recovery_body'))}</p>${onlyRoute}`
+    + `<p>${esc(T('recovery_body'))}</p>`
     + `<p class="rt">${tbls}</p></div>`;
 }
 
