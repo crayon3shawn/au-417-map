@@ -1,8 +1,9 @@
 """build.py 裡幾個會影響資料正確性的判斷。"""
-import unittest, sys, pathlib
+import unittest, sys, re, pathlib
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 import build
+from lib import load
 
 
 class TestNonGeographic(unittest.TestCase):
@@ -194,3 +195,44 @@ class TestSearchIndex(unittest.TestCase):
         wf = (ROOT / ".github" / "workflows" / "pages.yml").read_text(encoding="utf-8")
         self.assertIn("dist/*.json", wf,
                       "workflow 只複製 *.html 的話，跨州查詢會靜靜地失效")
+
+
+class TestBuiltPages(unittest.TestCase):
+    """需要建置產物才能檢查的東西。
+
+    只有真的要讀 dist/ 的放這裡。讀 src/ 或 data/ 的不可以放進來——這個
+    class 整個掛著 skipTest，make clean 之後它們會跟著靜悄悄消失，而測試
+    照樣報 OK。CI 剛好安全只是因為它會先 make all。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.pages = sorted((ROOT / "dist").glob("*.html"))
+        if not cls.pages:
+            raise unittest.SkipTest("dist/ 裡沒有頁面，請先 make all")
+
+    def test_每頁恰好一個h1(self):
+        """一頁兩個 h1 是常見的複製貼上後遺症，而且螢幕閱讀器會據此建大綱。"""
+        for p in self.pages:
+            with self.subTest(page=p.name):
+                n = len(re.findall(r"<h1[\s>]", p.read_text(encoding="utf-8")))
+                self.assertEqual(1, n, f"{p.name} 有 {n} 個 h1")
+
+
+class TestSources(unittest.TestCase):
+    """出處是這個站的信用來源。少一個不會有任何徵兆——頁尾照樣渲染，只是
+    某一份資料的來源從此沒人標。地名索引（australianpostcodes）就曾經整個
+    沒被標示過，而整個地名搜尋都靠它。
+
+    讀的是 src/foot.js，不需要 dist/，所以不放在 TestBuiltPages 裡。
+    """
+
+    def test_出處清單是四個且都有對應的字串(self):
+        foot = (ROOT / "src" / "foot.js").read_text(encoding="utf-8")
+        block = re.search(r"var SRC = \[(.*?)\];", foot, re.S)
+        self.assertIsNotNone(block, "foot.js 裡找不到 SRC 陣列")
+        keys = re.findall(r"'(foot_src_\w+)'", block.group(1))
+        self.assertEqual(4, len(keys), f"出處剩 {len(keys)} 個：{keys}")
+        strings = load(ROOT / "data" / "strings.json")["s"]
+        for k in keys:
+            self.assertIn(k, strings, f"{k} 沒有對應的字串")

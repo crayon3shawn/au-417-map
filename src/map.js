@@ -97,6 +97,9 @@ over.appendChild(grat);
 // 每個郵區的旗標記的是「它在五張地區表裡的成員資格」，不是判定結果——
 // 判定取決於選了哪個產業，所以切換產業只要換一組遮罩重新上色。
 const BIT_FIRE = 8, BIT_DISASTER = 16, REBUILD = BIT_FIRE | BIT_DISASTER;
+// 判定色。宣告在這裡而不是用到的地方附近——答案面板與色點都在前段用它，
+// 放在後面只是靠「那些函式要等互動才跑」僥倖躲過 TDZ。
+const CAT_COLOR = {work:'var(--c-work)', rebuild:'var(--c-rebuild)', none:'var(--c-none)'};
 
 // 目前的地圖檢視：work（跟著產業走）／fire／flood。宣告要在 colorOf 之前——
 // let 有 TDZ，而初始化時就會走到上色。
@@ -134,12 +137,60 @@ function indGroups(){
   return out;
 }
 
-// 候選列的色點：左半＝走 Regional 的五個產業，右半＝觀光餐旅。跟入口頁同一個
-// 做法與同一個順序（見 base.css 的 .hits em）。
+// 這個郵區有沒有災後重建這條路。宣告在這裡而不是用到的地方附近——
+// paintDot 與 answerBody 都要用，放在後面只是靠「那些函式要等互動
+// 才跑」僥倖躲過 TDZ（CAT_COLOR 先前就是這樣）。
+const hasRecovery = f => !!(f & REBUILD);
+
+// 候選列的色點。跟入口頁同一個做法與同一個順序，完整理由在 portal.js 的
+// 同名函式：只有算／不算兩個值，重建走外環——它是郵區的屬性，不屬於任何
+// 一個產業，畫成其中一半就變回這一版要拆掉的誤讀。
 function paintDot(btn, f){
   const g = indGroups();
-  btn.style.setProperty('--hc', CAT_COLOR[catFor(f, g[0].mask)]);
-  btn.style.setProperty('--hc2', CAT_COLOR[catFor(f, g[g.length - 1].mask)]);
+  const c = m => (f & m) ? CAT_COLOR.work : CAT_COLOR.none;
+  btn.style.setProperty('--hc', c(g[0].mask));
+  btn.style.setProperty('--hc2', c(g[g.length - 1].mask));
+  btn.classList.toggle('rt', hasRecovery(f));
+}
+
+// 答案面板的兩個組成，跟入口頁同一套（見 portal.js 的同名函式，那裡有完整
+// 的理由）。摘要：災後重建不是某個產業的判定值，是獨立於產業的第二條路——
+// 「觀光與餐旅 → 只有災後重建工作算」會被讀成餐旅工作在這裡算，但實際上算
+// 的是重建工作本身。所以拆成兩個獨立的問題：這一行的一般工作算不算，以及
+// 這個郵區有沒有重建這條路。
+
+function answerHead(f){
+  const groups = indGroups().map(g => ({work: !!(f & g.mask)}));
+  const allWork = groups.every(g => g.work);
+  const noneWork = groups.every(g => !g.work);
+  if(!allWork && !noneWork) return {say: T('say_depends'), band: 'var(--ink)', none: false};
+  if(allWork) return {say: T('say_all_work'), band: CAT_COLOR.work, none: false};
+  return hasRecovery(f)
+    ? {say: T('say_rebuild_only'), band: CAT_COLOR.rebuild, none: false}
+    : {say: T('say_all_none'),     band: CAT_COLOR.none,    none: true};
+}
+
+function answerBody(f){
+  const sep = lang === 'zh' ? '、' : ', ';
+  const groups = indGroups().map(g => ({names: g.names, work: !!(f & g.mask)}));
+  const uniform = groups.every(g => g.work === groups[0].work);
+  const rows = uniform ? '' : groups.map(g =>
+      `<div class="verdict" style="--vc:${g.work ? CAT_COLOR.work : CAT_COLOR.none}">`
+      + `<span class="dot"></span><span><b>${esc(T(g.work ? 'grp_work' : 'grp_nowork'))}</b>`
+      + `<br>${esc(g.names.join(sep))}</span></div>`
+    ).join('');
+  if(!hasRecovery(f)) return rows;
+  // 表名要寫出來：送件時官方問的就是這個。tbl_* 自己就帶著「官方表：」，
+  // 不要再加一層標籤。
+  const tbls = [(f & BIT_FIRE) ? T('tbl_bushfire') : '', (f & BIT_DISASTER) ? T('tbl_disaster') : '']
+      .filter(Boolean).map(x => `<em class="tbl">${esc(x)}</em>`).join('<br>');
+  // 這裡原本還有一句「你本行的一般工作在這個郵區不算」，條件是
+  // groups.every(g => !g.work)——那跟 answerHead 回傳 say_rebuild_only
+  // 的條件完全一樣，所以它永遠只是把標題那句再講一次，從來沒有單獨出現過。
+  return rows
+    + `<div class="route"><b>${esc(T('recovery_h'))}</b>`
+    + `<p>${esc(T('recovery_body'))}</p>`
+    + `<p class="rt">${tbls}</p></div>`;
 }
 
 // 地圖一次只畫一張表，所以只有兩色：在這張表上、不在。
@@ -686,37 +737,16 @@ function select(pc){
   const [p, , , f, names] = d.rec;
   const shown = names.slice(0, 6);
   const more = names.length > shown.length ? T('more_areas', {n: names.length}) : '';
-  const rows = [];
   const sep = lang === 'zh' ? '、' : ', ';
-  // 每一組產業各給一個判定。兩組相同時收成標題那一句——「不分產業，一般工作
-  // 就算」已經把話講完了，再列兩行一樣的結論只是把答案變長。
-  const groups = indGroups().map(g => ({names: g.names, cat: catFor(f, g.mask)}));
-  const uniform = groups.every(g => g.cat === groups[0].cat);
-  // 鍵寫成字面量：測試掃的是原始碼裡的 T('...')，動態拼出來的鍵兩個守衛都會漏。
-  const SAY_ALL = {work: T('say_all_work'), rebuild: T('say_all_rebuild'), none: T('say_all_none')};
-  const SAY_GRP = {work: T('grp_work'), rebuild: T('grp_rebuild'), none: T('grp_none')};
-  const GRP_COLOR = {work: 'var(--c-work)', rebuild: 'var(--c-rebuild)', none: 'var(--c-none)'};
-  if(!uniform) for(const g of groups)
-    rows.push(`<div class="verdict" style="--vc:${GRP_COLOR[g.cat]}"><span class="dot"></span>`
-      + `<span><b>${esc(SAY_GRP[g.cat])}</b><br>${esc(g.names.join(sep))}</span></div>`);
-  // 災害那兩列是州頁比入口頁多給的深度：把「災後重建」拆成官方的兩張表，並
-  // 講大火那條路認哪些工作。表名要寫出來，送件時官方問的就是這個。
-  if(f & BIT_FIRE) rows.push(`<div class="verdict" style="--vc:var(--c-fire)"><span class="dot"></span><span><b>${esc(T('v_fire'))}</b><br><em class="tbl">${esc(T('tbl_bushfire'))}</em><br>${esc(T('v_fire_sub'))}</span></div>`);
-  // 天災那一列沒有副標：原本那句只講了一個 2021 年的日期門檻（現在找工作的人
-  // 永遠通過）跟一個 ImmiAccount 表單欄位（送件時才用得到）。官方對「哪些
-  // 工作算天災重建」的範圍定義沒有可引的來源，寧可留白也不編。
-  if(f & BIT_DISASTER) rows.push(`<div class="verdict" style="--vc:var(--c-flood)"><span class="dot"></span><span><b>${esc(T('v_flood'))}</b><br><em class="tbl">${esc(T('tbl_disaster'))}</em></span></div>`);
-  if(groups.some(g => g.cat === 'rebuild')) rows.push(`<div class="note">${esc(T('rebuild_note'))}</div>`);
-  if(d.stray) rows.push(`<div class="note">${esc(T('v_no_polygon'))}</div>`);
-
-  // 判定不一致時沒有代表色可用，退回一般文字色。
-  detail.style.setProperty('--vc', uniform ? GRP_COLOR[groups[0].cat] : 'var(--ink)');
-  detail.classList.toggle('no', uniform && groups[0].cat === 'none');
+  const a = answerHead(f);
+  const extra = d.stray ? `<div class="note">${esc(T('v_no_polygon'))}</div>` : '';
+  detail.style.setProperty('--vc', a.band);
+  detail.classList.toggle('no', a.none);
   detail.innerHTML =
     `<div class="ans"><span class="pcn">${p}</span>` +
-    `<span class="say">${esc(uniform ? SAY_ALL[groups[0].cat] : T('say_depends'))}</span>` +
+    `<span class="say">${esc(a.say)}</span>` +
     `<span class="loc">${esc(shown.join(sep))}${more}</span></div>` +
-    `<div class="bd">${rows.join('')}</div>`;
+    `<div class="bd">${answerBody(f)}${extra}</div>`;
 }
 
 const tip = document.getElementById('tip'), wrap = document.getElementById('mapwrap');
@@ -757,7 +787,6 @@ const qhint = document.getElementById('qhint');
 const byName = [];
 for(const rec of PC) for(const nm of rec[4]) byName.push([nm.toLowerCase(), rec[0], nm]);
 
-const CAT_COLOR = {work:'var(--c-work)', rebuild:'var(--c-rebuild)', none:'var(--c-none)'};
 
 function clearHits(){ hits.innerHTML = ''; hits.classList.remove('more'); }
 // 內容比窗口高時掛 .more，底部才會漸隱（見 base.css）。CSS 沒辦法自己判斷。

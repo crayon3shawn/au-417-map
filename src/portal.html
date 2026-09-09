@@ -48,19 +48,6 @@ __CSS__</style>
         <div class="hits" id="hits" role="listbox" data-t-aria="p_hits_aria"></div>
       </section>
 
-      <!-- 產業選擇器在查詢**之後**。郵區判定已經把全部產業一次列出來，不需要
-           先承諾一個行業才問得到答案——這個選擇器現在只決定「下方各州統計」
-           與「查行政區時的分布」要用哪一行來數，是精修不是閘門，所以排在
-           主要動作下面。
-           結構仍是「標籤 + 控制項 + 卡片」，跟各州頁的側欄一致。 -->
-      <section class="blk blk-ind">
-        <span class="eyebrow" data-t="industry_label"></span>
-        <select id="ind" class="ind" data-t-aria="p_ind_aria"></select>
-      </section>
-
-      <!-- 產業定義卡是參考資料，不是控制項，所以跟著選擇器走。 -->
-      <div class="card indcard" id="indnote"></div>
-
     </div>
 
     <!-- 這張圖是**州導覽**，不是可以點郵區的地圖：點一州會開那一州的地圖頁。
@@ -75,9 +62,22 @@ __CSS__</style>
 </div>
 
   <div class="wrap doc">
+  <!-- 產業選擇器就放在它控制的東西上面。
+       它原本在左欄查詢框下面，但郵區判定已經不看它了（判定一次列出全部產業，
+       災後重建又是不分產業的另一條路），所以一個叫「你做哪一行」的大選單擺在
+       主要動作旁邊卻不會改變答案——那正是它讓人覺得不直覺的原因。
+       它真正決定的是下面這幾張卡片按哪一行來數，以及查行政區時的分布。放在
+       這裡，控制項與它的效果在同一個畫面上，不必再用一段文字解釋。 -->
   <section class="panel dist">
-    <span class="eyebrow" data-t="p_eyebrow_dist"></span>
+    <div class="disthd">
+      <span class="eyebrow" data-t="p_eyebrow_dist"></span>
+      <label class="indpick">
+        <span data-t="p_dist_by"></span>
+        <select id="ind" class="ind" data-t-aria="p_ind_aria"></select>
+      </label>
+    </div>
     <div class="cards" id="cards"></div>
+    <div class="card indcard" id="indnote"></div>
   </section>
 
   <section class="basis">

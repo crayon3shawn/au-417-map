@@ -93,14 +93,10 @@
      就到不了這個寬度，完全不受影響。 */
   .app{max-width:640px;margin-left:auto;margin-right:auto;width:100%}
   .app-rail{display:contents}
-  /* 手機上的順序：查詢 → 地圖 → 產業選擇 → 產業定義。
-     查詢排第一，它是使用者來這一頁的唯一理由，而且答案已經不需要先選產業。
-     產業選擇器沉到地圖之後：它現在只影響各州統計與行政區分布，不影響郵區
-     判定，排在主要動作前面只會把搜尋框往下推。 */
+  /* 手機上的順序：查詢 → 地圖。左欄現在只剩這兩塊——產業選擇器與定義卡已經
+     搬到下面的「郵區分布」區塊，跟它們控制的卡片放在一起。 */
   .blk-search{order:0}
   .app-map{order:1}
-  .blk-ind{order:2}
-  #indnote{order:3}
   /* 高度跟著澳洲的長寬比走（--au-aspect 由 portal.js 依 viewBox 設定），
      不用固定的 52vh——橫向的澳洲塞進直式窗格會上下各留一大條空白。 */
   /* 長寬比套在 svg 上，不是套在整個格子上——格子現在還裝著圖說，套在格子上
@@ -111,8 +107,17 @@
   .dist{margin-bottom:30px}
   .doc{padding-left:0;padding-right:0}
 }
+/* 分布區塊的標頭：左邊是標籤，右邊是「依產業計算」＋選擇器。控制項與它控制
+   的卡片在同一個畫面上，不必再用一段文字解釋兩者的關係。 */
+.disthd{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  gap:8px 16px;margin-bottom:12px}
+.disthd .eyebrow{display:block;margin:0}
+.indpick{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--ink-3)}
+.indpick .ind{width:auto;min-width:160px}
+@media (max-width:560px){ .indpick{width:100%} .indpick .ind{flex:1} }
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:9px}
-.panel > .eyebrow{display:block;margin-bottom:12px}
+/* 產業定義是這個選擇器的參考資料，所以跟著它走，排在卡片後面。 */
+.dist .indcard{margin-top:12px}
 /* position+z-index 不是裝飾：.lamp 是絕對定位的，沒有這一行的話光源會依照
    繪製順序蓋在這張靜態排版的 svg 上面，變成整張圖被一團橘光糊住。 */
 svg.au{position:relative;z-index:1;display:block;width:100%;height:100%;flex:1;min-width:0}
