@@ -110,7 +110,28 @@ function drawSameList(){
   });
 }
 
+// 資料出處。原本在三頁的頁尾各印一次，現在只有這裡有。
+// ABS 那一筆是 CC BY 4.0，標示出處是授權條件——這份清單不能省。
+const SRC = [
+  [META.source_url, 'foot_src_ha'],
+  ['https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/POA/MapServer', 'foot_src_abs'],
+  ['https://github.com/matthewproctor/australianpostcodes', 'foot_src_pc'],
+  ['https://www.disasterassist.gov.au/find-a-disaster', 'foot_src_da'],
+];
+function drawSources(){
+  const el = document.getElementById('srclist');
+  if(!el) return;
+  el.innerHTML = SRC.map(([url, key]) =>
+    `<li><a href="${url}" target="_blank" rel="noopener">${esc(T(key))}</a></li>`).join('');
+}
+
 const langBtn = document.getElementById('lang');
+// 頁尾導覽：回入口頁與各州。說明頁自己不列。
+function footLinks(){
+  return [{label: T('nav_home'), url: META.home_url || 'index.html'}]
+    .concat(DATA.states.filter(s => s.url).map(s => ({label: s.abbr, url: s.url})));
+}
+
 function applyLang(){
   document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
   document.title = T('about_title');
@@ -122,11 +143,14 @@ function applyLang(){
   drawCov();
   drawTable();
   drawSameList();
+  drawSources();
   const a = (url, text) => `<a href="${url}" target="_blank" rel="noopener">${esc(text)}</a>`;
   const bn = document.getElementById('basisnote');
   if(bn) bn.innerHTML = T('p_basis_note2', {link: a(META.source_url, T('p_official_text'))});
   renderFoot(document.getElementById('foot'), {
-    T, esc, sourceUrl: META.source_url,
+    T, esc,
+    links: footLinks(),
+    repoUrl: META.repo_url,
     pageDate: META.page_date, builtAt: META.built_at,
   });
 }

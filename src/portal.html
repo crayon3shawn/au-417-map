@@ -68,15 +68,18 @@ __CSS__</style>
        主要動作旁邊卻不會改變答案——那正是它讓人覺得不直覺的原因。
        它真正決定的是下面這幾張卡片按哪一行來數，以及查行政區時的分布。放在
        這裡，控制項與它的效果在同一個畫面上，不必再用一段文字解釋。 -->
+  <!-- 這裡原本還有一排各州卡片（「郵區分布」）。拿掉的理由：卡片上那條比例條
+       畫的是**郵遞區號的個數**，而郵遞區號大小差好幾個數量級（西澳「不算」的
+       113 個全落在 6000–6182，就是柏斯），它邀請的是一個不成立的比較；而導覽
+       上方已經有各州按鈕、地圖本身也點得進去，第三條路是多的。
+       選單與產業定義卡留著：地圖的各州顏色、搜尋結果與行政區分布的配色都看它。 -->
   <section class="panel dist">
     <div class="disthd">
-      <span class="eyebrow" data-t="p_eyebrow_dist"></span>
       <label class="indpick">
-        <span data-t="p_dist_by"></span>
+        <span class="eyebrow" data-t="industry_label"></span>
         <select id="ind" class="ind" data-t-aria="p_ind_aria"></select>
       </label>
     </div>
-    <div class="cards" id="cards"></div>
     <div class="card indcard" id="indnote"></div>
   </section>
   </div>

@@ -183,7 +183,6 @@ function applyIndustry(){
   // 原本這裡還有一句「這個選擇只決定下方統計」。選擇器搬到統計上面之後，
   // 那句話變成在解釋一個已經看得出來的關係——控制項就長在它的效果旁邊。
   drawStates();
-  drawCards();
   // 換產業／換語言之後要把目前看的東西重畫一次。不能一律走 lookup()——
   // 有些行政區名同時也是地名（Newcastle、Cairns、Sydney），重查會退回列表，
   // 使用者已經選好的區域就被收起來了。
@@ -321,54 +320,7 @@ for(const s of STATES){
 }
 }
 
-// ---- 各州卡片 ----
-const cards = document.getElementById('cards');
-// 卡片只做兩件事：帶你去那個州的地圖，以及對「沒有地圖的州」講出它為什麼
-// 不需要地圖（全境都算／幾乎都不算）。
-//
-// 原本每張卡還有一條比例條與三個計數。那條條子看起來像「這個州有多少地方
-// 能工作」，但它畫的是**郵遞區號的個數**，而郵遞區號的大小差好幾個數量級：
-// 西澳「不算」的 113 個郵區全部落在 6000–6182，也就是柏斯都會區——面積佔
-// 西澳遠不到 0.1%，條子上卻是四分之一。它邀請的是一個不成立的比較。
-// 各州的實際分布要看地圖，那才是照面積畫的。
-function drawCards(){
-cards.innerHTML = '';
-for(const s of STATES){
-  // 有網址就請人去看；沒網址但這個州其實有地圖（局部預覽）就什麼都不說——
-  // 「尚無地圖」是假的，「看地圖 →」又點不動，留白才是誠實的。
-  const status = s.url ? T('p_card_go')
-               : s.mapped ? ''
-               : s.all_work ? T('p_card_all')
-               : s.work === 0 ? T('p_card_nowork')
-               : s.work <= 5 ? T('p_card_few') : T('p_card_nomap');
-  const note = s.all_work
-    ? T('p_card_note_all', {ind:indLabel(), w:s.work})
-    : s.work === 0
-      ? T('p_card_note_none', {ind:indLabel()})
-      : s.work <= 5
-        ? T('p_card_note_few', {ind:indLabel(), w:s.work,
-                                unit:T(s.work === 1 ? 'p_unit_pc_one' : 'p_unit_pc_many')})
-        : null;
-  const detail = note ? `<div class="allwork">${esc(note)}</div>` : '';
-  // 中文版兩個名字都給（縮寫＋英文＋中文），英文版重複的中文就不用出現
-  const names = lang === 'zh' ? `${esc(s.name)}　${esc(s.label)}` : esc(s.name);
-  const inner = `
-    <div class="top">
-      <span class="nm">${esc(s.abbr)}</span>
-      <span class="en">${names}</span>
-      <span class="go">${esc(status)}</span>
-    </div>
-    ${detail}`;
-  let node;
-  if(s.url){ node = document.createElement('a'); node.href = s.url; node.className = 'statecard';
-             if(/^https?:/.test(s.url)){ node.target = '_blank'; node.rel = 'noopener'; } }
-  else { node = document.createElement('div');
-         node.className = 'statecard ' + ((note || s.mapped) ? 'off' : 'nomap'); }
-  node.innerHTML = inner;
-  cards.appendChild(node);
-}
-}
-
+// 產業定義卡的「請參考官方 ○○」要印出那張表的名字。
 // 前三張表的名字是官方英文專有名詞，兩種語言都照原文；後兩張是描述，要翻。
 const AREA_FIXED = {regional:'Regional Australia', remote:'Remote and Very Remote',
                     northern:'Northern Australia'};
@@ -600,6 +552,13 @@ q.addEventListener('input', () => {
 
 // ---- 套用語言 ----
 const langBtn = document.getElementById('lang');
+// 頁尾導覽：各州加說明。入口頁自己不列。
+function footLinks(){
+  const out = STATES.filter(s => s.url).map(s => ({label: s.abbr, url: s.url}));
+  if(META.about_url) out.push({label: T('nav_about'), url: META.about_url});
+  return out;
+}
+
 function applyLang(){
   document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
   document.title = T('p_title');
@@ -609,7 +568,9 @@ function applyLang(){
   for(const n of document.querySelectorAll('[data-t-aria]')) n.setAttribute('aria-label', T(n.getAttribute('data-t-aria')));
 
   renderFoot(document.getElementById('foot'), {
-    T, esc, sourceUrl: META.source_url,
+    T, esc,
+    links: footLinks(),
+    repoUrl: META.repo_url,
     pageDate: META.page_date, builtAt: META.built_at,
   });
   // #hint 住在 #result 裡面，顯示查詢結果時整塊會被換掉，這個元素就不在了。

@@ -11,7 +11,7 @@ TARGET=artifact 時用 data/artifacts.json 的絕對網址。
 import sys, json, pathlib, collections
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from lib import expand, load, STATES
-from build import (LABELS, VISA, AREA_BITS, REBUILD_MASK, DEFAULT_INDUSTRY, STATE_ORDER, tokens_css,
+from build import (REPO_URL, LABELS, VISA, AREA_BITS, REBUILD_MASK, DEFAULT_INDUSTRY, STATE_ORDER, tokens_css,
                    national_flags, national_names, write_search_index, TARGET, theme_js, lamp_js, url_js, foot_js,
                    work_mask, site_links, robots_meta, CHANNEL, SITE_URL)
 
@@ -191,6 +191,7 @@ def main():
         "meta": {
             "source_url": pcdata["sources"][VISA]["url"],
             "home_url": next((n["url"] for n in site_links() if n.get("home")), "index.html"),
+            "repo_url": REPO_URL,
             "about_url": next((n["url"] for n in site_links() if n.get("about")), None),
             "channel": CHANNEL,
             "site_url": SITE_URL,

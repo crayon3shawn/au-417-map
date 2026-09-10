@@ -1139,6 +1139,15 @@ function otherHits(term){
 const langBtn = document.getElementById('lang');
 const h1 = document.getElementById('h1');
 
+// 頁尾導覽：跟標頭同一份資料，但不標記目前頁——在最下面的時候「你在哪」
+// 已經不是問題了，要的是「接下來去哪」。
+function footLinks(){
+  return (META.nav || []).map(n => ({
+    label: n.home ? T('nav_home') : n.about ? T('nav_about') : n.label,
+    url: n.url,
+  }));
+}
+
 function applyLang(){
   document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
   document.title = h1.textContent = T('title_state', {state: stateName()});
@@ -1158,9 +1167,10 @@ function applyLang(){
   // 頁尾由共用的 renderFoot 產生。map_strays 是這一頁特有的資料品質註記
   // （有幾個郵區沒有對應的多邊形，以小點顯示），接在免責後面。
   renderFoot(document.getElementById('foot'), {
-    T, esc, sourceUrl: META.source_url,
+    T, esc,
+    links: footLinks(),
+    repoUrl: META.repo_url,
     pageDate: META.page_date, builtAt: META.built_at,
-    extra: META.n_no_poly ? [esc(T('map_strays', {n: META.n_no_poly}))] : [],
   });
   // 導覽的「全澳入口」也要換
   const home = document.querySelector('#nav a.home');

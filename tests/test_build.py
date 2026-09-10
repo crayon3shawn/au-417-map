@@ -224,13 +224,21 @@ class TestSources(unittest.TestCase):
     某一份資料的來源從此沒人標。地名索引（australianpostcodes）就曾經整個
     沒被標示過，而整個地名搜尋都靠它。
 
-    讀的是 src/foot.js，不需要 dist/，所以不放在 TestBuiltPages 裡。
+    ABS 那一筆還多一層：邊界資料是 CC BY 4.0，標示出處是**授權條件**不是
+    禮貌，刪掉它是違約不只是失禮。
+
+    清單原本在頁尾（三頁各印一次），現在只在說明頁。讀的是 src/about.js，
+    不需要 dist/，所以不放在 TestBuiltPages 裡。
     """
 
     def test_出處清單是四個且都有對應的字串(self):
-        foot = (ROOT / "src" / "foot.js").read_text(encoding="utf-8")
-        block = re.search(r"var SRC = \[(.*?)\];", foot, re.S)
-        self.assertIsNotNone(block, "foot.js 裡找不到 SRC 陣列")
+        src = (ROOT / "src" / "about.js").read_text(encoding="utf-8")
+        block = re.search(r"const SRC = \[(.*?)\];", src, re.S)
+        self.assertIsNotNone(block, "about.js 裡找不到 SRC 陣列")
+        self.assertIn("srclist", src, "說明頁沒有把出處畫出來")
+        self.assertIn("id=\"sources\"",
+                      (ROOT / "src" / "about.html").read_text(encoding="utf-8"),
+                      "說明頁的樣板少了 #sources 區塊")
         keys = re.findall(r"'(foot_src_\w+)'", block.group(1))
         self.assertEqual(4, len(keys), f"出處剩 {len(keys)} 個：{keys}")
         strings = load(ROOT / "data" / "strings.json")["s"]

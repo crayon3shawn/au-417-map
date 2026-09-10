@@ -230,6 +230,8 @@ def write_search_index():
     return SEARCH_INDEX
 
 
+# 頁尾的「原始碼」連結。公開 repo，放連結是慣例也是可查證性的一部分。
+REPO_URL = "https://github.com/crayon3shawn/au-417-map"
 ABOUT_URL = "about.html"
 
 
@@ -399,6 +401,7 @@ def main(state):
         "strings": load(ROOT / "data" / "strings.json")["s"],
         # 面板上「完整範圍與送件注意事項」要連到說明頁的 #recovery。
         # 這是跨頁的錨點——工具頁上沒有那個區塊了。
+        "repo_url": REPO_URL,
         "about_url": next((n["url"] for n in site_links(state) if n.get("about")), None),
         # 跨州查詢：旗標表小所以內嵌，地名表大所以指向共用檔（見 national_names）
         "nat": national_flags(),

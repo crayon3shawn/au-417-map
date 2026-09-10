@@ -61,9 +61,13 @@
       "en": "88 days for a second visa, 179 for a third.",
       "zh": "二簽 88 天、三簽 179 天。"
     },
-    "foot_disclaim": {
-      "en": "This is not an official website and does not constitute immigration assistance — for an individual case, consult a registered migration agent (MARA) or a legal practitioner. Postcode boundaries are for orientation only, not legal boundaries. Go by the official Home Affairs page before you apply.",
-      "zh": "本站非官方網站，也不構成移民協助（immigration assistance）——個案問題請洽註冊移民代辦（MARA）或法律執業者。郵區界線僅供判讀，不是法定界線。送件前請以 Home Affairs 官方頁面為準。"
+    "foot_name": {
+      "en": "417 Visa Map · unofficial tool",
+      "zh": "417 集簽地圖 · 非官方工具"
+    },
+    "foot_repo": {
+      "en": "Source",
+      "zh": "原始碼"
     },
     "foot_src_abs": {
       "en": "ABS — ASGS 2021 Postal Areas",
@@ -74,7 +78,7 @@
       "zh": "Disaster Assist — 災害宣告查詢"
     },
     "foot_src_h": {
-      "en": "Sources",
+      "en": "Where the data comes from",
       "zh": "資料出處"
     },
     "foot_src_ha": {
@@ -165,10 +169,6 @@
       "en": "map",
       "zh": "地圖"
     },
-    "map_strays": {
-      "en": "{n} eligible postcodes have no ABS boundary (mostly PO Box ranges) and are shown as dots.",
-      "zh": "有 {n} 個合格郵區在 ABS 沒有對應面（多為信箱型郵區），以小點標示。"
-    },
     "map_title": {
       "en": "Map of postcodes where 417 specified work counts in {state}. {n} postcodes. Use the “Postcode or place” field on the left to look up an individual postcode.",
       "zh": "{state} 417 集簽合格郵遞區號地圖，共 {n} 個郵區。用左側「查郵區或地名」欄位查詢個別郵區。"
@@ -221,38 +221,6 @@
       "en": "The \"Scope\" column below summarises the official definitions and examples. When in doubt, go by {link}.",
       "zh": "下表的「範圍」是官方定義與例示的中文摘要，不是官方文字。判斷不確定時請以 {link} 為準。"
     },
-    "p_card_all": {
-      "en": "All eligible",
-      "zh": "全境都算"
-    },
-    "p_card_few": {
-      "en": "Almost none eligible",
-      "zh": "幾乎都不算"
-    },
-    "p_card_go": {
-      "en": "Open map →",
-      "zh": "看地圖 →"
-    },
-    "p_card_nomap": {
-      "en": "No map yet",
-      "zh": "尚無地圖"
-    },
-    "p_card_note_all": {
-      "en": "The whole state is on the area list that applies to {ind}, so work anywhere counts and no map is needed. {w} postcodes.",
-      "zh": "整個州都在{ind}適用的地區名單上，在哪裡工作都算，所以不需要地圖。共 {w} 個郵區。"
-    },
-    "p_card_note_few": {
-      "en": "Ordinary {ind} work counts in only {w} {unit}; everywhere else, only disaster recovery work counts.",
-      "zh": "一般{ind}工作只有 {w} {unit}算，其餘只有災後重建工作算。"
-    },
-    "p_card_note_none": {
-      "en": "Ordinary {ind} work never counts here. But the whole territory is a declared disaster area, so recovery work counts anywhere in it.",
-      "zh": "一般{ind}工作在這裡都不算。但全境被宣告為災區，災後重建工作在哪裡都算。"
-    },
-    "p_card_nowork": {
-      "en": "Ordinary work excluded",
-      "zh": "一般工作不算"
-    },
     "p_cov_unit": {
       "en": "postcodes · {pct}%",
       "zh": "個 · {pct}%"
@@ -260,14 +228,6 @@
     "p_detail_empty": {
       "en": "Enter a postcode or place name above and the verdict appears here, for every industry at once.",
       "zh": "在上面輸入郵遞區號或地名，這裡會顯示這個郵區算不算集簽，六種產業一次講完。"
-    },
-    "p_dist_by": {
-      "en": "counted for",
-      "zh": "依產業計算"
-    },
-    "p_eyebrow_dist": {
-      "en": "Postcode breakdown",
-      "zh": "郵區分布"
     },
     "p_golink": {
       "en": "Open the {state} map →",
@@ -405,14 +365,6 @@
       "en": "Australia 417 Visa Map",
       "zh": "澳洲 417 集簽地圖"
     },
-    "p_unit_pc_many": {
-      "en": "postcodes",
-      "zh": "個郵區"
-    },
-    "p_unit_pc_one": {
-      "en": "postcode",
-      "zh": "個郵區"
-    },
     "rec_disaster_eg": {
       "en": "Other official examples: demolition of buildings, trench digging, land clearing and earth moving; residential and non-residential construction or renovation/repair, including of roads, footpaths, bridges, parking lots, fencing, railways, dams, irrigation systems, sewage, and stormwater drainage systems; work for charitable organisations assisting affected communities, including administrative, technical and coordination support; administrative support, including customer service and working in call centres; coordination support for insurance companies, government organisations, community and evacuation centres; transport support, delivering food, medications or other essential items; and caring for, transporting and managing affected animals and related equipment.",
       "zh": "其餘官方舉例：建物拆除與挖溝整地土方；住宅與非住宅的營造或翻修修繕（含道路、人行道、橋樑、停車場、圍籬、鐵路、水壩、灌溉、污水與雨水排放系統）；協助受災社區的慈善組織工作，含行政、技術與協調支援；客服與話務中心的行政支援；保險公司與各級政府、社區與收容中心的協調支援；運送食物、藥品等必需品；以及照料、運送與管理受災動物與相關設備。"
@@ -504,6 +456,10 @@
     "search_ph": {
       "en": "4000 or Gold Coast",
       "zh": "4000 或 Gold Coast"
+    },
+    "src_note": {
+      "en": "Postal area and state boundaries come from the ABS under CC BY 4.0 — attribution is a licence condition. The postcode lists are parsed verbatim from the Home Affairs page, not retyped by hand.",
+      "zh": "郵區邊界與州界來自 ABS，採 CC BY 4.0 授權——標示出處是授權條件。郵區清單逐字取自 Home Affairs 的頁面，不是人工轉錄。"
     },
     "tbl_bushfire": {
       "en": "Official table: Bushfire declared areas",
