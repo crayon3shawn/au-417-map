@@ -7,7 +7,8 @@ import unittest, re, pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 TOKENS = ROOT / "src" / "tokens.css"
-TEMPLATES = [ROOT / "src" / "template.html", ROOT / "src" / "portal.html"]
+TEMPLATES = [ROOT / "src" / "template.html", ROOT / "src" / "portal.html",
+             ROOT / "src" / "about.html"]
 PAGES = sorted((ROOT / "dist").glob("*.html"))
 
 THEME_BLOCKS = [
@@ -152,11 +153,11 @@ class TestNoDeadCSS(unittest.TestCase):
         # .foot-note 這種會被誤報成死規則。共用片段一律要進這份清單。
         corpus = "".join(
             (ROOT / f).read_text(encoding="utf-8")
-            for f in ("src/template.html", "src/portal.html",
-                      "src/map.js", "src/portal.js", "src/foot.js",
+            for f in ("src/template.html", "src/portal.html", "src/about.html",
+                      "src/map.js", "src/portal.js", "src/about.js", "src/foot.js",
                       "data/strings.json"))
         dead = set()
-        for name in ("base.css", "map.css", "portal.css"):
+        for name in ("base.css", "map.css", "portal.css", "about.css"):
             t = (ROOT / "src" / name).read_text(encoding="utf-8")
             t = re.sub(r"/\*.*?\*/", "", t, flags=re.S)
             for sel in re.findall(r"([^{}]+)\{", t):

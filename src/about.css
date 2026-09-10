@@ -1,0 +1,91 @@
+/* 說明頁專用。制度說明的版面——對照表、三則說明、災後重建的完整範圍。
+
+   為什麼獨立一個檔而不是留在 portal.css：說明頁原本整份載入 portal.css，
+   那裡面有它用不到的元件（答案面板、候選清單、圖例色塊），而那些規則會引用
+   --vc／--hc／--sw——那三個變數是由對應元件用 style="--sw:…" 或
+   style.setProperty 在執行時設的。說明頁沒有那些元件，所以那三個變數在這一頁
+   永遠沒有值。test_頁面用到的token都有定義 就是這樣抓到的：不是測試太嚴，
+   是這一頁真的載了用不到的東西。樣式跟著內容走。 */
+
+/* 開場一句話，說明這一頁講什麼、要查郵區請回工具頁。 */
+.about-lede{margin:0 0 30px;font-size:14px;line-height:1.7;color:var(--ink-2);max-width:70ch}
+.about-lede a{color:var(--ink)}
+
+.basis{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}
+.basis h2{margin:0 0 8px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
+  font-weight:700;font-size:24px;letter-spacing:.02em}
+.basis-lede{margin:0 0 16px;font-size:14px;line-height:1.65;color:var(--ink-2);max-width:70ch}
+.cov{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.cov div{display:flex;align-items:baseline;gap:7px;background:var(--surface);
+  border:1px solid var(--line);border-radius:4px;padding:7px 11px;font-size:12.5px;color:var(--ink-2)}
+.cov b{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
+  color:var(--ink);font-weight:600;font-size:14px}
+.cov i{font-style:normal;color:var(--ink-3);font-size:11px}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:5px;background:var(--surface)}
+table.imap{border-collapse:collapse;width:100%;min-width:680px;font-size:12.5px}
+table.imap th,table.imap td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--line);
+  vertical-align:top;line-height:1.5}
+table.imap thead th{font-family:"IBM Plex Mono",monospace;font-weight:600;
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);
+  background:var(--sunk);white-space:nowrap}
+table.imap tbody tr:last-child th,table.imap tbody tr:last-child td{border-bottom:0}
+table.imap th[scope="row"]{font-weight:700;white-space:nowrap}
+table.imap th[scope="row"] em{display:block;font-style:normal;font-weight:400;
+  font-size:11px;color:var(--ink-3);letter-spacing:0}
+
+.basis-note2{margin:0 0 10px;font-size:12.5px;line-height:1.6;color:var(--ink-3)}
+.basis-note2 a{color:var(--ink-2)}
+.basis-note{margin:14px 0 0;font-size:12.5px;line-height:1.6;color:var(--ink-2);
+  border-left:3px solid var(--accent);padding-left:11px}
+.notes{margin-top:38px;padding-top:22px;border-top:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
+.notes h3{margin:0 0 7px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
+  font-weight:700;font-size:19px;letter-spacing:.02em}
+.notes p{margin:0;font-size:12.5px;line-height:1.6;color:var(--ink-2)}
+.notes a{color:var(--ink-2)}
+.notes a:hover{color:var(--accent)}/* 完整說明：從答案面板搬下來的那七段。這裡是參考資料，兩張表都列，
+   不跟著目前查的郵區變。 */
+.recdoc{font-size:12.5px;line-height:1.6;color:var(--ink-2);
+  display:flex;flex-direction:column;gap:14px}
+.recdoc .lead{margin:0;color:var(--ink)}
+.recdoc .rec{margin:0;padding-left:11px;border-left:2px solid var(--warn-line)}
+.recdoc .rec h4{margin:0 0 3px;font-size:13.5px;color:var(--ink);
+  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;letter-spacing:.01em}
+.recdoc .rec p{margin:0 0 4px}
+.recdoc .rec b{color:var(--ink)}
+/* 官方舉例壓一階：它是佐證，不是判定本身。 */
+.recdoc .eg{color:var(--ink-3);font-size:11.5px;line-height:1.5}
+/* 送件時才會踩到、但踩到就會被退件的兩件事。 */
+.recdoc .req{color:var(--ink);font-size:11.5px;line-height:1.5}
+/* 天數計算的差別（志工做一天算一天）對兩條路都成立，所以在兩塊之後。 */
+.recdoc .days{margin:0;padding-top:10px;border-top:1px solid var(--line);font-size:11.5px}
+
+table.imap td.na{color:var(--ink-3)}
+table.imap td.na b{color:var(--c-rebuild)}
+table.imap tbody tr.grp:not(:first-child) th,
+table.imap tbody tr.grp:not(:first-child) td{border-top:1px solid var(--ink-3)}
+table.imap td.areas{vertical-align:top}
+table.imap td.sc{color:var(--ink-3);font-size:12.5px;min-width:260px}
+@media (max-width:700px){
+  .tblwrap{overflow-x:visible;border:0;border-radius:0;background:none}
+  table.imap{min-width:0;width:100%;display:block}
+  table.imap thead{display:none}
+  table.imap tbody{display:block}
+  table.imap tr{display:block;border:1px solid var(--line);border-radius:5px;
+    background:var(--surface);padding:11px 13px;margin-bottom:7px}
+  table.imap th,table.imap td{display:block;padding:0;border:0}
+  /* 表名的儲存格在卡片模式只會落在該組第一張卡上，改用每一列都帶著的
+     data-areas 印，五張卡才都說得出自己看哪一張表。
+     選 .areas 不選 [rowspan]：只有一列的組（觀光餐旅）不需要 rowspan 屬性，
+     用 [rowspan] 選的話那一張卡會把表名印兩次。 */
+  table.imap td.areas{display:none}
+  table.imap tr::before{content:attr(data-areas);display:block;order:-1;
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;
+    color:var(--ink-3);margin-bottom:5px}
+  table.imap th[scope="row"]{font-size:14px;margin-bottom:5px}
+  table.imap td.sc{min-width:0;line-height:1.55}
+  /* 分組的線在卡片模式沒有意義（卡片本來就各自獨立），改用組與組之間的間距 */
+  table.imap tbody tr.grp:not(:first-child) th,
+  table.imap tbody tr.grp:not(:first-child) td{border-top:0}
+  table.imap tbody tr.grp:not(:first-child){margin-top:18px}
+}

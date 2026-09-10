@@ -1,0 +1,114 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+__ROBOTS__<title>417 集簽規則說明 · How 417 specified work is decided</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>__TOKENS__
+__CSS__</style>
+<script>__THEME__</script>
+
+<!-- 說明頁。工具頁（入口頁與各州頁）只回答「這個郵區算不算」，制度本身怎麼
+     運作、官方認的範圍是什麼，全部集中在這裡。
+
+     為什麼要獨立一頁：那些內容原本散在兩頁的下半部，而且是**同一套東西寫了
+     兩遍**（州頁「三個重點」與入口頁三則說明講同一件事，fact2_head 跟
+     p_note2_h 連標題都一樣叫「災區是另一條路」）。更要緊的是它們**常駐**：
+     1823 個「一般工作本來就算」的郵區（67%）的使用者查完答案，還要滾過
+     八百字跟他無關的災害說明。
+
+     實際量過：面板上的判定本身只有 98 字，兩頁的說明加起來 2171 字。 -->
+<div class="devbar" id="devbar" hidden></div>
+  <header class="topbar">
+    <h1 class="brand" data-t="about_h1"></h1>
+    <span class="spacer"></span>
+    <nav class="nav" id="nav" data-t-aria="nav_aria"></nav>
+    <button class="lang" id="theme" type="button" data-t-aria="theme_toggle"></button>
+    <button class="lang" id="lang" type="button"></button>
+  </header>
+
+  <div class="wrap doc">
+    <p class="about-lede" data-t="about_lede"></p>
+
+    <section class="basis">
+      <h2 data-t="p_basis_h2"></h2>
+      <p class="basis-lede" data-t="p_basis_lede"></p>
+
+      <div class="cov" id="cov"></div>
+
+      <p class="basis-note2" id="basisnote"></p>
+
+      <div class="tblwrap">
+        <table class="imap" id="imap">
+          <thead><tr>
+            <th data-t="p_th_industry"></th>
+            <th data-t="p_th_table"></th>
+            <th data-t="p_th_scope"></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <p class="basis-note" id="samelist"></p>
+    </section>
+
+    <div class="notes">
+      <div>
+        <h3 data-t="p_note1_h"></h3>
+        <p data-t="p_note1_b"></p>
+      </div>
+      <div>
+        <h3 data-t="p_note2_h"></h3>
+        <p data-t="p_note2_b"></p>
+      </div>
+      <div>
+        <h3 data-t="p_note3_h"></h3>
+        <p data-t="p_note3_b"></p>
+      </div>
+    </div>
+
+    <!-- 災後重建的完整說明。兩張表都列（不看任何特定郵區），因為這裡是參考
+         資料不是判定——判定在工具頁，那裡只給「哪一張表 + 起算日」加一個
+         往這裡的連結。 -->
+    <section class="blk" id="recovery">
+      <h2 data-t="rec_sec_h"></h2>
+      <div class="recdoc">
+        <!-- rec_key 在工具頁的面板上也有一份。這裡不能省：rec_lead 是
+             「所以…」開頭，接的就是它，少了它這一段沒有主詞。 -->
+        <p class="lead"><b data-t="rec_key"></b> <span data-t="rec_lead"></span></p>
+        <div class="rec">
+          <h4 data-t="rec_sec_fire_h"></h4>
+          <p class="tbl" data-t="tbl_bushfire"></p>
+          <p><b data-t="rec_fire_when"></b> <span data-t="rec_fire_scope"></span></p>
+          <p class="eg" data-t="rec_fire_eg"></p>
+        </div>
+        <div class="rec">
+          <h4 data-t="rec_sec_dis_h"></h4>
+          <p class="tbl" data-t="tbl_disaster"></p>
+          <p><b data-t="rec_disaster_when"></b> <span data-t="rec_disaster_scope"></span></p>
+          <p class="eg" data-t="rec_disaster_eg"></p>
+          <p class="req"><span data-t="rec_disaster_form"></span> <span data-t="rec_disaster_lodged"></span></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="blk" id="days">
+      <h2 data-t="fact3_head"></h2>
+      <div class="recdoc">
+        <p data-t="fact3_body"></p>
+        <p class="days" data-t="rec_volunteer_days"></p>
+      </div>
+    </section>
+  </div>
+
+<footer class="foot" id="foot"></footer>
+
+<script>
+__URL__
+</script>
+<script>
+__FOOT__
+</script>
+<script>
+__JS__
+</script>

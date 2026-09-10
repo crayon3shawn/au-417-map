@@ -3,9 +3,6 @@ const DATA = __DATA__;
 const PC = DATA.postcodes, POA = DATA.poa, CITIES = DATA.cities,
       META = DATA.meta, OTHER = DATA.other || {}, FLAGS = DATA.flags;
 
-// 頁首出處與 417/462 等同性由資料決定，不寫死在樣板裡
-document.getElementById('excluded').textContent = META.excluded_note;
-
 // 導覽：Artifact 在沙箱 iframe 裡不能改上層網址，只能開新分頁。
 // （之後放上 GitHub Pages 就能改成相對路徑原地跳轉。）
 const navEl = document.getElementById('nav');
@@ -20,7 +17,7 @@ for(const n of (META.nav || [])){
     a.href = n.url;
     // 絕對網址代表在 Artifact 沙箱裡，只能開新分頁；相對路徑是同站台，原地跳轉即可
     if(/^https?:/.test(n.url)){ a.target = '_blank'; a.rel = 'noopener'; }
-    a.className = n.home ? 'home' : '';
+    a.className = n.home ? 'home' : n.about ? 'about' : '';
     a.textContent = n.home ? '← ' + n.label : n.label;
     navEl.appendChild(a);
   }
@@ -196,7 +193,12 @@ function answerBody(f){
     + `<div class="route"><b>${esc(T('recovery_h'))}</b>`
     + `<p><em class="key">${esc(T('rec_key'))}</em></p>`
     + when
-    + `<p><a class="more" href="#recovery">${esc(T('rec_more'))}</a></p>`
+    // 跨頁錨點：完整說明住在說明頁，工具頁上沒有那個區塊。
+    // 沒有 about_url（TARGET=artifact 沒填）時就不放連結——寧可少一個入口，
+    // 也不要給一個點了不會動的東西。
+    + (META.about_url
+        ? `<p><a class="more" href="${META.about_url}#recovery">${esc(T('rec_more'))}</a></p>`
+        : '')
     + `</div>`;
 }
 
@@ -644,7 +646,6 @@ function applyIndustry(){
         ? `<div class="bd">${esc(indScope())} `
           + `<a href="${META.source_url}" target="_blank" rel="noopener">${esc(T('official_def', {tables}))}</a></div>`
         : '');
-  document.getElementById('fact1').textContent = T('fact1_body', {ind: indLabel(), tables});
   if(selPc !== null) select(selPc);
   else renderRegionPanel();
 }
@@ -1098,7 +1099,7 @@ function drawDevBar(){
 // 入口頁共用的一個檔，瀏覽器只下載一次。
 const NAT = META.nat || {};
 const stateUrl = {};
-for(const n of (META.nav || [])) if(!n.home) stateUrl[n.label.toLowerCase()] = n.url;
+for(const n of (META.nav || [])) if(!n.home && !n.about) stateUrl[n.label.toLowerCase()] = n.url;
 const pcState = {};
 for(const st in NAT) if(st !== META.state) for(const pc in NAT[st]) pcState[pc] = st;
 
@@ -1164,13 +1165,14 @@ function applyLang(){
   // 導覽的「全澳入口」也要換
   const home = document.querySelector('#nav a.home');
   if(home) home.textContent = '← ' + T('nav_home');
+  // 州代號（QLD…）兩種語言都一樣，只有這兩個要翻
+  const about = document.querySelector('#nav a.about');
+  if(about) about.textContent = T('nav_about');
   // 產業選單的選項文字
   for(const o of indSel.options){
     const i = META.industries.find(x => x.key === o.value);
     if(i) o.textContent = lang === 'zh' ? i.label : (i.label_en || i.label);
   }
-  document.getElementById('excluded').textContent =
-    lang === 'zh' ? META.excluded_note : (META.excluded_note_en || '');
   drawDevBar();
   langBtn.textContent = lang === 'zh' ? 'EN' : '中文';
   langBtn.setAttribute('aria-label', lang === 'zh' ? 'Switch to English' : '切換為中文');

@@ -59,7 +59,9 @@ const SECTION = {
 };
 
 const STRINGS = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'strings.json'), 'utf8')).s;
-const TEMPLATES = ['src/template.html', 'src/portal.html'];
+// 完整說明只住在說明頁。工具頁上只留「哪一張表 + 起算日」與一個往這裡的連結
+// ——那兩頁的檢查在上面的 PANEL 那一段。
+const TEMPLATES = ['src/about.html'];
 
 const bad = [];
 
@@ -74,6 +76,10 @@ for (const [label, file] of PAGES) {
     }
     for (const c of PANEL) {
       const html = s.answerBody(c.flag);
+      // 面板一定要有往完整說明的入口，否則「只有重建算」的人拿不到範圍
+      if (!html.includes('about.html#recovery')) {
+        bad.push(`${label} ${lang} 面板/${c.what}：沒有連到說明頁的 #recovery`);
+      }
       for (const kw of c[lang]) {
         if (!html.includes(kw)) bad.push(`${label} ${lang} 面板/${c.what}：找不到「${kw}」`);
       }

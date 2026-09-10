@@ -19,11 +19,10 @@
 }
 @media (prefers-reduced-motion:reduce){ .topbar{transition:none} }
 .hdrspacer{display:contents}
-/* 側欄拆成兩段：上段（產業、查詢、詳情）是「問問題與看答案」，下段是背景資料。
-   分兩段只是為了手機能把上段排在地圖之前——桌機上兩段裝在同一個容器裡，
-   **整條左欄一起捲**。曾經讓上段固定、只有下段捲，結果搜尋結果一多或詳情
-   一長，上段就被切掉而且捲不到，等於看不到答案。
-   手機上 railwrap 用 display:contents 退出版面，讓兩段各自排到地圖前後。 */
+/* 側欄只有一段了：產業、查詢、詳情——「問問題與看答案」。
+   原本還有第二段（三個重點、災後重建完整說明）放在地圖之後，那些已經搬到
+   說明頁。留下的整條左欄一起捲：曾經讓上段固定、只有下段捲，結果搜尋結果
+   一多或詳情一長，上段就被切掉而且捲不到，等於看不到答案。 */
 .main{display:grid;grid-template-columns:352px 1fr;min-height:0}
 .railwrap{min-height:0;overflow-y:auto;border-right:1px solid var(--line)}
 @media (max-width:900px){
@@ -34,15 +33,12 @@
 
 .rail{background:var(--surface);
   padding:20px;display:flex;flex-direction:column;gap:22px}
-.rail-a{padding-bottom:0}
-.rail-b{padding-top:22px}
 @media (max-width:900px){
-  /* 手機順序：產業→查詢→詳情→地圖→背景資料。搜尋要在地圖上面，而答案必須
+  /* 手機順序：側欄（產業→查詢→詳情）→地圖。搜尋要在地圖上面，而答案必須
      緊跟著搜尋——中間隔一張 72vh 的地圖的話，打完字還要滑過整張圖才看得到
      結果，等於把搜尋往上搬的好處抵消掉。 */
-  .rail-a{order:1;border-bottom:1px solid var(--line);padding-bottom:20px}
+  .rail{order:1;border-bottom:1px solid var(--line)}
   .mapwrap{order:2}
-  .rail-b{order:3;border-top:1px solid var(--line);padding-top:20px}
 }
 .lay{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;
   padding:9px 10px;border-radius:3px;cursor:pointer;transition:background .12s}
@@ -74,9 +70,6 @@
 .btn:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
 .note{font-size:12.5px;line-height:1.55;color:var(--ink-2);background:var(--warn-bg);
   border:1px solid var(--warn-line);border-radius:3px;padding:9px 11px}
-.facts{display:flex;flex-direction:column;gap:9px;font-size:12.5px;line-height:1.55;color:var(--ink-2)}
-.facts p{margin:0}
-.facts b{color:var(--ink)}
 .src{font-size:12.5px;line-height:1.6;color:var(--ink-3)}
 .src a{color:var(--ink-2)}
 .src a:hover{color:var(--accent)}

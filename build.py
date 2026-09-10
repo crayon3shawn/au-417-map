@@ -230,6 +230,9 @@ def write_search_index():
     return SEARCH_INDEX
 
 
+ABOUT_URL = "about.html"
+
+
 def site_links(state=None):
     """各頁之間的連結。
 
@@ -249,6 +252,12 @@ def site_links(state=None):
     for key in STATE_ORDER:
         if key in urls:
             out.append({"label": key.upper(), "url": urls[key], "current": key == state})
+    # 說明頁排最後：工具頁的導覽主要是換州，制度說明是偶爾才點的東西。
+    # TARGET=artifact 時每頁各自發布，彼此的網址由 data/artifacts.json 決定，
+    # 沒填就不放連結——寧可少一個入口，也不要給一個 404。
+    about = ABOUT_URL if TARGET != "artifact" else load(ARTIFACTS).get("about")
+    if about:
+        out.append({"label": "說明", "url": about, "about": True, "t": "nav_about"})
     return out
 
 
@@ -388,6 +397,9 @@ def main(state):
         "site_url": SITE_URL,
         "source_url": src[VISA]["url"],
         "strings": load(ROOT / "data" / "strings.json")["s"],
+        # 面板上「完整範圍與送件注意事項」要連到說明頁的 #recovery。
+        # 這是跨頁的錨點——工具頁上沒有那個區塊了。
+        "about_url": next((n["url"] for n in site_links(state) if n.get("about")), None),
         # 跨州查詢：旗標表小所以內嵌，地名表大所以指向共用檔（見 national_names）
         "nat": national_flags(),
         "index_url": write_search_index(),

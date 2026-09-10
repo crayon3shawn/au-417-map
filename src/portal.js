@@ -153,7 +153,12 @@ function answerBody(f){
     + `<div class="route"><b>${esc(T('recovery_h'))}</b>`
     + `<p><em class="key">${esc(T('rec_key'))}</em></p>`
     + when
-    + `<p><a class="more" href="#recovery">${esc(T('rec_more'))}</a></p>`
+    // 跨頁錨點：完整說明住在說明頁，工具頁上沒有那個區塊。
+    // 沒有 about_url（TARGET=artifact 沒填）時就不放連結——寧可少一個入口，
+    // 也不要給一個點了不會動的東西。
+    + (META.about_url
+        ? `<p><a class="more" href="${META.about_url}#recovery">${esc(T('rec_more'))}</a></p>`
+        : '')
     + `</div>`;
 }
 
@@ -179,7 +184,6 @@ function applyIndustry(){
   // 那句話變成在解釋一個已經看得出來的關係——控制項就長在它的效果旁邊。
   drawStates();
   drawCards();
-  drawSameList();
   // 換產業／換語言之後要把目前看的東西重畫一次。不能一律走 lookup()——
   // 有些行政區名同時也是地名（Newcastle、Cairns、Sydney），重查會退回列表，
   // 使用者已經選好的區域就被收起來了。
@@ -223,6 +227,13 @@ function drawNav(){
     a.href = s.url;
     a.textContent = s.abbr;
     if(/^https?:/.test(s.url)){ a.target = '_blank'; a.rel = 'noopener'; }
+    nav.appendChild(a);
+  }
+  // 說明頁排在最後：換州是隨時會用的，制度說明是偶爾才點的。
+  if(META.about_url){
+    const a = document.createElement('a');
+    a.href = META.about_url;
+    a.textContent = T('nav_about');
     nav.appendChild(a);
   }
 }
@@ -312,11 +323,17 @@ for(const s of STATES){
 
 // ---- 各州卡片 ----
 const cards = document.getElementById('cards');
+// 卡片只做兩件事：帶你去那個州的地圖，以及對「沒有地圖的州」講出它為什麼
+// 不需要地圖（全境都算／幾乎都不算）。
+//
+// 原本每張卡還有一條比例條與三個計數。那條條子看起來像「這個州有多少地方
+// 能工作」，但它畫的是**郵遞區號的個數**，而郵遞區號的大小差好幾個數量級：
+// 西澳「不算」的 113 個郵區全部落在 6000–6182，也就是柏斯都會區——面積佔
+// 西澳遠不到 0.1%，條子上卻是四分之一。它邀請的是一個不成立的比較。
+// 各州的實際分布要看地圖，那才是照面積畫的。
 function drawCards(){
 cards.innerHTML = '';
 for(const s of STATES){
-  const total = s.total || 1;
-  const seg = (n, v) => n ? `<i style="width:${(n/total*100).toFixed(1)}%;background:${v}"></i>` : '';
   // 有網址就請人去看；沒網址但這個州其實有地圖（局部預覽）就什麼都不說——
   // 「尚無地圖」是假的，「看地圖 →」又點不動，留白才是誠實的。
   const status = s.url ? T('p_card_go')
@@ -332,13 +349,7 @@ for(const s of STATES){
         ? T('p_card_note_few', {ind:indLabel(), w:s.work,
                                 unit:T(s.work === 1 ? 'p_unit_pc_one' : 'p_unit_pc_many')})
         : null;
-  const detail = (!s.url && note)
-    ? `<div class="allwork">${esc(note)}</div>`
-    : `<div class="legend2">
-        <span style="--sw:var(--c-work)"><i></i>${esc(T('p_leg_work', {ind:indLabel()}))} <b>${s.work}</b></span>
-        <span style="--sw:var(--c-rebuild)"><i></i>${esc(T('p_leg_rebuild'))} <b>${s.rebuild}</b></span>
-        <span style="--sw:var(--c-none)"><i></i>${esc(T('p_leg_none'))} <b>${s.none}</b></span>
-      </div>`;
+  const detail = note ? `<div class="allwork">${esc(note)}</div>` : '';
   // 中文版兩個名字都給（縮寫＋英文＋中文），英文版重複的中文就不用出現
   const names = lang === 'zh' ? `${esc(s.name)}　${esc(s.label)}` : esc(s.name);
   const inner = `
@@ -347,7 +358,6 @@ for(const s of STATES){
       <span class="en">${names}</span>
       <span class="go">${esc(status)}</span>
     </div>
-    <div class="mix">${seg(s.work,'var(--c-work)')}${seg(s.rebuild,'var(--c-rebuild)')}${seg(s.none,'var(--c-none)')}</div>
     ${detail}`;
   let node;
   if(s.url){ node = document.createElement('a'); node.href = s.url; node.className = 'statecard';
@@ -359,75 +369,11 @@ for(const s of STATES){
 }
 }
 
-// ---- 依據：五張表的大小、產業對應 ----
-const COV = DATA.area_coverage, INDS = DATA.industries;
 // 前三張表的名字是官方英文專有名詞，兩種語言都照原文；後兩張是描述，要翻。
 const AREA_FIXED = {regional:'Regional Australia', remote:'Remote and Very Remote',
                     northern:'Northern Australia'};
 const AREA_KEY = {bushfire:'p_area_bushfire', disaster:'p_area_disaster'};
 const covName = k => AREA_FIXED[k] || T(AREA_KEY[k]);
-const covEl = document.getElementById('cov');
-function drawCov(){
-  covEl.innerHTML = '';
-  for(const k of ['regional','disaster','bushfire','remote','northern']){
-    const n = COV[k], pct = Math.round(n / COV._total * 100);
-    const div = document.createElement('div');
-    div.innerHTML = `<span>${esc(covName(k))}</span><b>${n}</b><i>${esc(T('p_cov_unit', {pct}))}</i>`;
-    covEl.appendChild(div);
-  }
-}
-
-const tb = document.querySelector('#imap tbody');
-function drawTable(){
-  tb.innerHTML = '';
-  // 「看哪張郵區表」那一欄其實只有兩種值：建築／農牧／礦業／漁業與採珠／
-  // 林業伐木都走 Regional，只有觀光餐旅走 Remote + Northern。逐列各印一次
-  // 會看起來像六條互不相干的規則，用 rowspan 併起來，表格自己就把「只有
-  // 兩類」講出來了。
-  //
-  // 範圍那一欄不能併。每個產業的定義都不一樣，而那一欄存在的理由正是避免
-  // 把不算的工作誤認為算——農牧的二次加工（釀酒、製麵、加工肉品）不算、
-  // 礦業的支援服務算，這種事沒有第二個地方會講。
-  //
-  // 分組的依據是 areas 不是 mask：DATA.industries 這一份沒有 mask 欄位
-  // （那是 DATA.industry_masks 才有的），拿 undefined 去比會把六個產業
-  // 全部併成一組，表格會印出 rowspan=6 加上一個對五種產業都錯的表名。
-  const groups = [];
-  for(const ind of INDS){
-    if(!ind.areas) continue;
-    const sig = JSON.stringify(ind.areas);
-    const g = groups.find(x => x.sig === sig);
-    if(g) g.inds.push(ind); else groups.push({sig, areas: ind.areas, inds: [ind]});
-  }
-  for(const g of groups){
-    const areas = g.areas.map(a => esc(covName(a))).join(T('p_area_join'));
-    g.inds.forEach((ind, i) => {
-      const label = lang === 'zh' ? ind.label : (ind.label_en || ind.en);
-      const scope = lang === 'zh' ? ind.scope : (ind.scope_en || ind.scope);
-      // 中文版把英文原名附在下面（官網用語，查得到）；英文版就是原名，不必重複
-      const sub = lang === 'zh' ? `<em>${esc(ind.en)}</em>` : '';
-      const tr = document.createElement('tr');
-      if(i === 0) tr.className = 'grp';
-      // 窄螢幕上表格會攤成一疊卡片，那時 rowspan 的儲存格只會出現在該組的
-      // 第一張卡上，其餘四張就不知道自己看哪張表。每一列都帶著表名，卡片
-      // 模式用 ::before 印出來（見 portal.css）。表格模式仍走 rowspan。
-      tr.dataset.areas = g.areas.map(a => covName(a)).join(T('p_area_join'));
-      tr.innerHTML = `<th scope="row">${esc(label)}${sub}</th>`
-        + (i === 0 ? `<td class="areas"${g.inds.length > 1 ? ` rowspan="${g.inds.length}"` : ''}>${areas}</td>` : '')
-        + `<td class="sc">${esc(scope || '')}</td>`;
-      tb.appendChild(tr);
-    });
-  }
-}
-
-// 兩張表差多少。上面的表格已經用 rowspan 把「誰跟誰吃同一張表」畫出來了，
-// 這裡補的是它畫不出來的東西：兩張表的大小差一個數量級。
-function drawSameList(){
-  document.getElementById('samelist').innerHTML = T('p_samelist', {
-    tour: COV._tourism, reg: COV.regional,
-    ratio: Math.round(COV.regional / COV._tourism),
-  });
-}
 
 // ---- 查詢 ----
 const q = document.getElementById('q'), result = document.getElementById('result');
@@ -662,10 +608,6 @@ function applyLang(){
   for(const n of document.querySelectorAll('[data-t-ph]'))   n.setAttribute('placeholder', T(n.getAttribute('data-t-ph')));
   for(const n of document.querySelectorAll('[data-t-aria]')) n.setAttribute('aria-label', T(n.getAttribute('data-t-aria')));
 
-  // 帶連結或變數的句子，佔位符在 strings.json 裡，這裡才組得起來
-  const a = (url, text) => `<a href="${url}" target="_blank" rel="noopener">${esc(text)}</a>`;
-  document.getElementById('basisnote').innerHTML =
-    T('p_basis_note2', {link: a(META.source_url, T('p_official_text'))});
   renderFoot(document.getElementById('foot'), {
     T, esc, sourceUrl: META.source_url,
     pageDate: META.page_date, builtAt: META.built_at,
@@ -693,8 +635,6 @@ function applyLang(){
 
   drawNav();
   fillIndustries();
-  drawCov();
-  drawTable();
   applyIndustry();          // 會重畫地圖、卡片、同表清單，以及目前顯示的結果
 }
 langBtn.addEventListener('click', () => {

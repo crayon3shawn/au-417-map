@@ -3,7 +3,7 @@
    為什麼要有這一份：state 頁與入口頁原本各自維護一份 CSS，27 個同名選擇器
    裡有 13 個內容已經漂走（內距 22 vs 26、圓角 3 vs 4、卡片背景色不同…），
    而且有三個是同名不同物（.card／.verdict／.bar 在兩頁指不同元件），撞名
-   讓它們根本沒辦法共用。撞名的已經在入口頁改成 .statecard／.answer／.mix。
+   讓它們根本沒辦法共用。撞名的已經在入口頁改成 .statecard／.answer。
 
    跟 tokens.css 一樣由 build 注入到 <style> 開頭，兩個樣板都不要再宣告一次。 */
 
@@ -157,7 +157,7 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 /* 判定列。州頁的答案面板與入口頁的「哪些產業算」共用同一個元件——兩邊
    都是「一顆判定色點 + 粗體結論 + 一行細節」，本來就該是同一個東西。 */
 .verdict{display:flex;gap:9px;align-items:flex-start;font-size:14px;line-height:1.5}
-.verdict .dot{width:9px;height:9px;border-radius:2px;margin-top:6px;flex:none;background:var(--vc)}
+.verdict .dot{width:9px;height:9px;border-radius:2px;margin-top:6px;flex:none;background:var(--vc,var(--line-2))}
 .verdict b{font-weight:700}
 .verdict .no{color:var(--ink-3)}
 .verdict.no .dot{background:var(--line-2)}
@@ -179,22 +179,6 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .route .more{display:inline-block;margin-top:8px;color:var(--ink);font-size:11.5px}
 .route .more:hover{color:var(--accent)}
 
-/* 完整說明：從答案面板搬下來的那七段。這裡是參考資料，兩張表都列，
-   不跟著目前查的郵區變。 */
-.recdoc{font-size:12.5px;line-height:1.6;color:var(--ink-2);
-  display:flex;flex-direction:column;gap:14px}
-.recdoc .lead{margin:0;color:var(--ink)}
-.recdoc .rec{margin:0;padding-left:11px;border-left:2px solid var(--warn-line)}
-.recdoc .rec h4{margin:0 0 3px;font-size:13.5px;color:var(--ink);
-  font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;letter-spacing:.01em}
-.recdoc .rec p{margin:0 0 4px}
-.recdoc .rec b{color:var(--ink)}
-/* 官方舉例壓一階：它是佐證，不是判定本身。 */
-.recdoc .eg{color:var(--ink-3);font-size:11.5px;line-height:1.5}
-/* 送件時才會踩到、但踩到就會被退件的兩件事。 */
-.recdoc .req{color:var(--ink);font-size:11.5px;line-height:1.5}
-/* 天數計算的差別（志工做一天算一天）對兩條路都成立，所以在兩塊之後。 */
-.recdoc .days{margin:0;padding-top:10px;border-top:1px solid var(--line);font-size:11.5px}
 .qhint{margin:0;font-size:12.5px;line-height:1.45;color:var(--ink-3)}
 .hits{display:flex;flex-direction:column;gap:2px;max-height:210px;overflow-y:auto}
 .hits:empty{display:none}
@@ -221,7 +205,7 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
    之後的面板自己打架（2715 個郵區裡有 1073 個右半是藍的，而面板那一列是灰的）。
    災後重建改用外環：它是郵區的屬性，不屬於任何一個產業。 */
 .hits em{font-style:normal;width:9px;height:9px;border-radius:2px;flex:none;
-  background:linear-gradient(to right,var(--hc) 0 50%,var(--hc2,var(--hc)) 50% 100%)}
+  background:linear-gradient(to right,var(--hc,var(--line-2)) 0 50%,var(--hc2,var(--hc,var(--line-2))) 50% 100%)}
 .hits .rt em{box-shadow:0 0 0 1.5px var(--paper),0 0 0 3px var(--c-rebuild)}
 
 .card{border:1px solid var(--line);border-radius:4px;background:var(--paper);overflow:hidden}
@@ -263,3 +247,7 @@ a.mark:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .foot-stamp{margin:0;font-family:"IBM Plex Mono",monospace;font-size:11px;
   letter-spacing:.06em;color:var(--ink-3)}
 @media (max-width:900px){ .foot{padding:22px 26px 28px} }
+
+/* 頁面外殼的水平留白。入口頁、說明頁共用（州頁是滿版的兩欄，不用它）。 */
+.wrap{max-width:1080px;margin:0 auto;padding:0 26px 56px}
+.doc{padding-top:26px}

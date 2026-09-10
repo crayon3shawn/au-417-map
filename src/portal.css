@@ -2,7 +2,6 @@
 
 /* .wrap 只包說明文件那一段——長文需要限制行寬。工具區與標題是整寬的，
    跟州頁一樣，這樣兩個頁面的骨架才是同一套。 */
-.wrap{max-width:1080px;margin:0 auto;padding:0 26px 56px}
 #indnote{display:block;margin-top:11px;padding-top:11px;border-top:1px solid var(--line);
   font-size:12.5px;color:var(--ink-3);line-height:1.5}
 #indnote .dim{color:var(--ink-3);opacity:.75}
@@ -73,7 +72,6 @@
    沒有任何地方講。放在圖下面而不是上面——先看到圖，需要時才讀說明。 */
 .mapcap{margin:0;padding:10px 16px 14px;font-size:12px;line-height:1.5;
   color:var(--ink-3);text-align:center}
-.doc{padding-top:26px}
 @media (max-width:900px){
   /* 手機不鎖一屏——內容要能自然往下排 */
   /* 手機不鎖一屏，但仍用 flex 排序：免責要留在標頭下面。桌機它排在工具帶
@@ -152,8 +150,6 @@ a.card:hover{border-color:var(--ink-3);background:var(--sunk)}
 .statecard .go{font-family:inherit;font-weight:600;font-size:14px;
   letter-spacing:.06em;color:var(--ink-2)}
 .statecard.off{opacity:.62}
-.mix{display:flex;height:7px;border-radius:2px;overflow:hidden;margin-top:9px;background:var(--sunk)}
-.mix i{display:block}
 .legend2{display:flex;flex-wrap:wrap;gap:5px 14px;margin-top:7px;font-size:12.5px;color:var(--ink-2)}
 .legend2 span{display:flex;align-items:center;gap:5px}
 .legend2 i{width:9px;height:9px;border-radius:2px;background:var(--sw)}
@@ -165,77 +161,15 @@ a.card:hover{border-color:var(--ink-3);background:var(--sunk)}
 .statecard.nomap{opacity:.62}
 .statecard.nomap .go{color:var(--ink-3)}
 
-.basis{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)}
-.basis h2{margin:0 0 8px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
-  font-weight:700;font-size:24px;letter-spacing:.02em}
-.basis-lede{margin:0 0 16px;font-size:14px;line-height:1.65;color:var(--ink-2);max-width:70ch}
-.cov{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
-.cov div{display:flex;align-items:baseline;gap:7px;background:var(--surface);
-  border:1px solid var(--line);border-radius:4px;padding:7px 11px;font-size:12.5px;color:var(--ink-2)}
-.cov b{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
-  color:var(--ink);font-weight:600;font-size:14px}
-.cov i{font-style:normal;color:var(--ink-3);font-size:11px}
-.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:5px;background:var(--surface)}
-table.imap{border-collapse:collapse;width:100%;min-width:680px;font-size:12.5px}
-table.imap th,table.imap td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--line);
-  vertical-align:top;line-height:1.5}
-table.imap thead th{font-family:"IBM Plex Mono",monospace;font-weight:600;
-  font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);
-  background:var(--sunk);white-space:nowrap}
-table.imap tbody tr:last-child th,table.imap tbody tr:last-child td{border-bottom:0}
-table.imap td.na{color:var(--ink-3)}
-table.imap td.na b{color:var(--c-rebuild)}
-table.imap th[scope="row"]{font-weight:700;white-space:nowrap}
 /* 每一組（＝吃同一張郵區表的產業）之間畫一條較重的線。第一組緊接著表頭，
    表頭底下本來就有線，不必再加一條。 */
-table.imap tbody tr.grp:not(:first-child) th,
-table.imap tbody tr.grp:not(:first-child) td{border-top:1px solid var(--ink-3)}
 /* 表名儲存格在群組裡是垂直置中的，看起來會跟第一列的產業名對不齊。 */
-table.imap td.areas{vertical-align:top}
-table.imap td.sc{color:var(--ink-3);font-size:12.5px;min-width:260px}
-table.imap th[scope="row"] em{display:block;font-style:normal;font-weight:400;
-  font-size:11px;color:var(--ink-3);letter-spacing:0}
-
 /* 窄螢幕：表格攤成一疊卡片。
    量到的：表格 680px 塞在 388px 的框裡，可橫捲但沒有任何提示，而「範圍」那一
    欄實際寬 362px，畫面上只看得到 71px——那一欄正是這張表存在的理由（農牧的
    二次加工不算、礦業的支援服務算），在手機上等於沒有。
    斷點取 700px 而不是版面的 900px：744px 以上（iPad 直式）表格是完整顯示的，
    不需要改成卡片。 */
-@media (max-width:700px){
-  .tblwrap{overflow-x:visible;border:0;border-radius:0;background:none}
-  table.imap{min-width:0;width:100%;display:block}
-  table.imap thead{display:none}
-  table.imap tbody{display:block}
-  table.imap tr{display:block;border:1px solid var(--line);border-radius:5px;
-    background:var(--surface);padding:11px 13px;margin-bottom:7px}
-  table.imap th,table.imap td{display:block;padding:0;border:0}
-  /* 表名的儲存格在卡片模式只會落在該組第一張卡上，改用每一列都帶著的
-     data-areas 印，五張卡才都說得出自己看哪一張表。
-     選 .areas 不選 [rowspan]：只有一列的組（觀光餐旅）不需要 rowspan 屬性，
-     用 [rowspan] 選的話那一張卡會把表名印兩次。 */
-  table.imap td.areas{display:none}
-  table.imap tr::before{content:attr(data-areas);display:block;order:-1;
-    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;
-    color:var(--ink-3);margin-bottom:5px}
-  table.imap th[scope="row"]{font-size:14px;margin-bottom:5px}
-  table.imap td.sc{min-width:0;line-height:1.55}
-  /* 分組的線在卡片模式沒有意義（卡片本來就各自獨立），改用組與組之間的間距 */
-  table.imap tbody tr.grp:not(:first-child) th,
-  table.imap tbody tr.grp:not(:first-child) td{border-top:0}
-  table.imap tbody tr.grp:not(:first-child){margin-top:18px}
-}
-.basis-note2{margin:0 0 10px;font-size:12.5px;line-height:1.6;color:var(--ink-3)}
-.basis-note2 a{color:var(--ink-2)}
-.basis-note{margin:14px 0 0;font-size:12.5px;line-height:1.6;color:var(--ink-2);
-  border-left:3px solid var(--accent);padding-left:11px}
-.notes{margin-top:38px;padding-top:22px;border-top:1px solid var(--line);
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
-.notes h3{margin:0 0 7px;font-family:"Barlow Condensed","Noto Sans TC",sans-serif;
-  font-weight:700;font-size:19px;letter-spacing:.02em}
-.notes p{margin:0;font-size:12.5px;line-height:1.6;color:var(--ink-2)}
-.notes a{color:var(--ink-2)}
-.notes a:hover{color:var(--accent)}
 /* 跟著滑鼠的光源。節點由 lamp.js 建，只有「深色 + 有滑鼠 + 沒要求減少動態」
    才會出現，所以這裡不做任何條件判斷。州頁沒有這個，理由寫在 lamp.js 檔頭。
    .lamp 負責裁切（光暈比容器大，不裁會溢出到旁邊的側欄），<i> 負責移動——

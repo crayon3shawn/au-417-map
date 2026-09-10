@@ -71,11 +71,44 @@ def summarise(state, s, work_pcs):
     return None
 
 
+def build_about(payload):
+    """說明頁。制度本身怎麼運作、官方認的範圍是什麼，全部集中在這一頁。
+
+    為什麼獨立一頁而不是工具頁的一節：那些內容原本散在入口頁與州頁的下半部，
+    而且是同一套東西寫了兩遍（州頁「三個重點」與入口頁三則說明講同一件事，
+    連標題都一樣叫「災區是另一條路」）。更要緊的是它們**常駐**——1823 個
+    「一般工作本來就算」的郵區（67%）的使用者查完答案，還要滾過八百字跟他
+    無關的災害說明。實際量過：面板上的判定本身 98 字，兩頁的說明 2171 字。
+
+    它跟入口頁共用同一份 payload：需要的只有 industries、area_coverage 與
+    strings，那些本來就在裡面。地圖、郵區索引、輪廓它都用不到，但為了不讓
+    兩邊的資料組法漂掉，寧可多帶一點也不要另外組一份。
+    """
+    html = (ROOT / "src" / "about.html").read_text(encoding="utf-8")
+    for token, value in (("__ROBOTS__", robots_meta()),
+                         ("__TOKENS__", tokens_css()),
+                         ("__THEME__", theme_js()),
+                         ("__URL__", url_js()),
+                         ("__FOOT__", foot_js()),
+                         ("__CSS__", part("about.css")),
+                         ("__JS__", part("about.js").replace("// @ts-check\n", "", 1)),
+                         ("__DATA__", json.dumps(payload, ensure_ascii=False,
+                                                 separators=(",", ":")))):
+        if token not in html:
+            raise SystemExit(f"about.html 裡找不到注入點 {token}")
+        html = html.replace(token, value)
+    dest = ROOT / "dist" / "about.html"
+    dest.write_text(html, encoding="utf-8")
+    print(f"-> {dest.relative_to(ROOT)}  ({dest.stat().st_size/1e6:.2f} MB)")
+
+
 def main():
     pcdata = load(ROOT / "data" / "postcodes.json")
     index  = load(ROOT / "data" / "portal-index.json")["postcodes"]
     out    = load(ROOT / "data" / "outline-au.json")["outlines"]
-    urls   = {n["label"].lower(): n["url"] for n in site_links() if not n.get("home")}
+    # about 與 home 都不是「州」，不能混進 urls（它是 州key -> 網址 的對照）
+    urls   = {n["label"].lower(): n["url"] for n in site_links()
+              if not n.get("home") and not n.get("about")}
     inds   = load(ROOT / "data" / "industries.json")["industries"]
     default_mask = work_mask(inds[DEFAULT_INDUSTRY]["areas"][VISA])
 
@@ -157,6 +190,8 @@ def main():
         "area_coverage": area_coverage(pcdata, {int(p) for p in index}),
         "meta": {
             "source_url": pcdata["sources"][VISA]["url"],
+            "home_url": next((n["url"] for n in site_links() if n.get("home")), "index.html"),
+            "about_url": next((n["url"] for n in site_links() if n.get("about")), None),
             "channel": CHANNEL,
             "site_url": SITE_URL,
             "visa": VISA,
@@ -190,6 +225,8 @@ def main():
     dest = ROOT / "dist" / "index.html"
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(html, encoding="utf-8")
+
+    build_about(payload)
     have = ", ".join(s["label"] for s in states if s["url"])
     print(f"可查郵區 {len(entries)} 個 · 已有地圖的州：{have}")
     for s in states:

@@ -1,6 +1,18 @@
 {
   "note": "介面文字。每個 key 一組 zh／en。頁面同時載入兩種語言，靠切換鈕換——分成兩份產出的話 Artifact 數量會加倍，每份都要單獨設分享權限。",
   "s": {
+    "about_h1": {
+      "en": "How it is decided",
+      "zh": "集簽規則說明"
+    },
+    "about_lede": {
+      "en": "This page explains the system itself: which official postcode tables exist, which industry follows which table, what counts as disaster recovery work, and how days are counted. To check whether a particular postcode counts, go to the <a href=\"index.html\">national portal</a> or a state map.",
+      "zh": "這一頁講制度本身：官方有哪幾張郵區表、哪個產業看哪一張、災後重建那條路認什麼工作、天數怎麼算。要查某一個郵區算不算，回<a href=\"index.html\">全澳入口</a>或各州地圖。"
+    },
+    "about_title": {
+      "en": "How 417 specified work is decided · Australia 417 Visa Map",
+      "zh": "417 集簽規則說明 · 澳洲 417 集簽地圖"
+    },
     "cat_none": {
       "en": "Does not count at all",
       "zh": "完全不算"
@@ -41,22 +53,6 @@
       "en": "No postcode boundaries are drawn here: the polygons are fetched per state and this map covers NSW only.",
       "zh": "這裡沒有畫郵區界線：郵區面是逐州抓的，這張圖只涵蓋 NSW。"
     },
-    "fact1_body": {
-      "en": "Only {ind} work inside {tables} postcodes counts.",
-      "zh": "{ind}在 {tables} 郵區內的工作才算集簽。"
-    },
-    "fact1_head": {
-      "en": "The area list depends on your industry.",
-      "zh": "地區名單看產業。"
-    },
-    "fact2_body": {
-      "en": "In a declared disaster postcode, recovery work counts even if the postcode is not on the lists above, and volunteering counts too. Work in the same postcode unrelated to recovery does not. The two disaster tables define eligible work differently — full detail below.",
-      "zh": "被宣告為災區的郵區，就算不在上面那些名單裡，做災後重建工作一樣算，志工也算。但同一個郵區跟災後復原無關的工作不算。兩張災害表認的範圍不一樣，完整說明見下面。"
-    },
-    "fact2_head": {
-      "en": "Disaster areas are a separate route.",
-      "zh": "災區是另一條路。"
-    },
     "fact3_body": {
       "en": "Counted as full-time equivalent days. You cannot compress them into less than 3 or 6 calendar months.",
       "zh": "算的是等同全職的工作天數，不能壓縮在比 3 個月／6 個月更短的期間內完成。"
@@ -64,10 +60,6 @@
     "fact3_head": {
       "en": "88 days for a second visa, 179 for a third.",
       "zh": "二簽 88 天、三簽 179 天。"
-    },
-    "facts_title": {
-      "en": "Three things that matter",
-      "zh": "三個重點"
     },
     "foot_disclaim": {
       "en": "This is not an official website and does not constitute immigration assistance — for an individual case, consult a registered migration agent (MARA) or a legal practitioner. Postcode boundaries are for orientation only, not legal boundaries. Go by the official Home Affairs page before you apply.",
@@ -184,6 +176,10 @@
     "more_areas": {
       "en": " and {n} localities in total",
       "zh": " 等 {n} 個地區"
+    },
+    "nav_about": {
+      "en": "How it works",
+      "zh": "說明"
     },
     "nav_aria": {
       "en": "Switch map",
