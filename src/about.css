@@ -48,6 +48,10 @@ table.imap th[scope="row"] em{display:block;font-style:normal;font-weight:400;
 .recdoc{font-size:12.5px;line-height:1.6;color:var(--ink-2);
   display:flex;flex-direction:column;gap:14px}
 .recdoc .lead{margin:0;color:var(--ink)}
+/* 兩張表並列。窄螢幕退回上下——並列的價值是掃視比較，欄寬不夠時那個價值
+   會被換行吃掉，反而比堆疊更難讀。 */
+.recpair{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+@media (max-width:760px){ .recpair{grid-template-columns:1fr;gap:16px} }
 .recdoc .rec{margin:0;padding-left:11px;border-left:2px solid var(--warn-line)}
 .recdoc .rec h4{margin:0 0 3px;font-size:13.5px;color:var(--ink);
   font-family:"Barlow Condensed","Noto Sans TC",sans-serif;font-weight:700;letter-spacing:.01em}

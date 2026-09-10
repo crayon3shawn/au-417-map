@@ -35,11 +35,11 @@ const PAGES = [
 // 官網 https://immi.homeaffairs.gov.au/.../work-holiday-417/specified-work
 const PANEL = [
   { what: '大火', flag: BIT.bushfire, absent: 'Natural disaster',
-    zh: ['Bushfire declared areas', '2019 年 7 月 31 日', '不是你做哪一行'],
-    en: ['Bushfire declared areas', '31 July 2019', 'not what trade you are in'] },
+    zh: ['Bushfire declared areas', '2019 年 7 月 31 日', '跟你做哪一行無關'],
+    en: ['Bushfire declared areas', '31 July 2019', 'does not depend on your industry'] },
   { what: '天災', flag: BIT.disaster, absent: 'Bushfire',
-    zh: ['Natural disaster declared areas', '2021 年 12 月 31 日', '不是你做哪一行'],
-    en: ['Natural disaster declared areas', '31 December 2021', 'not what trade you are in'] },
+    zh: ['Natural disaster declared areas', '2021 年 12 月 31 日', '跟你做哪一行無關'],
+    en: ['Natural disaster declared areas', '31 December 2021', 'does not depend on your industry'] },
 ];
 
 // ---- 搬到 #recovery 的 ----
