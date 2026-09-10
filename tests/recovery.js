@@ -48,6 +48,16 @@ const PAGES = [
   ['州頁',   path.join(ROOT, 'dist', 'nsw.html')],
 ];
 
+// 對兩條路都成立、不分大火天災的共通內容。
+// rec_key：判斷的是「那份工作是不是重建」，不是工種——兩種誤讀都靠它擋
+//   （做建築的以為自己不適用；或以為只要人在災區上班就算）。
+// rec_volunteer_days：志工做一天算一天，不必湊等同全職——官網「How to count
+//   specified work」裡的一句話，走重建路線的人實質受影響。
+const COMMON = {
+  zh: ['不是你做哪一行', '志工性質的重建工作', '等同全職'],
+  en: ['not what trade you are in', 'volunteer recovery work', 'full-time equivalent'],
+};
+
 const bad = [];
 for (const [label, file] of PAGES) {
   for (const lang of ['zh', 'en']) {
@@ -63,6 +73,12 @@ for (const [label, file] of PAGES) {
         if (!html.includes(kw)) {
           bad.push(`${label} ${lang} ${c.what}：找不到官方關鍵詞「${kw}」`);
         }
+      }
+    }
+    // 共通內容：任一條路只要成立就該出現
+    for (const kw of COMMON[lang]) {
+      if (!s.answerBody(BIT.disaster).includes(kw)) {
+        bad.push(`${label} ${lang} 共通段：找不到官方關鍵詞「${kw}」`);
       }
     }
     // 只有大火時不該出現 Employment type

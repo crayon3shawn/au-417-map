@@ -155,13 +155,15 @@ function answerBody(f){
   // 的條件完全一樣，所以它永遠只是把標題那句再講一次，從來沒有單獨出現過。
   return rows
     + `<div class="route"><b>${esc(T('recovery_h'))}</b>`
-    + `<p>${esc(T('rec_lead'))}</p>`
+    + `<p><em class="key">${esc(T('rec_key'))}</em> ${esc(T('rec_lead'))}</p>`
     + route(BIT_FIRE, 'tbl_bushfire', 'rec_fire_when', 'rec_fire_scope', 'rec_fire_eg')
     // 天災那條多兩件送件時才會踩到的事：ImmiAccount 的 Employment type 要選對，
     // 而且這條路只適用於 2025/4/5 起遞交或當日尚未決定的申請。
     + route(BIT_DISASTER, 'tbl_disaster', 'rec_disaster_when', 'rec_disaster_scope',
             'rec_disaster_eg',
             `<p class="req">${esc(T('rec_disaster_form'))} ${esc(T('rec_disaster_lodged'))}</p>`)
+    // 天數計算的差別對兩條路都成立，所以放在兩塊之後、不進 route()。
+    + `<p class="days">${esc(T('rec_volunteer_days'))}</p>`
     + `</div>`;
 }
 

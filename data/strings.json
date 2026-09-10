@@ -449,9 +449,17 @@
       "en": "Work carried out after 31 July 2019.",
       "zh": "2019 年 7 月 31 日之後執行的工作。"
     },
+    "rec_key": {
+      "en": "What matters is whether the job is disaster recovery work — not what trade you are in.",
+      "zh": "判斷的是那份工作是不是災後重建，不是你做哪一行。"
+    },
     "rec_lead": {
-      "en": "Open to every industry, and paid or volunteer work both count. But the two tables define eligible work differently.",
-      "zh": "不分產業都可以走，有給薪或志工都算。但兩張表各自認的工作範圍不一樣。"
+      "en": "So it is open to every industry, and paid or volunteer work both count. The flip side: work in the same postcode that is unrelated to disaster recovery still does not count. The two tables also define eligible work differently.",
+      "zh": "所以任何產業都可以走，有給薪或志工都算；反過來說，在同一個郵區做跟災後復原無關的工作，一樣不算。兩張表各自認的工作範圍也不一樣。"
+    },
+    "rec_volunteer_days": {
+      "en": "Day counting differs: for volunteer recovery work, any day on which you worked counts as one day — you do not need to match a full-time equivalent day. Paid recovery work is counted like any other specified work.",
+      "zh": "天數計算有個差別：志工性質的重建工作，有工作的每一天都算一天，不必湊到「等同全職的工作天數」。有給薪的則跟一般工作一樣要湊。"
     },
     "recovery_h": {
       "en": "Another route: disaster recovery work",
