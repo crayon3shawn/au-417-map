@@ -417,9 +417,41 @@
       "en": "postcode",
       "zh": "個郵區"
     },
-    "recovery_body": {
-      "en": "Open to every industry, and volunteer work counts. What qualifies is the recovery work itself — earthworks, demolition, repairs, roads and bridges. Keep records showing the job was disaster repair.",
-      "zh": "不分產業都可以走，有給薪或志工都算。算的是重建工作本身——土建、拆除、修繕、道路橋樑。留好能證明工程屬於災後修復的紀錄。"
+    "rec_disaster_eg": {
+      "en": "Other official examples: demolition of buildings, trench digging, land clearing and earth moving; residential and non-residential construction or renovation/repair, including of roads, footpaths, bridges, parking lots, fencing, railways, dams, irrigation systems, sewage, and stormwater drainage systems; work for charitable organisations assisting affected communities, including administrative, technical and coordination support; administrative support, including customer service and working in call centres; coordination support for insurance companies, government organisations, community and evacuation centres; transport support, delivering food, medications or other essential items; and caring for, transporting and managing affected animals and related equipment.",
+      "zh": "其餘官方舉例：建物拆除與挖溝整地土方；住宅與非住宅的營造或翻修修繕（含道路、人行道、橋樑、停車場、圍籬、鐵路、水壩、灌溉、污水與雨水排放系統）；協助受災社區的慈善組織工作，含行政、技術與協調支援；客服與話務中心的行政支援；保險公司與各級政府、社區與收容中心的協調支援；運送食物、藥品等必需品；以及照料、運送與管理受災動物與相關設備。"
+    },
+    "rec_disaster_form": {
+      "en": "When you lodge, you must select 'flood recovery - paid' or 'flood recovery - volunteer' under 'Employment type' in ImmiAccount.",
+      "zh": "送件時「Employment type」要選 flood recovery - paid 或 flood recovery - volunteer。"
+    },
+    "rec_disaster_lodged": {
+      "en": "This applies to applications lodged on or after 5 April 2025, or lodged but not decided by that date.",
+      "zh": "這條路適用於 2025 年 4 月 5 日（含）之後遞交、或在該日尚未決定的申請。"
+    },
+    "rec_disaster_scope": {
+      "en": "Wider than the bushfire route. The first official example is general cleaning up: wiping down items, moving and cleaning furniture and appliances, hosing out properties and outdoor areas or mopping floors, and transportation of rubbish.",
+      "zh": "範圍比大火那條寬。官方舉的第一個例子就是一般清理：擦拭物品、搬動與清潔家具電器、沖洗房屋與戶外區域、拖地，以及載運垃圾。"
+    },
+    "rec_disaster_when": {
+      "en": "Work carried out after 31 December 2021.",
+      "zh": "2021 年 12 月 31 日之後執行的工作。"
+    },
+    "rec_fire_eg": {
+      "en": "Official examples: re-building fences destroyed in a bushfire affected community; caring for wildlife in a bushfire affected community; support work for volunteer organisations assisting victims of bushfires; demolition of buildings, trench digging, land clearing and earth moving; residential and non-residential construction or renovation/repair, including of roads, footpaths, bridges, parking lots, fencing, railways, dams, irrigation systems, sewage, and stormwater drainage systems.",
+      "zh": "官方舉例：重建被燒毀的圍籬、照顧受災地區的野生動物、協助大火災民的志工組織的支援工作、建物拆除與挖溝整地土方，以及住宅與非住宅的營造或翻修修繕（含道路、人行道、橋樑、停車場、圍籬、鐵路、水壩、灌溉、污水與雨水排放系統）。"
+    },
+    "rec_fire_scope": {
+      "en": "Two categories: construction, farming, or any other work in association with recovery or restitution of land, property, farm animals or wildlife; and support services or assistance to people living, working or volunteering in the affected areas.",
+      "zh": "官方定義兩類：與土地、房產、農場動物或野生動物的復原或回復有關的營造、農務或任何工作；以及對居住、工作或志願服務於受災地區的人提供的支援服務或協助。"
+    },
+    "rec_fire_when": {
+      "en": "Work carried out after 31 July 2019.",
+      "zh": "2019 年 7 月 31 日之後執行的工作。"
+    },
+    "rec_lead": {
+      "en": "Open to every industry, and paid or volunteer work both count. But the two tables define eligible work differently.",
+      "zh": "不分產業都可以走，有給薪或志工都算。但兩張表各自認的工作範圍不一樣。"
     },
     "recovery_h": {
       "en": "Another route: disaster recovery work",

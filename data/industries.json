@@ -1,7 +1,7 @@
 {
   "note": "產業與地區表的對應。官方沒有這張表——它是 Home Affairs 頁面上的散文規則，人工整理自 417 與 462 的『Approved industries and areas for specified work』段落。地區表本身在 postcodes.json。 scope 是該產業的範圍摘要，同樣整理自官網的定義與例示，用意是避免把不算的工作誤認為算（例如農牧的二次加工）。 label_en／scope_en 直接取自官網原文，不是把中文再翻回英文。",
   "source": "https://immi.homeaffairs.gov.au/visas/getting-a-visa/visa-listing/work-holiday-417/specified-work",
-  "checked_against_page_dated": "2026-08-18",
+  "checked_against_page_dated": "2026-09-10",
   "industries": {
     "construction": {
       "label": "建築",
@@ -102,16 +102,19 @@
     }
   },
   "recovery": {
-    "note": "災後重建是獨立於產業的另一條路，任何產業都適用，且志工也算。介面上因此把它做成獨立的區塊，不是某個產業的判定值——「觀光與餐旅 → 只有災後重建工作算」會被讀成餐旅工作在災區就算，那是錯的。",
+    "note": "災後重建是獨立於產業的另一條路，任何產業都適用，且志工也算。介面上因此把它做成獨立的區塊，不是某個產業的判定值——「觀光與餐旅 → 只有災後重建工作算」會被讀成餐旅工作在災區就算，那是錯的。\n\n2026-09-10 逐字對過官網（章節「Approved industries and areas for specified work」底下的「Bushfire recovery work」與「Natural disaster recovery work」兩小節）。三件事因此改掉：\n\n1. 兩條路的工作範圍**官方定義就不一樣**，原本共用一段說明是錯的。\n   Bushfire：construction, farming, or any other work in association with recovery or restitution of land, property, farm animals or wildlife；加上 support services or assistance to people living, working or volunteering in the affected areas。\n   Natural disaster：範圍寬得多，且官方舉的**第一個**例子就是 general cleaning up（wiping down items、moving and cleaning furniture and appliances、hosing out properties and outdoor areas or mopping floors、transportation of rubbish），另含行政／客服話務／保險與政府協調／運送物資／照料受災動物。\n2. 舊的「土建、拆除、修繕、道路橋樑」漏掉清理。那是先前的人工整理，沒有對過官網。在災區找到清潔職缺的人比找到工地職缺的多，這一漏會直接讓他們以為自己不算。\n3. 天災那條另有兩個官網寫明、原本沒記錄的條件：送件時 ImmiAccount 的「Employment type」必須選 flood recovery - paid 或 flood recovery - volunteer；而且這條路只適用於2025-04-05（含）之後遞交、或在該日尚未決定的申請。\n   大火那條官網**沒有**指定任何 Employment type，所以介面上也不要寫。\n\n起算日兩個都確認無誤。註記一個官網自己的不一致：Natural disaster 章節的前言寫 「carried out from 31 December 2021」，產業章節寫 「carried out after 31 December 2021」，差一天。我們沿用 after（產業章節那一版，也是定義工作範圍的那一節）。",
     "bushfire": {
       "area": "bushfire",
-      "from": "2019-07-31"
+      "from": "2019-07-31",
+      "scope_source": "Approved industries and areas for specified work > Bushfire recovery work"
     },
     "disaster": {
       "area": "disaster",
-      "from": "2021-12-31"
-    },
-    "todo": "待查證（需連得到 immi.homeaffairs.gov.au）：重建工作的範圍到底涵蓋哪些。目前頁面上寫「土建、拆除、修繕、道路橋樑」，沿用先前的人工整理，沒有逐字對過官網。特別要確認清理／清潔類的工作算不算——若算，頁面的範圍句要補上，因為那會改變一大群人的判斷（他們找的是清潔職缺，不是工地職缺）。"
+      "from": "2021-12-31",
+      "scope_source": "Approved industries and areas for specified work > Natural disaster recovery work",
+      "employment_type": "flood recovery - paid / flood recovery - volunteer（ImmiAccount）",
+      "applies_to_applications_lodged_from": "2025-04-05"
+    }
   },
   "scope_note": "scope 是官方定義與例示的中文摘要，不是官方文字。頁面上會同時附 source 連結，讓使用者能對原文核對。"
 }

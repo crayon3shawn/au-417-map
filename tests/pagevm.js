@@ -49,7 +49,9 @@ function stub(name) {
 
 // 把一個產出頁面跑起來，回傳它的全域物件（頁面定義的頂層函式在上面）。
 // 拋錯就讓它往上丟——呼叫端決定要怎麼報。
-function runPage(file) {
+// seed.localStorage：頁面在載入時就從 localStorage 讀語言（`lang` 是閉包裡的
+// let，跑完之後從外面設不到），所以要驗英文版就只能在啟動前先塞進去。
+function runPage(file, seed) {
   const html = fs.readFileSync(file, 'utf8');
   // 頁面有兩段腳本：先是主題切換（要在繪製前跑），最後才是主程式。
   // 兩段都要跑，而且要照順序——貪婪比對會把中間整段 HTML 也吃進來。
@@ -77,7 +79,7 @@ function runPage(file) {
     URLSearchParams,
     navigator: { language: 'zh-TW' },
     localStorage: {
-      _v: {},
+      _v: Object.assign({}, seed && seed.localStorage),
       getItem(k) { return Object.prototype.hasOwnProperty.call(this._v, k) ? this._v[k] : null; },
       setItem(k, v) { this._v[k] = String(v); },
       removeItem(k) { delete this._v[k]; },
