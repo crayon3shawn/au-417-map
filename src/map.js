@@ -182,31 +182,21 @@ function answerBody(f){
   if(!hasRecovery(f)) return rows;
   // 表名要寫出來：送件時官方問的就是這個。tbl_* 自己就帶著「官方表：」，
   // 不要再加一層標籤。
-  // 兩條路的範圍**官方定義就不一樣**，所以各講各的，不能共用一段。
-  // Bushfire 認的是「與土地／房產／農場動物／野生動物復原有關的營造、農務或
-  // 任何工作」加「對受災地區的人的支援服務」；Natural disaster 的第一個官方
-  // 例子就是一般清理（擦拭、清潔家具電器、沖洗、拖地、載運垃圾），而且還涵蓋
-  // 行政、客服話務、保險與政府協調、運送物資。清理沒有列在大火那條上。
-  // 這個差別會改變一大群人的判斷——他們在災區找到的是清潔職缺，不是工地職缺。
-  const route = (bit, tbl, when, scope, eg, extra) => !(f & bit) ? '' :
-      `<div class="rt"><em class="tbl">${esc(T(tbl))}</em>`
-      + `<p><b>${esc(T(when))}</b> ${esc(T(scope))}</p>`
-      + `<p class="eg">${esc(T(eg))}</p>`
-      + (extra || '');
-  // 這裡原本還有一句「你本行的一般工作在這個郵區不算」，條件是
-  // groups.every(g => !g.work)——那跟 answerHead 回傳 say_rebuild_only
-  // 的條件完全一樣，所以它永遠只是把標題那句再講一次，從來沒有單獨出現過。
+  // 答案面板只留「要不要繼續看下去」需要的三件事：這裡有另一條路、判斷的
+  // 對象是工作不是工種、是哪一張表加起算日。範圍、官方舉例、送件注意事項、
+  // 天數計算全部搬到頁面下方的 #recovery。
+  //
+  // 為什麼搬：那些內容加起來七段，塞在郵遞區號正下方會把答案本身淹掉，而它們
+  // 是「決定要走這條路之後才需要讀」的東西，不是查詢當下的判斷依據。
+  const when = [(f & BIT_FIRE) ? [T('tbl_bushfire'), T('rec_fire_when')] : null,
+                (f & BIT_DISASTER) ? [T('tbl_disaster'), T('rec_disaster_when')] : null]
+      .filter(Boolean)
+      .map(([tbl, w]) => `<p class="rt"><em class="tbl">${esc(tbl)}</em> ${esc(w)}</p>`).join('');
   return rows
     + `<div class="route"><b>${esc(T('recovery_h'))}</b>`
-    + `<p><em class="key">${esc(T('rec_key'))}</em> ${esc(T('rec_lead'))}</p>`
-    + route(BIT_FIRE, 'tbl_bushfire', 'rec_fire_when', 'rec_fire_scope', 'rec_fire_eg')
-    // 天災那條多兩件送件時才會踩到的事：ImmiAccount 的 Employment type 要選對，
-    // 而且這條路只適用於 2025/4/5 起遞交或當日尚未決定的申請。
-    + route(BIT_DISASTER, 'tbl_disaster', 'rec_disaster_when', 'rec_disaster_scope',
-            'rec_disaster_eg',
-            `<p class="req">${esc(T('rec_disaster_form'))} ${esc(T('rec_disaster_lodged'))}</p>`)
-    // 天數計算的差別對兩條路都成立，所以放在兩塊之後、不進 route()。
-    + `<p class="days">${esc(T('rec_volunteer_days'))}</p>`
+    + `<p><em class="key">${esc(T('rec_key'))}</em></p>`
+    + when
+    + `<p><a class="more" href="#recovery">${esc(T('rec_more'))}</a></p>`
     + `</div>`;
 }
 

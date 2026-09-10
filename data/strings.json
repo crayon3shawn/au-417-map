@@ -50,8 +50,8 @@
       "zh": "地區名單看產業。"
     },
     "fact2_body": {
-      "en": "In a declared disaster area, recovery work — earthworks, demolition, repairs, roads and bridges — counts even if the postcode is not on the lists above. Volunteering counts too. Ordinary work in the same postcode does not.",
-      "zh": "被宣告為災區的郵區，就算不在上面那些名單裡，做災後重建的土建、拆除、修繕、道路橋樑一樣算，志工也算。但同一個郵區的一般工作不算。"
+      "en": "In a declared disaster postcode, recovery work counts even if the postcode is not on the lists above, and volunteering counts too. Work in the same postcode unrelated to recovery does not. The two disaster tables define eligible work differently — full detail below.",
+      "zh": "被宣告為災區的郵區，就算不在上面那些名單裡，做災後重建工作一樣算，志工也算。但同一個郵區跟災後復原無關的工作不算。兩張災害表認的範圍不一樣，完整說明見下面。"
     },
     "fact2_head": {
       "en": "Disaster areas are a separate route.",
@@ -326,8 +326,8 @@
       "zh": "一般工地只認 regional"
     },
     "p_note2_b": {
-      "en": "In a declared disaster area, <strong>recovery work</strong> — earthworks, demolition, repairs, roads and bridges — counts even if the postcode is not on the regional list. Volunteering counts too. Ordinary new-build work in the same postcode does not.",
-      "zh": "被宣告為災區的郵區，就算不在 regional 名單裡，做<strong>災後重建</strong>的土建、拆除、修繕、道路橋樑一樣算，志工也算。但同一個郵區的一般新建案不算。"
+      "en": "In a declared disaster postcode, <strong>recovery work</strong> counts even if the postcode is not on the regional list, and volunteering counts too. New work in the same postcode unrelated to recovery does not. The two disaster tables define eligible work differently — full detail below.",
+      "zh": "被宣告為災區的郵區，就算不在 regional 名單裡，做<strong>災後重建</strong>工作一樣算，志工也算。但同一個郵區跟災後復原無關的新建案不算。兩張災害表認的範圍不一樣，完整說明見下面。"
     },
     "p_note2_h": {
       "en": "Disaster areas are a separate route",
@@ -456,6 +456,22 @@
     "rec_lead": {
       "en": "So it is open to every industry, and paid or volunteer work both count. The flip side: work in the same postcode that is unrelated to disaster recovery still does not count. The two tables also define eligible work differently.",
       "zh": "所以任何產業都可以走，有給薪或志工都算；反過來說，在同一個郵區做跟災後復原無關的工作，一樣不算。兩張表各自認的工作範圍也不一樣。"
+    },
+    "rec_more": {
+      "en": "Full scope and lodgement notes ↓",
+      "zh": "完整範圍與送件注意事項 ↓"
+    },
+    "rec_sec_dis_h": {
+      "en": "Natural disaster declared areas",
+      "zh": "天災宣告區"
+    },
+    "rec_sec_fire_h": {
+      "en": "Bushfire declared areas",
+      "zh": "叢林大火宣告區"
+    },
+    "rec_sec_h": {
+      "en": "Disaster recovery work: full detail",
+      "zh": "災後重建工作：完整說明"
     },
     "rec_volunteer_days": {
       "en": "Day counting differs: for volunteer recovery work, any day on which you worked counts as one day — you do not need to match a full-time equivalent day. Paid recovery work is counted like any other specified work.",
